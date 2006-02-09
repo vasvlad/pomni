@@ -1,0 +1,46 @@
+Format: 1.8
+Date: Sun, 31 May 2009 03:10:19 +0300
+Source: pomni
+Binary: pomni
+Architecture: source all
+Version: 0.1.0
+Distribution: unstable
+Urgency: low
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Changed-By: Ed Bartosh <bartosh@gmail.com>
+Description: 
+ pomni      - Learning tool based on spaced repetition technique
+Changes: 
+ pomni (0.1.0) unstable; urgency=low
+ .
+   * New look of main menu (Max)
+   * Animated toolbars (Max)
+   * New look of configuration mode (Max)
+   * Increased input field in input mode (Fixes: #80) (Max)
+   * Changed review mode look&feel (Max)
+   * 'Rainbow' and 'Eternal' UI and code have been splitted (Max)
+   * Added theme selection to configuration mode (Max)
+   * Removed duplicated 'Warning' diablog (Max)
+   * A lot of UI changes in 'Rainbow'
+   * Refactored UI classes (Vlad)
+   * Implemented editing in review mode (Vlad)
+   * Refactored UI classes again:
+         renamed start -> activate
+         renamed HildonBaseUI -> HildonBaseController
+         refactored & fixed collback assigning
+         ControllerConfigure isn't inherited from HildonUI anymore
+   * Turned off hildon autocapitalization
+   * fixed bug #93 "Various tracebacks in empty database" (Vlad)
+   * fixed bug #94 "Traceback after the second enttry in the Input mode" (Vlad)
+Checksums-Sha1: 
+ 55b9578080b3b3c6c22cb0de99ace29afd946c9d 467 pomni_0.1.0.dsc
+ 940c11222ad6ca431fe3ec1fadc2b4629e70cc9c 3147165 pomni_0.1.0.tar.gz
+ c3faa9b6e723739cac199ad1e3d33513a39ee2c9 1254838 pomni_0.1.0_all.deb
+Checksums-Sha256: 
+ 96509af358e01720d82ff898d0af24b567ac92c760f66283edb9e6c6e13a616f 467 pomni_0.1.0.dsc
+ 78993c04b9930b4382f5ed9384a056bb6cf22fb219f9a0693b15d526fff018ae 3147165 pomni_0.1.0.tar.gz
+ eef143b1a48b7acf453e31476656397a2c273960569d387ce1adffd119afbe3a 1254838 pomni_0.1.0_all.deb
+Files: 
+ 51b16caa275fcaef208b92a4ff3a5681 467 user/education - pomni_0.1.0.dsc
+ 2c03e3eee9f40134ec4f8d22ec7d505d 3147165 user/education - pomni_0.1.0.tar.gz
+ ec367118288e4180e481cc6f98bf060e 1254838 user/education - pomni_0.1.0_all.deb

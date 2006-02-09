@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% block content %}
+<h2>Deploying the final product</h2>
+
+<p>
+It's time to put all the bits and pieces together and to deploy the
+final version, which you are browsing right now. Go to the root folder
+of the application and edit your <code>app.yaml</code> file.
+Change the name of the application in the first line from <code>aef</code>
+to the token
+that you will upload the application with. Then, use the <code>appcfg</code>
+utility to upload the site.
+</p>
+<p>
+Congratulations -- you are done!
+</p>
+{% endblock %}
+

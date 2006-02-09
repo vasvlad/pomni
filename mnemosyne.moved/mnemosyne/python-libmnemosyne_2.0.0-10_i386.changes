@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Sun, 31 May 2009 15:42:26 +0300
+Source: python-libmnemosyne
+Binary: python-libmnemosyne
+Architecture: source all
+Version: 2.0.0-10
+Distribution: unstable
+Urgency: low
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Changed-By: Ed Bartosh <bartosh@gmail.com>
+Description: 
+ python-libmnemosyne - Mnemosyne core library
+Changes: 
+ python-libmnemosyne (2.0.0-10) unstable; urgency=low
+ .
+   * massive update from upstream. API break
+Checksums-Sha1: 
+ 9c7dfae699274443a7104217974c5c1799ff3b53 546 python-libmnemosyne_2.0.0-10.dsc
+ 97d26b60e2a0fafda210c9ca2c284bbe8b8e7fb7 305906 python-libmnemosyne_2.0.0-10.tar.gz
+ 8bc4957f2bb19157d27f7c45735cd50cf9ab469d 129956 python-libmnemosyne_2.0.0-10_all.deb
+Checksums-Sha256: 
+ 34e2e0df297b9812b1d2fdb1a4d537c7960a67a2bd28193ee00ef0e70f4750f5 546 python-libmnemosyne_2.0.0-10.dsc
+ 020307931180b5a678ca23dc215ea7de41c3b88a1523a3e3b1a51178f5858419 305906 python-libmnemosyne_2.0.0-10.tar.gz
+ abc4df7e83affa00d86431b45975ac880f30324ac1fb0e63cd1acb98a356c723 129956 python-libmnemosyne_2.0.0-10_all.deb
+Files: 
+ 23844ac2fe468c2b6a0ca1a94deae733 546 python - python-libmnemosyne_2.0.0-10.dsc
+ e7183663cafe1aedbcb8768805e55c18 305906 python - python-libmnemosyne_2.0.0-10.tar.gz
+ d61672190f8fb7d9fa6f7717a9f4989b 129956 python - python-libmnemosyne_2.0.0-10_all.deb

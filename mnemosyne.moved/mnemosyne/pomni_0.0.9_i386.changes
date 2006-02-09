@@ -1,0 +1,30 @@
+Format: 1.8
+Date: Tue, 05 May 2009 17:52:34 +0300
+Source: pomni
+Binary: pomni
+Architecture: source all
+Version: 0.0.9
+Distribution: unstable
+Urgency: low
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Changed-By: Ed Bartosh <bartosh@gmail.com>
+Description: 
+ pomni      - Learning tool based on spaced repetition technique
+Changes: 
+ pomni (0.0.9) unstable; urgency=low
+ .
+   * Used SQLite backend from upstream
+   * fixed saving review results
+   * Fixed bug #90 'application crashed after starting in  review mode' (Vlad)
+Checksums-Sha1: 
+ 6e1a487e62dbdc63ed9e0b1a05fc73449a33919f 467 pomni_0.0.9.dsc
+ 13d3b35f7a2581f718895fb05f663294c9714f72 3058934 pomni_0.0.9.tar.gz
+ 1ea18a702f6287bb1b4dba2a3cd79c2a2818acc5 1333792 pomni_0.0.9_all.deb
+Checksums-Sha256: 
+ 5b0ae493b026df4947ae7c8a95884367fc85fd290149d90583bb9a65e45da669 467 pomni_0.0.9.dsc
+ fd5684b87ffe2e0945950476987335ce610926e17e876774a3319153fc83b7f2 3058934 pomni_0.0.9.tar.gz
+ a9c56346bfd63445f6b254bcc0294332bc48d940ebf95796e16e07cb7de1aaf1 1333792 pomni_0.0.9_all.deb
+Files: 
+ b581bd412e1392d9e33d05c01e8153cb 467 user/education - pomni_0.0.9.dsc
+ a2315b03030e289e2a639893c87f2299 3058934 user/education - pomni_0.0.9.tar.gz
+ 4049a26049f2ad03bb26cea2deb8d64f 1333792 user/education - pomni_0.0.9_all.deb

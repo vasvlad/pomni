@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<glade-interface>
+    <widget class="GtkDialog" id="dialog">
+        <property name="resize_mode">queue</property>
+        <property name="events">all-events-mask | button-motion-mask | button-press-mask | button-release-mask | button1-motion-mask | button2-motion-mask | button3-motion-mask | enter-notify-mask | exposure-mask | focus-change-mask | key-press-mask | key-release-mask | leave-notify-mask | pointer-motion-hint-mask | pointer-motion-mask | property-change-mask | proximity-in-mask | proximity-out-mask | scroll-mask | structure-mask | substructure-mask | visibility-notify-mask</property>
+        <property name="type_hint">dialog</property>
+        <property name="title" context="True" translatable="True">Sample dialog</property>
+        <child internal-child="vbox">
+            <widget class="GtkVBox" id="dialog-vbox1">
+                <property name="border_width">2</property>
+                <property name="events">all-events-mask | button-motion-mask | button-press-mask | button-release-mask | button1-motion-mask | button2-motion-mask | button3-motion-mask | enter-notify-mask | exposure-mask | focus-change-mask | key-press-mask | key-release-mask | leave-notify-mask | pointer-motion-hint-mask | pointer-motion-mask | property-change-mask | proximity-in-mask | proximity-out-mask | scroll-mask | structure-mask | substructure-mask | visibility-notify-mask</property>
+                <property name="visible">True</property>
+                <child>
+                    <placeholder/>
+                    <packing>
+                        <property name="position">2</property>
+                    </packing>
+                </child>
+                <child internal-child="action_area">
+                    <widget class="GtkHButtonBox" id="dialog-action_area1">
+                        <property name="layout_style">end</property>
+                        <property name="spacing">10</property>
+                        <property name="border_width">5</property>
+                        <property name="events">all-events-mask | button-motion-mask | button-press-mask | button-release-mask | button1-motion-mask | button2-motion-mask | button3-motion-mask | enter-notify-mask | exposure-mask | focus-change-mask | key-press-mask | key-release-mask | leave-notify-mask | pointer-motion-hint-mask | pointer-motion-mask | property-change-mask | proximity-in-mask | proximity-out-mask | scroll-mask | structure-mask | substructure-mask | visibility-notify-mask</property>
+                        <property name="visible">True</property>
+                        <child>
+                            <widget class="GtkButton" id="cancelbutton1">
+                                <property name="receives_default">True</property>
+                                <property name="label" context="True" translatable="True">gtk-cancel</property>
+                                <property name="events">all-events-mask | button-motion-mask | button-press-mask | button-release-mask | button1-motion-mask | button2-motion-mask | button3-motion-mask | enter-notify-mask | exposure-mask | focus-change-mask | key-press-mask | key-release-mask | leave-notify-mask | pointer-motion-hint-mask | pointer-motion-mask | property-change-mask | proximity-in-mask | proximity-out-mask | scroll-mask | structure-mask | substructure-mask | visibility-notify-mask</property>
+                                <property name="can_default">True</property>
+                                <property name="use_stock">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing/>
+                        </child>
+                        <child>
+                            <widget class="GtkButton" id="okbutton1">
+                                <property name="receives_default">True</property>
+                                <property name="label" context="True" translatable="True">gtk-ok</property>
+                                <property name="events">all-events-mask | button-motion-mask | button-press-mask | button-release-mask | button1-motion-mask | button2-motion-mask | button3-motion-mask | enter-notify-mask | exposure-mask | focus-change-mask | key-press-mask | key-release-mask | leave-notify-mask | pointer-motion-hint-mask | pointer-motion-mask | property-change-mask | proximity-in-mask | proximity-out-mask | scroll-mask | structure-mask | substructure-mask | visibility-notify-mask</property>
+                                <property name="can_default">True</property>
+                                <property name="use_stock">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="visible">True</property>
+                            </widget>
+                            <packing>
+                                <property name="position">1</property>
+                            </packing>
+                        </child>
+                    </widget>
+                    <packing>
+                        <property name="pack_type">end</property>
+                        <property name="expand">False</property>
+                    </packing>
+                </child>
+            </widget>
+        </child>
+    </widget>
+    <widget class="GtkWindow" id="window">
+        <property name="events">all-events-mask | button-motion-mask | button-press-mask | button-release-mask | button1-motion-mask | button2-motion-mask | button3-motion-mask | enter-notify-mask | exposure-mask | focus-change-mask | key-press-mask | key-release-mask | leave-notify-mask | pointer-motion-hint-mask | pointer-motion-mask | property-change-mask | proximity-in-mask | proximity-out-mask | scroll-mask | structure-mask | substructure-mask | visibility-notify-mask</property>
+        <property name="title" context="True" translatable="True">Sample window</property>
+        <child>
+            <placeholder/>
+        </child>
+    </widget>
+</glade-interface>

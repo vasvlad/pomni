@@ -1,0 +1,12 @@
+application: aef
+version: 3
+runtime: python
+api_version: 1
+
+handlers:
+- url: /static/(.*)
+  static_files: static/\1
+  upload: static/(.*)
+- url: /.*
+  script: wheels.py
+

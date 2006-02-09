@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Sun, 26 Apr 2009 14:56:23 +0000
+Source: python-libmnemosyne
+Binary: python-libmnemosyne
+Architecture: source all
+Version: 2.0.0-9
+Distribution: unstable
+Urgency: low
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Changed-By: Ed Bartosh <bartosh@gmail.com>
+Description: 
+ python-libmnemosyne - Mnemosyne core library
+Changes: 
+ python-libmnemosyne (2.0.0-9) unstable; urgency=low
+ .
+   * updated from upstream
+Checksums-Sha1: 
+ 46a096773ab033037e1a5c7ec20fc99a5dca5bb5 542 python-libmnemosyne_2.0.0-9.dsc
+ 679d51acd21af502f1a94808113e3c37aff812fe 254244 python-libmnemosyne_2.0.0-9.tar.gz
+ 27d3eaa3c1867872d7a2c7821dbd53e607821498 122254 python-libmnemosyne_2.0.0-9_all.deb
+Checksums-Sha256: 
+ bf583ddc5214489274ecf0aa714ab80c551423654e7007e9d2a5c7a5a64832cd 542 python-libmnemosyne_2.0.0-9.dsc
+ c30e3b064d1001b12ee44b8e011d3f88be672b5fd55dd8948f8d09cc5bd556d4 254244 python-libmnemosyne_2.0.0-9.tar.gz
+ 124237c0e96873ca10f02f56cc8562a327429de4ea6363b566d80a618f742ea1 122254 python-libmnemosyne_2.0.0-9_all.deb
+Files: 
+ 5e430f58ad8d652418b474021500f74c 542 python - python-libmnemosyne_2.0.0-9.dsc
+ 6e9ec0259441dc99b4399fb4f4628e7e 254244 python - python-libmnemosyne_2.0.0-9.tar.gz
+ a1dedfda8bcdef5c2570ad05f3359217 122254 python - python-libmnemosyne_2.0.0-9_all.deb

@@ -1,0 +1,3 @@
+#!/bin/sh
+dpkg-scanpackages -m pomni /dev/null  > pomni/Packages
+dpkg-scanpackages -m pomni /dev/null | gzip -9c > pomni/Packages.gz

@@ -1,0 +1,31 @@
+Format: 1.8
+Date: Sun, 31 May 2009 03:08:43 +0300
+Source: pomni
+Binary: pomni
+Architecture: source all
+Version: 0.2.0~beta1
+Distribution: unstable
+Urgency: low
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Changed-By: Ed Bartosh <bartosh@gmail.com>
+Description: 
+ pomni      - Learning tool based on spaced repetition technique
+Changes: 
+ pomni (0.2.0~beta1) unstable; urgency=low
+ .
+   * Implemented input and review modes for 3sided card type (Max)
+   * Turned off hildon autocapitalization
+   * fixed bug #93 "Various tracebacks in empty database" (Vlad)
+   * fixed bug #94 "Traceback after the second enttry in the Input mode" (Vlad)
+Checksums-Sha1: 
+ de765559ee34d928f1375101b6b991364d1f2eaa 494 pomni_0.2.0~beta1.dsc
+ 79698ee77a22894cbb23889218658d4f48f1fbc4 2751383 pomni_0.2.0~beta1.tar.gz
+ df3ea77f4820c81f96321692bcd43dc2c40d332c 872168 pomni_0.2.0~beta1_all.deb
+Checksums-Sha256: 
+ cc904c39a35dd8b644685d7d5395e607d8d1a99d4e9372283b1a86a49d59a05a 494 pomni_0.2.0~beta1.dsc
+ fa1ff16531029d36b43c677b4254b3b5bc04c6c6364016f0f06e2c71ff5f628f 2751383 pomni_0.2.0~beta1.tar.gz
+ 64b8abca6ebebd97ae18b7754446f4eb9bda0a700e4d44a13a5c79a1a9d0745d 872168 pomni_0.2.0~beta1_all.deb
+Files: 
+ 5be45c84dcdf37a32c090f32a98e987a 494 user/education - pomni_0.2.0~beta1.dsc
+ 0e9c3496563ee3414547b69c66cb12b0 2751383 user/education - pomni_0.2.0~beta1.tar.gz
+ 15603e955a9375fbf00baf4d349e6304 872168 user/education - pomni_0.2.0~beta1_all.deb

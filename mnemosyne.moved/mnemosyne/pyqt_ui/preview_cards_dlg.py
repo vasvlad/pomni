@@ -1,0 +1,42 @@
+#
+# Widget to preview set of related cards <Peter.Bienstman@UGent.be>
+#
+
+import gettext
+_ = gettext.gettext
+
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from ui_preview_cards_dlg import Ui_PreviewCardsDlg
+
+
+class PreviewCardsDlg(QDialog, Ui_PreviewCardsDlg):
+
+    def __init__(self, cards, cat_name_string, parent=None):
+        QDialog.__init__(self, parent)
+        self.setupUi(self)
+        self.cards = cards
+        self.index = 0
+        self.question_label.setText(_("Question: ") + cat_name_string)
+        self.update_dialog()
+
+    def update_dialog(self):
+        if len(self.cards) == 1:
+            self.previous_button.setVisible(False)
+            self.next_button.setVisible(False)
+            self.fact_view_name.setVisible(False)            
+        card = self.cards[self.index]
+        self.question.setHtml(card.question())
+        self.answer.setHtml(card.answer())
+        self.fact_view_name.setText(card.fact_view.name + " (" + \
+                        str(self.index+1) + "/" + str(len(self.cards)) + ")")
+        self.previous_button.setEnabled(self.index != 0)
+        self.next_button.setEnabled(self.index != len(self.cards)-1)
+
+    def previous(self):
+        self.index -= 1
+        self.update_dialog()
+
+    def next(self):
+        self.index += 1
+        self.update_dialog()

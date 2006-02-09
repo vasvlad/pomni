@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+{% block title %}Download Section{% endblock %}
+{% block content %}
+<h2>Downloads</h2>
+
+<ul>
+<li><a href="/static/trainingwheels.zip">Download the Training Wheels Application</a></li>
+<li><a href="/downloads/sample.zip">Download the sample (this very site)</a></li>
+</ul>
+
+{% if user %}
+
+{% if is_admin %}
+Hello, admin<br/><br/>
+Please do not forget to hand out your email address ({{user.email}}) to as
+many of your users as possible. How else would they know how to contact you
+with ideas for this application?
+{% else %}
+Hello {{user.nickname}}, <br/><br/>
+Thank you for taking an interest in this application. We are always
+looking for feedback on how to make Training Wheels even easier to
+use for the beginning web programmers. If you would like to contribute
+and make this an even better app, please do not hesitate to contact us.
+{% endif %}
+
+
+<a href="{{logoutlink}}">Click here to log out again.</a>
+
+{% else %}
+For additional, super-secret and interesting information,
+<a href="{{loginlink}}">please log in.</a>
+{% endif %}
+
+{% endblock %}

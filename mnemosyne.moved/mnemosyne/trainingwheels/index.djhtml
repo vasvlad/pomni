@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+{% block content %}
+<h2>Welcome to the Training Wheels home page!</h2>
+
+<p>
+Training Wheels is a simple system, based on the Google App Engine,
+to allow users to build and host great looking homepages in just a few
+easy steps. This very site was built using Training Wheels (yes, I
+eat my own dogfood) and will show you how it's done. You can download
+this example site in the <a href="downloads.djhtml">downloads section</a>.
+</p>
+
+<p>
+At the top of the page, you will see links to different &quot;stages&quot;.
+These show you the development of this website, from a simple site template
+we got from the Internet to the final result you are seeing here. Have fun!
+</p>
+{% endblock %}
+

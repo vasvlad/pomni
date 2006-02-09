@@ -1,0 +1,254 @@
+2009-06-04 22:47:36 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 22:47:36 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:02:44 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:02:44 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:03:43 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:03:43 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:04:05 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:04:05 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:07:38 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:07:38 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:09:50 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:09:50 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:09:50 : Loaded database 0 0 0
+2009-06-04 23:11:15 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:11:15 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:11:45 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:11:45 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:12:27 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:12:27 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:13:32 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:13:32 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:14:14 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:14:14 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:14:42 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:14:42 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:17:05 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:17:05 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:17:10 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:17:10 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:17:16 : Loaded database 0 0 0
+2009-06-04 23:18:21 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:18:21 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:18:31 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:18:31 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:19:15 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:19:15 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:20:55 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:20:55 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:23:32 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:23:32 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:24:22 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:24:22 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:32:52 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:32:52 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:33:47 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:33:47 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:35:04 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:35:04 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:36:09 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:36:09 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:38:12 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:38:12 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:41:42 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:41:42 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:43:36 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:43:36 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:44:43 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:44:43 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:45:14 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:45:14 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:45:32 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:45:32 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:46:13 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:46:13 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:46:32 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:46:32 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:46:51 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:46:51 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:47:48 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:47:48 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:47:49 : Loaded database 0 0 0
+2009-06-04 23:49:22 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:49:22 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:49:25 : Loaded database 0 0 0
+2009-06-04 23:50:26 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:50:26 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:50:27 : Loaded database 0 0 0
+2009-06-04 23:57:02 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:57:02 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:57:57 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-04 23:57:57 : Scheduler : SM2 Mnemosyne
+2009-06-04 23:58:00 : New database
+2009-06-05 21:02:50 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:02:50 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:02:57 : Loaded database 0 0 0
+2009-06-05 21:05:37 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:05:37 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:05:40 : Loaded database 0 0 0
+2009-06-05 21:06:33 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:06:33 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:06:36 : Loaded database 0 0 0
+2009-06-05 21:29:48 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:29:48 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:29:50 : Loaded database 0 0 0
+2009-06-05 21:30:03 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:30:03 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:30:04 : Loaded database 0 0 0
+2009-06-05 21:37:57 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:37:57 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:38:00 : Loaded database 0 0 0
+2009-06-05 21:38:44 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:38:44 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:38:47 : Loaded database 0 0 0
+2009-06-05 21:39:07 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:39:07 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:39:08 : Loaded database 0 0 0
+2009-06-05 21:39:33 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:39:33 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:39:35 : Loaded database 0 0 0
+2009-06-05 21:40:33 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:40:33 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:40:35 : Loaded database 0 0 0
+2009-06-05 21:40:47 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:40:47 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:40:49 : Loaded database 0 0 0
+2009-06-05 21:42:31 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-05 21:42:31 : Scheduler : SM2 Mnemosyne
+2009-06-05 21:42:33 : Loaded database 0 0 0
+2009-06-06 12:36:33 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-06 12:36:33 : Scheduler : SM2 Mnemosyne
+2009-06-06 12:36:46 : Loaded database 0 0 0
+2009-06-07 01:02:54 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:02:55 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:03:16 : Loaded database 0 0 0
+2009-06-07 01:06:01 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:06:01 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:06:03 : Loaded database 0 0 0
+2009-06-07 01:06:43 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:06:43 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:06:45 : Loaded database 0 0 0
+2009-06-07 01:07:10 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:07:10 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:07:11 : Loaded database 0 0 0
+2009-06-07 01:09:27 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:09:27 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:09:30 : Loaded database 0 0 0
+2009-06-07 01:22:05 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:22:05 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:22:05 : Loaded database 0 0 0
+2009-06-07 01:24:00 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:24:00 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:24:00 : Loaded database 0 0 0
+2009-06-07 01:26:31 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:26:31 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:27:39 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:27:39 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:27:39 : Loaded database 0 0 0
+2009-06-07 01:28:40 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:28:40 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:28:40 : Loaded database 0 0 0
+2009-06-07 01:29:25 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:29:25 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:29:25 : Loaded database 0 0 0
+2009-06-07 01:32:03 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:32:03 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:32:03 : Loaded database 0 0 0
+2009-06-07 01:32:16 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:32:16 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:32:16 : Loaded database 0 0 0
+2009-06-07 01:32:29 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:32:29 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:32:29 : Loaded database 0 0 0
+2009-06-07 01:32:29 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:32:29 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:32:29 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:32:29 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:39:02 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:39:02 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:39:02 : Loaded database 0 0 0
+2009-06-07 01:39:04 : Program stopped
+2009-06-07 01:56:44 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 01:56:44 : Scheduler : SM2 Mnemosyne
+2009-06-07 01:56:44 : Loaded database 0 0 0
+2009-06-07 01:56:46 : Program stopped
+2009-06-07 02:13:14 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:13:14 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:13:14 : Loaded database 0 0 0
+2009-06-07 02:14:00 : Program stopped
+2009-06-07 02:16:48 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:16:48 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:16:48 : Loaded database 0 0 0
+2009-06-07 02:17:41 : Program stopped
+2009-06-07 02:42:58 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:42:58 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:42:58 : Loaded database 0 0 0
+2009-06-07 02:47:25 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:47:25 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:47:27 : Loaded database 0 0 0
+2009-06-07 02:48:29 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:48:29 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:48:31 : Loaded database 0 0 0
+2009-06-07 02:49:37 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:49:37 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:49:39 : Loaded database 0 0 0
+2009-06-07 02:50:36 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:50:36 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:50:38 : Loaded database 0 0 0
+2009-06-07 02:52:06 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:52:06 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:52:08 : Loaded database 0 0 0
+2009-06-07 02:53:12 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:53:12 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:53:14 : Loaded database 0 0 0
+2009-06-07 02:54:29 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:54:29 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:54:32 : Loaded database 0 0 0
+2009-06-07 02:57:03 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 02:57:03 : Scheduler : SM2 Mnemosyne
+2009-06-07 02:57:07 : Loaded database 0 0 0
+2009-06-07 02:57:15 : Program stopped
+2009-06-07 03:06:56 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:06:56 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:06:56 : Loaded database 0 0 0
+2009-06-07 03:07:14 : Program stopped
+2009-06-07 03:09:46 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:09:46 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:09:46 : Loaded database 0 0 0
+2009-06-07 03:10:25 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:10:25 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:10:28 : Loaded database 0 0 0
+2009-06-07 03:10:47 : Program stopped
+2009-06-07 03:18:31 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:18:31 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:18:31 : Loaded database 0 0 0
+2009-06-07 03:23:30 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:23:30 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:23:33 : Loaded database 0 0 0
+2009-06-07 03:25:39 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:25:39 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:25:40 : Loaded database 0 0 0
+2009-06-07 03:26:49 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:26:49 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:26:51 : Loaded database 0 0 0
+2009-06-07 03:27:11 : New item a3e7f853-357f-43ec-b0e3-40811581b00c.1.1 0 0
+2009-06-07 03:27:48 : Program stopped
+2009-06-07 03:30:16 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:30:16 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:30:16 : Loaded database 0 1 1
+2009-06-07 03:30:25 : New item 0193009b-70d0-40d8-82bf-27fd603c730e.1.1 0 0
+2009-06-07 03:30:58 : Program stopped
+2009-06-07 03:31:42 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:31:42 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:31:42 : Loaded database 0 2 2
+2009-06-07 03:31:57 : New item 6548d6e9-a3cf-43d0-887c-b36c3826e19e.1.1 0 0
+2009-06-07 03:32:52 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 03:32:52 : Scheduler : SM2 Mnemosyne
+2009-06-07 03:32:54 : Loaded database 0 3 3
+2009-06-07 03:33:03 : New item 53250574-803d-4d56-9cb1-881805b9ef4f.1.1 0 0
+2009-06-07 03:33:09 : New item 82d73274-d25c-4c1c-abd9-3782d74fff24.1.1 0 0
+2009-06-07 03:33:26 : Program stopped
+2009-06-07 12:46:57 : Program started : Mnemosyne 1.99 posix linux2
+2009-06-07 12:46:57 : Scheduler : SM2 Mnemosyne
+2009-06-07 12:46:58 : Loaded database 0 5 5
+2009-06-07 12:51:26 : Program stopped

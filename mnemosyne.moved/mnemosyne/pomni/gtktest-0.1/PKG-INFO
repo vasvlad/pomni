@@ -1,0 +1,22 @@
+Metadata-Version: 1.0
+Name: gtktest
+Version: 0.1
+Summary: library of helpers for unit-testing GTK applications
+Home-page: http://gintas.pov.lt/gtktest
+Author: Gintautas Miliauskas
+Author-email: gintas@pov.lt
+License: MIT
+Description: 
+        gtktest is a collection of helpers that wrap pyGTK to make it
+        easy to test.  It allows testing of modal dialogs and recursive
+        mainloop invocations while preventing the windows from being shown
+        during test runs.  Arbitrary classes and methods can be overriden
+        or call loggers can be attached to them.
+        
+Platform: POSIX
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Testing

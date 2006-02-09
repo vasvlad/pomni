@@ -1,0 +1,43 @@
+{% extends "_base.html" %}
+{% block content %}
+<h2>Making it your own</h2>
+
+<p>
+Now that we have everything set up, we are going to make the page our own.
+In order to do so, we are going to stub out parts of the text that we
+would like to change from the template. Training Wheels uses a template
+language called 
+<a href="http://www.djangoproject.com/documentation/0.96/templates/"> 
+Django Templates</a>
+</p>
+
+<p>
+First, let's rename the original file from <code>index.html</code> to
+<code>_template</code>. Training Wheels considers everything that starts
+with an underscore <i>hidden</i> to the end user and will not display it.
+Now, we open the file in an editor and use Django's 
+<a href="http://www.djangoproject.com/documentation/0.96/templates/#template-inheritance">
+Template Inheritance</a> to mark a couple of sections that we would like to
+customize:
+<ul>
+<li><code>title</code>: the title of our page (for the browser window)</li>
+<li><code>head</code>: a general header to be displayed (TRAINING WHEELS -- Google App Engine for the regular Joe)</li>
+<li><code>navigation</code>: navigation links for the site</li>
+<li><code>content</code>: the text we would like to display for a page (this will probably be the only thing that will really change from page to page)</li>
+<li><code>copyright</code>: the little copyright notice at the bottom of the screen</li>
+</ul>
+</p>
+
+<p>
+Note that we did not put our desired changes into the template itself, we just marked the sections we would like to replace. This enables us to easily switch out the template
+with something else if we choose to do so later on.
+</p>
+<p>
+Next, we will set standard values for all our newly created blocks by building a sub-template. We open a new file and name it <code>_base.html</code> (note that this file
+is also hidden). Here, we set the values for all our blocks to reasonable defaults. We then open a third file -- our new page that should be rendered. In order to let
+the application know that this contains dynamic content, we save it with a different ending <code>index.djhtml</code> (for Django-Html). As you will see from looking at
+the source, our index file is very small blank: we simply tell it to extend our base template and replace the content-section with a different html snippet.
+We can now create an arbitrary amount of Django-HTML files that are all based on the same template and look all the same (without having to do a lot of ugly copy and paste).
+</p>
+{% endblock %}
+
