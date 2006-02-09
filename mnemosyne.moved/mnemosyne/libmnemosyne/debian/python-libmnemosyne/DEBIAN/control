@@ -2,7 +2,7 @@ Package: python-libmnemosyne
 Version: 2.0.0-9
 Architecture: all
 Maintainer: Ed Bartosh <bartosh@gmail.com>
-Installed-Size: 836
+Installed-Size: 812
 Depends: python2.5
 Section: python
 Description: Mnemosyne core library

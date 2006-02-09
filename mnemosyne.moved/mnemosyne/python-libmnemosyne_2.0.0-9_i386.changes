@@ -15,14 +15,14 @@ Changes:
  .
    * updated from upstream
 Checksums-Sha1: 
- 46a096773ab033037e1a5c7ec20fc99a5dca5bb5 542 python-libmnemosyne_2.0.0-9.dsc
- 679d51acd21af502f1a94808113e3c37aff812fe 254244 python-libmnemosyne_2.0.0-9.tar.gz
- 27d3eaa3c1867872d7a2c7821dbd53e607821498 122254 python-libmnemosyne_2.0.0-9_all.deb
+ cd6e667b2a802d2eea12d6a4462b432baa7c8a86 542 python-libmnemosyne_2.0.0-9.dsc
+ 267597cd6830755a0b3bb0fa71ff23faf27847de 252556 python-libmnemosyne_2.0.0-9.tar.gz
+ 6052adc77355177ab3bf1a8cb27936ea10983d10 117966 python-libmnemosyne_2.0.0-9_all.deb
 Checksums-Sha256: 
- bf583ddc5214489274ecf0aa714ab80c551423654e7007e9d2a5c7a5a64832cd 542 python-libmnemosyne_2.0.0-9.dsc
- c30e3b064d1001b12ee44b8e011d3f88be672b5fd55dd8948f8d09cc5bd556d4 254244 python-libmnemosyne_2.0.0-9.tar.gz
- 124237c0e96873ca10f02f56cc8562a327429de4ea6363b566d80a618f742ea1 122254 python-libmnemosyne_2.0.0-9_all.deb
+ 06b197f5456dfdc8c65f378bc8265dff39577f86af50daf5bf5e8fdc67a60666 542 python-libmnemosyne_2.0.0-9.dsc
+ bf8096a2263fc4a09aa21d183b25fc7b4469d6ad4ec1319cfe53030419aa8f6d 252556 python-libmnemosyne_2.0.0-9.tar.gz
+ 18fc588e60736fd9fc3f53525afd20a9f2f89c2425f76a065e41e68edd86ca4f 117966 python-libmnemosyne_2.0.0-9_all.deb
 Files: 
- 5e430f58ad8d652418b474021500f74c 542 python - python-libmnemosyne_2.0.0-9.dsc
- 6e9ec0259441dc99b4399fb4f4628e7e 254244 python - python-libmnemosyne_2.0.0-9.tar.gz
- a1dedfda8bcdef5c2570ad05f3359217 122254 python - python-libmnemosyne_2.0.0-9_all.deb
+ f5edab8bcced7eac12072dec0c220215 542 python - python-libmnemosyne_2.0.0-9.dsc
+ ee589f043e53db8a33b074284c66b96c 252556 python - python-libmnemosyne_2.0.0-9.tar.gz
+ 17b6382d4f1afdfb7786ad70d0fa2b55 117966 python - python-libmnemosyne_2.0.0-9_all.deb

@@ -7,8 +7,8 @@ Maintainer: Ed Bartosh <bartosh@gmail.com>
 Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 5), python2.5, python-setuptools
 Checksums-Sha1: 
- d3be26db6d171371be58b3ae0e84080490051424 3163072 pomni_0.2.0~beta2.tar.gz
+ f85ae710db8c18a5342576aa342e6aac8c79b552 3016167 pomni_0.2.0~beta2.tar.gz
 Checksums-Sha256: 
- 5365d6bee94265bbad56996c32fe3f37c151abdd93d2c06cb27c4469a892cea7 3163072 pomni_0.2.0~beta2.tar.gz
+ 2f35e57256eec7a4af7d86c6dad1771fc39f508031a7d4829253bbe0520a1f73 3016167 pomni_0.2.0~beta2.tar.gz
 Files: 
- 7ad84e486860632c3060d29c2b9b9b8a 3163072 pomni_0.2.0~beta2.tar.gz
+ 4f1b39bbb6fcab6409f139c226c8786e 3016167 pomni_0.2.0~beta2.tar.gz

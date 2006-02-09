@@ -27,29 +27,40 @@ Hildon UI: Input mode classes.
 import gettext
 import gtk
 import gtk.glade
+import os
 
+
+from mnemosyne.libmnemosyne.component_manager import database, config, \
+        ui_controller_main, card_types
 from pomni.hildon_ui import HildonBaseController
 _ = gettext.gettext
 
 
-class EternalControllerInput(HildonBaseController):
-    """ Eternal Input mode controller """
+class HildonUiControllerInput(HildonBaseController):
+    """ Hildon Input controller """
 
-    def __init__(self, component_manager):
+    def __init__(self, w_tree, signals):
         """ Initialization items of input window. """
 
-        HildonBaseController.__init__(self, component_manager)
+        HildonBaseController.__init__(self, w_tree)
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
+
+class EternalControllerInput(HildonUiControllerInput):
+    """ Eternal Input mode controller """
+
+    def __init__(self, w_tree):
+        """ Initialization items of input window. """
+
+        signals = ["add_card", "add_card2", "input_to_main_menu"]
+        HildonUiControllerInput.__init__(self, w_tree, signals)
+
         self.fields_container = None
         self.card_type = None
         self.fact = None
         self.update = None
         self.edit_boxes = {}
-
-    def activate(self):
-
-        signals = ["add_card", "add_card2", "input_to_main_menu"]
-        self.w_tree.signal_autoconnect(\
-                dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         
         self.categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
@@ -118,8 +129,8 @@ class EternalControllerInput(HildonBaseController):
 
         return fields_container
 
-    def show(self, fact = None):
-        """Show input window."""
+    def activate(self, fact = None):
+        """ Start input window. """
 
         self.fact = fact
         self.update = fact is not None
@@ -156,7 +167,7 @@ class EternalControllerInput(HildonBaseController):
             self.categories.get_child().set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
-        """Add card to database."""
+        """ Add card to database. """
 
         try:
             fact_data = self.get_data()
@@ -185,7 +196,7 @@ class EternalControllerInput(HildonBaseController):
             self.switcher.set_current_page(self.review)
 
     def add_card2_cb(self, widget, event):
-        """Hook for add_card for eventboxes."""
+        """ Hook for add_card for eventboxes. """
 
         self.add_card_cb (widget)
 
@@ -235,26 +246,26 @@ class EternalControllerInput(HildonBaseController):
 
 
 
-class RainbowControllerInput(HildonBaseController):
+class RainbowControllerInput(HildonUiControllerInput):
     """ Rainbow Input mode controller """
 
-    def __init__(self, component_manager):
+    def __init__(self, w_tree):
         """ Initialization items of input window. """
 
-        HildonBaseController.__init__(self, component_manager)
-
-    def activate(self):
-        signals = ["add_card", "change_card_type", "input_to_main_menu"]
-        self.w_tree.signal_autoconnect(\
-           dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
-
+        signals = ["add_card", "change_card_type", "input_to_main_menu", \
+            "enable_add_picture_button", "disable_add_picture_button", \
+            "add_picture", "select_item", "close_image_selection_dialog"]
+        HildonUiControllerInput.__init__(self, w_tree, signals)
+        self.update = None
+        self.input_toolbar_add_picture_button.set_sensitive(False)
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
+        self.images_liststore = gtk.ListStore(str, gtk.gdk.Pixbuf)
+        self.iconview_widget.set_model(self.images_liststore)
+        self.iconview_widget.set_pixbuf_column(1)
         self.init_listboxes()
         self.layout()
-
-    def show(self):
 
         # Turn off hildon autocapitalization
         try:
@@ -264,25 +275,33 @@ class RainbowControllerInput(HildonBaseController):
         except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
             pass # so, skip silently
 
-
     def layout (self):
         """ Hides or shows neccessary widgets. It depends on card_type. """
 
         if self.card_type:        
-            self.pronun_box.set_property('visible', self.card_type.id == '3')
+            self.answer_box.set_property('visible', True)
+            self.pronun_box.set_property('visible', False)
+            if self.card_type.name == _("Foreign word with pronunciation"):
+                self.pronun_box.set_property('visible', True)
+            elif self.card_type.name == _("Cloze deletion"):
+                self.answer_box.set_property('visible', False)
 
     def set_card_type(self):
         """ Set card type when user select it in cardtypes listbox. """
 
         cardtypes = dict([(card_type.id, card_type) \
             for card_type in card_types()])
-        selected_id = (int(self.cardtypes.get_active()) + 1).__str__()
-        self.card_type = cardtypes.get(selected_id)
+        cardname = self.cardtypes.get_active_text()
+        for cardtype in cardtypes.values():
+            if cardtype.name == cardname:
+                self.card_type = cardtype
 
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from listbox. """
 
         self.set_card_type()
+        self.clear_widgets()
+        self.input_toolbar_add_picture_button.set_sensitive(False)
         self.layout()
 
     def update_categories(self):
@@ -323,7 +342,16 @@ class RainbowControllerInput(HildonBaseController):
     def activate(self, fact = None):
         """ Start input window. """
         
+        self.fact = fact
+        self.update = fact is not None
+
         self.update_categories()
+        self.clear_widgets()
+        if fact:
+            self.card_type = fact.card_type
+            self.layout()
+            self.set_widgets_data(fact)
+        
         self.switcher.set_current_page(self.input)
 
     def add_card_cb(self, widget):
@@ -334,12 +362,19 @@ class RainbowControllerInput(HildonBaseController):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        # Create new card
-        card = ui_controller_main()
-        card.create_new_cards(fact_data, self.card_type, 0, [\
-            self.categories.get_child().get_text()], True)
-        database().save(config()['path'])
+        main = ui_controller_main()
+        if self.update: #Update card
+            main.update_related_cards(self.fact, fact_data, self.card_type,\
+                [self.categories.get_child().get_text()], None)
+        else: #Create new card
+            main.create_new_cards(fact_data, self.card_type, 0, [\
+                self.categories.get_child().get_text()], True)
+                
+        # Card saved in main.create_new_cards
+        #database().save(config()['path'])
         self.clear_widgets()
+        if self.update:
+            self.switcher.set_current_page(self.review)
 
     def get_widgets_data(self, check_for_required=True):
         """ Get data from widgets. """
@@ -348,9 +383,11 @@ class RainbowControllerInput(HildonBaseController):
         question_widget = self.question_box_text
         answer_widget = self.answer_box_text
         pronunciation_widget = self.pronun_box_text
-        if self.card_type.id == '3':
+        if self.card_type.name == _("Foreign word with pronunciation"):
             widgets = [('f', question_widget), ('t', answer_widget), \
                 ('p', pronunciation_widget)]
+        elif self.card_type.name ==  _("Cloze deletion"):
+            widgets = [('text', question_widget)]
         else:
             widgets = [('q', question_widget), ('a', answer_widget)]
         for fact_key, widget in widgets:
@@ -362,6 +399,22 @@ class RainbowControllerInput(HildonBaseController):
                 if not fact[required]:
                     raise ValueError
         return fact
+
+    def set_widgets_data(self, fact):
+        """ Set widgets data from fact. """
+
+        question_widget = self.question_box_text
+        answer_widget = self.answer_box_text
+        pronunciation_widget = self.pronun_box_text
+        if self.card_type.name == _("Foreign word with pronunciation"):
+            widgets = [('f', question_widget), ('t', answer_widget), \
+                ('p', pronunciation_widget)]
+        elif self.card_type.name ==  _("Cloze deletion"):
+            widgets = [('text', question_widget)]
+        else:
+            widgets = [('q', question_widget), ('a', answer_widget)]
+        for fact_key, widget in widgets:
+            widget.get_buffer().set_text(fact[fact_key])
 
     def clear_widgets(self):
         """ Clear data in widgets. """
@@ -375,6 +428,65 @@ class RainbowControllerInput(HildonBaseController):
 
         self.switcher.set_current_page(self.main_menu)
 
+    def add_picture_cb(self, widget):
+        """ Show image selection dialog. """
+
+        def resize_image(pixbuf):
+            x_ratio = pixbuf.get_width() / 64.0
+            y_ratio = pixbuf.get_height() / 64.0
+            new_width = int(pixbuf.get_width() / x_ratio)
+            new_height = int(pixbuf.get_height() / y_ratio)
+            return pixbuf.scale_simple(\
+                new_width, new_height, gtk.gdk.INTERP_BILINEAR)
+
+        self.images_liststore.clear()
+        self.imagedir = config()['imagedir']
+        if not os.path.exists(self.imagedir):
+            self.imagedir = "./images" # on Desktop
+            if not os.path.exists(self.imagedir):
+                ui_controller_main().widget.information_box(\
+                    _("'Images' directory does not exist!"), "OK")
+                return                
+        if os.listdir(self.imagedir):
+            for file in os.listdir(self.imagedir):
+                if os.path.isfile(os.path.join(self.imagedir, file)):
+                    pixbuf = gtk.gdk.pixbuf_new_from_file(\
+                        os.path.join(self.imagedir, file))
+                    self.images_liststore.append([file, resize_image(pixbuf)])
+            self.image_selection_dialog.show()
+        else:
+            ui_controller_main().widget.information_box(\
+                _("There are no files in 'Images' directory!"), "OK")
+            
+    def select_item_cb(self, widget):
+        """ 
+        Set html-text with image path when user
+        select image from image selection dialog. 
+        """
+
+        self.image_selection_dialog.hide()
+        item_index = self.iconview_widget.get_selected_items()[0]
+        item_text = self.images_liststore.get_value(\
+            self.images_liststore.get_iter(item_index),0)
+        self.question_box_text.get_buffer().set_text(\
+            "<img src='%s'>" % os.path.join(self.imagedir, item_text))
+       
+    def close_image_selection_dialog_cb(self, widget):
+        
+        self.image_selection_dialog.hide()
+
+    def enable_add_picture_button_cb(self, widget, event):
+        """ Enable Add picture button when activate
+            Question widget. Is depends on card-type. """
+
+        if self.card_type.name == _("Front-to-back and back-to-front") or \
+            self.card_type.name == _("Front-to-back only"):
+            self.input_toolbar_add_picture_button.set_sensitive(True)
+
+    def disable_add_picture_button_cb(self, widget, event):
+        """ Disable Add picture button Question widget. """
+
+        self.input_toolbar_add_picture_button.set_sensitive(False)
 
 # Local Variables:
 # mode: python

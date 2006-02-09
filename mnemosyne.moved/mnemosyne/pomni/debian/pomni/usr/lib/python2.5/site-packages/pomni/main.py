@@ -37,7 +37,9 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../")
 
 from optparse import OptionParser
-from mnemosyne.libmnemosyne import Mnemosyne
+
+from mnemosyne.libmnemosyne.component_manager import database, config
+
 from pomni.factory import ui_factory
 
 def parse_commandline(argv):
@@ -47,10 +49,46 @@ def parse_commandline(argv):
 
     parser.add_option("-u", "--ui", help="ui type", default="hildon")
     parser.add_option("-d", "--datadir", help="data directory")
-    parser.add_option("-m", "--mode", default="review", help="working mode. "\
+    parser.add_option("-m", "--mode", help="working mode. "\
                       "'main', 'input', 'review' or 'configure'")
 
     return parser.parse_args(argv)
+
+def initialise(basedir):
+    """Custom initialise.
+    Faster replacement for libmnemosyne.initialise
+    """
+    from mnemosyne.libmnemosyne.component_manager import component_manager
+    from mnemosyne.libmnemosyne import initialise_new_empty_database
+
+    # Configuration.
+    from mnemosyne.libmnemosyne.configuration import Configuration
+    component_manager.register("config", Configuration())
+    
+    # Logger.
+    from mnemosyne.libmnemosyne.loggers.txt_logger import TxtLogger
+    component_manager.register("log", TxtLogger())   
+    
+    # Database.
+    from mnemosyne.libmnemosyne.databases.SQLite import SQLite
+    component_manager.register("database", SQLite())
+
+    # Scheduler.
+    from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne import SM2Mnemosyne
+    component_manager.register("scheduler", SM2Mnemosyne())
+    
+    # Card types.
+    from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
+    component_manager.register("card_type", FrontToBack())
+    from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
+    component_manager.register("card_type", BothWays())
+    from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
+    component_manager.register("card_type", ThreeSided())
+    from mnemosyne.libmnemosyne.card_types.cloze import Cloze
+    component_manager.register("card_type", Cloze())
+
+    config().initialise(basedir)
+    initialise_new_empty_database()
 
 def main(argv):
     """ Main """
@@ -67,19 +105,21 @@ def main(argv):
     else:
         basedir = os.path.join(os.environ['HOME'], ".pomni")
 
-    #cdatabase = database()
-    #db_name = os.path.join(basedir, config()['path'])
+    initialise(basedir)
 
-    #if os.path.exists(db_name):
-    #    cdatabase.load(db_name)
+    cdatabase = database()
+    db_name = os.path.join(basedir, config()['path'])
 
-    #if not opts.mode:
-    #    if config()['startup_with_review']: 
-    #        opts.mode = 'review'
-    #    else:
-    #        opts.mode = 'main'
+    if os.path.exists(db_name):
+        cdatabase.load(db_name)
 
-    return ui_factory(basedir, opts.ui).start(opts.mode)
+    if not opts.mode:
+        if config()['startup_with_review']: 
+            opts.mode = 'review'
+        else:
+            opts.mode = 'main'
+
+    return ui_factory(opts.ui).start(opts.mode)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

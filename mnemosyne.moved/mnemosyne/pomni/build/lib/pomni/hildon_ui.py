@@ -29,16 +29,16 @@ import gettext
 import gtk
 import gtk.glade
 import gtkhtml2
+import urllib
+import urlparse
 
-from mnemosyne.libmnemosyne.ui_component import UiComponent
-from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
-
-#from mnemosyne.libmnemosyne.component_manager import component_manager
-#from mnemosyne.libmnemosyne.component_manager import config, \
-#    ui_controller_main, database
+from mnemosyne.libmnemosyne.component_manager import component_manager
+from mnemosyne.libmnemosyne.component_manager import config, \
+    ui_controller_main, database
 
 _ = gettext.gettext
 
+htmlOpener = urllib.FancyURLopener()
 
 class HildonUiControllerException(Exception):
     """ Exception hook """
@@ -55,22 +55,18 @@ class HildonUiControllerException(Exception):
         Exception.__init__(self)
 
 
-class HildonBaseController(UiComponent):
+class HildonBaseController():
     """Base controllers functionality."""
 
-    main_menu, review, input, configuration = range(4)
+    main_menu, review, input, config = range(4)
 
-    def __init__(self, component_manager):
+    def __init__(self, w_tree):
         """Attributes initialization."""
 
-        print 'HildonBaseController.__init__'
-        UiComponent.__init__(self, component_manager)
+        self.w_tree = w_tree
 
     def __getattr__(self, name):
         """Lazy get widget as an attribute."""
-
-        if 'w_tree' not in self.__dict__:
-            self.w_tree = self.main_widget().w_tree
 
         widget = self.w_tree.get_widget(name)
         if widget:
@@ -83,46 +79,40 @@ class HildonBaseController(UiComponent):
         self.switcher.set_current_page(self.main_menu)
 
 
-class HildonUI(MainWidget):
+class HildonUI():
     """ Hildon UI """
 
-    def __init__(self, component_manager):
-        MainWidget.__init__(self, component_manager)
-        #self.w_tree = None
+    def __init__(self):
 
-    def activate(self):
-        print 'HildonUI.activate'
         def gen_callback(mode):
             """Generate callback for mode."""
 
             def callback(widget, event = None):
                 """Callback function."""
-                self.controllers[mode].show()
+                self.controllers[mode].activate()
             return callback
 
         try:
-            theme = self.config()["theme_path"].split("/")[-1]
+            theme = config()["theme_path"].split("/")[-1]
         except KeyError:
-            locals()["theme"] = "eternal"
+            globals()[theme] = "eternal"
 
         # Load the glade file for current theme
-        #ui_controller_main().widget = self
-        theme_path = self.config()["theme_path"]
+        ui_controller_main().widget = self
+        theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
         controllers = {}
-        for mode in ("input", "configure", "main", "review"):
+        for mode in ("review", "input", "configure", "main"):
             cname = theme.capitalize() + 'Controller' + mode.capitalize()
             module = __import__("pomni.hildon_%s" % mode, 
                     globals(), locals(), [cname])
-            print cname
-            controllers[mode] = getattr(module, cname)(self.component_manager)
-            #controllers[mode].activate()
+            controllers[mode] = getattr(module, cname)(self.w_tree)
 
-        #controllers["review"] = self.component_manager.review_widget()
-        #print 'review:', controllers["review"]
+        component_manager.register("ui_controller_review", \
+            controllers["review"])
 
         # Set unvisible tabs of switcher
         self.w_tree.get_widget("switcher").set_property('show_tabs', False)
@@ -131,7 +121,7 @@ class HildonUI(MainWidget):
 
         self.question_flag = False
         # fullscreen mode
-        if self.config()['fullscreen']:
+        if config()['fullscreen']:
             self.window.fullscreen()
             self.fullscreen = True
         else:
@@ -139,7 +129,6 @@ class HildonUI(MainWidget):
 
         # Generate callbacks for modes
         self.controllers = controllers
-        print 'assigned controllers to', self
         signals = ["review", "input", "configure"]
         for signal in signals:
             setattr(self, signal + '_cb', gen_callback(signal))
@@ -150,13 +139,11 @@ class HildonUI(MainWidget):
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-        print 'HildonUI.activate finished', self
-
 
     def start(self, mode):
         """ Start UI  """
 
-        self.controllers[mode].show()
+        self.controllers[mode].activate()
         gtk.main()
 
 
@@ -200,8 +187,15 @@ class HildonUI(MainWidget):
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
 
+        def request_url(document, url, stream):
+            uri = urlparse.urljoin("", url)
+            f = htmlOpener.open(uri)
+            stream.write(f.read())
+            stream.close()
+
         view = gtkhtml2.View()
         document = gtkhtml2.Document()
+        document.connect('request_url', request_url)
         view.set_document(document)
         view.document = document
         view.show()

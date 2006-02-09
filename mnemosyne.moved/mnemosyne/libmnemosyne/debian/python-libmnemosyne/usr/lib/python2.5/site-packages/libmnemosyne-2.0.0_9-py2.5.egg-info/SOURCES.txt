@@ -4,7 +4,6 @@ card_type.py
 card_type_converter.py
 category.py
 component_manager.py
-config.py
 configuration.py
 database.py
 exceptions.py

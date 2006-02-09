@@ -443,6 +443,7 @@ style "config-checkboxes-label" {
 widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 widget "*.config_mode_label_theme" style "config-checkboxes"
+widget "*.config_mode_label_imagedir" style "config-checkboxes"
 
 style "config-button-theme" {
     GtkButton::focus-line-width = 0
@@ -456,6 +457,19 @@ style "config-button-theme" {
     }
 }
 widget "*.config_mode_button_theme" style "config-button-theme"
+
+style "imagedir-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "imagedir_button.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_button_imagedir" style "imagedir-button"
 #----------------------------- Config mode ------------------
 
 
@@ -471,6 +485,7 @@ style "dialog" {
     }
 }
 class "GtkDialog" style "dialog"
+#widget "image_selection_window" style "dialog"
 
 style "dialog-label" {
     font_name = "Nokia Sans Bold 16"
@@ -489,6 +504,8 @@ widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
 widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
 widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
 widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-label"
 
 style "question-dialog-button-yes" {
     engine "pixmap" {
@@ -518,6 +535,7 @@ style "question-dialog-button-yes" {
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
 widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
 widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.image_selection_dialog_button_select" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
     engine "pixmap" {
@@ -545,10 +563,19 @@ style "question-dialog-button-no" {
     }
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
+widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
 #----------------------------- Dialogs ------------------
 
 
 #----------------------------- General ------------------
+# style for scrolls in Image selection dialog
+style "image-selection-dialog-scrollbars" {
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+}
+widget_class "*.GtkVScrollbar" style "image-selection-dialog-scrollbars"
+
 # Style for Main window
 style "main-window" {
     engine "pixmap"{
@@ -612,6 +639,38 @@ style "delete-card-button" {
     }
 }
 widget "*.*delete_card_button" style "delete-card-button"
+
+# Style for "Add picture" button
+style "add-picture-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "add_picture_small.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "add_picture_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "add_picture_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "add_picture_big_insensitive.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.input_toolbar_add_picture_button" style "add-picture-button"
 
 # Style for "To Main Menu" button
 style "main-menu-button" {

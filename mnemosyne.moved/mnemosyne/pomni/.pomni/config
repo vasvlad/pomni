@@ -91,11 +91,11 @@ S'never'
 p41
 sS'latex_preamble'
 p42
-S'\\documentclass[12pt]{article}\n\\pagestyle{empty}\n\\begin{document}'
+S'\n\\documentclass[12pt]{article}\n\\pagestyle{empty}\n\x08egin{document}\n'
 p43
 sS'upload_server'
 p44
-S'mnemosyne-proj.dyndns.org:80'
+S'xxxxmnemosyne-proj.dyndns.org:80'
 p45
 sS'scheduler'
 p46
@@ -113,17 +113,17 @@ sS'sort_column'
 p52
 NsS'latex'
 p53
-S'latex -interaction=nonstopmode'
+S'latex'
 p54
 sS'font_size'
 p55
-F30
+F30.192307692307693
 sS'first_run'
 p56
 I01
 sS'user_id'
 p57
-S'602143ae-93c3-43d2-93bc-881319fefbe2'
+S'58579b63-6599-4b56-8544-6abaa04cc619'
 p58
 sS'database'
 p59
@@ -134,7 +134,7 @@ p61
 I5
 sS'theme_path'
 p62
-S'/usr/share/pomni/hildon-UI/eternal'
+S'./hildon-UI/eternal'
 p63
 sS'import_dir'
 p64

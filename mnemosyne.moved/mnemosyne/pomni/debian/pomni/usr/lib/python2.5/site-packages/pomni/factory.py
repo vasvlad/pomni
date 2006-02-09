@@ -24,32 +24,16 @@
 UI Factory. Creates UI objects
 """
 
+from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
-from mnemosyne.libmnemosyne import Mnemosyne
+def ui_factory(interface=None):
+    """ Create UI(View in terms of MVC) """
 
-from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
-
-class FakeControllerReview(ReviewWidget):
-    """ Hildon Review controller """
-
-    def activate(self):
-        pass
-
-class App(Mnemosyne):
-    def __init__(self, resource_limited=False):
-        Mnemosyne.__init__(self, resource_limited)
-        self.components.insert(0, ("mnemosyne.libmnemosyne.translator",
-             "GetTextTranslator"))
-
-    def initialise(self, basedir, filename=None):
-        Mnemosyne.initialise(self, basedir, filename=None)
-
-def ui_factory(basedir, interface=None):
-    """UI factory. Return main ui object."""
-
-    app = App()
+    from mnemosyne.libmnemosyne.ui_controllers_main.default_main_controller \
+                                               import DefaultMainController
+    component_manager.register("ui_controller_main", DefaultMainController())
 
     if interface == 'cmd':
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
@@ -60,17 +44,10 @@ def ui_factory(basedir, interface=None):
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-        # FIXME: get current theme here
-
-        app.components.append(("pomni.hildon_ui", "HildonUI"))
-        app.components.append(("pomni.factory",
-                               "FakeControllerReview"))
-        print 'before initialise'
-        app.initialise(basedir)
-
-        print '>>> main-widget=', app.main_widget(), app.main_widget().controllers
-
-        return app.main_widget()
+    
+        from pomni.hildon_ui import HildonUI
+        component_manager.register("renderer", HtmlHildon())
+        return HildonUI()
 
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)

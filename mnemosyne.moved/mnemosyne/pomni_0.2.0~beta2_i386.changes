@@ -1,5 +1,5 @@
 Format: 1.8
-Date: Tue, 02 Jun 2009 23:17:00 +0300
+Date: Thu, 04 Jun 2009 21:35:44 +0300
 Source: pomni
 Binary: pomni
 Architecture: source all
@@ -14,15 +14,16 @@ Changes:
  pomni (0.2.0~beta2) unstable; urgency=low
  .
    * implemented input and review modes for clozed deletion card type (Max)
+   * implemented input and review modes for 2sided card type (Max)
 Checksums-Sha1: 
- 83c43532edea13e26a38fb3a03e48ab90a081d02 494 pomni_0.2.0~beta2.dsc
- d3be26db6d171371be58b3ae0e84080490051424 3163072 pomni_0.2.0~beta2.tar.gz
- c97cd004d8309c719a0bfa148250f75430a1a330 1270128 pomni_0.2.0~beta2_all.deb
+ f90e0919fee7704f3d10c0687ed92a0b56a5b694 494 pomni_0.2.0~beta2.dsc
+ f85ae710db8c18a5342576aa342e6aac8c79b552 3016167 pomni_0.2.0~beta2.tar.gz
+ ab9138a27f4989c7c117cf43e822b98994ca1f85 1285108 pomni_0.2.0~beta2_all.deb
 Checksums-Sha256: 
- 1975058233c0c0527b1d05ab29e107ccadbb2e41f8bd7aa6c4ab1bd0fd61d694 494 pomni_0.2.0~beta2.dsc
- 5365d6bee94265bbad56996c32fe3f37c151abdd93d2c06cb27c4469a892cea7 3163072 pomni_0.2.0~beta2.tar.gz
- b9f4c3fb692ae7af8b699cdaa8f79236c2e90800987bcbc09383dd58b07c187e 1270128 pomni_0.2.0~beta2_all.deb
+ 7bd3bae76a07d0055feb5fa50a8cfc75bb80055cba8c9bb9b5debc4ce4c6c041 494 pomni_0.2.0~beta2.dsc
+ 2f35e57256eec7a4af7d86c6dad1771fc39f508031a7d4829253bbe0520a1f73 3016167 pomni_0.2.0~beta2.tar.gz
+ 104fba44de6e47d5892145cf13b7b714bfdb296d62696d55ac7075a92c832a6d 1285108 pomni_0.2.0~beta2_all.deb
 Files: 
- 88502c492aa1303ece15a4c68c324398 494 user/education - pomni_0.2.0~beta2.dsc
- 7ad84e486860632c3060d29c2b9b9b8a 3163072 user/education - pomni_0.2.0~beta2.tar.gz
- 411ba94d307f4149ed1296a1dcaf8a9e 1270128 user/education - pomni_0.2.0~beta2_all.deb
+ e9e94488a3be1344d175835ec10fdb35 494 user/education - pomni_0.2.0~beta2.dsc
+ 4f1b39bbb6fcab6409f139c226c8786e 3016167 user/education - pomni_0.2.0~beta2.tar.gz
+ db28ff97c6d0a2f56a4431bf6357e356 1285108 user/education - pomni_0.2.0~beta2_all.deb

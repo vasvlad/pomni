@@ -1,7 +1,0 @@
-include README
-include LICENSE
-include Makefile
-include MANIFEST.in
-recursive-include examples *.py
-recursive-include gtktest *.py *.glade
-include ep2005.sxi

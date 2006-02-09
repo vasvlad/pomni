@@ -1,8 +1,0 @@
-2009-05-31 21:30:59 : Program started : Mnemosyne 1.99 posix linux2
-2009-05-31 21:30:59 : Scheduler : SM2 Mnemosyne
-2009-05-31 21:31:53 : Program started : Mnemosyne 1.99 posix linux2
-2009-05-31 21:31:53 : Scheduler : SM2 Mnemosyne
-2009-05-31 21:34:31 : Program started : Mnemosyne 1.99 posix linux2
-2009-05-31 21:34:31 : Scheduler : SM2 Mnemosyne
-2009-05-31 21:35:41 : Program started : Mnemosyne 1.99 posix linux2
-2009-05-31 21:35:41 : Scheduler : SM2 Mnemosyne

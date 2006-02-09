@@ -7,8 +7,8 @@ Maintainer: Ed Bartosh <bartosh@gmail.com>
 Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 5), python, python-setuptools
 Checksums-Sha1: 
- 679d51acd21af502f1a94808113e3c37aff812fe 254244 python-libmnemosyne_2.0.0-9.tar.gz
+ 267597cd6830755a0b3bb0fa71ff23faf27847de 252556 python-libmnemosyne_2.0.0-9.tar.gz
 Checksums-Sha256: 
- c30e3b064d1001b12ee44b8e011d3f88be672b5fd55dd8948f8d09cc5bd556d4 254244 python-libmnemosyne_2.0.0-9.tar.gz
+ bf8096a2263fc4a09aa21d183b25fc7b4469d6ad4ec1319cfe53030419aa8f6d 252556 python-libmnemosyne_2.0.0-9.tar.gz
 Files: 
- 6e9ec0259441dc99b4399fb4f4628e7e 254244 python-libmnemosyne_2.0.0-9.tar.gz
+ ee589f043e53db8a33b074284c66b96c 252556 python-libmnemosyne_2.0.0-9.tar.gz
