@@ -1,0 +1,86 @@
+<ui version="4.0" >
+ <class>CardTwoSided</class>
+ <widget class="QWidget" name="CardTwoSided" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>297</width>
+    <height>283</height>
+   </rect>
+  </property>
+  <layout class="QHBoxLayout" >
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" >
+     <item>
+      <widget class="QLabel" name="question_label" >
+       <property name="maximumSize" >
+        <size>
+         <width>320</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Question:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="question" >
+       <property name="tabChangesFocus" >
+        <bool>true</bool>
+       </property>
+       <property name="undoRedoEnabled" >
+        <bool>true</bool>
+       </property>
+       <property name="readOnly" >
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="answer_label" >
+       <property name="text" >
+        <string>Answer:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextBrowser" name="answer" >
+       <property name="tabChangesFocus" >
+        <bool>true</bool>
+       </property>
+       <property name="undoRedoEnabled" >
+        <bool>true</bool>
+       </property>
+       <property name="readOnly" >
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="vice_versa" >
+       <property name="text" >
+        <string>Add &amp;vice versa too</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
