@@ -1,7 +1,7 @@
 Typical git operations for this project:
 
 1. Push master to github: git-push github master
-2. List of not picked svn commits from upstream: scrtipts/cherry-pick
+2. List of not picked svn commits from upstream: scripts/upstream-changes
 3. Create remote branch for project member's master: git remote add vlad/master git://github.com/vasvlad/pomni.git
 4. Pull from member's master to separate branch: git pull vlad/master master
 
