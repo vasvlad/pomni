@@ -1,0 +1,8 @@
+git-checkout upstream
+git-svn rebase
+git-log |grep '^    git-svn-id: ' |sort > /tmp/mnemosyne-upstream
+git-checkout master
+git-log |grep '^    git-svn-id: ' |sort > /tmp/mnemosyne-master
+diff -u /tmp/mnemosyne-upstream /tmp/mnemosyne-master |grep '^- ' |sed -e 's/.*\/mnemosyne-proj\/\([^ ]\+\).*/\1/'
+rm /tmp/mnemosyne-upstream /tmp/mnemosyne-master
+
