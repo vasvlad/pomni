@@ -1,0 +1,79 @@
+Руководство по стилю программирования для проекта Pomni
+-------------------------------------------------------
+
+1. Предисловие. Дзен Питона как руководство стиля программирования. 
+
+По возможности при программировании придерживаться Zen of Python. Если 
+чувствуете, что делаете что-то не так - перечитайте его, найдите пункт, 
+который нарушаете и исправьте код.
+
+Zen of Python - это конечно шутка, но, как говорится "в каждой шутке есть доля шутки".
+
+Его текст можно получить, введя в интерпретаторе 'import this', вот так:
+>>> import this
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+
+Перевод (не идеален, лучше читать оригинал):
+
+Красивое лучше уродливого.
+Явное лучше неявного.
+Простое лучше сложного.
+Сложное лучше усложнённого.
+Плоское лучше вложенного.
+Разрежённое лучше плотного.
+Удобочитаемость важна.
+Частные случаи не настолько существенны, чтобы нарушать правила.
+Однако практичность важнее чистоты.
+Ошибки никогда не должны замалчиваться.
+За исключением замалчивания, которое задано явно.
+В случае неоднозначности сопротивляйтесь искушению угадать.
+Должен существовать один - и предпочтительно только один - очевидный способ что-либо сделать.
+Хотя он может быть с первого взгляда не очевиден, если ты не голландец.
+Сейчас лучше, чем никогда.
+Однако, никогда чаще лучше, чем *прямо* сейчас.
+Если реализацию идеи сложно объяснить - это плохая идея.
+Если реализацию идеи просто объяснить - это может быть хорошая идея.
+Пространства имен - великолепная идея, давайте делать их побольше!
+
+
+2. Собственно руководство
+
+2.1 В случаях, не оговоренных в данном документе следуйте PEP 8 [1]
+Для проверки стиля используйте pylint[2] и pep8.py[3].
+
+2.2 В случае работы с уже существующим кодом нужно следовать его стилю, даже
+если он противоречит PEP 8.
+
+2.3 В Docstrings используйте английский язык и императив, например:
+    """ Add two integers. Return sum. """ - правильно
+    """ Adds two integers. Returns sum. """ - неправильно
+
+2.4 Не пишите свое имя в заголовке. Все авторы будут перечислены в файле AUTHORS.
+
+2.5 Используйте doctests, где возможно. 
+В большинстве случаев они даже лучше объясняют код, чем словесные описания.
+
+[1] Руководство стиля для кода Python: http://www.python.org/dev/peps/pep-0008/
+[2] Pylint: http://www.logilab.org/project/name/pylint
+[3] Скрипт для проверки стиля: http://svn.browsershots.org/trunk/devtools/pep8/pep8.py
+
