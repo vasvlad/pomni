@@ -3,7 +3,7 @@
 #
 
 
-class ComponentManager(object):
+class ComponentManager():
 
     """Manages the different components. Each component belongs to a type
     (database, scheduler, card_type, card_type_widget, ...).
@@ -20,7 +20,6 @@ class ComponentManager(object):
     Managed components:
 
        ======================   ===============================
-       "config"                 config instance
        "database"               database instance
        "scheduler"              scheduler instance
        "filter"                 filter instance
@@ -85,27 +84,24 @@ component_manager = ComponentManager()
 
 # Convenience functions, for easier access from the outside world.
 
-def config():
-    return component_manager.get_current("config")
-    
-def database():
+def get_database():
     return component_manager.get_current("database")
 
-def scheduler():
+def get_scheduler():
     return component_manager.get_current("scheduler")
 
-def ui_controller_main():
+def get_ui_controller_main():
     return component_manager.get_current("ui_controller_main")
 
-def ui_controller_review():
+def get_ui_controller_review():
     return component_manager.get_current("ui_controller_review")
 
-def card_types():
+def get_card_types():
     return component_manager.get_all("card_type")
 
-def card_type_by_id(id):
+def get_card_type_by_id(id):
     return component_manager.card_type_by_id[id]
 
-def filters():
+def get_filters():
     return component_manager.get_all("filter")
 

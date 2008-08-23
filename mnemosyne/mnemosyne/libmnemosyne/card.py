@@ -2,8 +2,8 @@
 # card.py <Peter.Bienstman@UGent.be>
 #
 
-from mnemosyne.libmnemosyne.component_manager import database
-from mnemosyne.libmnemosyne.component_manager import scheduler
+from mnemosyne.libmnemosyne.component_manager import get_database
+from mnemosyne.libmnemosyne.component_manager import get_scheduler
 
 
 class Card(object):
@@ -36,8 +36,9 @@ class Card(object):
 
         """
 
+        db = get_database()
         self.grade = 0
-        self.easiness = database().average_easiness()
+        self.easiness = db.average_easiness()
         self.acq_reps = 0
         self.ret_reps = 0
         self.lapses = 0
@@ -59,8 +60,8 @@ class Card(object):
 
         """
 
-        db = database()
-        sch = scheduler()
+        db = get_database()
+        sch = get_scheduler()
         self.grade = grade
         self.easiness = db.average_easiness()
         self.acq_reps = 1
@@ -81,9 +82,9 @@ class Card(object):
     interval = property(lambda self : self.next_rep - self.last_rep)
     
     days_since_last_rep = property(lambda self : \
-                            database().days_since_start - self.last_rep)
+                            get_database().days_since_start - self.last_rep)
                             
     days_until_next_rep = property(lambda self : \
-                            self.next_rep - database().days_since_start)
+                            self.next_rep - get_database().days_since_start)
 
 
