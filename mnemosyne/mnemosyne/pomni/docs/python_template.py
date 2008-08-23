@@ -3,7 +3,7 @@
 #
 # Pomni. Learning tool based on spaced repetition technique
 #
-# Copyright (C) 2008 Author Name <author_name@gmail.com>
+# Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License version 2 as published by the
@@ -26,6 +26,7 @@ Description of the module
 
 import types
 
+
 def add(int1, int2):
     """ Return sum of two integer numbers
     >>> add(1,2)
@@ -43,6 +44,7 @@ def add(int1, int2):
         raise TypeError("Only integer numbers are allowed!")
     return int1 + int2
 
+
 def _test():
     """ Run doctests
     """
@@ -58,4 +60,3 @@ if __name__ == "__main__":
 # indent-tabs-mode nil
 # tab-width 4
 # End:
-
