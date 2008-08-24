@@ -73,6 +73,12 @@ Namespaces are one honking great idea -- let's do more of those!
 2.5 Используйте doctests, где возможно. 
 В большинстве случаев они даже лучше объясняют код, чем словесные описания.
 
+2.6 Используйте двойные кавычки для строк. Если строка содержит двойные кавычки -
+экранируйте их:
+    "This is good string"
+    "This is good string \"with double quotes\""
+    'This is bad string'
+	
 [1] Руководство стиля для кода Python: http://www.python.org/dev/peps/pep-0008/
 [2] Pylint: http://www.logilab.org/project/name/pylint
 [3] Скрипт для проверки стиля: http://svn.browsershots.org/trunk/devtools/pep8/pep8.py
