@@ -24,8 +24,6 @@
 MVC Model
 """
 
-import types
-
 from pomni.patterns import Subject
 
 
@@ -57,7 +55,7 @@ class Model(Subject):
     def is_valid_mark(self, mark):
         """ Check if mark is valid """
 
-        if type(mark) != types.IntType or not 0 <= mark <= 5:
+        if isinstance(mark, int) or not 0 <= mark <= 5:
             raise self.ModelException(\
                 "Error: Mark has to be a number from 0 to 5")
         return True
