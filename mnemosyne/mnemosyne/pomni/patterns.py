@@ -24,8 +24,24 @@
 Design Patterns
 """
 
+
 class Subject:
-    """ Observer pattern. Subject - observable entity """
+    """ Observer pattern. Subject - observable entity
+
+    >>> class Observer:
+    ...     def update(self, observer): print 'updated'
+    >>> observer = Observer()
+    >>> observable = Subject()
+    >>> observable.register(observer)
+    >>> observable.notify()
+    updated
+    >>> observable.deregister(observer)
+    >>> observable.notify()
+    >>> observable.deregister(observer)
+    Traceback (most recent call last):
+    ...
+    LookupError: Error: Observer isn't registered
+    """
 
     def __init__(self):
         self._observers = []
@@ -41,6 +57,8 @@ class Subject:
 
         if observer in self._observers:
             self._observers.remove(observer)
+        else:
+            raise LookupError("Error: Observer isn't registered")
 
     def notify(self):
         """ Notify observers """
