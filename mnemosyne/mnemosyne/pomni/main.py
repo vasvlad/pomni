@@ -28,11 +28,13 @@ import sys
 import os
 
 # add mnemosyne directory to Python path in debug mode
-if os.path.basename(sys.argv[0]).endswith('debug'):
-    print 'bla'
-    sys.path.insert(0, '../')
+if os.path.basename(sys.argv[0]).endswith("debug"):
+    sys.path.insert(0, "../")
 
 from optparse import OptionParser
+
+from mnemosyne.libmnemosyne import initialise
+from mnemosyne.libmnemosyne.component_manager import get_database, get_scheduler
 
 from pomni.factory import ui_factory, backend_factory
 from pomni.model import Model
@@ -46,8 +48,7 @@ def parse_commandline(argv):
     parser.add_option("--ui", type="string", dest="ui", help="specify ui type")
     parser.add_option("--backend", type="string", dest="backend",
                         help="specify storage backend")
-    parser.add_option('--debug', action='store_true', dest='debug',
-                        help='enable debug output')
+    parser.add_option("-d", "--datadir", dest="datadir", help="data directory")
 
     options, argv = parser.parse_args(argv)
 
@@ -59,8 +60,21 @@ def main(argv):
 
     opts, argv = parse_commandline(argv)
 
-    backend = backend_factory(opts.backend)
-    model = Model(backend)
+    # FIXME: move this to config module
+    if opts.datadir:
+        datadir = os.path.abspath(options.datadir)
+    elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
+        datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
+
+    print 'datadir=', datadir
+    initialise(datadir)
+
+    database = get_database()
+    # FIXME: take filename from config
+    database.load(os.path.join(datadir, "default.mem"))
+
+    scheduler = get_scheduler()
+    model = Model(backend, scheduler)
     view = ui_factory(model, opts.ui)
     controller = Controller(model, view)
 

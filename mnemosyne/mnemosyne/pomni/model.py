@@ -40,17 +40,22 @@ class Model(Subject):
         """ Model Exception """
         pass
 
-    def __init__(self, backend):
+    def __init__(self, database, scheduler):
         """ Constructor """
 
         Subject.__init__(self)
 
-        self.backend = backend
+        self.database, self.scheduler = database, scheduler
+        self.learn_ahead = False
 
     def scheduled(self):
         """ Return next scheduled card """
-        for name in self.backend.get_list(sort=True):
-            yield (name, self.backend.get_record(name))
+        while True:
+            card = self.scheduler.get_new_question(self.learn_ahead)
+            if card:
+                yield card
+            else:
+                break
 
     def is_valid_mark(self, mark):
         """ Check if mark is valid """

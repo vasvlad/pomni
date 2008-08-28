@@ -24,6 +24,8 @@
 Factory. Creates objects
 """
 
+from mnemosyne.libmnemosyne.databases.pickle import Pickle
+
 from pomni.cmd_ui import CommandlineUI
 from pomni.dummy_backend import DummyBackend
 
@@ -48,6 +50,8 @@ def backend_factory(name=None):
 
     if not name or name == 'dummy':
         return DummyBackend()
+    if name == 'pickle':
+        return Pickle()
 
     raise ValueError("No idea how to create %s backend" % name)
 
