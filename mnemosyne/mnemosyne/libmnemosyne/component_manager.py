@@ -3,7 +3,7 @@
 #
 
 
-class ComponentManager():
+class ComponentManager(object):
 
     """Manages the different components. Each component belongs to a type
     (database, scheduler, card_type, card_type_widget, ...).
@@ -20,6 +20,7 @@ class ComponentManager():
     Managed components:
 
        ======================   ===============================
+       "config"                 config instance
        "database"               database instance
        "scheduler"              scheduler instance
        "filter"                 filter instance
@@ -44,6 +45,16 @@ class ComponentManager():
         self.card_type_by_id = {}
 
     def register(self, type, component, used_for=None):
+        """
+        type:      String describing the type.
+                   (XXX: make these registerable to prevent typos)
+        component: Instance of Component.
+        used_for:  Context for which a component is registered.
+                   This is used for example to register certain
+                   UI elements for specific card types.
+        XXX: When handling used_for cases we should make use of class 
+             inheritance, TODO KW
+        """
         if not self.components.has_key(used_for):
             self.components[used_for] = {}
         if not self.components[used_for].has_key(type):
@@ -84,24 +95,28 @@ component_manager = ComponentManager()
 
 # Convenience functions, for easier access from the outside world.
 
-def get_database():
+def config():
+    return component_manager.get_current("config")
+    
+def database():
     return component_manager.get_current("database")
 
-def get_scheduler():
+def scheduler():
     return component_manager.get_current("scheduler")
 
-def get_ui_controller_main():
+def ui_controller_main():
     return component_manager.get_current("ui_controller_main")
 
-def get_ui_controller_review():
+def ui_controller_review():
     return component_manager.get_current("ui_controller_review")
 
-def get_card_types():
+def card_types():
     return component_manager.get_all("card_type")
 
-def get_card_type_by_id(id):
+def card_type_by_id(id):
+    # XXX Can be solved by using named components, TODO KW
     return component_manager.card_type_by_id[id]
 
-def get_filters():
+def filters():
     return component_manager.get_all("filter")
 
