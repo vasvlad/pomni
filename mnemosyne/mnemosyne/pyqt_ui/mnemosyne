@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 ##############################################################################
 #
@@ -7,12 +7,10 @@
 ##############################################################################
 
 import sys, os, locale
+from optparse import OptionParser
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from mnemosyne.pyqt_ui.main_dlg import *
-from mnemosyne.pyqt_ui.message_boxes import *
-from mnemosyne.pyqt_ui.plugin import * # To be picked up by py2exe.
-from optparse import OptionParser
 
 # Parse options.
 
@@ -20,17 +18,36 @@ parser = OptionParser()
 parser.usage = "%prog [<database.mem>]"
 parser.add_option("-d", "--datadir", dest="datadir",
                   help="data directory", default=None)
+parser.add_option("-i", "--run-in-place", action="store_true",
+                  dest="in_place", default=False)
 (options, args) = parser.parse_args()
 
-# Determine basedir.
+# Make it easier for developpers to run Mnemosyne without installing it.
+
+if options.in_place == True:
+    sys.path.insert(0,os.path.abspath("."))
+
+# TODO: improve imports.
+
+from mnemosyne.libmnemosyne import initialise, finalise
+
+#from mnemosyne.libmnemosyne.config import get_config, set_config
+from mnemosyne.pyqt_ui.main_window import *
+#from mnemosyne.pyqt_ui.message_boxes import *
+#from mnemosyne.pyqt_ui.plugin import * # To be picked up by py2exe.
+
+
+# Check if we have to override the basedir determined in mnemosyne.core,
+# either because we explicitly specified a datadir on the command line,
+# or because there is a .mnemosyne directory present in the current directory.
+# The latter is handy when Mnemosyne is run from a USB key, so that there
+# is no need to refer to a drive letter which can change from computer to
+# computer.
 
 if options.datadir != None:
     basedir = os.path.abspath(options.datadir)
-else:
-    if os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
-        basedir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
-    else:
-        basedir = os.path.join(os.path.expanduser("~"), ".mnemosyne")
+elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
+    basedir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
 
 # Filename argument.
 
@@ -64,7 +81,7 @@ if os.path.exists(config_file_c):
 try:
     import config as _config
     if _config.locale != None:
-        loc = _config.locale      
+        loc = _config.locale
 except:
     pass
 
@@ -83,8 +100,10 @@ a.installTranslator(translator)
 if os.path.exists(os.path.join(basedir,"MNEMOSYNE_LOCK")):
     status = QMessageBox.warning(None,
              a.trUtf8("Mnemosyne"),
-             a.trUtf8("Another running copy of Mnemosyne was detected.\n" +\
-                      "Starting a new copy could lead to data loss!\n"),
+             a.trUtf8("Either Mnemosyne didn't shut down properly,\n" +
+                      "or another copy of Mnemosyne is still running.\n" +
+                      "Continuing in the latter case could lead to data " +
+                      "loss!\n"),
              a.trUtf8("&Exit"), a.trUtf8("&Continue"),
              QString(), 0, -1)
     if status == 0 or status == -1:
@@ -103,8 +122,7 @@ try:
 except:
     print "Unable to initialise sound."
 
-w = MainDlg(filename)
-install_tooltip_strings(w)
+w = MainWindow(filename)
 
 QObject.connect(a,SIGNAL("lastWindowClosed()"),w.fileExit)
 QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
@@ -116,13 +134,12 @@ w.show()
 
 # TODO: check first run wizard.
 
-if get_config("first_run") == True:
+if config["first_run"] == True:
     w.productTour()
-    set_config("first_run", False)
-elif get_config("show_daily_tips") == True:
+    config["first_run"] = False
+elif config["show_daily_tips"] == True:
     w.Tip()
 
 a.exec_()
 
-# TODO: check if finalize runs
 finalise()

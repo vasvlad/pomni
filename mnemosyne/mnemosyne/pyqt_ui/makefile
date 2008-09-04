@@ -1,14 +1,15 @@
-WIDGETS = activate_categories_frm.py config_frm.py change_category_frm.py \
-	add_cards_frm.py import_frm.py edit_cards_frm.py \
-	preview_cards_frm.py \
-	export_frm.py main_frm.py edit_cards_frm.py product_tour_frm.py \
-	statistics_frm.py about_frm.py tip_frm.py
+WIDGETS = ui_main_window.py \
+	activate_categories_dlg.py config_dlg.py change_category_dlg.py \
+	add_cards_dlg.py import_dlg.py edit_cards_dlg.py \
+	preview_cards_dlg.py \
+	export_dlg.py main_dlg.py edit_cards_dlg.py product_tour_dlg.py \
+	statistics_dlg.py about_dlg.py tip_dlg.py
 
-WIDGETS = main_frm.py add_cards_frm.py card_twosided.py
+WIDGETS = ui_main_window.py ui_add_cards_dlg.py ui_review_wdgt.py
 
 default: $(WIDGETS)
 
-$(WIDGETS): %.py: %.ui
+$(WIDGETS): Ui_%.py: %.ui
 	pyuic4 $< > $@
 
 clean:

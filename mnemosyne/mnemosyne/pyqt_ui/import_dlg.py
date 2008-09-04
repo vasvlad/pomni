@@ -27,7 +27,7 @@ class ImportDlg(ImportFrm):
     ##########################################################################
 
     def __init__(self,parent = None,name = None,modal = 0,fl = 0):
-        
+
         ImportFrm.__init__(self,parent,name,modal,fl)
 
         for fformat in get_importable_file_formats():
@@ -36,12 +36,15 @@ class ImportDlg(ImportFrm):
         self.fileformats.setCurrentText(get_config("import_format"))
 
         self.categories.insertItem(self.trUtf8("<default>"))
-        for cat in get_categories():
-            if cat.name != self.trUtf8("<default>"):
-                self.categories.insertItem(cat.name)
+
+        names = [cat.name for cat in get_categories()]
+        names.sort()
+        for name in names:
+            if name != self.trUtf8("<default>"):
+                self.categories.insertItem(name)
 
         self.reset_box.setChecked(get_config("reset_learning_data_import"))
-        
+
         self.connect(self.browse_button, SIGNAL("clicked()"), self.browse)
         self.connect(self.ok_button,     SIGNAL("clicked()"), self.apply)
 
@@ -60,10 +63,10 @@ class ImportDlg(ImportFrm):
               expand_path(get_config("import_dir")),
               self.trUtf8("All Files (*);;").append(QString(fformat.filter)),
               self, None, self.trUtf8("Import"), fformat.filter))
-       
+
         if out != "":
             self.filename.setText(out)
-            
+
     ##########################################################################
     #
     # apply
@@ -88,5 +91,5 @@ class ImportDlg(ImportFrm):
         set_config("import_dir", contract_path(os.path.dirname(fname)))
         set_config("import_format", fformat_name)
         set_config("reset_learning_data_import", reset_learning_data)
-        
+
         self.close()
