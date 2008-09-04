@@ -49,10 +49,10 @@ class DummyBackend:
         """ Set field value """
 
         self.records[name][key] = val
-    
+
     def add_field(self, name, back):
         """ Add new record """
-    
+
         self.records[name] = {"back": back, "mark": 0}
 
 def _test():
