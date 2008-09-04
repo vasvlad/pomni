@@ -63,8 +63,25 @@ class CommandlineUI:
         it's called by observable(Model in our case) to notify
         about its change
         """
+
         pass
 
+    def fill_mode(self):
+        """ Fill mode - fill both record of card """
+
+        print("=== Fill mode ===")
+        model = self.model
+        backend = model.backend
+        once_again = "y"
+        while once_again == "y":
+            face_side = raw_input("Enter the face side: ")
+            back_side = raw_input("Enter the back side: ")
+            backend.add_field(face_side, back_side) 
+            once_again = raw_input("Do you want to add a new record? y/n ")
+
+        print "=== Session statistics ==="
+        for name, card in model.scheduled():
+            print(name, card)
 
 def _test():
     """ Run doctests

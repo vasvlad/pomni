@@ -37,11 +37,19 @@ class Controller:
         model.register(self)
         # register with view somehow?
 
-    def start(self):
+    def start(self, mode):
         """ Start the application """
 
-        self.view.main_mode()
+        if not mode:
+            # default mode testing
+            self.view.main_mode()
+            return
 
+        if mode == "test":
+            self.view.main_mode()
+        else:
+            self.view.fill_mode()
+            
     def update(self, model):
         """ This method is part of Observer pattern
             it's called by observable(Model in our case) to notify
