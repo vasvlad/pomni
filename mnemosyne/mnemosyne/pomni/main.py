@@ -49,11 +49,14 @@ def parse_commandline(argv):
     parser.add_option("--backend", type="string", dest="backend",
                         help="specify storage backend")
     parser.add_option("-d", "--datadir", dest="datadir", help="data directory")
+    parser.add_option('--debug', action='store_true', dest='debug',
+                        help='enable debug output')
+    parser.add_option('--mode', type="string", dest="mode", 
+                        help='switch between two mode: fill and test')
 
     options, argv = parser.parse_args(argv)
 
     return (options, argv)
-
 
 def main(argv):
     """ Main """
@@ -78,7 +81,7 @@ def main(argv):
     view = ui_factory(model, opts.ui)
     controller = Controller(model, view)
 
-    return controller.start()
+    return controller.start(opts.mode)
 
 
 if __name__ == "__main__":
