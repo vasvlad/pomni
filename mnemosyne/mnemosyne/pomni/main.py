@@ -29,12 +29,12 @@ import os
 
 # add mnemosyne directory to Python path in debug mode
 if os.path.basename(sys.argv[0]).endswith("debug"):
-    sys.path.insert(0, "../")
+    sys.path = ["../", "../../"] + sys.path
 
 from optparse import OptionParser
 
 from mnemosyne.libmnemosyne import initialise
-from mnemosyne.libmnemosyne.component_manager import get_database, get_scheduler
+from mnemosyne.libmnemosyne.component_manager import database, scheduler
 
 from pomni.factory import ui_factory, backend_factory
 from pomni.model import Model
@@ -72,17 +72,16 @@ def main(argv):
     print 'datadir=', datadir
     initialise(datadir)
 
-    database = get_database()
+    data = database()
     # FIXME: take filename from config
-    database.load(os.path.join(datadir, "default.mem"))
+    data.load(os.path.join(datadir, "default.mem"))
 
-    scheduler = get_scheduler()
-    model = Model(backend, scheduler)
+    sched = scheduler()
+    model = Model(data, sched)
     view = ui_factory(model, opts.ui)
     controller = Controller(model, view)
 
     return controller.start(opts.mode)
-
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

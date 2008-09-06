@@ -56,7 +56,6 @@ def backend_factory(name=None):
     raise ValueError("No idea how to create %s backend" % name)
 
 
-
 def _test():
     """ Run doctests
     """
