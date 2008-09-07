@@ -29,11 +29,12 @@ import os
 
 # add mnemosyne directory to Python path in debug mode
 if os.path.basename(sys.argv[0]).endswith("debug"):
-    sys.path = ["../", "../../"] + sys.path
+    sys.path.insert(0, "../")
+    sys.path.insert(0, "../../")
 
 from optparse import OptionParser
 
-from mnemosyne.libmnemosyne import initialise
+from mnemosyne import libmnemosyne
 from mnemosyne.libmnemosyne.component_manager import database, scheduler
 
 from pomni.factory import ui_factory, backend_factory
@@ -49,14 +50,24 @@ def parse_commandline(argv):
     parser.add_option("--backend", type="string", dest="backend",
                         help="specify storage backend")
     parser.add_option("-d", "--datadir", dest="datadir", help="data directory")
-    parser.add_option('--debug', action='store_true', dest='debug',
-                        help='enable debug output')
-    parser.add_option('--mode', type="string", dest="mode", 
-                        help='switch between two mode: fill and test')
+    parser.add_option("--mode", type="string", dest="mode", 
+                        help="specify working mode. 'input', 'review' or 'conf'")
 
     options, argv = parser.parse_args(argv)
 
     return (options, argv)
+
+def _create_example_cards(db_name):
+    """ Temporary: Create some example cards. Must be removed when ui is ready """
+    
+    from mnemosyne.libmnemosyne.component_manager import ui_controller_main, card_types
+
+    c = ui_controller_main()
+    c.create_new_cards({'q': 'word 1', 'a': 'translation 1'}, card_types()[0], 0, ('category1'))
+    c.create_new_cards({'q': 'word 2', 'a': 'translation 2'}, card_types()[0], 0, ('category1'))
+    c.create_new_cards({'q': 'word 3', 'a': 'translation 3'}, card_types()[0], 0, ('category1'))
+
+    database().save(db_name)
 
 def main(argv):
     """ Main """
@@ -69,16 +80,22 @@ def main(argv):
     elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
         datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
 
-    print 'datadir=', datadir
-    initialise(datadir)
+    libmnemosyne.initialise(datadir)
 
-    data = database()
-    # FIXME: take filename from config
-    data.load(os.path.join(datadir, "default.mem"))
+    cdatabase = database()
+    # FIXME: take db name from config
+    db_name = os.path.join(datadir, "default.mem")
 
-    sched = scheduler()
-    model = Model(data, sched)
+    if os.path.exists(db_name):
+        cdatabase.load(db_name)
+
+    if not cdatabase.card_count():
+        _create_example_cards(db_name)
+
+    cscheduler = scheduler()
+    model = Model(cdatabase, cscheduler)
     view = ui_factory(model, opts.ui)
+    
     controller = Controller(model, view)
 
     return controller.start(opts.mode)

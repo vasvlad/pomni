@@ -25,25 +25,27 @@ Factory. Creates objects
 """
 
 from mnemosyne.libmnemosyne.databases.pickle import Pickle
+from mnemosyne.libmnemosyne.component_manager import component_manager
+from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
-from pomni.cmd_ui import CommandlineUI
+from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt
 from pomni.dummy_backend import DummyBackend
 
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
 
-    if not interface:
+    if not interface or interface == 'cmd':
         # default UI
-        return CommandlineUI(model)
+        component_manager.register("ui_controller_review", CmdUiControllerReview())
+        component_manager.register("review_widget", CmdReviewWdgt)
+        component_manager.register("renderer", TextRenderer())
+        return
 
-    if interface == "cmd":
-        return CommandlineUI(model)
-    elif interface == "hildon":
+    if interface == "hildon":
         raise NotImplementedError("Hildon UI is not implemented yet.")
     # add next gui here
 
     raise ValueError("No idea how to create %s UI" % interface)
-
 
 def backend_factory(name=None):
     """ Create backend """
@@ -54,7 +56,6 @@ def backend_factory(name=None):
         return Pickle()
 
     raise ValueError("No idea how to create %s backend" % name)
-
 
 def _test():
     """ Run doctests
