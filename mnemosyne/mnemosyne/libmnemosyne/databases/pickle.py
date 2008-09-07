@@ -175,7 +175,6 @@ class Pickle(Database):
         for category in self.categories:
             if category.name == name:
                 return category
-
         category = Category(name)
         self.categories.append(category)
         return category
