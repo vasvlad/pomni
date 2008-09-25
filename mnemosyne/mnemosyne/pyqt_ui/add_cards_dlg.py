@@ -1,9 +1,6 @@
-##############################################################################
 #
-# Widget to add new items <Peter.Bienstman@UGent.be>
-# Duplicate check by Jarno Elonen <elonen@iki.fi>
+# add_cards_dlg.py <Peter.Bienstman@UGent.be>
 #
-##############################################################################
 
 import gettext
 _ = gettext.gettext
@@ -11,77 +8,46 @@ _ = gettext.gettext
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-
-#from mnemosyne.libmnemosyne.mnemosyne_core import *
 from mnemosyne.libmnemosyne.category import *
-from ui_add_cards_dlg import *
-#from edit_item_dlg import *
+from Ui_add_cards_dlg import *
+
 from mnemosyne.libmnemosyne.card_type import *
 from mnemosyne.libmnemosyne.config import config
-from mnemosyne.libmnemosyne.plugin_manager import * 
+from mnemosyne.libmnemosyne.component_manager import *
 
-# TODO: import them all at once
+from mnemosyne.pyqt_ui.generic_card_type_widget import GenericCardTypeWdgt
 
-from card_twosided_wdgt import *
-from card_threesided_wdgt import *
-
-
-##############################################################################
-#
-# AddCardsDlg
-#
-##############################################################################
 
 class AddCardsDlg(QDialog, Ui_AddCardsDlg):
 
-    ##########################################################################
-    #
-    # __init__
-    #
-    ##########################################################################
-    
     def __init__(self, filename, parent = None):
-        
         QDialog.__init__(self, parent)
-
         # TODO: modal, Qt.WStyle_MinMax | Qt.WStyle_SysMenu))?
-        
         self.setupUi(self)
-
-        self.card_type_by_name = {} # TODO: move to lib?
-        
+        # We calculate card_type_by_name here rather than in the component
+        # manager, because these names can change if the user chooses another
+        # translation. TODO: test.
+        self.card_type_by_name = {}
         for card_type in get_card_types():
             self.card_types.addItem(card_type.name)
             self.card_type_by_name[card_type.name] = card_type
-
         # TODO: sort card types by id.
-               
         # TODO: remember last type.
-
         self.card_widget = None
-
         self.update_card_widget()
-        
         self.update_combobox(config["last_add_category"])
-
         self.grades = QButtonGroup()
-
         self.grades.addButton(self.grade_0_button, 0)
         self.grades.addButton(self.grade_1_button, 1)
         self.grades.addButton(self.grade_2_button, 2)
         self.grades.addButton(self.grade_3_button, 3)
         self.grades.addButton(self.grade_4_button, 4)
         self.grades.addButton(self.grade_5_button, 5)
-        
         self.connect(self.grades, SIGNAL("buttonClicked(int)"),
-                     self.new_card)
-        
+                     self.new_cards)
         #self.connect(self.preview_button, SIGNAL("clicked()"),
         #             self.preview)
-
-
-        # TODO: fonts?
-        
+        #TODO: fonts?
         #if get_config("QA_font") != None:
         #    font = QFont()
         #    font.fromString(get_config("QA_font"))
@@ -90,146 +56,66 @@ class AddCardsDlg(QDialog, Ui_AddCardsDlg):
         #    self.answer.setFont(font)
         #self.categories.setFont(font)
 
-        
-            
-    ##########################################################################
-    #
-    # update_card_widget
-    #
-    ##########################################################################
-
     def update_card_widget(self):
-
         if self.card_widget:
             self.vboxlayout.removeWidget(self.card_widget)
             self.card_widget.close()
-
         card_type_name = unicode(self.card_types.currentText())
         card_type = self.card_type_by_name[card_type_name]
-
-        card_type.widget = card_type.widget_class()
-            
+        if card_type.widget == None:
+            try:
+                card_type.widget =  component_manager.\
+                   get_current("card_type_widget",
+                               used_for=card_type.__class__.__name__)()
+            except KeyError:
+                card_type.widget = GenericCardTypeWdgt(card_type)
         self.card_widget = card_type.widget
+        self.card_widget.show()
         self.vboxlayout.insertWidget(1, self.card_widget)
-
         #self.adjustSize()
 
-
-
-    ##########################################################################
-    #
-    # update_combobox
-    #
-    ##########################################################################
-
     def update_combobox(self, current_cat_name):
-
         no_of_categories = self.categories.count()
         for i in range(no_of_categories-1,-1,-1):
             self.categories.removeItem(i)
-
         self.categories.addItem(_("<default>"))
         for name in get_database().category_names():
             if name != _("<default>"):
                 self.categories.addItem(name)
-
         for i in range(self.categories.count()):
             if self.categories.itemText(i) == current_cat_name:
                 self.categories.setCurrentIndex(i)
                 break
 
+    def new_cards(self, grade):
 
-    ##########################################################################
-    #
-    # new_card
-    #
-    #   Don't rebuild revision queue afterwards, as this can cause corruption
-    #   for the current card. The new cards will show up after the old queue
-    #   is empty.
-    #
-    ##########################################################################
-    
-    def new_card(self, grade):
+        """Note that we don't rebuild revision queue afterwards, as this can
+        cause corruption for the current card.  The new cards will show up
+        after the old queue is empty."""
 
-        # Get data from the card wiget.
-        
-        data = self.card_widget.get_data()
-        
-        if data is None:
+        fact_data = self.card_widget.get_data()
+        if fact_data is None:
             return
-
-        # Add our own data. The card model can later remove these.
-
-        data['grade'] = grade
-
-        data['cat_names'] = [unicode(self.categories.currentText())]
-
-        # Create the new cards.
-
+        cat_names = [unicode(self.categories.currentText())]
         card_type_name = unicode(self.card_types.currentText())
-
         card_type = self.card_type_by_name[card_type_name]
-
-        card_type.new_cards(data)
-        
+        c = get_ui_controller_main()
+        c.create_new_cards(fact_data, card_type, grade, cat_names)
+        self.update_combobox(cat_names[-1])
         get_database().save(config['path'])
-        
-        # Update widget. TODO 
-                        
-        #self.question.setFocus()
+        self.card_widget.clear()
 
-        #set_config("last_add_vice_versa", self.addViceVersa.isOn())
-        #set_config("last_add_category",   cat_name)
-
-
-            
-    ##########################################################################
-    #
-    # reject
-    #
-    ##########################################################################
-    
     def reject(self):
-
         if self.card_widget.get_data() is None:
             QDialog.reject(self)
             return
-
         status = QMessageBox.warning(None, _("Mnemosyne"),
-                                     _("Abandon current card?"),
-                                     _("&Yes"), _("&No"),
-                                     "", 1, -1)
+                _("Abandon current card?"),
+                _("&Yes"), _("&No"), "", 1, -1)
         if status == 0:
             QDialog.reject(self)
-            return
-        else:
-            return
-
-
-
-
-    ##########################################################################
-    #
-    # preview
-    #
-    ##########################################################################
 
     def preview(self):
+        raise NotImplementedError
 
-        raise NotImplementedError()
-
-        if get_config("3_sided_input") == False:
-        
-            dlg = PreviewItemDlg(unicode(self.question.text()),
-                                 unicode(self.answer.text()),
-                                 unicode(self.categories.currentText()),
-                                 self)
-        else:
-            dlg = PreviewItemDlg(unicode(self.question.text()),
-                                 unicode(QString(self.pronunciation.text()).\
-                                         append(QString("\n")).\
-                                         append(QString(self.answer.text()))),
-                                 unicode(self.categories.currentText()),
-                                 self)            
-        dlg.exec_loop()
 

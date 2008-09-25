@@ -1,129 +1,66 @@
-##############################################################################
 #
-# Three sided card type <Peter.Bienstman@UGent.be>
+# three_sided.py <Peter.Bienstman@UGent.be>
 #
-##############################################################################
 
 import gettext
 _ = gettext.gettext
 
-from mnemosyne.libmnemosyne.card import *
-from mnemosyne.libmnemosyne.card_type import *
-from mnemosyne.libmnemosyne.fact import *
-from mnemosyne.libmnemosyne.config import config
+from mnemosyne.libmnemosyne.card_type import CardType
+from mnemosyne.libmnemosyne.fact_view import FactView
 
-
-
-##############################################################################
-#
-# ThreeSided
-#
-#  f: foreign word
-#  p: pronunciation
-#  t: translation
-#
-##############################################################################
 
 class ThreeSided(CardType):
 
-    ##########################################################################
-    #
-    # __init__
-    #
-    ##########################################################################
-
-    recognition = 0
-    production = 1
-
-    def __init__(self):
-
-        CardType.__init__(self, id=2,
-                          name=_("Foreign word with pronunciation"),
-                          can_be_unregistered=False)
-
-
-
-    ##########################################################################
-    #
-    # generate_q
-    #
-    ##########################################################################
-
-    def generate_q(self, fact, fact_view):
-
-        if fact_view == ThreeSided.recognition:
-            return fact['f']
-        elif fact_view == ThreeSided.production:
-            return fact['t'] 
+    def __init__(self, language_name=""):
+        CardType.__init__(self)
+        if not language_name:
+            self.id = "3"
+            self.name = _("Foreign word with pronunciation")
+            self.is_language = False
         else:
-            print 'Invalid fact view.'
-            raise NameError()
+            self.id = "3_" + language_name
+            self.name = language_name
+            self.is_language = True
 
+        # List and name the keys.
+        self.fields.append(("f", _("Foreign word")))
+        self.fields.append(("p", _("Pronunciation")))
+        self.fields.append(("t", _("Translation")))
 
+        # Recognition.
+        v = FactView(1, _("Recognition"))
+        v.q_fields = ["f"]
+        v.a_fields = ["p", "t"]
+        v.required_fields = ["f"]
+        self.fact_views.append(v)
+
+        # Production.
+        v = FactView(2, _("Production"))
+        v.q_fields = ["t"]
+        v.a_fields = ["f", "p"]
+        v.required_fields = ["t"]
+        self.fact_views.append(v)
+    
+        # The foreign word field needs to be unique. As for duplicates is the
+        # answer field, these are better handled through a synonym detection 
+        # plugin.
+        self.unique_fields = ["f"]
         
-    ##########################################################################
-    #
-    # generate_a
-    #
-    ##########################################################################
-
-    def generate_a(self, fact, fact_view):
-
-        if fact_view == ThreeSided.recognition:
-            return fact['p'] + '\n' + fact['t']
-        elif fact_view == ThreeSided.production:
-            return fact['f'] + '\n' + fact['p']
-        else:
-            print 'Invalid fact view.'
-            raise NameError()
-
-        
-
-    ##########################################################################
-    #
-    # new_cards
-    #
-    ##########################################################################
-
-    def new_cards(self, data):
-
-        # Extract and remove data.
-
-        grade       = data['grade']
-        cat_names   = data['cat_names']
-        recognition = data['recognition']
-        production  = data['production']
-        
-        del data['recognition']
-        del data['production']
-        del data['grade']
-
-        # Create fact.
-
-        # TODO: add fact_views as a category name
-
-        fact = Fact(data)
-        fact.save()
-
-        if recognition:
-            
-            Card(grade, card_type=self, fact=fact,
-                 fact_view=ThreeSided.recognition, cat_names=cat_names).save()
-
-        if production:
-            Card(grade, card_type=self, fact=fact,
-                 fact_view=ThreeSided.production, cat_names=cat_names).save()
-            
-        self.widget.clear()
-
-
-
-    ##########################################################################
-    #
-    # update_cards
-    #
-    ##########################################################################
-
-    def update_cards(self, data):
-
-        pass
+        # CSS. TODO: read from file if exists.
+        self.css = """
+            <style type="text/css">
+            table { margin-left: auto;
+                margin-right: auto; /* Centers table, but not its contents. */
+                height: 100%; }
+            body {  color: black;
+                background-color: white;
+                margin: 0;
+                padding: 0;
+                border: thin solid #8F8F8F; }
+            f { font-weight: bold;
+                text-align: center; } /* Align contents within the cell. */
+            t { text-align: center; }
+            p { color: green;
+                text-align: center; }               
+            </style>
+        """

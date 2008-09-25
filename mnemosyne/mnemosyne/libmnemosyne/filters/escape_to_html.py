@@ -1,31 +1,37 @@
-def f():
-    
-    # Escape literal < (unmatched tag) and new line from string.
-    
-    hanging = []
-    open = 0
-    pending = 0
+#
+# escape_to_html.py <Peter.Bienstman@UGent.be>
+#
 
-    for i in range(len(s)):
-        if s[i] == '<':
-            if open != 0:
-                hanging.append(pending)
+from mnemosyne.libmnemosyne.filter import Filter
+
+
+class EscapeToHtml(Filter):
+
+    """Escape literal < (unmatched tag) and new line from string."""
+
+    def run(self, text, obj):
+        hanging = []
+        open = 0
+        pending = 0
+        for i in range(len(text)):
+            if text[i] == '<':
+                if open != 0:
+                    hanging.append(pending)
+                    pending = i
+                    continue
+                open += 1
                 pending = i
-                continue
-            open += 1
-            pending = i
-        elif s[i] == '>':
-            if open > 0:
-                open -= 1
-
-    if open != 0:
-        hanging.append(pending)
-
-    new_s = ""
-    for i in range(len(s)):
-        if s[i] == '\n':
-            new_s += "<br>"
-        elif i in hanging:
-            new_s += "&lt;"
-        else:
-            new_s += s[i]
+            elif text[i] == '>':
+                if open > 0:
+                    open -= 1
+        if open != 0:
+            hanging.append(pending)
+        new_text = ""
+        for i in range(len(text)):
+            if text[i] == '\n':
+                new_text += "<br>"
+            elif i in hanging:
+                new_text += "&lt;"
+            else:
+                new_text += text[i]
+        return new_text

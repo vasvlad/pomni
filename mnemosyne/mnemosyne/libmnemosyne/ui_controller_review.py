@@ -1,51 +1,25 @@
-##############################################################################
 #
 # ui_controller_review.py <Peter.Bienstman@UGent.be>
 #
-##############################################################################
 
-from plugin import Plugin
-
+from mnemosyne.libmnemosyne.component import Component
 
 
-##############################################################################
-#
-# UiControllerReview
-#
-##############################################################################
+class UiControllerReview(Component):
 
-class UiControllerReview(Plugin):
+    def __init__(self, name, description=""):
+        self.name = name
+        self.description = description
+        self.widget = None
+        self.card = None
 
-    ##########################################################################
-    #
-    # __init__
-    #
-    ##########################################################################
-
-    def __init__(self, name, description, can_be_unregistered=True):
-
-        self.type                = "ui_controller_review"
-        self.widget              = None
-        self.name                = name
-        self.description         = description
-        self.can_be_unregistered = can_be_unregistered
-
-        
-
-
-    ##########################################################################
-    #
-    # Functions to be implemented by the actual controller.
-    #
-    ##########################################################################
-
-    def current_card(self):
-        raise NotImplementedError        
-    
     def new_question(self):
+        raise NotImplementedError    
+        
+    def show_answer(self):
         raise NotImplementedError
 
-    # TODO: add
+    # TODO: add update dialog, etc
 
 
 
@@ -63,4 +37,4 @@ class UiControllerReview(Plugin):
     # clear_question()
     # clear_answer()
     # update_show_button(text,default,enabled)
-    
+

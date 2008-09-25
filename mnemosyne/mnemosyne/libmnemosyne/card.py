@@ -1,289 +1,95 @@
-##############################################################################
 #
 # card.py <Peter.Bienstman@UGent.be>
 #
-##############################################################################
 
-import md5, time, logging
+from mnemosyne.libmnemosyne.component_manager import get_database
+from mnemosyne.libmnemosyne.component_manager import get_scheduler
+from mnemosyne.libmnemosyne.component_manager import get_card_filters
 
-from mnemosyne.libmnemosyne.plugin_manager import *
-from mnemosyne.libmnemosyne.config import config
-#from mnemosyne.libmnemosyne.card_type import *
-from mnemosyne.libmnemosyne.start_date import start_date
-#from mnemosyne.libmnemosyne.scheduler import *
-#from mnemosyne.libmnemosyne.database import *
-
-log = logging.getLogger("mnemosyne")
-
-
-
-
-##############################################################################
-#
-# Card
-#
-# We store q and a in strings to cache them, instead of regenerating them
-# each time from its Fact. This could take too much time, e.g. on a mobile
-# platform. Also useful for searching in an SQL database.
-#
-# Note that we store a card_type_id, as opposed to a card_type, because
-# otherwise we can't use pickled databases, as the card_types themselves are
-# not stored in the database. It is also closer the SQL implementation.
-#
-# 'fact_view' indicate different cards generated from the same fact data,
-# like reverse cards. TODO: do we need a mapping from this integer to a
-# description?
-#
-# If the user deletes a subcard from a fact, we don't delete it, in case
-# the user later reactivates it. We can either employ a 'hidden'
-# variable here, or move it to a different container (perhaps more
-# efficient?). TODO: implement and benchmark
-#
-##############################################################################
 
 class Card(object):
 
-    ##########################################################################
-    #
-    # __init__
-    #
-    ##########################################################################
-            
-    def __init__(self, grade, card_type, fact, fact_view, cat_names, id=None):
+    """A card is formed when a fact view operates on a fact."""
 
-        db = get_database()
-        sch = get_scheduler()
-
-        self.card_type_id = card_type.id
-        self.fact         = fact
-        self.fact_view    = fact_view
-        self.q            = self.filtered_q()
-        self.a            = self.filtered_a()
-        self.hidden       = False
-
-        self.cat = []
-        for cat_name in cat_names:
-            self.cat.append(db.get_or_create_category_with_name(cat_name))
-        
-        self.reset_learning_data() # TODO: see where this is used and merge.
-
-        # The initial grading is seen as the first repetition.
-        
-        self.grade = grade
-        self.acq_reps = 1
-        self.acq_reps_since_lapse = 1
-
-        self.last_rep = start_date.days_since_start()
-
-        self.easiness = db.average_easiness()
-
-        if id == None:
-            self.new_id()
-        else:
-            self.id = id 
-
-        new_interval  = sch.calculate_initial_interval(grade)
-        new_interval += sch.calculate_interval_noise(new_interval)
-        self.next_rep = start_date.days_since_start() + new_interval
-
-        
-
-    ##########################################################################
-    #
-    # filtered_q
-    #
-    ##########################################################################
-
-    def filtered_q(self):
-
-        card_type = get_card_type_by_id(self.card_type_id)
-
-        q = card_type.generate_q(self.fact, self.fact_view)
-
-        #q = preprocess(q) # TODO: update to plugin scheme
-
-        return q
-
-    ##########################################################################
-    #
-    # filtered_a
-    #
-    ##########################################################################
-    
-    def filtered_a(self):
-        
-        card_type = get_card_type_by_id(self.card_type_id)
-        
-        a = card_type.generate_a(self.fact, self.fact_view)
-
-        #a = preprocess(a) # TODO: update to plugin scheme
-
-        return a
-    
-    
-    ##########################################################################
-    #
-    # reset_learning_data
-    #
-    ##########################################################################
+    def __init__(self, fact, fact_view):
+        self.fact = fact
+        self.fact_view = fact_view
+        self.id = self.fact.id + "." + str(self.fact_view.id)
+        self.reset_learning_data()
 
     def reset_learning_data(self):
 
-        self.grade                = 0
-        self.easiness             = 2.5
-        
-        self.acq_reps             = 0
-        self.ret_reps             = 0
-        self.lapses               = 0
+        """Used when creating a card for the first time, or when choosing
+        'reset learning data' on import.
+
+        Last_rep and next_rep are measured in days since the creation of
+        the database. Note that these values should be stored as float in
+        SQL to accomodate plugins doing minute-level scheduling.
+
+        Note: self.unseen is needed on top of self.acq_reps, because the
+        initial grading of a manually added card is counted as the first
+        repetition. An imported card has no such initial grading, and
+        therefore we do the initial grading the first time we see it during
+        the interactive learning process. Because of this, determining if a
+        card has been seen during the interactive learning process can not
+        be decided on the basis of acq_reps, but still that information is
+        needed when randomly selecting unseen cards to learn.
+
+        """
+
+        db = get_database()
+        self.grade = 0
+        self.easiness = db.average_easiness()
+        self.acq_reps = 0
+        self.ret_reps = 0
+        self.lapses = 0
         self.acq_reps_since_lapse = 0
         self.ret_reps_since_lapse = 0
+        self.last_rep = 0
+        self.next_rep = 0
+        self.unseen = True
 
-        # TODO: store as float for minute level scheduling
+    def set_initial_grade(self, grade):
+
+        """This is called after manually adding cards. This code is separated
+        out from the constructor, as for imported for imported cards, there is
+        no grading information available when there are created, and the
+        initial grading is done the first time they are are seen in
+        the interactive review process (by similar code in the scheduler).
+
+        This initial grading is seen as the first repetition.
+
+        """
+
+        db = get_database()
+        sch = get_scheduler()
+        self.grade = grade
+        self.easiness = db.average_easiness()
+        self.acq_reps = 1
+        self.acq_reps_since_lapse = 1
+        self.last_rep = db.days_since_start()
+        new_interval = sch.calculate_initial_interval(grade)
+        new_interval += sch.calculate_interval_noise(new_interval)
+        self.next_rep = db.days_since_start() + new_interval
+
+    def question(self):
+        q = self.fact_view.question(self.fact)
+        for f in get_card_filters():
+            q = f.run(q, self)
+        return q
+
+    def answer(self):
+        a = self.fact_view.answer(self.fact)
+        for f in get_card_filters():
+            a = f.run(a, self)
+        return a
         
-        self.last_rep  = 0 # In days since beginning.
-        self.next_rep  = 0 #
-
-        
-    ##########################################################################
-    #
-    # save
-    #
-    ##########################################################################
+    interval = property(lambda self : self.next_rep - self.last_rep)
     
-    def save(self):
-
-        get_database().add_card(self)
-        
-        new_interval = start_date.days_since_start() - self.next_rep
-
-        log.info("New card %s %d %d", self.id, self.grade, new_interval)
-
-        print 'new card', self.q, self.a
+    days_since_last_rep = property(lambda self : \
+                            get_database().days_since_start - self.last_rep)
+                            
+    days_until_next_rep = property(lambda self : \
+                            self.next_rep - get_database().days_since_start)
 
 
-        
-    ##########################################################################
-    #
-    # new_id
-    #
-    ##########################################################################
-    
-    def new_id(self):
-
-        digest = md5.new(self.q.encode("utf-8") + self.a.encode("utf-8") + \
-                         time.ctime()).hexdigest()
-        self.id = digest[0:8]
-
-
-
-    ##########################################################################
-    #
-    # interval
-    #
-    ##########################################################################
-
-    def interval(self):
-        return self.next_rep - self.last_rep
-    
-        
-    ##########################################################################
-    #
-    # sort_key: needed?
-    #
-    ##########################################################################
-
-    def sort_key(self):
-        return self.next_rep
-    
-
-    
-    ##########################################################################
-    #
-    # sort_key_newest: needed?
-    #
-    ##########################################################################
-
-    def sort_key_newest(self):
-        return self.acq_reps + self.ret_reps
-
-    ##########################################################################
-    #
-    # is_in_active_category
-    #
-    ##########################################################################
-
-    def is_in_active_category(self):
-        
-        for c in self.cat:
-            if c.active == False:
-                return False
-            
-        return True
-    
-
-# TODO: see which of these we still need and if they could be moved to
-# database
-
-    
-    
-    ##########################################################################
-    #
-    # is_new
-    #
-    ##########################################################################
-    
-    def is_new(self):
-        return (self.acq_reps == 0) and (self.ret_reps == 0)
-    
-    
-    
-    ##########################################################################
-    #
-    # is_overdue
-    #
-    ##########################################################################
-    
-    def is_overdue(self):
-        return (self.grade >= 2) and (self.is_in_active_category()) and \
-               (days_since_start > self.next_rep)
-
-    ##########################################################################
-    #
-    # days_since_last_rep
-    #
-    ##########################################################################
-    
-    def days_since_last_rep(self):
-        return days_since_start - self.last_rep
-
-    ##########################################################################
-    #
-    # days_until_next_rep
-    #
-    ##########################################################################
-    
-    def days_until_next_rep(self):
-        return self.next_rep - days_since_start
-    
-
-    ##########################################################################
-    #
-    # qualifies_for_learn_ahead
-    #
-    ##########################################################################
-    
-    def qualifies_for_learn_ahead(self):
-        return (self.grade >= 2) and (self.is_in_active_category()) and \
-               (get_days_since_start() < self.next_rep) 
-        
-    ##########################################################################
-    #
-    # change_category
-    #
-    ##########################################################################
-    
-    def change_category(self, new_cat_name):
-
-        old_cat = self.cat
-        self.cat = get_category_by_name(new_cat_name)
-        remove_category_if_unused(old_cat)

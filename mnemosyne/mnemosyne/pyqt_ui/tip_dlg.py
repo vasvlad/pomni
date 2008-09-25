@@ -16,26 +16,26 @@ from mnemosyne.core import *
 ##############################################################################
 
 class TipDlg(TipFrm):
-    
+
     ##########################################################################
     #
     # __init__
     #
     ##########################################################################
-    
+
     def __init__(self, parent=None, name=None, modal=0, fl=0):
-        
+
         TipFrm.__init__(self,parent,name,modal,fl)
 
         self.show_tips.setChecked(get_config("show_daily_tips"))
-        
+
         self.tips = []
 
         self.tips.append(self.trUtf8("For optimal results, it's best to do your repetitions every day."""))
 
         self.tips.append(self.trUtf8("""If you've been away for a few days, don't worry about your backlog. Do as many cards as you feel like to catch up, the rest will be automatically rescheduled to the future."""))
 
-        self.tips.append(self.trUtf8("""The 'number of grade 0 cards to learn at once' setting determines how many new cards you are trying to learn at the same time. It does <b>not</b> tell you how many new cards you need to learn per day. You are the judge of that: you can learn more cards or less cards, depending on how you feel."""))
+        self.tips.append(self.trUtf8("""The 'number of grade 0 cards to hold in your hand' setting determines how many new cards you are trying to learn at the same time. It does <b>not</b> tell you how many new cards you need to learn per day. You are the judge of that: you can learn more cards or less cards, depending on how you feel."""))
 
         self.tips.append(self.trUtf8("""In summary, try to do your repetitions every day, but don't worry too much about getting the 'scheduled' counter to zero, and certainly not about getting the 'Not memorised' counter to zero."""))
 
@@ -80,28 +80,28 @@ class TipDlg(TipFrm):
         self.tips.append(self.trUtf8("""Advanced users can customise more of Mnemosyne by editing the config.py file in their .mnemosyne directory. They can also install plugins to customise Mnemosyne even further."""))
 
         self.update_dialog()
-        
+
     ##########################################################################
     #
     # update_dialog
     #
     ##########################################################################
-    
+
     def update_dialog(self):
-        
+
         tip = get_config("tip")
         self.tip_label.setText(self.tips[tip])
         self.previous_button.setEnabled(tip != 0)
         self.next_button.setEnabled(tip != len(self.tips)-1)
-        
+
     ##########################################################################
     #
     # previous
     #
     ##########################################################################
-    
+
     def previous(self):
-        
+
         set_config("tip", (get_config("tip")-1) % len(self.tips))
         self.update_dialog()
 
@@ -110,9 +110,9 @@ class TipDlg(TipFrm):
     # next
     #
     ##########################################################################
-    
+
     def next(self):
-        
+
         set_config("tip", (get_config("tip")+1) % len(self.tips))
         self.update_dialog()
 
@@ -123,7 +123,7 @@ class TipDlg(TipFrm):
     ##########################################################################
 
     def closeEvent(self, event):
-        
+
         set_config("show_daily_tips",self.show_tips.isOn())
         set_config("tip", (get_config("tip")+1) % len(self.tips))
         event.accept()

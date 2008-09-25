@@ -1,43 +1,28 @@
-##############################################################################
 #
 # ui_controller_main.py <Peter.Bienstman@UGent.be>
 #
-##############################################################################
 
-from plugin import Plugin
-
+from mnemosyne.libmnemosyne.component import Component
 
 
-##############################################################################
-#
-# UiControllerMain
-#
-##############################################################################
+class UiControllerMain(Component):
 
-class UiControllerMain(Plugin):
+    """A collection of logic used by the main Mnemosyne window and some related
+    widgets.  The logic related to the review process is split out in a
+    separated controller class, to allow that to be swapped out easily.
 
-    ##########################################################################
-    #
-    # __init__
-    #
-    ##########################################################################
+    """
 
-    def __init__(self, widget,
-                 name, description, can_be_unregistered=True):
+    def __init__(self, name, description=""):
+        self.name = name
+        self.description = description
+        self.widget = None
 
-        self.type                = "ui_controller_main"
-        self.widget              = widget
-        self.name                = name
-        self.description         = description
-        self.can_be_unregistered = can_be_unregistered
+    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+        raise NotImplementedError
 
 
-    ##########################################################################
-    #
-    # Functions to be implemented by the actual controller.
-    #
-    ##########################################################################
-    
+    # TODO: list calls made back to widget.
 
-
-    # TODO: list calls made back to widget
+    # information_box(self, message, OK_string)
+    # question_box(self, question, option0, option1, option2):
