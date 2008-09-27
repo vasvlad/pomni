@@ -43,8 +43,10 @@ class Controller:
     def start(self, mode):
         """ Start the application """
 
-        if not mode or mode == 'review':
-            ui_controller_review().start()
+        self.view.start()
+
+        #if not mode or mode == 'review':
+        #    ui_controller_review().start()
 
     def update(self, model):
         """ This method is part of Observer pattern

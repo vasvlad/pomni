@@ -28,7 +28,7 @@ from mnemosyne.libmnemosyne.databases.pickle import Pickle
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
-from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt
+from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CmdUi
 from pomni.dummy_backend import DummyBackend
 
 def ui_factory(model, interface=None):
@@ -39,7 +39,7 @@ def ui_factory(model, interface=None):
         component_manager.register("ui_controller_review", CmdUiControllerReview())
         component_manager.register("review_widget", CmdReviewWdgt)
         component_manager.register("renderer", TextRenderer())
-        return
+        return CmdUi()
 
     if interface == "hildon":
         raise NotImplementedError("Hildon UI is not implemented yet.")

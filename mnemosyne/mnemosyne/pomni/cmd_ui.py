@@ -26,16 +26,23 @@ Command-line UI
 
 import os
 import gettext
+import cmd
 from os.path import basename
-from mnemosyne.libmnemosyne.component_manager import config
-from mnemosyne.libmnemosyne.component_manager import database, scheduler
+
+from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
+        ui_controller_review, config
+from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
+    import SM2Controller
 
 class CmdUiControllerException(Exception): pass
 
 _ = gettext.gettext
 
 class CommandlineUI:
-    """ Commandline UI """
+    """ Commandline UI. Deprecated. Left here only until input mode
+        will be implemented and moved to separate class and integrated 
+        with CmdUI"""
 
     def __init__(self, model):
         self.model = model
@@ -62,9 +69,31 @@ class CommandlineUI:
             backend.add_field(face_side, back_side) 
             once_again = raw_input("Do you want to add a new record? y/n ")
 
-from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
-from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
-    import SM2Controller
+class CmdUi(cmd.Cmd):
+    """ Commandline UI. Upper-level class """
+
+    def __init__(self):
+        cmd.Cmd.__init__(self)
+        self.prompt = '====== Main =======\nPomni: '
+
+    def start(self):
+        self.cmdloop()
+
+    def do_quit(self, line):
+        """ Quit the program """ 
+        return True
+
+    def do_review(self, line):
+        """ Review mode """
+        ui_controller_review().start()
+
+    def do_input(self, line):
+        """ Input mode """
+        print "Input mode. Not implemented yet"
+
+    def do_config(self, line):
+        """ Configuration mode """
+        print "Configuration mode. Not implemented yet"
 
 class CmdUiControllerReview(UiControllerReview):
     """ Commandline UI controller. Review mode """
