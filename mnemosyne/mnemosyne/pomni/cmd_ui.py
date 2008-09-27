@@ -39,42 +39,22 @@ class CmdUiControllerException(Exception): pass
 
 _ = gettext.gettext
 
-class CommandlineUI:
-    """ Commandline UI. Deprecated. Left here only until input mode
-        will be implemented and moved to separate class and integrated 
-        with CmdUI"""
+class CommandlineUI(cmd.Cmd):
+    """ Commandline UI. Upper-level class """
 
     def __init__(self, model):
+        cmd.Cmd.__init__(self)
+        self.prompt = '====== Main =======\nPomni: '
+
         self.model = model
         model.register(self)
 
     def update(self, model):
         """ This method is part of Observer pattern
-        it's called by observable(Model in our case) to notify
-        about its change
+            it's called by observable(Model in our case) to notify
+            about its change
         """
-
         pass
-
-    def input_mode(self):
-        """ Input mode - fill both record of card """
-
-        print("=== Input mode ===")
-        model = self.model
-        backend = model.backend
-        once_again = "y"
-        while once_again == "y":
-            face_side = raw_input("Enter the face side: ")
-            back_side = raw_input("Enter the back side: ")
-            backend.add_field(face_side, back_side) 
-            once_again = raw_input("Do you want to add a new record? y/n ")
-
-class CmdUi(cmd.Cmd):
-    """ Commandline UI. Upper-level class """
-
-    def __init__(self):
-        cmd.Cmd.__init__(self)
-        self.prompt = '====== Main =======\nPomni: '
 
     def start(self):
         self.cmdloop()
@@ -89,7 +69,14 @@ class CmdUi(cmd.Cmd):
 
     def do_input(self, line):
         """ Input mode """
-        print "Input mode. Not implemented yet"
+        print("=== Input mode ===")
+        #backend = self.model.backend
+        once_again = "y"
+        while once_again == "y":
+            face_side = raw_input("Enter the face side: ")
+            back_side = raw_input("Enter the back side: ")
+            #backend.add_field(face_side, back_side)
+            once_again = raw_input("Do you want to add a new record? y/n ")
 
     def do_config(self, line):
         """ Configuration mode """
