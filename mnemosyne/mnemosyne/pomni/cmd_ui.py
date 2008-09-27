@@ -57,10 +57,8 @@ class CommandlineUI(cmd.Cmd):
         pass
 
     def start(self, mode):
-        control = {"input" : self.do_input, "review": self.do_review,
-                   "conf": self.do_conf}
-        if mode in control:
-            control[mode]()
+        if mode:
+            self.onecmd(mode)
         else:
             self.cmdloop()
 
@@ -68,11 +66,11 @@ class CommandlineUI(cmd.Cmd):
         """ Quit the program """ 
         return True
 
-    def do_review(self, line=None):
+    def do_review(self, line):
         """ Review mode """
         ui_controller_review().start()
 
-    def do_input(self, line=None):
+    def do_input(self, line):
         """ Input mode """
         print("=== Input mode ===")
         #backend = self.model.backend
@@ -83,7 +81,7 @@ class CommandlineUI(cmd.Cmd):
             #backend.add_field(face_side, back_side)
             once_again = raw_input("Do you want to add a new record? y/n ")
 
-    def do_conf(self, line=None):
+    def do_conf(self, line):
         """ Configuration mode """
         print "Configuration mode. Not implemented yet"
 
