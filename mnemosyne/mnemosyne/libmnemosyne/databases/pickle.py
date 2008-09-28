@@ -2,21 +2,22 @@
 # pickle.py <Peter.Bienstman@UGent.be>
 #
 
-# TODO: abstract out logging messages so that they are automatically the
-# same in the other databases?
-
-import logging, os, cPickle, datetime, gzip, shutil
+import os
+import cPickle
+import datetime
+import gzip
+import shutil
 import mnemosyne.version
 
+from mnemosyne.libmnemosyne.category import Category
 from mnemosyne.libmnemosyne.database import Database
-from mnemosyne.libmnemosyne.config import config
 from mnemosyne.libmnemosyne.start_date import StartDate
 from mnemosyne.libmnemosyne.utils import expand_path, contract_path
-from mnemosyne.libmnemosyne.exceptions import *
-from mnemosyne.libmnemosyne.category import Category
-from mnemosyne.libmnemosyne.component_manager import *
-
-log = logging.getLogger("mnemosyne")
+from mnemosyne.libmnemosyne.exceptions import InvalidFormatError
+from mnemosyne.libmnemosyne.exceptions import SaveError, LoadError
+from mnemosyne.libmnemosyne.component_manager import component_manager, config
+from mnemosyne.libmnemosyne.component_manager import log, scheduler
+from mnemosyne.libmnemosyne.component_manager import card_type_by_id
 
 
 class Pickle(Database):
@@ -54,17 +55,17 @@ class Pickle(Database):
             self.unload()
         self.load_failed = False
         self.start_date = StartDate()
-        config["path"] = path
-        log.info("New database")
-        self.save(contract_path(path, config.basedir))
+        config()["path"] = path
+        log().new_database()
+        self.save(contract_path(path, config().basedir))
 
     def load(self, path):
-        path = expand_path(path, config.basedir)
+        path = expand_path(path, config().basedir)
         if self.is_loaded():
             unload_database()
         if not os.path.exists(path):
             self.load_failed = True
-            raise IOError
+            raise LoadError
         try:
             infile = file(path, 'rb')
             db = cPickle.load(infile)
@@ -79,18 +80,17 @@ class Pickle(Database):
             raise InvalidFormatError(stack_trace=True)
         # Work around a sip bug: don't store card types, but their ids.
         for f in self.facts:
-            f.card_type = get_card_type_by_id(f.card_type)
+            f.card_type = card_type_by_id(f.card_type)
         # TODO: This was to remove database inconsistencies. Still needed?
         #for c in self.categories:
         #    self.remove_category_if_unused(c)
-        config["path"] = contract_path(path, config.basedir)
-        log.info("Loaded database %d %d %d", self.scheduled_count(), \
-                    self.non_memorised_count(), self.card_count())
+        config()["path"] = contract_path(path, config().basedir)
+        log().loaded_database()
         for f in component_manager.get_all("after_load"):
             f.run()
 
     def save(self, path):
-        path = expand_path(path, config.basedir)
+        path = expand_path(path, config().basedir)
         # Work around a sip bug: don't store card types, but their ids.
         for f in self.facts:
             f.card_type = f.card_type.id
@@ -108,21 +108,20 @@ class Pickle(Database):
         except:
             print traceback_string()
             raise SaveError()
-        config["path"] = contract_path(path, config.basedir)
+        config()["path"] = contract_path(path, config().basedir)
         # Work around sip bug again.
         for f in self.facts:
-            f.card_type = get_card_type_by_id(f.card_type)
+            f.card_type = card_type_by_id(f.card_type)
 
 
     def unload(self):
-        self.save(config["path"])
-        log.info("Saved database %d %d %d", self.scheduled_count(), \
-                    self.non_memorised_count(), self.card_count())
+        self.save(config()["path"])
+        log().saved_database()
         self.start_date = None
         self.categories = []
         self.facts = []
         self.cards = []
-        get_scheduler().clear_queue()
+        scheduler().clear_queue()
         return True
 
     def backup(self):
@@ -131,9 +130,9 @@ class Pickle(Database):
 
         if not self.is_loaded():
             return
-        backupdir = unicode(os.path.join(config.basedir, "backups"))
+        backupdir = unicode(os.path.join(config().basedir, "backups"))
         # Export to XML. Create only a single file per day.
-        db_name = os.path.basename(config["path"])[:-4]
+        db_name = os.path.basename(config()["path"])[:-4]
         filename = db_name + "-" +\
                    datetime.date.today().strftime("%Y%m%d") + ".xml"
         filename = os.path.join(backupdir, filename)
@@ -145,11 +144,11 @@ class Pickle(Database):
         f.close()
         os.remove(filename)
         # Only keep the last logs.
-        if config["backups_to_keep"] < 0:
+        if config()["backups_to_keep"] < 0:
             return
         files = [f for f in os.listdir(backupdir) if f.startswith(db_name+"-")]
         files.sort()
-        if len(files) > config["backups_to_keep"]:
+        if len(files) > config()["backups_to_keep"]:
             os.remove(os.path.join(backupdir, files[0]))
 
     def is_loaded(self):
@@ -173,14 +172,12 @@ class Pickle(Database):
     # TODO: benchmark this and see if we need a dictionary category_by_name.
 
     def get_or_create_category_with_name(self, name):
-        if all(name != c.name for c in self.categories):
-            category = Category(name)
-            self.categories.append(category)
-            return category
-        else:
-            for c in self.categories:
-                if c.name == name:
-                    return c
+        for category in self.categories:
+            if category.name == name:
+                return category
+        category = Category(name)
+        self.categories.append(category)
+        return category
 
     # TODO: we used to check on name here. OK to check on instance?
 
@@ -205,16 +202,15 @@ class Pickle(Database):
             if c.fact == fact:
                 self.cards.remove(c)
         self.facts.remove(fact)
-        get_scheduler().rebuild_queue()
+        scheduler().rebuild_queue()
         for cat in old_cat:
             self.remove_category_if_unused(cat)
-        log.info("Deleted card %s", c.id)
+        log().deleted_card()
 
     def add_card(self, card):
         self.load_failed = False
         self.cards.append(card)
-        new_interval = self.days_since_start() - card.next_rep
-        log.info("New card %s %d %d", card.id, card.grade, new_interval)
+        log().new_card(card)
 
     def update_card(self, card):
         return # Should happen automatically.

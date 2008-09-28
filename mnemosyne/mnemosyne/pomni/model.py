@@ -24,8 +24,6 @@
 MVC Model
 """
 
-import types
-
 from pomni.patterns import Subject
 
 
@@ -42,22 +40,27 @@ class Model(Subject):
         """ Model Exception """
         pass
 
-    def __init__(self, backend):
+    def __init__(self, database, scheduler):
         """ Constructor """
 
         Subject.__init__(self)
 
-        self.backend = backend
+        self.database, self.scheduler = database, scheduler
+        self.learn_ahead = False
 
     def scheduled(self):
         """ Return next scheduled card """
-        for name in self.backend.get_list(sort=True):
-            yield (name, self.backend.get_record(name))
+        while True:
+            card = self.scheduler.get_new_question(self.learn_ahead)
+            if card:
+                yield card
+            else:
+                break
 
     def is_valid_mark(self, mark):
         """ Check if mark is valid """
 
-        if type(mark) != types.IntType or not 0 <= mark <= 5:
+        if isinstance(mark, int) or not 0 <= mark <= 5:
             raise self.ModelException(\
                 "Error: Mark has to be a number from 0 to 5")
         return True

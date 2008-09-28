@@ -27,7 +27,7 @@ Design Patterns
 
 class Subject:
     """ Observer pattern. Subject - observable entity
-
+    Usage:
     >>> class Observer:
     ...     def update(self, observer): print 'updated'
     >>> observer = Observer()

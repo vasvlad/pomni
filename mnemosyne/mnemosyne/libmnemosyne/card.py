@@ -2,9 +2,8 @@
 # card.py <Peter.Bienstman@UGent.be>
 #
 
-from mnemosyne.libmnemosyne.component_manager import get_database
-from mnemosyne.libmnemosyne.component_manager import get_scheduler
-from mnemosyne.libmnemosyne.component_manager import get_card_filters
+from mnemosyne.libmnemosyne.component_manager import database
+from mnemosyne.libmnemosyne.component_manager import scheduler
 
 
 class Card(object):
@@ -14,7 +13,7 @@ class Card(object):
     def __init__(self, fact, fact_view):
         self.fact = fact
         self.fact_view = fact_view
-        self.id = self.fact.id + "." + str(self.fact_view.id)
+        self.id = self.fact.uid + "." + str(self.fact_view.id)
         self.reset_learning_data()
 
     def reset_learning_data(self):
@@ -37,9 +36,8 @@ class Card(object):
 
         """
 
-        db = get_database()
         self.grade = 0
-        self.easiness = db.average_easiness()
+        self.easiness = database().average_easiness()
         self.acq_reps = 0
         self.ret_reps = 0
         self.lapses = 0
@@ -61,8 +59,8 @@ class Card(object):
 
         """
 
-        db = get_database()
-        sch = get_scheduler()
+        db = database()
+        sch = scheduler()
         self.grade = grade
         self.easiness = db.average_easiness()
         self.acq_reps = 1
@@ -73,23 +71,19 @@ class Card(object):
         self.next_rep = db.days_since_start() + new_interval
 
     def question(self):
-        q = self.fact_view.question(self.fact)
-        for f in get_card_filters():
-            q = f.run(q, self)
-        return q
+        return self.fact.card_type.get_renderer().render_card_fields(self, \
+                self.fact_view.q_fields)
 
     def answer(self):
-        a = self.fact_view.answer(self.fact)
-        for f in get_card_filters():
-            a = f.run(a, self)
-        return a
+        return self.fact.card_type.get_renderer().render_card_fields(self, \
+                self.fact_view.a_fields)
         
     interval = property(lambda self : self.next_rep - self.last_rep)
     
     days_since_last_rep = property(lambda self : \
-                            get_database().days_since_start - self.last_rep)
+                            database().days_since_start - self.last_rep)
                             
     days_until_next_rep = property(lambda self : \
-                            self.next_rep - get_database().days_since_start)
+                            self.next_rep - database().days_since_start)
 
 
