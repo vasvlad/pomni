@@ -30,7 +30,7 @@ import cmd
 from os.path import basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config
+        ui_controller_review, config, ui_controller_main, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
     import SM2Controller
@@ -73,12 +73,14 @@ class CommandlineUI(cmd.Cmd):
     def do_input(self, line):
         """ Input mode """
         print("=== Input mode ===")
-        #backend = self.model.backend
         once_again = "y"
         while once_again == "y":
             face_side = raw_input("Enter the face side: ")
             back_side = raw_input("Enter the back side: ")
-            #backend.add_field(face_side, back_side)
+            c = ui_controller_main()
+            c.create_new_cards({'q': face_side, 'a': back_side}, card_types()[0], 0, ('category1'))
+            database().save(config()['path'])
+
             once_again = raw_input("Do you want to add a new record? y/n ")
 
     def do_conf(self, line):
