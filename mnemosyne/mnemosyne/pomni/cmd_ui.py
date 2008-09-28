@@ -73,15 +73,23 @@ class CommandlineUI(cmd.Cmd):
     def do_input(self, line):
         """ Input mode """
         print("=== Input mode ===")
+
         once_again = "y"
+        c = ui_controller_main()
+        #Default type for Comandline Interface is "Front-to-back only"
+        for card_type in card_types():
+            if (card_type.name == _("Front-to-back only")):
+                break;
+        # Default category for Comandline Interface is 'category1'
+        category = 'category1'
         while once_again == "y":
             face_side = raw_input("Enter the face side: ")
             back_side = raw_input("Enter the back side: ")
-            c = ui_controller_main()
-            c.create_new_cards({'q': face_side, 'a': back_side}, card_types()[0], 0, ('category1'))
-            database().save(config()['path'])
+            c.create_new_cards({'q': face_side, 'a': back_side}, card_type, 0, category)
 
             once_again = raw_input("Do you want to add a new record? y/n ")
+
+        database().save(config()['path'])
 
     def do_conf(self, line):
         """ Configuration mode """
