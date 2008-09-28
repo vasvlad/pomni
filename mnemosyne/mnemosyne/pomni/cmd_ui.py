@@ -56,8 +56,11 @@ class CommandlineUI(cmd.Cmd):
         """
         pass
 
-    def start(self):
-        self.cmdloop()
+    def start(self, mode):
+        if mode:
+            self.onecmd(mode)
+        else:
+            self.cmdloop()
 
     def do_quit(self, line):
         """ Quit the program """ 
@@ -78,7 +81,7 @@ class CommandlineUI(cmd.Cmd):
             #backend.add_field(face_side, back_side)
             once_again = raw_input("Do you want to add a new record? y/n ")
 
-    def do_config(self, line):
+    def do_conf(self, line):
         """ Configuration mode """
         print "Configuration mode. Not implemented yet"
 

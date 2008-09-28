@@ -43,7 +43,7 @@ class Controller:
     def start(self, mode):
         """ Start the application """
 
-        self.view.start()
+        self.view.start(mode)
 
         #if not mode or mode == 'review':
         #    ui_controller_review().start()
