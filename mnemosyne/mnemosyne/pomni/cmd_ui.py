@@ -86,9 +86,10 @@ class CommandlineUI(cmd.Cmd):
             face_side = raw_input("Enter the face side: ")
             back_side = raw_input("Enter the back side: ")
             c.create_new_cards({'q': face_side, 'a': back_side}, card_type, 0, category)
-
             once_again = raw_input("Do you want to add a new record? y/n ")
-
+	    
+       database().save(config()['path'])
+       
     def do_conf(self, line):
         """ Configuration mode """
         print "Configuration mode. Not implemented yet"
