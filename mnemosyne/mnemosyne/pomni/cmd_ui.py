@@ -88,7 +88,7 @@ class CommandlineUI(cmd.Cmd):
             c.create_new_cards({'q': face_side, 'a': back_side}, card_type, 0, category)
             once_again = raw_input("Do you want to add a new record? y/n ")
 	    
-       database().save(config()['path'])
+        database().save(config()['path'])
        
     def do_conf(self, line):
         """ Configuration mode """
