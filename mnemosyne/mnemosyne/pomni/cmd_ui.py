@@ -89,8 +89,6 @@ class CommandlineUI(cmd.Cmd):
 
             once_again = raw_input("Do you want to add a new record? y/n ")
 
-        database().save(config()['path'])
-
     def do_conf(self, line):
         """ Configuration mode """
         print "Configuration mode. Not implemented yet"
