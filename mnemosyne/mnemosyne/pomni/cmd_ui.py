@@ -77,9 +77,10 @@ class CommandlineUI(cmd.Cmd):
         once_again = "y"
         c = ui_controller_main()
         #Default type for Comandline Interface is "Front-to-back only"
+        print "Select Card Type:"
         for card_type in card_types():
-            if (card_type.name == _("Front-to-back only")):
-                break;
+            print card_type.id,".",card_type.name
+
         # Default category for Comandline Interface is 'category1'
         category = 'category1'
         while once_again == "y":
