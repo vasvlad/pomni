@@ -75,21 +75,50 @@ class CommandlineUI(cmd.Cmd):
         print("=== Input mode ===")
 
         once_again = "y"
-        c = ui_controller_main()
-        #Default type for Comandline Interface is "Front-to-back only"
-        print "Select Card Type:"
-        for card_type in card_types():
-            print card_type.id,".",card_type.name
-
-        # Default category for Comandline Interface is 'category1'
-        category = 'category1'
+        card = ui_controller_main()
         while once_again == "y":
-            face_side = raw_input("Enter the face side: ")
-            back_side = raw_input("Enter the back side: ")
-            c.create_new_cards({'q': face_side, 'a': back_side}, card_type, 0, category)
-            once_again = raw_input("Do you want to add a new record? y/n ")
+            # Select Card Type by user:
+            print "Select Card Type:"
+            card_type_by_id = {}
+            for card_type in card_types():
+                print card_type.id, card_type.name
+                card_type_by_id[card_type.id] = card_type
+
+            while True:
+                card_type_id = raw_input(_("Enter number \
+                                    of Card Type or 'q' to quit ... "))
+                if card_type_id in ("q", "Q"):
+                    return
+                try:
+                    card_type = card_type_by_id[card_type_id]
+                except KeyError:
+                    print(_("Input error, try again"))
+                    continue
+                break
+
+            # Default category for Comandline Interface is 'category1'
+            category = 'category'
+            # Enter all fields for the current type
+            fact = {}
+            problem_field = False
+            for fact_key, fact_key_name in card_type.fields:
+                print _("Enter field"), fact_key_name
+                text = raw_input()
+                if text:
+                    fact[fact_key] = text
+            # Check necesary fields and create new card
+            for required in card_type.required_fields():
+                if not required in fact.keys():
+                    print(_("Error.This card is not saved in a database !!!"))
+                    print(_("You didn't enter all necesary field(s) !!!"))
+                    problem_field = True
+            # Create new card
+            if not problem_field :
+                card.create_new_cards(fact, card_type, 0, category)
+                database().save(config()['path'])
+
+            once_again = raw_input(_("Do you want to add a new record? y/n "))
 	    
-        database().save(config()['path'])
        
     def do_conf(self, line):
         """ Configuration mode """
