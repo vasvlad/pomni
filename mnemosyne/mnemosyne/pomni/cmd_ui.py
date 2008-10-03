@@ -85,8 +85,8 @@ class CommandlineUI(cmd.Cmd):
                 card_type_by_id[card_type.id] = card_type
 
             while True:
-                card_type_id = raw_input(_("Enter number \
-                                    of Card Type or 'q' to quit ... "))
+                card_type_id = \
+                raw_input(_("Enter number of Card Type or 'q' to quit ... "))
                 if card_type_id in ("q", "Q"):
                     return
                 try:
@@ -96,8 +96,27 @@ class CommandlineUI(cmd.Cmd):
                     continue
                 break
 
-            # Default category for Comandline Interface is 'category1'
-            category = 'category'
+            # Select the exist or Add the new Categore  
+            i = 0
+            category_names_by_id = {}
+            for name in database().category_names():
+                print i,name
+                category_names_by_id[str(i)] = name 
+                i=i+1
+ 
+            while True:
+                category_name_id = \
+                raw_input(_("Enter number of Category or enter new category or 'q' to quit ... "))
+                if category_name_id in ("q", "Q"):
+                    return
+                try:
+                     category_name = category_names_by_id[category_name_id]
+                except KeyError:
+                    database().get_or_create_category_with_name(category_name_id)
+                    category_name = category_name_id
+                break
+
+
             # Enter all fields for the current type
             fact = {}
             problem_field = False
@@ -114,7 +133,7 @@ class CommandlineUI(cmd.Cmd):
                     problem_field = True
             # Create new card
             if not problem_field :
-                card.create_new_cards(fact, card_type, 0, category)
+                card.create_new_cards(fact, card_type, 0, [category_name])
                 database().save(config()['path'])
 
             once_again = raw_input(_("Do you want to add a new record? y/n "))

@@ -63,9 +63,9 @@ def _create_example_cards(db_name):
     from mnemosyne.libmnemosyne.component_manager import ui_controller_main, card_types
 
     c = ui_controller_main()
-    c.create_new_cards({'q': 'word 1', 'a': 'translation 1'}, card_types()[0], 0, ('category1'))
-    c.create_new_cards({'q': 'word 2', 'a': 'translation 2'}, card_types()[0], 0, ('category1'))
-    c.create_new_cards({'q': 'word 3', 'a': 'translation 3'}, card_types()[0], 0, ('category1'))
+    c.create_new_cards({'q': 'word 1', 'a': 'translation 1'}, card_types()[0], 0, ['category1'])
+    c.create_new_cards({'q': 'word 2', 'a': 'translation 2'}, card_types()[0], 0, ['category1'])
+    c.create_new_cards({'q': 'word 3', 'a': 'translation 3'}, card_types()[0], 0, ['category1'])
 
     database().save(db_name)
 
