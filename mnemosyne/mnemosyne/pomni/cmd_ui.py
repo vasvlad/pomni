@@ -45,7 +45,7 @@ class CommandlineUI(cmd.Cmd):
     def __init__(self, model):
         cmd.Cmd.__init__(self)
         self.prompt = '====== Main =======\nPomni: '
-
+        ui_controller_main().widget = self
         self.model = model
         model.register(self)
 
@@ -55,6 +55,18 @@ class CommandlineUI(cmd.Cmd):
             about its change
         """
         pass
+
+    def information_box(self, message, OK_string):
+        print message
+
+    def question_box(self, question, option0, option1, option2):
+        print question
+        print "0", option0
+        print "1", option1
+        print "2", option2
+        answer = raw_input(_("Enter number of answer for select it "))
+
+        return answer
 
     def start(self, mode):
         if mode:
@@ -112,7 +124,6 @@ class CommandlineUI(cmd.Cmd):
                 try:
                      category_name = category_names_by_id[category_name_id]
                 except KeyError:
-                    database().get_or_create_category_with_name(category_name_id)
                     category_name = category_name_id
                 break
 
