@@ -13,8 +13,7 @@ from mnemosyne.libmnemosyne.component_manager import filters
 
 class TextRenderer(Renderer):
     
-    def render_card_fields(self, card, fields):
-        fact = card.fact
+    def render_card_fields(self, fact, fields):
         txt = ''
         for field in fields:
             key = field[0]
