@@ -29,7 +29,6 @@ from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
-from pomni.dummy_backend import DummyBackend
 
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
@@ -50,9 +49,9 @@ def ui_factory(model, interface=None):
 def backend_factory(name=None):
     """ Create backend """
 
-    if not name or name == 'dummy':
-        return DummyBackend()
-    if name == 'pickle':
+    if not name or name == 'sqlite':
+        raise NotImplementedError("SQLite backend is not implemented yet"
+    if not name or name == 'pickle':
         return Pickle()
 
     raise ValueError("No idea how to create %s backend" % name)
