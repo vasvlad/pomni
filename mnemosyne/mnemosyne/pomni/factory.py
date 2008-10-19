@@ -49,10 +49,10 @@ def ui_factory(model, interface=None):
 def backend_factory(name=None):
     """ Create backend """
 
-    if not name or name == 'sqlite':
-        raise NotImplementedError("SQLite backend is not implemented yet"
-    if not name or name == 'pickle':
-        return Pickle()
+    if not name or name == "pickle":
+    	return Pickle()
+    if name == 'sqlite':
+        raise NotImplementedError("SQLite backend is not implemented yet")
 
     raise ValueError("No idea how to create %s backend" % name)
 
