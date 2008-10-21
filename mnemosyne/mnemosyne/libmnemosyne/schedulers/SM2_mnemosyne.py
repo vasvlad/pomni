@@ -2,17 +2,12 @@
 # SM2_mnemosyne.py <Peter.Bienstman@UGent.be>
 #
 
-import logging
 import random
 import copy
 
 from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.scheduler import Scheduler
-from mnemosyne.libmnemosyne.component_manager import get_database
-from mnemosyne.libmnemosyne.config import config
-from mnemosyne.libmnemosyne.stopwatch import stopwatch
-
-log = logging.getLogger("mnemosyne")
+from mnemosyne.libmnemosyne.component_manager import database, config,  log
 
 
 class SM2Mnemosyne(Scheduler):
@@ -42,9 +37,9 @@ class SM2Mnemosyne(Scheduler):
             noise = round(random.uniform(-a,a))
         return noise
 
-    def rebuild_queue(self, learn_ahead = False):
+    def rebuild_queue(self, learn_ahead=False):
         self.queue = []
-        db = get_database()
+        db = database()
         if not db.is_loaded():
             return
         # Do the cards that are scheduled for today (or are overdue), but
@@ -59,7 +54,7 @@ class SM2Mnemosyne(Scheduler):
         # avoid too long intervals between revisions. If there are too few
         # cards in left in the queue, append more new cards to keep some
         # spread between these last cards.
-        limit = config["grade_0_cards_at_once"]
+        limit = config()["grade_0_items_at_once"]
         grade_0 = db.cards_due_for_final_review(grade=0)
         grade_0_selected = []
         if limit != 0:
@@ -105,7 +100,7 @@ class SM2Mnemosyne(Scheduler):
         grade_0_selected = []
         if limit != 0 and len(unseen) != 0:
             while True:
-                if config["randomise_new_cards"] == False:
+                if config()["randomise_new_cards"] == False:
                     new_card = unseen[0]
                 else:
                     new_card = random.choice(unseen)
@@ -126,7 +121,9 @@ class SM2Mnemosyne(Scheduler):
         # earliest scheduled cards first. We only put 5 cards at the same
         # time into the queue, in order to save memory.
         # TODO: this requires the user to click 'learn ahead of schedule'
-        # again after 5 cards. See if we can improve this.
+        # again after 5 cards. If it's possible to make this algorithm
+        # stateless and return 1 card at the time, this will be solved
+        # automatically.
         if learn_ahead == False:
             return
         else:
@@ -140,7 +137,7 @@ class SM2Mnemosyne(Scheduler):
 
     def remove_from_queue(self, card):
 
-        """Remove a single instance of an card from the queue. Necessary when
+        """Remove a single instance of a card from the queue. Necessary when
         the queue needs to be rebuilt, and there is still a question pending.
 
         """
@@ -162,7 +159,7 @@ class SM2Mnemosyne(Scheduler):
         return card
 
     def process_answer(self, card, new_grade, dry_run=False):
-        db = get_database()
+        db = database()
         days_since_start = db.days_since_start()
         # When doing a dry run, make a copy to operate on. Note that this
         # leaves the original in cards and the reference in the GUI intact.
@@ -244,7 +241,7 @@ class SM2Mnemosyne(Scheduler):
                         new_interval = actual_interval * card.easiness
             # Shouldn't happen, but build in a safeguard.
             if new_interval == 0:
-                log.info("Internal error: new interval was zero.")
+                print "Internal error: new interval was zero."
                 new_interval = scheduled_interval
             new_interval = int(new_interval)
         # When doing a dry run, stop here and return the scheduled interval.
@@ -263,12 +260,8 @@ class SM2Mnemosyne(Scheduler):
                 card.next_rep += 1
                 noise += 1
         # Create log entry.
-        log.info("R %s %d %1.2f | %d %d %d %d %d | %d %d | %d %d | %1.1f",
-                    card.id, card.grade, card.easiness,
-                    card.acq_reps, card.ret_reps, card.lapses,
-                    card.acq_reps_since_lapse, card.ret_reps_since_lapse,
-                    scheduled_interval, actual_interval,
-                    new_interval, noise, stopwatch.time())
+        log().revision(card, scheduled_interval, actual_interval,
+                       new_interval, noise)
         return new_interval + noise
 
     def clear_queue(self):

@@ -2,10 +2,8 @@
 # card_type.py <Peter.Bienstman@UGent.be>
 #
 
-from mnemosyne.libmnemosyne.fact import Fact
-from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.component import Component
-from mnemosyne.libmnemosyne.component_manager import get_database
+from mnemosyne.libmnemosyne.component_manager import component_manager
 
 
 class CardType(Component):
@@ -19,15 +17,19 @@ class CardType(Component):
 
     The keys from the fact are also given more verbose names here.
     This is not done in fact.py, on one hand to save space in the database,
-    and on the other hand to allow the possibilty that different card types
+    and on the other hand to allow the possibility that different card types
     give different names to the same key. (E.g. foreign word' could be
-    called 'French' in a French card type, or'pronunciation' could be
+    called 'French' in a French card type, or 'pronunciation' could be
     called 'reading' in a Kanji card type.) This in done in self.fields,
     which is a list of the form [(fact_key, fact_key_name)]. It is tempting to
     use a dictionary here, but we can't do that since ordering is important.
 
     We could use the component manager to track fact views, but this is
     probably overkill.
+    
+    The renderer is determined only when we need it, as opposed to when we
+    create the card type, because it is not sure that the renderer already
+    exists at that stage.
 
     """
 
@@ -40,8 +42,7 @@ class CardType(Component):
         self.unique_fields = []
         self.is_language = False
         self.widget = None
-        self.css = "" # TODO: read from file if exists.
-        self.a_on_top_of_q = False
+        self.renderer = None
 
     def required_fields(self):
 
@@ -52,4 +53,20 @@ class CardType(Component):
             for k in f.required_fields:
                 s.add(k)
         return s
+        
+    def question(self, fact, fact_view):
+        return self.get_renderer().render_card_fields(fact, fact_view.q_fields)
 
+    def answer(self, fact, fact_view):
+        return self.get_renderer().render_card_fields(fact, fact_view.a_fields)
+        
+    def get_renderer(self):
+        if self.renderer:
+            return self.renderer
+        else:
+            try:
+                self.renderer = component_manager.\
+                   get_current("renderer", used_for=self.__class__.__name__)
+            except KeyError:
+                 self.renderer = component_manager.get_current("renderer")
+            return self.renderer

@@ -13,9 +13,9 @@ class UiControllerMain(Component):
 
     """
 
-    def __init__(self, name, description=""):
-        self.name = name
-        self.description = description
+    def __init__(self, name="", description=""):    
+        self.name = None
+        self.description = None
         self.widget = None
 
     def create_new_cards(self, fact_data, card_type, grade, cat_names):

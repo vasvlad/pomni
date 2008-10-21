@@ -8,11 +8,12 @@ _ = gettext.gettext
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from Ui_review_wdgt import *
+from ui_review_wdgt import *
 
-from mnemosyne.libmnemosyne.component_manager import component_manager
-from mnemosyne.libmnemosyne.component_manager import get_ui_controller_review
-from mnemosyne.libmnemosyne.config import config
+from mnemosyne.libmnemosyne.review_widget import ReviewWidget
+from mnemosyne.libmnemosyne.component_manager import component_manager, config
+from mnemosyne.libmnemosyne.component_manager import ui_controller_review
+from mnemosyne.libmnemosyne.component_manager import ui_controller_main
 
 _empty = """
 <html><head>
@@ -26,12 +27,12 @@ body  { background-color: white;
 <body><table><tr><td></td></tr></table></body></html>
 """
 
-class ReviewWdgt(QWidget, Ui_ReviewWdgt):
+class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
     
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.setupUi(self)
-        self.controller = get_ui_controller_review()
+        self.controller = ui_controller_review()
         self.controller.widget = self
         self.grade_buttons = QButtonGroup()
         self.grade_buttons.addButton(self.grade_0_button, 0)
@@ -50,20 +51,8 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt):
     def grade_answer(self, grade):
         self.controller.grade_answer(grade)
 
-    def next_rep_string(self, days):
-        if days == 0:
-            return QString('\n') + self.trUtf8("Next repetition: today.")
-        elif days == 1:
-            return QString('\n') + self.trUtf8("Next repetition: tomorrow.")
-        else:
-            return QString('\n') + self.trUtf8("Next repetition in ").\
-                   append(QString(str(days))).\
-                   append(self.trUtf8(" days."))
-
     def set_window_title(self, title):
-        self.setWindowTitle(title)
-
-    # TODO: pass on to parent
+        ui_controller_main().widget.setWindowTitle(title)
     
     def enable_edit_current_card(self, enable):
         return
@@ -76,9 +65,6 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt):
     def enable_edit_deck(self, enable):
         return        
         self.actionEditDeck.setEnabled(enable)
-
-    def get_font_size(self):
-        return font.pointSize()
 
     def set_question_label(self, text):
         self.question_label.setText(text)
@@ -144,8 +130,17 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt):
 
     def enable_grades(self, grades_enabled):
         self.grades.setEnabled(grades_enabled)
-
+ 
+    def set_grades_title(self, text):
+        self.grades.setTitle(text)
         
+    def set_grade_text(self, grade, text):
+        self.grade_buttons.button(grade).setText(text)
+        
+    def set_grade_tooltip(self, grade, text):
+        self.grade_buttons.button(grade).setToolTip(text)
+  
+       
             
     ##########################################################################
     #
@@ -159,9 +154,9 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt):
     def update_dialog(self):
         # Update question and answer font.
 
-        if config["QA_font"] != None:
+        if config()["QA_font"] != None:
             font = QFont()
-            font.fromString(config["QA_font"])
+            font.fromString(config()["QA_font"])
         else:
             font = self.show_button.font()
 

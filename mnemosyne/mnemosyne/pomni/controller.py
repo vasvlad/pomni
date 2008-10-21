@@ -24,6 +24,8 @@
 MVC Controller
 """
 
+from mnemosyne.libmnemosyne.component_manager import ui_controller_review, ui_controller_main
+from mnemosyne.libmnemosyne import component_manager
 
 class Controller:
     """ MVC pattern. Controller. Manages the model and the view.
@@ -35,12 +37,16 @@ class Controller:
     def __init__(self, model, view):
         self.model, self.view = model, view
         model.register(self)
-        # register with view somehow?
+        #ui_controller_main().widget = component_manager.get_current("main_widget")()
+        ui_controller_review().widget = component_manager.get_current("review_widget")()
 
-    def start(self):
+    def start(self, mode):
         """ Start the application """
 
-        self.view.main_mode()
+        self.view.start(mode)
+
+        #if not mode or mode == 'review':
+        #    ui_controller_review().start()
 
     def update(self, model):
         """ This method is part of Observer pattern
