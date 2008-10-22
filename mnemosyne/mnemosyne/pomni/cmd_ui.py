@@ -24,7 +24,6 @@
 Command-line UI
 """
 
-import os
 import gettext
 import cmd
 from os.path import basename
@@ -32,10 +31,10 @@ from os.path import basename
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
-from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
-    import SM2Controller
 
-class CmdUiControllerException(Exception): pass
+class CmdUiControllerException(Exception):
+    """ This module's exception type """
+    pass
 
 _ = gettext.gettext
 
@@ -43,6 +42,7 @@ class CommandlineUI(cmd.Cmd):
     """ Commandline UI. Upper-level class """
 
     def __init__(self, model):
+
         cmd.Cmd.__init__(self)
         self.prompt = '====== Main =======\nPomni: '
         ui_controller_main().widget = self
@@ -56,10 +56,12 @@ class CommandlineUI(cmd.Cmd):
         """
         pass
 
-    def information_box(self, message, OK_string):
+    def information_box(self, message, ok_string):
+        """ Widget method. DefaultMainController.create_new_cards calls it """
         print message
 
     def question_box(self, question, option0, option1, option2):
+        """ Widget method. DefaultMainController.create_new_cards calls it """
         print question
         print "0", option0
         print "1", option1
@@ -69,6 +71,7 @@ class CommandlineUI(cmd.Cmd):
         return answer
 
     def start(self, mode):
+        """ UI entry point. Called by controller  """
         if mode:
             self.onecmd(mode)
         else:
@@ -112,17 +115,17 @@ class CommandlineUI(cmd.Cmd):
             i = 0
             category_names_by_id = {}
             for name in database().category_names():
-                print i,name
-                category_names_by_id[str(i)] = name 
-                i=i+1
+                print i, name
+                category_names_by_id[str(i)] = name
+                i += 1
  
             while True:
-                category_name_id = \
-                raw_input(_("Enter number of Category or enter new category or 'q' to quit ... "))
+                category_name_id = raw_input(_("Enter number of Category or "\
+                    "enter new category or 'q' to quit ... "))
                 if category_name_id in ("q", "Q"):
                     return
                 try:
-                     category_name = category_names_by_id[category_name_id]
+                    category_name = category_names_by_id[category_name_id]
                 except KeyError:
                     category_name = category_name_id
                 break
@@ -158,10 +161,14 @@ class CmdUiControllerReview(UiControllerReview):
     """ Commandline UI controller. Review mode """
     
     def __init__(self):
-        # FIXME - should call parent's __init__, not grandparent's
+        
         UiControllerReview.__init__(self, name="Command line UI Controller")
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
         self.grade = 0
+
+    def update_dialog(self):
+        """ This is part of UiControllerReview API """
+        pass
 
     def start(self):
         """ UI Entry point """
@@ -176,6 +183,8 @@ class CmdUiControllerReview(UiControllerReview):
                 break
 
     def new_question(self, learn_ahead=False):
+        """ Print new question """
+
         if database().card_count() == 0:
             raise CmdUiControllerException(_("Database is empty"))
         else:
@@ -191,12 +200,16 @@ class CmdUiControllerReview(UiControllerReview):
                     raise CmdUiControllerException(_("Finished"))
 
     def show_answer(self):
+        """ Print answer or quit  """
+
         value = raw_input(_("Press enter to see the answer or 'q' to quit ..."))
         if value in ("q", "Q"):
             raise CmdUiControllerException(_("Exited"))
         print(_("Answer: %s" % self.card.answer()))
 
     def grade_answer(self):
+        """ Get grade from the user and process it """
+
         while True:
             try:
                 grade = raw_input(_("Grade your answer:"))
@@ -224,7 +237,6 @@ def _test():
     """
     import doctest
     doctest.testmod()
-
 
 if __name__ == "__main__":
     _test()

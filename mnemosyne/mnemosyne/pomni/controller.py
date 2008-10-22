@@ -24,7 +24,7 @@
 MVC Controller
 """
 
-from mnemosyne.libmnemosyne.component_manager import ui_controller_review, ui_controller_main
+from mnemosyne.libmnemosyne.component_manager import ui_controller_review
 from mnemosyne.libmnemosyne import component_manager
 
 class Controller:
@@ -35,10 +35,13 @@ class Controller:
     """
 
     def __init__(self, model, view):
+
         self.model, self.view = model, view
         model.register(self)
-        #ui_controller_main().widget = component_manager.get_current("main_widget")()
-        ui_controller_review().widget = component_manager.get_current("review_widget")()
+        #ui_controller_main().widget = \
+        #    component_manager.get_current("main_widget")()
+        ui_controller_review().widget = \
+            component_manager.get_current("review_widget")()
 
     def start(self, mode):
         """ Start the application """
@@ -54,7 +57,6 @@ class Controller:
             about its change
         """
         pass
-
 
 def _test():
     """ Run doctests

@@ -26,6 +26,9 @@ MVC Model
 
 from pomni.patterns import Subject
 
+class ModelException(Exception):
+    """ Model Exception """
+    pass
 
 class Model(Subject):
     """ MVC pattern. Model - manage state of
@@ -36,10 +39,6 @@ class Model(Subject):
     Has interface methods, which are used by controller and view.
     """
 
-    class ModelException(Exception):
-        """ Model Exception """
-        pass
-
     def __init__(self, database, scheduler):
         """ Constructor """
 
@@ -47,34 +46,6 @@ class Model(Subject):
 
         self.database, self.scheduler = database, scheduler
         self.learn_ahead = False
-
-    def scheduled(self):
-        """ Return next scheduled card """
-        while True:
-            card = self.scheduler.get_new_question(self.learn_ahead)
-            if card:
-                yield card
-            else:
-                break
-
-    def is_valid_mark(self, mark):
-        """ Check if mark is valid """
-
-        if isinstance(mark, int) or not 0 <= mark <= 5:
-            raise self.ModelException(\
-                "Error: Mark has to be a number from 0 to 5")
-        return True
-
-    def update_mark(self, name, mark):
-        """ Update the card's mark """
-
-        if not mark.isdigit():
-            raise self.ModelException("Error: Mark has to be a number")
-
-        mark = int(mark)
-        if self.is_valid_mark(mark):
-            self.backend.set_field(name, "mark", mark)
-            self.notify()
 
 
 def _test():
@@ -86,7 +57,6 @@ def _test():
 
 if __name__ == "__main__":
     _test()
-
 
 # Local Variables:
 # mode: python
