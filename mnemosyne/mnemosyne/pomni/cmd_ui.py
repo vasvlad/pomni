@@ -24,9 +24,11 @@
 Command-line UI
 """
 
+import os
 import gettext
 import cmd
-from os.path import basename
+import locale
+import codecs
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main, card_types
@@ -163,7 +165,8 @@ class CmdUiControllerReview(UiControllerReview):
     def __init__(self):
         
         UiControllerReview.__init__(self, name="Command line UI Controller")
-        self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
+        self.title = _("Mnemosyne") + " - " + \
+            os.path.basename(config()["path"])[:-4]
         self.grade = 0
 
     def update_dialog(self):
@@ -205,7 +208,17 @@ class CmdUiControllerReview(UiControllerReview):
         value = raw_input(_("Press enter to see the answer or 'q' to quit ..."))
         if value in ("q", "Q"):
             raise CmdUiControllerException(_("Exited"))
-        print(_("Answer: %s" % self.card.answer()))
+
+        # get current encoding
+        encoding = None
+        for alias in locale.locale_encoding_alias:
+            if locale.locale_encoding_alias[alias] == locale.getpreferredencoding():
+                encoding = locale.locale_encoding_alias[alias]
+
+        answer = self.card.answer()
+        if encoding:
+            answer = codecs.encode(answer, encoding)
+        print(_("Answer: %s" % answer))
 
     def grade_answer(self):
         """ Get grade from the user and process it """
