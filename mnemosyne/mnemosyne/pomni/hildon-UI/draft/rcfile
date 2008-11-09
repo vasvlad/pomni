@@ -117,7 +117,52 @@ style "review-button-background" {
   }
 }
 
+# Normal Button styles:
+style "review-buttonqa-background" {
+
+  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
+  GtkWidget::focus-width = 0
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::child-displacement-x = 0
+  GtkButton::child-displacement-y = 0
+  GtkButton::interior_focus = 0
+  GtkButton::child_spacing = 0
+  xthickness = 7
+  ythickness = 0
+
+  engine "sapwood" {
+
+    image {
+        function = FOCUS
+	state    = ACTIVE
+    }
+
+    image {
+        function = FOCUS
+	file     = "subBackground.png"
+  	border   = { 283,  365, 53, 152 }
+    }
+
+
+    image {
+	function = BOX
+	file     = "subBackground.png"
+  	border   = { 283,  365, 53, 152 }
+    }
+
+  }
+}
+
+
+style "review-title-label" {
+	font_name = "Nokia Sans 16.0"
+	fg[NORMAL] = "#c2c1bf"
+}
+
+
 widget "*.button_answer" style "review-button"
+widget "*.title_label" style "review-title-label"
 widget "*.button_question" style "review-button"
 widget "*.button_numeric" style "review-button-background"
+widget "*.button_q_and_a" style "review-buttonqa-background"
 widget "ReviewWindow" style "reviewwindow"
