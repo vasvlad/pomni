@@ -30,6 +30,8 @@ from os.path import basename
 import gtk,gobject
 import gtk.glade
 import pygtk
+from gtk import *
+
 
 try:
     import hildon
@@ -80,6 +82,7 @@ class MainWindow:
     """ GUI - Hildon """
 
     def __init__(self,mode):
+        # Fix Me
         gladefile="./hildon-UI/draft/window_main.glade"
         self.wTree=gtk.glade.XML(gladefile)
         dic = { "on_review_clicked" : self.review_clicked, \
@@ -89,10 +92,18 @@ class MainWindow:
         self.wTree.signal_autoconnect (dic)
         self.window = self.wTree.get_widget("MainWindow")
 
+        # Fix Me
+        rc_parse("./hildon-UI/draft/rcfile")
+
+        # Fix Me 
+        if (mode == 'review'):
+            ReviewWindow()
+
+
     def review_clicked(self,widget):
         print "button Review clicked"
         ReviewWindow()
-        
+
     def input_clicked(self,widget):
         print "button Input clicked"
 
