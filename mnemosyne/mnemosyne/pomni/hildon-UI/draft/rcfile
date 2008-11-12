@@ -39,12 +39,6 @@ pixmap_path "/usr/include/X11R6/pixmaps:./"
 # This sets a style called "button".  The name is not really important, as
 # it is assigned to the actual widgets at the bottom of the file.
 
-style "reviewwindow"
-{
-  #This sets the padding around the window to the pixmap specified.
-  #bg_pixmap[<STATE>] = "<pixmap filename>"
-  bg_pixmap[NORMAL] = "background.png"
-}
 
 style "review-button" {
 
@@ -81,78 +75,6 @@ style "review-button" {
 }
 
 
-# Normal Button styles:
-style "review-button-background" {
-
-  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
-  GtkWidget::focus-width = 0
-  GtkButton::default_border = { 0, 0, 0, 0 }
-  GtkButton::child-displacement-x = 0
-  GtkButton::child-displacement-y = 0
-  GtkButton::interior_focus = 0
-  GtkButton::child_spacing = 0
-  xthickness = 7
-  ythickness = 0
-
-  engine "pixmap" {
-
-    image {
-        function = FOCUS
-	state    = ACTIVE
-    }
-
-    image {
-        function = FOCUS
-	file     = "selectionBackground.png"
-  	border   = { 283,  365, 29, 53 }
-    }
-
-
-    image {
-	function = BOX
-	file     = "selectionBackground.png"
-  	border   = { 283,  365, 29, 53 }
-    }
-
-  }
-}
-
-# Normal Button styles:
-style "review-buttonqa-background" {
-
-  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
-  GtkWidget::focus-width = 0
-  GtkButton::default_border = { 0, 0, 0, 0 }
-  GtkButton::child-displacement-x = 0
-  GtkButton::child-displacement-y = 0
-  GtkButton::interior_focus = 0
-  GtkButton::child_spacing = 0
-  xthickness = 7
-  ythickness = 0
-
-  engine "sapwood" {
-
-    image {
-        function = FOCUS
-	state    = ACTIVE
-    }
-
-    image {
-        function = FOCUS
-	file     = "subBackground.png"
-  	border   = { 283,  365, 53, 152 }
-    }
-
-
-    image {
-	function = BOX
-	file     = "subBackground.png"
-  	border   = { 283,  365, 53, 152 }
-    }
-
-  }
-}
-
 
 style "review-title-label" {
 	font_name = "Nokia Sans 16.0"
@@ -160,9 +82,112 @@ style "review-title-label" {
 }
 
 
+# Normal Button styles:
+style "review-frame" {
+
+  engine "pixmap" {
+
+    image
+         {
+          function = FLAT_BOX
+	file     = "textarea.png"
+  	border   = { 8, 8, 8, 8 }
+
+          }
+
+  }
+}
+
+style "reviewwindow"
+{
+   engine "pixmap"
+      {
+        image
+         {
+          function = FLAT_BOX
+          file = "background.png"
+          border = {10, 10, 10, 10}
+          detail = "base"
+          }
+     }
+ }
+
+style "22"
+{
+   engine "pixmap"
+      {
+        image
+         {
+          function = FLAT_BOX
+          file = "background.png"
+          border = {10, 10, 10, 10}
+          }
+        image
+         {
+          function = BOX
+          file = "background.png"
+          border = {10, 10, 10, 10}
+          }
+
+     }
+ }
+
+style "11"
+{
+  #This sets the padding around the window to the pixmap specified.
+  #bg_pixmap[<STATE>] = "<pixmap filename>"
+  bg_pixmap[NORMAL] = "background.png"
+}
+
+
+
+style "review-button-background"
+{
+  GtkNotebook::inner_left_border = 0
+  GtkNotebook::inner_right_border = 0
+  GtkNotebook::tab-overlap = 0
+  GtkNotebook::arrow-spacing = 6
+  GtkNotebook::label-padding = 2
+
+  # Themings for images on different sides of the notebook.
+  engine "sapwood"
+  {
+    image
+      {
+        function = BOX
+	detail   = "notebook"
+        border   = { 59, 59, 15, 15 }
+        file     = "darkbackground.png"
+      }
+  }
+}
+
+style "review-qabutton-background"
+{
+  GtkNotebook::inner_left_border = 0
+  GtkNotebook::inner_right_border = 0
+  GtkNotebook::tab-overlap = 0
+  GtkNotebook::arrow-spacing = 6
+  GtkNotebook::label-padding = 2
+
+  # Themings for images on different sides of the notebook.
+  engine "sapwood"
+  {
+    image
+      {
+        function = BOX
+	detail   = "notebook"
+        border   = { 19, 19, 35, 15 }
+        file     = "updarkbackground.png"
+      }
+  }
+}
+
+
+
 widget "*.button_answer" style "review-button"
 widget "*.title_label" style "review-title-label"
 widget "*.button_question" style "review-button"
-widget "*.button_numeric" style "review-button-background"
-widget "*.button_q_and_a" style "review-buttonqa-background"
+widget "*.notebook_button" style "review-button-background"
+widget "*.notebook_qa" style "review-qabutton-background"
 widget "ReviewWindow" style "reviewwindow"

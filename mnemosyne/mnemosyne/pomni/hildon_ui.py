@@ -55,24 +55,40 @@ class ReviewWindow:
     """ GUI - Hildon """
 
     def __init__(self):
-        gladefile="./hildon-UI/draft/window_review.glade"
-        self.wTree=gtk.glade.XML(gladefile)
-        dic = { "on_review_clicked" : self.review_clicked, \
-                "on_input_clicked" : self.input_clicked, \
-                "on_configure_clicked" : self.configure_clicked, \
+        # Fix Me
+        gladefile = "./hildon-UI/draft/window_review.glade"
+        self.wTree = gtk.glade.XML(gladefile)
+        dic = { "on_eventbox_numeral0_button_press_event" : self.numeral0_pressed, \
+                "on_eventbox_numeral1_button_press_event" : self.numeral1_pressed, \
+                "on_eventbox_numeral2_button_press_event" : self.numeral2_pressed, \
+                "on_eventbox_numeral3_button_press_event" : self.numeral3_pressed, \
+                "on_eventbox_numeral4_button_press_event" : self.numeral4_pressed, \
+                "on_eventbox_numeral5_button_press_event" : self.numeral5_pressed, \
+                "on_eventbox_open_button_press_event"     : self.open_card_clicked, \
                 "on_exit_clicked" : self.quit }
         self.wTree.signal_autoconnect (dic)
-        self.window = self.wTree.get_widget("ReviewWindow")
 
-    def review_clicked(self,widget):
-        print "button Review clicked"
+    def numeral0_pressed(self,widget,event):
+        print "button 0 clicked"
 
+    def numeral1_pressed(self,widget,event):
+        print "button 1 clicked"
 
-    def input_clicked(self,widget):
-        print "button Input clicked"
+    def numeral2_pressed(self,widget,event):
+        print "button 2 clicked"
 
-    def configure_clicked(self,widget):
-        print "button Configure clicked"
+    def numeral3_pressed(self,widget,event):
+        print "button 3 clicked"
+
+    def numeral4_pressed(self,widget,event):
+        print "button 4 clicked"
+
+    def numeral5_pressed(self,widget,event):
+        print "button 5 clicked"
+
+    def open_card_clicked(self,widget,event):
+        print "Open card clicked"
+
 
     def quit(self,widget):
         self.window.destroy()
@@ -84,10 +100,12 @@ class MainWindow:
     def __init__(self,mode):
         # Fix Me
         gladefile="./hildon-UI/draft/window_main.glade"
+
         self.wTree=gtk.glade.XML(gladefile)
         dic = { "on_review_clicked" : self.review_clicked, \
                 "on_input_clicked" : self.input_clicked, \
                 "on_configure_clicked" : self.configure_clicked, \
+                "on_eventbox1_button_press_event" : self.quit, \
                 "on_exit_clicked" : self.quit }
         self.wTree.signal_autoconnect (dic)
         self.window = self.wTree.get_widget("MainWindow")
