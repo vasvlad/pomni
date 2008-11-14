@@ -145,12 +145,12 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEventBox" id="eventbox_open">
+                      <widget class="GtkEventBox" id="eventbox_show_answer">
                         <property name="visible">True</property>
                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                         <property name="visible_window">False</property>
                         <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="on_eventbox_open_button_press_event"/>
+                        <signal name="button_press_event" handler="on_eventbox_show_answer_button_press_event"/>
                         <child>
                           <widget class="GtkImage" id="image1">
                             <property name="width_request">110</property>
@@ -316,7 +316,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEventBox" id="eventbox__numeral_4">
+                      <widget class="GtkEventBox" id="eventbox_numeral_4">
                         <property name="visible">True</property>
                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                         <property name="visible_window">False</property>

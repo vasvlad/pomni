@@ -55,27 +55,31 @@ class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
 
     def __init__(self):
-       pass
+        # FIXME - should call parent's __init__, not grandparent's
+        UiControllerReview.__init__(self, name="Command line UI Controller")
+        self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
+        self.grade = 0
+
     def numeral0_pressed(self,widget,event):
-        print "button 0 clicked"
+        self.grade_answer(0)
 
     def numeral1_pressed(self,widget,event):
-        print "button 1 clicked"
+        self.grade_answer(1)
 
     def numeral2_pressed(self,widget,event):
-        print "button 2 clicked"
+        self.grade_answer(2)
 
     def numeral3_pressed(self,widget,event):
-        print "button 3 clicked"
+        self.grade_answer(3)
 
     def numeral4_pressed(self,widget,event):
-        print "button 4 clicked"
+        self.grade_answer(4)
 
     def numeral5_pressed(self,widget,event):
-        print "button 5 clicked"
+        self.grade_answer(5)
 
     def open_card_clicked(self,widget,event):
-        print "Open card clicked"
+        self.show_answer()
 
     def start(self):
         # Fix Me
@@ -87,20 +91,57 @@ class HildonUiControllerReview(UiControllerReview):
                 "on_eventbox_numeral3_button_press_event" : self.numeral3_pressed, \
                 "on_eventbox_numeral4_button_press_event" : self.numeral4_pressed, \
                 "on_eventbox_numeral5_button_press_event" : self.numeral5_pressed, \
-                "on_eventbox_open_button_press_event"     : self.open_card_clicked, \
+                "on_eventbox_show_answer_button_press_event"     : self.open_card_clicked, \
                 "on_exit_clicked" : self.quit }
         self.wTree.signal_autoconnect (dic)
-
-        self.answer = self.wTree.get_widget("answer")
-        self.answer.set_text("")
-
         self.question = self.wTree.get_widget("question")
-        self.question.set_text("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        self.answer = self.wTree.get_widget("answer")
+        self.eventbox_numeral0 = self.wTree.get_widget("eventbox_numeral_0")
+        self.eventbox_numeral1 = self.wTree.get_widget("eventbox_numeral_1")
+        self.eventbox_numeral2 = self.wTree.get_widget("eventbox_numeral_2")
+        self.eventbox_numeral3 = self.wTree.get_widget("eventbox_numeral_3")
+        self.eventbox_numeral4 = self.wTree.get_widget("eventbox_numeral_4")
+        self.eventbox_numeral5 = self.wTree.get_widget("eventbox_numeral_5")
+        self.eventbox_show_answer = self.wTree.get_widget("eventbox_show_answer")
 
+        self.new_question()
+
+    def new_question(self, learn_ahead=False):
+        if database().card_count() == 0:
+            raise HildonUiControllerException(_("Database is empty"))
+        else:
+            self.card = scheduler().get_new_question(learn_ahead)
+            if self.card != None:
+                self.question.set_text(self.card.question())
+                self.answer.set_text("")
+                self.eventbox_numeral0.set_sensitive(False)
+                self.eventbox_numeral1.set_sensitive(False)
+                self.eventbox_numeral2.set_sensitive(False)
+                self.eventbox_numeral3.set_sensitive(False)
+                self.eventbox_numeral4.set_sensitive(False)
+                self.eventbox_numeral5.set_sensitive(False)
+                self.eventbox_show_answer.set_sensitive(True)
+            else:
+#                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
+                self.new_question(learn_ahead=True)
+
+    def show_answer(self):
+        self.answer.set_text(self.card.answer())
+        self.eventbox_numeral0.set_sensitive(True)
+        self.eventbox_numeral1.set_sensitive(True)
+        self.eventbox_numeral2.set_sensitive(True)
+        self.eventbox_numeral3.set_sensitive(True)
+        self.eventbox_numeral4.set_sensitive(True)
+        self.eventbox_numeral5.set_sensitive(True)
+        self.eventbox_show_answer.set_sensitive(False)
+
+    def grade_answer(self, grade):
+        scheduler().process_answer(self.card, grade)
+        self.new_question()
 
     def quit(self,widget):
+        raise HildonUiControllerException(_("Exited"))
         self.window.destroy()
-
 
 class MainWindow:
     """ GUI - Hildon """
@@ -180,136 +221,11 @@ class HildonUI():
 
     def do_input(self, line):
         """ Input mode """
-        print("=== Input mode ===")
+        print("=== Input mode === Not implemented yet")
 
-        once_again = "y"
-        card = ui_controller_main()
-        while once_again == "y":
-            # Select Card Type by user:
-            print "Select Card Type:"
-            card_type_by_id = {}
-            for card_type in card_types():
-                print card_type.id, card_type.name
-                card_type_by_id[card_type.id] = card_type
-
-            while True:
-                card_type_id = \
-                raw_input(_("Enter number of Card Type or 'q' to quit ... "))
-                if card_type_id in ("q", "Q"):
-                    return
-                try:
-                    card_type = card_type_by_id[card_type_id]
-                except KeyError:
-                    print(_("Input error, try again"))
-                    continue
-                break
-
-            # Select the exist or Add the new Categore  
-            i = 0
-            category_names_by_id = {}
-            for name in database().category_names():
-                print i,name
-                category_names_by_id[str(i)] = name 
-                i=i+1
- 
-            while True:
-                category_name_id = \
-                raw_input(_("Enter number of Category or enter new category or 'q' to quit ... "))
-                if category_name_id in ("q", "Q"):
-                    return
-                try:
-                     category_name = category_names_by_id[category_name_id]
-                except KeyError:
-                    category_name = category_name_id
-                break
-
-
-            # Enter all fields for the current type
-            fact = {}
-            problem_field = False
-            for fact_key, fact_key_name in card_type.fields:
-                print _("Enter field"), fact_key_name
-                text = raw_input()
-                if text:
-                    fact[fact_key] = text
-            # Check necesary fields and create new card
-            for required in card_type.required_fields():
-                if not required in fact.keys():
-                    print(_("Error.This card is not saved in a database !!!"))
-                    print(_("You didn't enter all necesary field(s) !!!"))
-                    problem_field = True
-            # Create new card
-            if not problem_field :
-                card.create_new_cards(fact, card_type, 0, [category_name])
-                database().save(config()['path'])
-
-            once_again = raw_input(_("Do you want to add a new record? y/n "))
-	    
-       
     def do_conf(self, line):
         """ Configuration mode """
         print "Configuration mode. Not implemented yet"
-
-class HildonUiControllerReview_old(UiControllerReview):
-    """ Hildon UI controller. Review mode """
-    
-    def __init__(self):
-        # FIXME - should call parent's __init__, not grandparent's
-        UiControllerReview.__init__(self, name="Hildon UI Controller")
-        self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
-        self.grade = 0
-
-    def start(self):
-        """ UI Entry point """
-        print("\nReview mode. Category: %s\n" % self.title)
-        while True:
-            try:
-                self.new_question()
-                self.show_answer()
-                self.grade_answer()
-            except HildonUiControllerException, exobj:
-                print(exobj)
-                break
-
-    def new_question(self, learn_ahead=False):
-        if database().card_count() == 0:
-            raise HildonUiControllerException(_("Database is empty"))
-        else:
-            self.card = scheduler().get_new_question(learn_ahead)
-            if self.card != None:
-                print _("Question:"), self.card.question()
-            else:
-                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
-                if value in ("y", "Y"):
-                    print("\n")
-                    self.new_question(learn_ahead=True)
-                else:
-                    raise HildonUiControllerException(_("Finished"))
-
-    def show_answer(self):
-        value = raw_input(_("Press enter to see the answer or 'q' to quit ..."))
-        if value in ("q", "Q"):
-            raise HildonUiControllerException(_("Exited"))
-        print(_("Answer: %s" % self.card.answer()))
-
-    def grade_answer(self):
-        while True:
-            try:
-                grade = raw_input(_("Grade your answer:"))
-            except SyntaxError:
-                print(_("Input error, try again"))
-                continue
-            if not grade.isdigit():
-                print(_("Input error: Grade has to be a number from 0 to 5"))
-                continue
-            grade = int(grade)
-            if not 0 <= grade <= 5:
-                print(_("Input error: Grade has to be a number from 0 to 5"))
-                continue
-
-            scheduler().process_answer(self.card, grade)
-            print("\n")
-            break
 
 
 class HildonReviewWdgt:
