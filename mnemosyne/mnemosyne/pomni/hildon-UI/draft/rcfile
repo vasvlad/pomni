@@ -78,9 +78,19 @@ style "review-button" {
 
 style "review-title-label" {
 	font_name = "Nokia Sans 16.0"
+	fg[NORMAL] = "#000000"
 	fg[NORMAL] = "#c2c1bf"
 }
 
+style "review-answer-label" {
+	font_name = "Nokia Sans 16.0"
+	fg[NORMAL] = "#000000"
+}
+
+style "review-question-label" {
+	font_name = "Nokia Sans 16.0"
+	fg[NORMAL] = "#000000"
+}
 
 # Normal Button styles:
 style "review-frame" {
@@ -111,33 +121,6 @@ style "reviewwindow"
           }
      }
  }
-
-style "22"
-{
-   engine "pixmap"
-      {
-        image
-         {
-          function = FLAT_BOX
-          file = "background.png"
-          border = {10, 10, 10, 10}
-          }
-        image
-         {
-          function = BOX
-          file = "background.png"
-          border = {10, 10, 10, 10}
-          }
-
-     }
- }
-
-style "11"
-{
-  #This sets the padding around the window to the pixmap specified.
-  #bg_pixmap[<STATE>] = "<pixmap filename>"
-  bg_pixmap[NORMAL] = "background.png"
-}
 
 
 
@@ -187,6 +170,8 @@ style "review-qabutton-background"
 
 widget "*.button_answer" style "review-button"
 widget "*.title_label" style "review-title-label"
+widget "*.answer" style "review-question-label"
+widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
 widget "*.notebook_button" style "review-button-background"
 widget "*.notebook_qa" style "review-qabutton-background"
