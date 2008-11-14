@@ -51,23 +51,11 @@ class HildonUiControllerException(Exception): pass
 
 _ = gettext.gettext
 
-class ReviewWindow:
+class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
 
     def __init__(self):
-        # Fix Me
-        gladefile = "./hildon-UI/draft/window_review.glade"
-        self.wTree = gtk.glade.XML(gladefile)
-        dic = { "on_eventbox_numeral0_button_press_event" : self.numeral0_pressed, \
-                "on_eventbox_numeral1_button_press_event" : self.numeral1_pressed, \
-                "on_eventbox_numeral2_button_press_event" : self.numeral2_pressed, \
-                "on_eventbox_numeral3_button_press_event" : self.numeral3_pressed, \
-                "on_eventbox_numeral4_button_press_event" : self.numeral4_pressed, \
-                "on_eventbox_numeral5_button_press_event" : self.numeral5_pressed, \
-                "on_eventbox_open_button_press_event"     : self.open_card_clicked, \
-                "on_exit_clicked" : self.quit }
-        self.wTree.signal_autoconnect (dic)
-
+       pass
     def numeral0_pressed(self,widget,event):
         print "button 0 clicked"
 
@@ -88,6 +76,26 @@ class ReviewWindow:
 
     def open_card_clicked(self,widget,event):
         print "Open card clicked"
+
+    def start(self):
+        # Fix Me
+        gladefile = "./hildon-UI/draft/window_review.glade"
+        self.wTree = gtk.glade.XML(gladefile)
+        dic = { "on_eventbox_numeral0_button_press_event" : self.numeral0_pressed, \
+                "on_eventbox_numeral1_button_press_event" : self.numeral1_pressed, \
+                "on_eventbox_numeral2_button_press_event" : self.numeral2_pressed, \
+                "on_eventbox_numeral3_button_press_event" : self.numeral3_pressed, \
+                "on_eventbox_numeral4_button_press_event" : self.numeral4_pressed, \
+                "on_eventbox_numeral5_button_press_event" : self.numeral5_pressed, \
+                "on_eventbox_open_button_press_event"     : self.open_card_clicked, \
+                "on_exit_clicked" : self.quit }
+        self.wTree.signal_autoconnect (dic)
+
+        self.answer = self.wTree.get_widget("answer")
+        self.answer.set_text("")
+
+        self.question = self.wTree.get_widget("question")
+        self.question.set_text("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
 
     def quit(self,widget):
@@ -115,12 +123,12 @@ class MainWindow:
 
         # Fix Me 
         if (mode == 'review'):
-            ReviewWindow()
+            ui_controller_review().start()
 
 
     def review_clicked(self,widget):
         print "button Review clicked"
-        ReviewWindow()
+        ui_controller_review().start()
 
     def input_clicked(self,widget):
         print "button Input clicked"
@@ -242,12 +250,12 @@ class HildonUI():
         """ Configuration mode """
         print "Configuration mode. Not implemented yet"
 
-class HildonUiControllerReview(UiControllerReview):
+class HildonUiControllerReview_old(UiControllerReview):
     """ Hildon UI controller. Review mode """
     
     def __init__(self):
         # FIXME - should call parent's __init__, not grandparent's
-        UiControllerReview.__init__(self, name="Hildon line UI Controller")
+        UiControllerReview.__init__(self, name="Hildon UI Controller")
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
         self.grade = 0
 

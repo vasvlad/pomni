@@ -80,7 +80,7 @@
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
                             <child>
-                              <widget class="GtkLabel" id="question1">
+                              <widget class="GtkLabel" id="question">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">question</property>
                               </widget>
@@ -105,7 +105,7 @@
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
                             <child>
-                              <widget class="GtkLabel" id="answer1">
+                              <widget class="GtkLabel" id="answer">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">answer</property>
                               </widget>
