@@ -30,7 +30,6 @@ from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
 from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
-from pomni.dummy_backend import DummyBackend
 
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
