@@ -37,7 +37,7 @@ from optparse import OptionParser
 from mnemosyne import libmnemosyne
 from mnemosyne.libmnemosyne.component_manager import database, scheduler
 
-from pomni.factory import ui_factory, backend_factory
+from pomni.factory import ui_factory
 from pomni.model import Model
 from pomni.controller import Controller
 
@@ -46,28 +46,13 @@ def parse_commandline(argv):
 
     parser = OptionParser(usage = "%prog [options]")
 
-    parser.add_option("--ui", type="string", dest="ui", help="specify ui type")
-    parser.add_option("--backend", type="string", dest="backend",
-                        help="specify storage backend")
-    parser.add_option("-d", "--datadir", dest="datadir", help="data directory")
-    parser.add_option("--mode", type="string", dest="mode", 
-                        help="specify working mode. 'input', 'review' or 'conf'")
+    parser.add_option("-u", "--ui", help="ui type")
+    parser.add_option("-b", "--backend", help="storage backend")
+    parser.add_option("-d", "--datadir", help="data directory")
+    parser.add_option("--mode", help="working mode. "\
+                      "'input', 'review' or 'conf'")
 
-    options, argv = parser.parse_args(argv)
-
-    return (options, argv)
-
-def _create_example_cards(db_name):
-    """ Temporary: Create some example cards. Must be removed when ui is ready """
-    
-    from mnemosyne.libmnemosyne.component_manager import ui_controller_main, card_types
-
-    c = ui_controller_main()
-    c.create_new_cards({'q': 'word 1', 'a': 'translation 1'}, card_types()[0], 0, ['category1'])
-    c.create_new_cards({'q': 'word 2', 'a': 'translation 2'}, card_types()[0], 0, ['category1'])
-    c.create_new_cards({'q': 'word 3', 'a': 'translation 3'}, card_types()[0], 0, ['category1'])
-
-    database().save(db_name)
+    return parser.parse_args(argv)
 
 def main(argv):
     """ Main """
@@ -76,7 +61,7 @@ def main(argv):
 
     # FIXME: move this to config module
     if opts.datadir:
-        datadir = os.path.abspath(options.datadir)
+        datadir = os.path.abspath(opts.datadir)
     elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
         datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
 
@@ -88,9 +73,6 @@ def main(argv):
 
     if os.path.exists(db_name):
         cdatabase.load(db_name)
-
-    if not cdatabase.card_count():
-        _create_example_cards(db_name)
 
     cscheduler = scheduler()
     model = Model(cdatabase, cscheduler)
