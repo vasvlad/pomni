@@ -21,33 +21,34 @@
 #
 
 """
-Factory. Creates objects
+UI Factory. Creates UI objects
 """
 
 from mnemosyne.libmnemosyne.databases.pickle import Pickle
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
-from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
-from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
-
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
 
     if not interface or interface == 'cmd':
         # default UI
+        from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
+
         component_manager.register("ui_controller_review", CmdUiControllerReview())
         component_manager.register("review_widget", CmdReviewWdgt)
         component_manager.register("renderer", TextRenderer())
         return CommandlineUI(model)
 
     if interface == "hildon":
+        from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
+
         component_manager.register("ui_controller_review", HildonUiControllerReview())
         component_manager.register("review_widget", HildonReviewWdgt)
         component_manager.register("renderer", TextRenderer())
         return HildonUI(model)
+    
     # add next gui here
-
     raise ValueError("No idea how to create %s UI" % interface)
 
 def backend_factory(name=None):
