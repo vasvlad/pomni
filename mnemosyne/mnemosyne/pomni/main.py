@@ -67,6 +67,13 @@ def main(argv):
 
     libmnemosyne.initialise(datadir)
 
+    # temporary workaround until config functionality is implemented
+    #from mnemosyne.libmnemosyne.component_manager import config
+    #conf = config()
+    #conf["theme"] = "draft"
+    #conf["theme_path"] = "./hildon-UI/draft"
+    #conf.save()
+
     cdatabase = database()
     # FIXME: take db name from config
     db_name = os.path.join(datadir, "default.mem")

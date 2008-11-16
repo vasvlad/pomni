@@ -27,19 +27,10 @@ Hildon UI
 import os
 import gettext
 from os.path import basename
-import gtk,gobject
-import gtk.glade
-import pygtk
-from gtk import *
 
-
-try:
-    import hildon
-except:
-    use_hildon = False
-else:
-    use_hildon = True
-
+import gtk
+from gtk import glade
+import hildon
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main, card_types
@@ -55,9 +46,9 @@ class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
 
     def __init__(self):
-        # FIXME - should call parent's __init__, not grandparent's
         UiControllerReview.__init__(self, name="Command line UI Controller")
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
+        self.gladefn = os.path.join(config()["theme_path"], "window_review.glade")
         self.grade = 0
 
     def numeral0_pressed(self,widget,event):
@@ -82,27 +73,27 @@ class HildonUiControllerReview(UiControllerReview):
         self.show_answer()
 
     def start(self):
-        # Fix Me
-        gladefile = "./hildon-UI/draft/window_review.glade"
-        self.wTree = gtk.glade.XML(gladefile)
-        dic = { "on_eventbox_numeral0_button_press_event" : self.numeral0_pressed, \
-                "on_eventbox_numeral1_button_press_event" : self.numeral1_pressed, \
-                "on_eventbox_numeral2_button_press_event" : self.numeral2_pressed, \
-                "on_eventbox_numeral3_button_press_event" : self.numeral3_pressed, \
-                "on_eventbox_numeral4_button_press_event" : self.numeral4_pressed, \
-                "on_eventbox_numeral5_button_press_event" : self.numeral5_pressed, \
-                "on_eventbox_show_answer_button_press_event"     : self.open_card_clicked, \
-                "on_exit_clicked" : self.quit }
-        self.wTree.signal_autoconnect (dic)
-        self.question = self.wTree.get_widget("question")
-        self.answer = self.wTree.get_widget("answer")
-        self.eventbox_numeral0 = self.wTree.get_widget("eventbox_numeral_0")
-        self.eventbox_numeral1 = self.wTree.get_widget("eventbox_numeral_1")
-        self.eventbox_numeral2 = self.wTree.get_widget("eventbox_numeral_2")
-        self.eventbox_numeral3 = self.wTree.get_widget("eventbox_numeral_3")
-        self.eventbox_numeral4 = self.wTree.get_widget("eventbox_numeral_4")
-        self.eventbox_numeral5 = self.wTree.get_widget("eventbox_numeral_5")
-        self.eventbox_show_answer = self.wTree.get_widget("eventbox_show_answer")
+        wTree = glade.XML(self.gladefn)
+        wTree.signal_autoconnect({"on_eventbox_numeral0_button_press_event": self.numeral0_pressed,
+                                  "on_eventbox_numeral1_button_press_event": self.numeral1_pressed,
+                                  "on_eventbox_numeral2_button_press_event": self.numeral2_pressed,
+                                  "on_eventbox_numeral3_button_press_event": self.numeral3_pressed,
+                                  "on_eventbox_numeral4_button_press_event": self.numeral4_pressed,
+                                  "on_eventbox_numeral5_button_press_event": self.numeral5_pressed,
+                                  "on_eventbox_show_answer_button_press_event": self.open_card_clicked,
+                                  "on_exit_clicked" : self.quit})
+
+        self.question = wTree.get_widget("question")
+        self.answer = wTree.get_widget("answer")
+        self.eventbox_numeral0 = wTree.get_widget("eventbox_numeral_0")
+        self.eventbox_numeral1 = wTree.get_widget("eventbox_numeral_1")
+        self.eventbox_numeral2 = wTree.get_widget("eventbox_numeral_2")
+        self.eventbox_numeral3 = wTree.get_widget("eventbox_numeral_3")
+        self.eventbox_numeral4 = wTree.get_widget("eventbox_numeral_4")
+        self.eventbox_numeral5 = wTree.get_widget("eventbox_numeral_5")
+        self.eventbox_show_answer = wTree.get_widget("eventbox_show_answer")
+
+        self.wTree = wTree
 
         self.new_question()
 
@@ -147,25 +138,21 @@ class MainWindow:
     """ GUI - Hildon """
 
     def __init__(self,mode):
-        # Fix Me
-        gladefile="./hildon-UI/draft/window_main.glade"
-
-        self.wTree=gtk.glade.XML(gladefile)
-        dic = { "on_review_clicked" : self.review_clicked, \
-                "on_input_clicked" : self.input_clicked, \
-                "on_configure_clicked" : self.configure_clicked, \
-                "on_eventbox1_button_press_event" : self.quit, \
-                "on_exit_clicked" : self.quit }
-        self.wTree.signal_autoconnect (dic)
+       
+        theme_path = config()["theme_path"]
+        self.wTree=gtk.glade.XML(os.path.join(theme_path, "window_main.glade"))
+        self.wTree.signal_autoconnect({"on_review_clicked": self.review_clicked,
+                                       "on_input_clicked" : self.input_clicked,
+                                       "on_configure_clicked" : self.configure_clicked,
+                                       "on_eventbox1_button_press_event" : self.quit,
+                                       "on_exit_clicked" : self.quit})
         self.window = self.wTree.get_widget("MainWindow")
 
-        # Fix Me
-        rc_parse("./hildon-UI/draft/rcfile")
+        gtk.rc_parse(os.path.join(theme_path,"rcfile"))
 
         # Fix Me 
         if (mode == 'review'):
             ui_controller_review().start()
-
 
     def review_clicked(self,widget):
         print "button Review clicked"
@@ -208,7 +195,7 @@ class HildonUI():
         return answer
 
     def start(self, mode):
-        app=MainWindow(mode)
+        app = MainWindow(mode)
         gtk.main()
 
     def do_quit(self, line):
