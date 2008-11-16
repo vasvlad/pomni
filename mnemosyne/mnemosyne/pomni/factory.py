@@ -29,6 +29,8 @@ from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
+from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
+from pomni.dummy_backend import DummyBackend
 
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
@@ -41,7 +43,10 @@ def ui_factory(model, interface=None):
         return CommandlineUI(model)
 
     if interface == "hildon":
-        raise NotImplementedError("Hildon UI is not implemented yet.")
+        component_manager.register("ui_controller_review", HildonUiControllerReview())
+        component_manager.register("review_widget", HildonReviewWdgt)
+        component_manager.register("renderer", TextRenderer())
+        return HildonUI(model)
     # add next gui here
 
     raise ValueError("No idea how to create %s UI" % interface)
