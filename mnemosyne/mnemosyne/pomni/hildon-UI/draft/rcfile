@@ -161,7 +161,7 @@ style "review-qabutton-background"
         function = BOX
 	detail   = "notebook"
         border   = { 19, 19, 35, 15 }
-        file     = "darkbackground.png"
+        file     = "updarkbackground.png"
       }
   }
 }

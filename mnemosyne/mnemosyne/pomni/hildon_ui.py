@@ -30,7 +30,12 @@ from os.path import basename
 
 import gtk
 from gtk import glade
-import hildon
+try:
+    import hildon
+    IS_MAEMO = True
+except:
+    IS_MAEMO = False
+
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main, card_types
