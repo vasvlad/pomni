@@ -121,6 +121,7 @@ class HildonUiControllerReview(UiControllerReview):
 #                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
                 self.new_question(learn_ahead=True)
 
+
     def show_answer(self):
         self.answer.set_text(self.card.answer())
         self.eventbox_numeral0.set_sensitive(True)
