@@ -1,0 +1,31 @@
+This package was debianized by Ed Bartosh <bartosh@gmail.com> on
+Sat, 29 Nov 2008 17:24:50 +0200.
+
+It was downloaded from http://mnemosyne-proj.sourceforge.net/
+
+Upstream Author: Peter Bienstman <Peter.Bienstman@UGent.be>
+
+Copyright: 2003-2007 Peter Bienstman et al
+
+License:
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License with
+  the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
+  if not, write to the Free Software Foundation, Inc., 51 Franklin St,
+  Fifth Floor, Boston, MA 02110-1301, USA.
+
+ On Debian systems, the complete text of the GNU General Public
+ License, version 2, can be found in /usr/share/common-licenses/GPL-2.
+
+The Debian packaging is (C) 2007, Robert Lemmen <robertle@semistable.com> and
+is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

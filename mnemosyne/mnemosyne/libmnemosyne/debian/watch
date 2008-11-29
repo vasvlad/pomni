@@ -1,0 +1,5 @@
+version=3
+
+# XXX doesn't really work yet
+http://sf.net/mnemosyne-proj/mnemosyne-(.*)\.tgz
+
