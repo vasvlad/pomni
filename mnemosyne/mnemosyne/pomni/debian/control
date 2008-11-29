@@ -1,0 +1,17 @@
+Source: pomni
+Section: python
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Build-Depends: debhelper (>= 5), python, python-setuptools
+Standards-Version: 3.8.0
+
+Package: pomni
+Architecture: all
+Depends: python
+Description: Learning tool based on spaced repetition technique
+ This is mobile version of Mnemosyne software
+ It resembles a traditional flash-card program to help you
+ memorise question/answer pairs, but with an important twist: it uses a
+ sophisticated algorithm to schedule the best time for an item to come up for
+ review. Difficult items that you tend to forget quickly will be scheduled more
+ often, while Mnemosyne won't waste your time on things you remember well.
+
