@@ -6,7 +6,7 @@ Standards-Version: 3.8.0
 
 Package: python-libmnemosyne
 Architecture: all
-Depends: python
+Depends: python2.5
 Description: Mnemosyne core library
  The Mnemosyne software resembles a traditional flash-card program to help you
  memorise question/answer pairs, but with an important twist: it uses a
