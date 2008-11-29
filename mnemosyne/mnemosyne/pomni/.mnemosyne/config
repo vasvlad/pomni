@@ -126,7 +126,7 @@ p52
 I5
 sS'theme_path'
 p53
-S'./hildon-UI/eternal'
+S'/usr/share/pomni/hildon-UI/eternal'
 p54
 sS'column_2_width'
 p55
