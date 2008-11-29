@@ -30,7 +30,12 @@ from os.path import basename
 
 import gtk
 from gtk import glade
-import hildon
+try:
+    import hildon
+    IS_MAEMO = True
+except:
+    IS_MAEMO = False
+
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main, card_types
@@ -115,6 +120,7 @@ class HildonUiControllerReview(UiControllerReview):
             else:
 #                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
                 self.new_question(learn_ahead=True)
+
 
     def show_answer(self):
         self.answer.set_text(self.card.answer())

@@ -110,13 +110,13 @@ style "review-frame" {
 
 style "reviewwindow"
 {
-   engine "sapwood"
+   engine "pixmap"
       {
         image
          {
           function = FLAT_BOX
           file = "background.png"
-          border = {0, 0, 0, 0}
+          border = {10, 10, 10, 10}
           detail = "base"
           }
      }
