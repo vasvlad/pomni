@@ -24,6 +24,9 @@
 Main 
 """
 
+if __name__ != "__main__":
+    raise ImportError("Don't import this! This program is supposed to be run from command line")
+
 import sys
 import os
 
@@ -66,13 +69,6 @@ def main(argv):
 
     initialise(datadir)
 
-    # temporary workaround until config functionality is implemented
-    #from mnemosyne.libmnemosyne.component_manager import config
-    #conf = config()
-    #conf["theme"] = "draft"
-    #conf["theme_path"] = "./hildon-UI/draft"
-    #conf.save()
-
     cdatabase = database()
     # FIXME: take db name from config
     db_name = os.path.join(datadir, "default.mem")
@@ -90,6 +86,7 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
+
 
 # Local Variables:
 # mode: python
