@@ -7,7 +7,7 @@ except ImportError:
 
 setup(name = "libmnemosyne",
     description='Mnemosyne core library',
-    version = 2.0,
+    version = open('debian/changelog').readline().split(' ')[1][1:-1],
     author = "Peter Bienstman",
     author_email = "Peter.Bienstman@UGent.be",
     license='GPL 2',
