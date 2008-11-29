@@ -30,6 +30,8 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 	$(PYTHON) setup.py install --root=$(PREFIX)
+	mv $(PREFIX)/usr/lib/python2.5/site-packages/pomni/main.py $(PREFIX)/usr/bin/pomni
+	chmod +x $(PREFIX)/usr/bin/pomni
 
 binary-indep: build install
 	dh_testdir
@@ -38,7 +40,6 @@ binary-indep: build install
 	dh_installdocs
 	dh_installmenu
 	dh_python
-	dh_link usr/lib/python2.5/site-packages/pomni/main.py usr/bin/pomni
 	dh_compress
 	dh_fixperms
 	dh_installdeb
