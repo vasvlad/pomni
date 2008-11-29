@@ -29,12 +29,11 @@ import os
 
 # add mnemosyne directory to Python path in debug mode
 if os.path.basename(sys.argv[0]).endswith("debug"):
-    sys.path.insert(0, "../")
     sys.path.insert(0, "../../")
 
 from optparse import OptionParser
 
-from mnemosyne import libmnemosyne
+from mnemosyne.libmnemosyne import initialise
 from mnemosyne.libmnemosyne.component_manager import database, scheduler
 
 from pomni.factory import ui_factory
@@ -65,7 +64,7 @@ def main(argv):
     elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
         datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
 
-    libmnemosyne.initialise(datadir)
+    initialise(datadir)
 
     # temporary workaround until config functionality is implemented
     #from mnemosyne.libmnemosyne.component_manager import config
