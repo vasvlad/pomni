@@ -3,7 +3,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PACKAGE := python-libmnemosyne
+PACKAGE := $(shell head -1 $(CURDIR)/debian/changelog | sed 's/^\([^ ]\+\) .*/\1/')
 PREFIX := $(CURDIR)/debian/$(PACKAGE)
 PYTHON := python2.5
 
