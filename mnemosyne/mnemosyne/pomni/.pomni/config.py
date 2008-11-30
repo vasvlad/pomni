@@ -32,5 +32,4 @@ latex = "latex"
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
 
 # path to default theme
-theme_path = "/usr/share/pomni/hildon-UI/draft"
-
+theme_path = "./hildon-UI/draft"
