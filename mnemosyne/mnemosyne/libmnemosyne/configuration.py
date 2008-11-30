@@ -48,6 +48,9 @@ latex = "latex"
 
 # Latex dvipng command.
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
+
+# path to default theme
+theme_path = "/usr/share/pomni/hildon-UI/draft"
 """
 
 
@@ -96,6 +99,7 @@ class Configuration(Component):
         c.setdefault("latex_postamble", "\\end{document}")
         c.setdefault("latex", "latex -interaction=nonstopmode")       
         c.setdefault("dvipng", "dvipng -D 200 -T tight tmp.dvi")
+        c.setdefault("theme_path", "/usr/share/pomni/hildon-UI/draft")
 
     def __getitem__(self, key):
         try:
@@ -138,7 +142,7 @@ class Configuration(Component):
     def determine_basedir(self, basedir):
         self.old_basedir = None
         if basedir == None:
-            home = unicode(os.path.expanduser("~"))
+            home = os.path.expanduser("~").decode(locale.getdefaultlocale()[1])
             if sys.platform == "darwin":
                 self.old_basedir = os.path.join(home, ".mnemosyne")
                 self.basedir = os.path.join(home, "Library", "Mnemosyne")

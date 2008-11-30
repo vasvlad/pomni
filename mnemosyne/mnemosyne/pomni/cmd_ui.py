@@ -157,7 +157,63 @@ class CommandlineUI(cmd.Cmd):
        
     def do_conf(self, line):
         """ Configuration mode """
-        print "Configuration mode. Not implemented yet"
+
+        def show_configuration(conf):
+            """ Show current configuration """
+            for i in conf._config.keys():
+                print i, ":", conf._config[i]
+        
+        def set_param(conf):
+            """ Set new param value """
+            param = raw_input("Enter param name to change: ")
+            if param not in conf._config.keys():
+                print param, "is not exist. Try another!"
+            else:
+                print "Current value of", param, ":", conf._config[param]
+                new_value = raw_input("Enter new value: ")
+                conf.__setitem__(param, new_value)
+
+        def get_param(conf):
+            """ Get current param value """
+            param = raw_input("Enter param name: ")
+            if param not in conf._config.keys():
+                print param, "is not exist. Try another!"
+            else:
+                print param, ":", conf._config[param]
+
+        def save_configuration(conf):
+            """ Save current configuration """
+            conf.save()
+
+        cfg = config()  # create instance
+        cfg.load()      # load parameters from configuration file
+        print "=== Config mode ==="
+        print "Type 'help' to view config commands or 'quit' to quit."
+
+        help_promt = """help - This information
+quit - Quit from Config mode
+show - Show current configuration
+set - Set new param value
+get - Get current param value
+save - Save current configuration"""
+
+        cmd = 'nocmd'
+        while cmd != 'quit':
+            cmd = raw_input("> ")
+            if cmd == 'help':
+                print help_promt
+            elif cmd == 'show':
+                show_configuration(cfg)
+            elif cmd == 'set':
+                set_param(cfg)
+            elif cmd == 'get':
+                get_param(cfg)
+            elif cmd == 'save':
+                save_configuration(cfg)
+            else:
+                if cmd != 'quit':
+                    print 'Unknown command. Type another!'
+
 
 class CmdUiControllerReview(UiControllerReview):
     """ Commandline UI controller. Review mode """

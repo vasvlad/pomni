@@ -24,18 +24,21 @@
 Main 
 """
 
+if __name__ != "__main__":
+    raise ImportError("Don't import this! This program is supposed to be run from command line")
+
 import sys
 import os
 
 # add mnemosyne directory to Python path in debug mode
 if os.path.basename(sys.argv[0]).endswith("debug"):
-    sys.path.insert(0, "../")
     sys.path.insert(0, "../../")
+    sys.path.insert(0, "../")
 
 from optparse import OptionParser
 
-from mnemosyne import libmnemosyne
-from mnemosyne.libmnemosyne.component_manager import database, scheduler
+from mnemosyne.libmnemosyne import initialise
+from mnemosyne.libmnemosyne.component_manager import database, scheduler, config
 
 from pomni.factory import ui_factory
 from pomni.model import Model
@@ -61,22 +64,16 @@ def main(argv):
 
     # FIXME: move this to config module
     if opts.datadir:
-        datadir = os.path.abspath(opts.datadir)
-    elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
-        datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
+        basedir = os.path.abspath(opts.datadir)
+    elif os.path.exists(os.path.join(os.getcwdu(), ".pomni")):
+        basedir = os.path.abspath(os.path.join(os.getcwdu(), ".pomni"))
+    else:
+        basedir = os.path.join(os.environ['HOME'], ".pomni")
 
-    libmnemosyne.initialise(datadir)
-
-    # temporary workaround until config functionality is implemented
-    #from mnemosyne.libmnemosyne.component_manager import config
-    #conf = config()
-    #conf["theme"] = "draft"
-    #conf["theme_path"] = "./hildon-UI/draft"
-    #conf.save()
+    initialise(basedir)
 
     cdatabase = database()
-    # FIXME: take db name from config
-    db_name = os.path.join(datadir, "default.mem")
+    db_name = os.path.join(basedir, config()['path'])
 
     if os.path.exists(db_name):
         cdatabase.load(db_name)
@@ -91,6 +88,7 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
+
 
 # Local Variables:
 # mode: python

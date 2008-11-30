@@ -31,7 +31,7 @@ from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
 
-    if not interface or interface == 'cmd':
+    if interface == 'cmd':
         # default UI
         from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
 
@@ -40,7 +40,7 @@ def ui_factory(model, interface=None):
         component_manager.register("renderer", TextRenderer())
         return CommandlineUI(model)
 
-    if interface == "hildon":
+    if not interface or interface == "hildon":
         from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
 
         component_manager.register("ui_controller_review", HildonUiControllerReview())

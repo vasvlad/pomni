@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.nokia.pomni
+Exec=/usr/bin/pomni

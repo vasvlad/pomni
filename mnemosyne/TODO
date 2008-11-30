@@ -1,24 +1,9 @@
 
-* Mnemosyne 1.2
-
--add new translations to website
-
--port fixes to 2.x.
-
--number of cards in next week
--unicode basedir /export
--upgrade skipping version 2
--ghost out 3.4 and 5 for unlearned cards?
--switch for randomisation
--default export location is wrong
-
--push trunk to launchpad again
-
-
 * Mnemosyne 2.0:
 
 -rework design to accomodate cards with variable number of fact views 
- (e.g. cloze deletion) (todo: create cards and store factviews, edit cards)
+ (e.g. cloze deletion) (todo: create cards and store factviews, edit cards, 
+ make sure we can't select activate factviews for this card type)
 
 -default buttons
 
@@ -49,6 +34,8 @@
 -test uploading of logs
 
 -show latex errors in GUI?
+
+-ghost out 3.4 and 5 for unlearned cards?
 
 -if we change a card id on import, by sure to put a message in the
  log to that effect, so that the statistics can keep track of it.
