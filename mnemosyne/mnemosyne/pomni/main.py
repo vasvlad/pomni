@@ -33,6 +33,7 @@ import os
 # add mnemosyne directory to Python path in debug mode
 if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../../")
+    sys.path.insert(0, "../")
 
 from optparse import OptionParser
 
