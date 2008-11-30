@@ -38,7 +38,7 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 from optparse import OptionParser
 
 from mnemosyne.libmnemosyne import initialise
-from mnemosyne.libmnemosyne.component_manager import database, scheduler
+from mnemosyne.libmnemosyne.component_manager import database, scheduler, config
 
 from pomni.factory import ui_factory
 from pomni.model import Model
@@ -64,15 +64,16 @@ def main(argv):
 
     # FIXME: move this to config module
     if opts.datadir:
-        datadir = os.path.abspath(opts.datadir)
-    elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
-        datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
+        basedir = os.path.abspath(opts.datadir)
+    elif os.path.exists(os.path.join(os.getcwdu(), ".pomni")):
+        basedir = os.path.abspath(os.path.join(os.getcwdu(), ".pomni"))
+    else:
+        basedir = os.path.join(os.environ['HOME'], ".pomni")
 
-    initialise(datadir)
+    initialise(basedir)
 
     cdatabase = database()
-    # FIXME: take db name from config
-    db_name = os.path.join(datadir, "default.mem")
+    db_name = os.path.join(basedir, config()['path'])
 
     if os.path.exists(db_name):
         cdatabase.load(db_name)
