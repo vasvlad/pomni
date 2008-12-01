@@ -124,55 +124,10 @@ style "reviewwindow"
 
 
 
-style "review-button-background"
-{
-  GtkNotebook::inner_left_border = 0
-  GtkNotebook::inner_right_border = 0
-  GtkNotebook::tab-overlap = 0
-  GtkNotebook::arrow-spacing = 6
-  GtkNotebook::label-padding = 2
-
-  # Themings for images on different sides of the notebook.
-  engine "sapwood"
-  {
-    image
-      {
-        function = BOX
-	detail   = "notebook"
-        border   = { 59, 59, 15, 15 }
-        file     = "darkbackground.png"
-      }
-  }
-}
-
-style "review-qabutton-background"
-{
-  GtkNotebook::inner_left_border = 0
-  GtkNotebook::inner_right_border = 0
-  GtkNotebook::tab-overlap = 0
-  GtkNotebook::arrow-spacing = 6
-  GtkNotebook::label-padding = 2
-
-  # Themings for images on different sides of the notebook.
-  engine "sapwood"
-  {
-    image
-      {
-        function = BOX
-	detail   = "notebook"
-        border   = { 19, 19, 35, 15 }
-        file     = "updarkbackground.png"
-      }
-  }
-}
-
-
 
 widget "*.button_answer" style "review-button"
 widget "*.title_label" style "review-title-label"
 widget "*.answer" style "review-question-label"
 widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
-widget "*.notebook_button" style "review-button-background"
-widget "*.notebook_qa" style "review-qabutton-background"
 widget "ReviewWindow" style "reviewwindow"

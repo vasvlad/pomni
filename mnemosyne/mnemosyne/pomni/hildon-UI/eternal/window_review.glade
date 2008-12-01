@@ -259,7 +259,7 @@
                         <child>
                           <widget class="GtkImage" id="image10">
                             <property name="visible">True</property>
-                            <property name="pixbuf">button5.png</property>
+                            <property name="pixbuf">button_5.png</property>
                           </widget>
                         </child>
                       </widget>
