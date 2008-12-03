@@ -43,66 +43,105 @@ from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
     import SM2Controller
 
-class HildonUiControllerException(Exception): pass
-
 _ = gettext.gettext
+
+class HildonUiControllerException(Exception): 
+    """ Exception hook """
+
+    pass
 
 class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
 
     def __init__(self):
+
         UiControllerReview.__init__(self, name="Command line UI Controller")
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
-        self.gladefn = os.path.join(config()["theme_path"], "window_review.glade")
+        self.gladefn = os.path.join(config()["theme_path"], 
+                                            "window_review.glade")
         self.grade = 0
 
-    def numeral0_pressed(self,widget,event):
+    def update_dialog(self):
+        """ This is part of UiControllerReview API """
+
+        pass
+
+    def numeral0_pressed(self, widget, event):
+        """ Call grade of answer """
+
         self.grade_answer(0)
 
-    def numeral1_pressed(self,widget,event):
+    def numeral1_pressed(self, widget, event):
+        """ Call grade of answer """
+
         self.grade_answer(1)
 
-    def numeral2_pressed(self,widget,event):
+    def numeral2_pressed(self, widget, event):
+        """ Call grade of answer """
+
         self.grade_answer(2)
 
-    def numeral3_pressed(self,widget,event):
+    def numeral3_pressed(self, widget, event):
+        """ Call grade of answer """
+
         self.grade_answer(3)
 
-    def numeral4_pressed(self,widget,event):
+    def numeral4_pressed(self, widget, event):
+        """ Call grade of answer """
+
         self.grade_answer(4)
 
-    def numeral5_pressed(self,widget,event):
+    def numeral5_pressed(self, widget, event):
+        """ Call grade of answer """
+
         self.grade_answer(5)
 
-    def open_card_clicked(self,widget,event):
+    def show_answer(self):
+        """ Show a right answer """
+
+        if config()["theme_path"].endswith("draft"):
+            from pomni.hildon_draft_ui import theme_show_answer
+        if config()["theme_path"].endswith("eternal"):
+            from pomni.hildon_eternal_ui import theme_show_answer
+
+        theme_show_answer(self)
+
+    def open_card_clicked(self, widget, event):
+        """ Hook for showing a right answer """
+
         self.show_answer()
 
     def start(self):
-        wTree = glade.XML(self.gladefn)
-        wTree.signal_autoconnect({"on_eventbox_numeral0_button_press_event": self.numeral0_pressed,
-                                  "on_eventbox_numeral1_button_press_event": self.numeral1_pressed,
-                                  "on_eventbox_numeral2_button_press_event": self.numeral2_pressed,
-                                  "on_eventbox_numeral3_button_press_event": self.numeral3_pressed,
-                                  "on_eventbox_numeral4_button_press_event": self.numeral4_pressed,
-                                  "on_eventbox_numeral5_button_press_event": self.numeral5_pressed,
-                                  "on_eventbox_show_answer_button_press_event": self.open_card_clicked,
-                                  "on_exit_clicked" : self.quit})
+        """ Start new review window """
 
-        self.question = wTree.get_widget("question")
-        self.answer = wTree.get_widget("answer")
-        self.eventbox_numeral0 = wTree.get_widget("eventbox_numeral_0")
-        self.eventbox_numeral1 = wTree.get_widget("eventbox_numeral_1")
-        self.eventbox_numeral2 = wTree.get_widget("eventbox_numeral_2")
-        self.eventbox_numeral3 = wTree.get_widget("eventbox_numeral_3")
-        self.eventbox_numeral4 = wTree.get_widget("eventbox_numeral_4")
-        self.eventbox_numeral5 = wTree.get_widget("eventbox_numeral_5")
-        self.eventbox_show_answer = wTree.get_widget("eventbox_show_answer")
+        # Load the glade form for review window
+        self.w_tree = glade.XML(self.gladefn)
 
-        self.wTree = wTree
+        #For common design
+        self.window = self.w_tree.get_widget("ReviewWindow")
+        self.question = self.w_tree.get_widget("question")
+        self.answer = self.w_tree.get_widget("answer")
+        self.eventbox_numeral0 = self.w_tree.get_widget("eventbox_numeral_0")
+        self.eventbox_numeral1 = self.w_tree.get_widget("eventbox_numeral_1")
+        self.eventbox_numeral2 = self.w_tree.get_widget("eventbox_numeral_2")
+        self.eventbox_numeral3 = self.w_tree.get_widget("eventbox_numeral_3")
+        self.eventbox_numeral4 = self.w_tree.get_widget("eventbox_numeral_4")
+        self.eventbox_numeral5 = self.w_tree.get_widget("eventbox_numeral_5")
 
+        #For different design
+        if config()["theme_path"].endswith("draft"):
+            from pomni.hildon_draft_ui import theme_start
+        if config()["theme_path"].endswith("eternal"):
+            from pomni.hildon_eternal_ui import theme_start
+
+        theme_start(self)
+
+        #Begin the review window from a new question
         self.new_question()
 
     def new_question(self, learn_ahead=False):
+        """ Create new question """
+
         if database().card_count() == 0:
             raise HildonUiControllerException(_("Database is empty"))
         else:
@@ -110,49 +149,50 @@ class HildonUiControllerReview(UiControllerReview):
             if self.card != None:
                 self.question.set_text(self.card.question())
                 self.answer.set_text("")
-                self.eventbox_numeral0.set_sensitive(False)
-                self.eventbox_numeral1.set_sensitive(False)
-                self.eventbox_numeral2.set_sensitive(False)
-                self.eventbox_numeral3.set_sensitive(False)
-                self.eventbox_numeral4.set_sensitive(False)
-                self.eventbox_numeral5.set_sensitive(False)
-                self.eventbox_show_answer.set_sensitive(True)
+
+                if config()["theme_path"].endswith("draft"):
+                    from pomni.hildon_draft_ui import theme_new_question
+                if config()["theme_path"].endswith("eternal"):
+                    from pomni.hildon_eternal_ui import theme_new_question
+
+                theme_new_question(self)
+
             else:
+                #Fix me
 #                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
                 self.new_question(learn_ahead=True)
 
-
-    def show_answer(self):
-        self.answer.set_text(self.card.answer())
-        self.eventbox_numeral0.set_sensitive(True)
-        self.eventbox_numeral1.set_sensitive(True)
-        self.eventbox_numeral2.set_sensitive(True)
-        self.eventbox_numeral3.set_sensitive(True)
-        self.eventbox_numeral4.set_sensitive(True)
-        self.eventbox_numeral5.set_sensitive(True)
-        self.eventbox_show_answer.set_sensitive(False)
-
     def grade_answer(self, grade):
+        """ Grade the answer """
+
         scheduler().process_answer(self.card, grade)
         self.new_question()
 
-    def quit(self,widget):
-        raise HildonUiControllerException(_("Exited"))
+    def quit(self, widget):
+        """ Close review window """
+
         self.window.destroy()
+
+    def quit_button(self, widget, event):
+        """ if pressed quit button then close the window """
+
+        self.quit(widget)
+
 
 class MainWindow:
     """ GUI - Hildon """
 
-    def __init__(self,mode):
-       
+    def __init__(self, mode):
+
         theme_path = config()["theme_path"]
-        self.wTree=gtk.glade.XML(os.path.join(theme_path, "window_main.glade"))
-        self.wTree.signal_autoconnect({"on_review_clicked": self.review_clicked,
-                                       "on_input_clicked" : self.input_clicked,
-                                       "on_configure_clicked" : self.configure_clicked,
-                                       "on_eventbox1_button_press_event" : self.quit,
-                                       "on_exit_clicked" : self.quit})
-        self.window = self.wTree.get_widget("MainWindow")
+        self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window_main.glade"))
+        self.w_tree.signal_autoconnect({
+                "on_review_clicked": self.review_clicked,
+                "on_input_clicked" : self.input_clicked,
+                "on_configure_clicked" : self.configure_clicked,
+                "on_eventbox1_button_press_event" : self.quit,
+                "on_exit_clicked" : self.quit})
+        self.window = self.w_tree.get_widget("MainWindow")
 
         gtk.rc_parse(os.path.join(theme_path,"rcfile"))
 
@@ -160,17 +200,17 @@ class MainWindow:
         if (mode == 'review'):
             ui_controller_review().start()
 
-    def review_clicked(self,widget):
+    def review_clicked(self, widget):
         print "button Review clicked"
         ui_controller_review().start()
 
-    def input_clicked(self,widget):
+    def input_clicked(self, widget):
         print "button Input clicked"
 
-    def configure_clicked(self,widget):
+    def configure_clicked(self, widget):
         print "button Configure clicked"
 
-    def quit(self,widget):
+    def quit(self, widget):
         gtk.main_quit()
 
 class HildonUI():
