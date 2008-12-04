@@ -155,34 +155,30 @@ class CommandlineUI(cmd.Cmd):
             once_again = raw_input(_("Do you want to add a new record? y/n "))
 	    
        
-    def show_configuration(self, conf):
-        """ Show current configuration """
-        for key in conf._config:
-            print key, ":", conf._config[key]
-
-    def set_param(self, conf, param, value):
-        """ Set new param value """
-        if param not in conf._config:
-            print param, "is not exist. Try another!"
-            return
-        conf.__setitem__(param, value)
-
-    def get_param(self, conf, param):
-        """ Get current param value """
-        if param not in conf._config:
-            print param, "is not exist. Try another!"
-            return
-        return conf._config[param]
-
-    def save_configuration(self, conf):
-        """ Save current configuration """
-        conf.save()
-
     def do_conf(self, line):
         """ Configuration mode """
 
-        self.cfg = config()  # create instance
-        self.cfg.load()      # load parameters from configuration file
+        def get_param(conf, param):
+            """ Get current param value """
+            if param not in conf._config:
+                print param, "is not exist. Try another!"
+                return
+            return conf.__getitem__(param)
+
+        def set_param(conf, param, value):
+            """ Set new param value """
+            if param not in conf._config:
+                print param, "is not exist. Try another!"
+                return
+            conf[param] = value
+
+        def show_configuration(conf):
+            """ Show current configuration """
+            for key in conf._config:
+                print key, ":", conf._config[key]
+
+        cfg = config()  # create instance
+        cfg.load()      # load parameters from configuration file
         print "=== Config mode ==="
         print "Type 'help' to view config commands or 'quit' to quit."
 
@@ -190,24 +186,24 @@ class CommandlineUI(cmd.Cmd):
         "\n\tshow - Show current configuration\n\tset - Set new param value"\
         "\n\tget - Get current param value\n\tsave - Save current configuration"
 
-        cmd = 'nocmd'
-        while cmd != 'quit':
-            cmd = raw_input("> ")
-            if cmd == 'help':
+        user_cmd = 'nocmd'
+        while user_cmd != 'quit':
+            user_cmd = raw_input("> ")
+            if user_cmd == 'help':
                 print help_promt
-            elif cmd == 'show':
-                self.show_configuration(self.cfg)
-            elif cmd == 'set':
+            elif user_cmd == 'show':
+                show_configuration(cfg)
+            elif user_cmd == 'set':
                 param = raw_input("Enter param name: ")
                 value = raw_input("Enter new value: ")
-                self.set_param(self.cfg, param, value)
-            elif cmd == 'get':
+                set_param(cfg, param, value)
+            elif user_cmd == 'get':
                 param = raw_input("Enter param name: ")
-                value = self.get_param(self.cfg, param)
+                value = get_param(cfg, param)
                 print value
-            elif cmd == 'save':
-                self.save_configuration(self.cfg)
-            elif cmd != 'quit':
+            elif user_cmd == 'save':
+                cfg.save()
+            elif user_cmd != 'quit':
                 print 'Unknown command. Type another!'
 
 
