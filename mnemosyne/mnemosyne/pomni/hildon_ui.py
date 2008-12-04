@@ -60,41 +60,38 @@ class HildonUiControllerReview(UiControllerReview):
         self.gladefn = os.path.join(config()["theme_path"], 
                                             "window_review.glade")
         self.grade = 0
+        self.w_tree = None
+        self.window = None
+        self.question = None
+        self.answer = None
+        self.eventbox_numeral0 = None
+        self.eventbox_numeral1 = None
+        self.eventbox_numeral2 = None
+        self.eventbox_numeral3 = None
+        self.eventbox_numeral4 = None
+        self.eventbox_numeral5 = None
+
 
     def update_dialog(self):
         """ This is part of UiControllerReview API """
 
         pass
 
-    def numeral0_pressed(self, widget, event):
+    def numeral_pressed(self, widget, event):
         """ Call grade of answer """
 
-        self.grade_answer(0)
-
-    def numeral1_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(1)
-
-    def numeral2_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(2)
-
-    def numeral3_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(3)
-
-    def numeral4_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(4)
-
-    def numeral5_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(5)
+        if (widget == self.eventbox_numeral0):
+            self.grade_answer(0)
+        if (widget == self.eventbox_numeral1):
+            self.grade_answer(1)
+        if (widget == self.eventbox_numeral2):
+            self.grade_answer(2)
+        if (widget == self.eventbox_numeral3):
+            self.grade_answer(3)
+        if (widget == self.eventbox_numeral4):
+            self.grade_answer(4)
+        if (widget == self.eventbox_numeral5):
+            self.grade_answer(5)
 
     def show_answer(self):
         """ Show a right answer """
@@ -139,7 +136,7 @@ class HildonUiControllerReview(UiControllerReview):
         #Begin the review window from a new question
         self.new_question()
 
-    def new_question(self, learn_ahead=False):
+    def new_question(self, learn_ahead = False):
         """ Create new question """
 
         if database().card_count() == 0:
@@ -164,7 +161,6 @@ class HildonUiControllerReview(UiControllerReview):
 
     def grade_answer(self, grade):
         """ Grade the answer """
-
         scheduler().process_answer(self.card, grade)
         self.new_question()
 
@@ -193,7 +189,6 @@ class MainWindow:
                 "on_eventbox1_button_press_event" : self.quit,
                 "on_exit_clicked" : self.quit})
         self.window = self.w_tree.get_widget("MainWindow")
-
         gtk.rc_parse(os.path.join(theme_path,"rcfile"))
 
         # Fix Me 
@@ -201,16 +196,19 @@ class MainWindow:
             ui_controller_review().start()
 
     def review_clicked(self, widget):
-        print "button Review clicked"
+        """ Open Review Window """
         ui_controller_review().start()
 
     def input_clicked(self, widget):
+        """ Open Input Window """
         print "button Input clicked"
 
     def configure_clicked(self, widget):
+        """ Open configure window """
         print "button Configure clicked"
 
     def quit(self, widget):
+        """ Quit from application """
         gtk.main_quit()
 
 class HildonUI():
@@ -228,10 +226,14 @@ class HildonUI():
         """
         pass
 
-    def information_box(self, message, OK_string):
+    def information_box(self, message, ok_string):
+        """ Output messsage """
+
         print message
 
     def question_box(self, question, option0, option1, option2):
+        """ Show question """
+
         print question
         print "0", option0
         print "1", option1
@@ -241,7 +243,8 @@ class HildonUI():
         return answer
 
     def start(self, mode):
-        app = MainWindow(mode)
+        """ Start GUI application """
+        MainWindow(mode)
         gtk.main()
 
     def do_quit(self, line):
