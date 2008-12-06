@@ -27,6 +27,8 @@ UI Factory. Creates UI objects
 from mnemosyne.libmnemosyne.databases.pickle import Pickle
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
+from mnemosyne.libmnemosyne.component_manager import config
+
 
 def ui_factory(model, interface=None):
     """ Create UI(View in terms of MVC) """
@@ -43,7 +45,12 @@ def ui_factory(model, interface=None):
     if not interface or interface == "hildon":
         from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
 
-        component_manager.register("ui_controller_review", HildonUiControllerReview())
+        theme = config()["theme_path"].split("/")[-1]
+        # Fix me - Check theme is not none 
+        ui_theme_review = __import__("pomni.hildon_%s_ui" % theme, globals(), \
+            locals(), [""]).HildonThemeUiControllerReview
+
+        component_manager.register("ui_controller_review", ui_theme_review())
         component_manager.register("review_widget", HildonReviewWdgt)
         component_manager.register("renderer", TextRenderer())
         return HildonUI(model)
