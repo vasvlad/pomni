@@ -167,9 +167,6 @@ class CommandlineUI(cmd.Cmd):
 
         def set_param(conf, param, value):
             """ Set new param value """
-            if param not in conf._config:
-                print param, "is not exist. Try another!"
-                return
             conf[param] = value
 
         def show_configuration(conf):
