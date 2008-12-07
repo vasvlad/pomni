@@ -6,6 +6,8 @@
     <property name="visible">True</property>
     <property name="default_width">800</property>
     <property name="default_height">480</property>
+    <signal name="key_press_event" handler="on_ReviewWindow_key_press_event"/>
+    <signal name="window_state_event" handler="on_ReviewWindow_window_state_event"/>
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
