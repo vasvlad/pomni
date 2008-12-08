@@ -76,13 +76,14 @@ class HildonUiControllerReview(UiControllerReview):
         self.eventbox_numeral5 = None
         self.fullscreen = False
 
-    def start(self):
+    def start(self,  w_tree):
         """ Start new review window """
 
-        # Load the glade form for review window
-        self.w_tree = glade.XML(self.gladefn)
-
         #For common design
+        self.w_tree = w_tree
+        self.notebook_windows = self.w_tree.get_widget("notebook_windows")
+        #Switch to Page review
+        self.notebook_windows.set_current_page(1)
         self.window = self.w_tree.get_widget("ReviewWindow")
         self.question = self.w_tree.get_widget("question")
         self.answer = self.w_tree.get_widget("answer")
@@ -106,7 +107,6 @@ class HildonUiControllerReview(UiControllerReview):
 
     def open_card_clicked(self, widget, event):
         """ Hook for showing a right answer """
-
         if (widget and event):
             self.show_answer()
 
@@ -178,7 +178,7 @@ class HildonUiControllerReview(UiControllerReview):
         """ Close review window """
 
         if (widget):
-            self.window.destroy()
+            self.widget.destroy()
 
     def quit_button(self, widget, event):
         """ If pressed quit button then close the window """
@@ -197,18 +197,17 @@ class MainWindow:
         except:
             theme_path = "/usr/share/pomni/hildon-UI/draft"
 
+        gtk.rc_parse(os.path.join(theme_path,"rcfile"))
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
                                                  "window.glade"))
         self.w_tree.signal_autoconnect({
                 "on_review_clicked": self.review_clicked,
                 "on_input_clicked" : self.input_clicked,
                 "on_configure_clicked" : self.configure_clicked,
-                "on_eventbox1_button_press_event" : self.quit,
                 "on_MainWindow_key_press_event" : self.on_key_press,
                 "on_MainWindow_window_state_event": self.window_state_event,
                 "on_exit_clicked" : self.quit})
         self.window = self.w_tree.get_widget("MainWindow")
-        gtk.rc_parse(os.path.join(theme_path,"rcfile"))
 
         self.fullscreen = False
 
@@ -220,7 +219,7 @@ class MainWindow:
         """ Open Review Window """
 
         if (widget):
-            ui_controller_review().start()
+            ui_controller_review().start(self.w_tree)
 
     def input_clicked(self, widget):
         """ Open Input Window """

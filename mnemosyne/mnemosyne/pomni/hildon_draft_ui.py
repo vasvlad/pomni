@@ -49,10 +49,10 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         self.eventbox_numeral5.set_sensitive(True)
         self.eventbox_show_answer.set_sensitive(False)
 
-    def start(self):
+    def start(self, w_tree):
         """ Start new review window for eternal theme """
 
-        HildonUiControllerReview.start(self)
+        HildonUiControllerReview.start(self, w_tree)
         self.eventbox_show_answer = \
              self.w_tree.get_widget("eventbox_show_answer")
         #Connect to various signals
@@ -63,10 +63,8 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
            "on_eventbox_numeral3_button_press_event": self.numeral_pressed,
            "on_eventbox_numeral4_button_press_event": self.numeral_pressed,
            "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
-           "on_eventbox_show_answer_button_press_event": self.open_card_clicked,
-           "on_ReviewWindow_key_press_event": self.on_key_press,
-           "on_ReviewWindow_window_state_event": self.window_state_event,
-           "on_exit_clicked" : self.quit})
+           "on_eventbox_show_answer_button_press_event": self.open_card_clicked
+           })
 
         self.estimate_box = self.w_tree.get_widget("estimate_box")
         self.answer_box = self.w_tree.get_widget("answer_box")
