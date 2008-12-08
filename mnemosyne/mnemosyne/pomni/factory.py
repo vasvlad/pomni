@@ -44,8 +44,10 @@ def ui_factory(model, interface=None):
 
     if not interface or interface == "hildon":
         from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
-
-        theme = config()["theme_path"].split("/")[-1]
+        try:
+            theme = config()["theme_path"].split("/")[-1]
+        except:
+            theme = "draft"
         # Fix me - Check theme is not none 
         ui_theme_review = __import__("pomni.hildon_%s_ui" % theme, globals(), \
             locals(), [""]).HildonThemeUiControllerReview

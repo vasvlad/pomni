@@ -58,8 +58,11 @@ class HildonUiControllerReview(UiControllerReview):
 
         UiControllerReview.__init__(self, name="Hildon UI Controller")
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
-        self.gladefn = os.path.join(config()["theme_path"], 
-                                            "window_review.glade")
+        try:
+            self.gladefn = os.path.join(config()["theme_path"], 
+                                            "window.glade")
+        except:
+            self.gladefn = "/usr/share/pomni/hildon-UI/draft/window.glade"
         self.grade = 0
         self.w_tree = None
         self.window = None
@@ -189,10 +192,13 @@ class MainWindow:
     """ GUI - Hildon """
 
     def __init__(self, mode):
+        try:
+            theme_path = config()["theme_path"]
+        except:
+            theme_path = "/usr/share/pomni/hildon-UI/draft"
 
-        theme_path = config()["theme_path"]
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
-                                                 "window_main.glade"))
+                                                 "window.glade"))
         self.w_tree.signal_autoconnect({
                 "on_review_clicked": self.review_clicked,
                 "on_input_clicked" : self.input_clicked,
