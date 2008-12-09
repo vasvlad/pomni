@@ -52,17 +52,11 @@ class HildonUiControllerException(Exception):
 
 class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
-
     def __init__(self):
         """ Initialization items of review window """
 
         UiControllerReview.__init__(self, name="Hildon UI Controller")
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
-        try:
-            self.gladefn = os.path.join(config()["theme_path"], 
-                                            "window.glade")
-        except:
-            self.gladefn = "/usr/share/pomni/hildon-UI/draft/window.glade"
         self.grade = 0
         self.w_tree = None
         self.window = None
@@ -144,13 +138,13 @@ class HildonUiControllerReview(UiControllerReview):
         """ Show New question on current theme """
         pass
 
-    def new_question(self, learn_ahead = False):
+    def new_question(self):
         """ Create new question """
 
         if database().card_count() == 0:
             raise HildonUiControllerException(_("Database is empty"))
         else:
-            self.card = scheduler().get_new_question(learn_ahead)
+            self.card = scheduler().get_new_question(False)
 
             if self.card != None:
                 self.question.set_text(self.card.question())
@@ -159,7 +153,11 @@ class HildonUiControllerReview(UiControllerReview):
             else:
                 #Fix me
 #                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
-                self.new_question(learn_ahead=True)
+                self.new_question(True)
+                self.question.set_text(self.card.question())
+                self.answer.set_text("")
+                self.theme_new_question()
+
 
     def grade_answer(self, grade):
         """ Grade the answer """
