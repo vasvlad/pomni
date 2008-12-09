@@ -57,14 +57,8 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
              self.w_tree.get_widget("eventbox_show_answer")
         #Connect to various signals
         self.w_tree.signal_autoconnect(
-          {"on_eventbox_numeral0_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral2_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral3_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral4_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
-           "on_eventbox_show_answer_button_press_event": self.open_card_clicked
-           })
+          {"on_eventbox_show_answer_button_press_event": 
+           self.open_card_clicked})
 
         self.estimate_box = self.w_tree.get_widget("estimate_box")
         self.answer_box = self.w_tree.get_widget("answer_box")

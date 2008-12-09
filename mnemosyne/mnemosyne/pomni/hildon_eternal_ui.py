@@ -36,6 +36,8 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         self.get_answer_hbox = None
         self.estimate_box = None
         self.answer_box = None
+        self.answer_box = None
+        self.w_tree = None
 
     def show_answer(self):
         """ Show answer in review window for eternal theme """
@@ -45,27 +47,19 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         self.answer_box.set_property('visible', True)
         self.answer.set_text(self.card.answer())
 
-    def start(self):
+    def start(self, w_tree):
         """ Start new review window for eternal theme """
 
-        HildonUiControllerReview.start(self)
+        HildonUiControllerReview.start(self, w_tree)
         self.get_answer_hbox = self.w_tree.get_widget("get_answer_hbox")
         self.estimate_box = self.w_tree.get_widget("estimate_box")
         self.answer_box = self.w_tree.get_widget("answer_box")
 
         #Connect to various signals
         self.w_tree.signal_autoconnect({
-           "on_eventbox_numeral0_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral2_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral3_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral4_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
-           "on_eventbox_show_answer_button_press_event": self.open_card_clicked,
-           "on_ReviewWindow_key_press_event": self.on_key_press,
-           "on_ReviewWindow_window_state_event": self.window_state_event,
-           "on_eventbox_quit_button_press_event": self.quit_button,
-           "on_exit_clicked" : self.quit})
+           "on_eventbox_show_answer_button_press_event": self.open_card_clicked
+        })
+
         #Begin the review window from a new question
         self.new_question()
 

@@ -160,6 +160,27 @@ style "reviewwindow"
      }
  }
 
+style "nothing"
+{
+  GtkNotebook::inner_left_border = 0
+  GtkNotebook::inner_right_border = 0
+  GtkNotebook::tab-overlap = 0
+  GtkNotebook::arrow-spacing = 6
+  GtkNotebook::label-padding = 2
+
+  # Themings for images on different sides of the notebook.
+  engine "sapwood"
+  {
+    image
+      {
+        function = BOX
+	detail   = "notebook"
+        border   = { 0, 0, 0, 0 }
+        file     = "nothing.png"
+      }
+  }
+}
+
 
 
 
@@ -171,4 +192,5 @@ widget "*.answer" style "review-question-label"
 widget "*.getanswer" style "review-getanswer-label"
 widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
-widget "ReviewWindow" style "reviewwindow"
+widget "*.notebook_windows" style "nothing"
+widget "MainWindow" style "reviewwindow"
