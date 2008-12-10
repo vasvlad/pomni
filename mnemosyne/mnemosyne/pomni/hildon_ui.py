@@ -26,22 +26,12 @@ Hildon UI
 
 import os
 import gettext
+import gtk
 from os.path import basename
 
-import gtk
-from gtk import glade
-try:
-    import hildon
-    IS_MAEMO = True
-except:
-    IS_MAEMO = False
-
-
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main, card_types
+        ui_controller_review, config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
-from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
-    import SM2Controller
 
 _ = gettext.gettext
 
@@ -203,11 +193,7 @@ class MainWindow:
     """ GUI - Hildon """
 
     def __init__(self, mode):
-        try:
-            theme_path = config()["theme_path"]
-        except:
-            theme_path = "/usr/share/pomni/hildon-UI/draft"
-
+        theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path,"rcfile"))
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
                                                  "window.glade"))
