@@ -2,9 +2,10 @@
 # card_type.py <Peter.Bienstman@UGent.be>
 #
 
+from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.libmnemosyne.component_manager import database
 from mnemosyne.libmnemosyne.component_manager import component_manager
-
 
 class CardType(Component):
 
@@ -31,6 +32,11 @@ class CardType(Component):
     create the card type, because it is not sure that the renderer already
     exists at that stage.
 
+    The functions create_related_cards and update_related_cards and provide
+    an extra layer of abstraction and can be overridden by card types like
+    cloze deletion, which require a varying number of fact views with card
+    specific data.
+
     """
 
     def __init__(self):
@@ -43,6 +49,7 @@ class CardType(Component):
         self.is_language = False
         self.widget = None
         self.renderer = None
+        self.fact_views_can_be_deactivated = True
 
     def required_fields(self):
 
@@ -70,3 +77,22 @@ class CardType(Component):
             except KeyError:
                  self.renderer = component_manager.get_current("renderer")
             return self.renderer
+
+    # The following two functions require access to the database. One could
+    # argue that this is not very clean design. However, it allows for the
+    # fact that all the logic corresponding to specialty card types (like
+    # cloze deletion) can be contained in a single derived class by
+    # reimplementing these functions.
+
+    def create_related_cards(self, fact, grade=0):
+        db = database()
+        for fact_view in self.fact_views:
+            card = Card(fact, fact_view)
+            card.set_initial_grade(grade)
+            db.add_card(card)
+
+    def update_related_cards(self, fact, new_fact_data):
+        fact.data = new_fact_data
+        db = database()
+        db.update_fact(fact)
+
