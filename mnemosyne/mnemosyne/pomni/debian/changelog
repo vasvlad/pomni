@@ -1,4 +1,13 @@
-pomni (1.0.0) unstable; urgency=low
+pomni (0.0.1) unstable; urgency=low
+
+  * Merged hildon_ui* work from Vlad's branch
+  * Fixed pylint findings
+  * Code cleanup
+  * Changed versioning scheme
+
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 11 Dec 2008 08:11:28 +0000
+
+pomni (0.0.0) unstable; urgency=low
 
   * Initial release
 

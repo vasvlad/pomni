@@ -27,6 +27,7 @@ Hildon UI
 import os
 import gettext
 import gtk
+from gtk import glade
 from os.path import basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
@@ -81,7 +82,7 @@ class HildonUiControllerReview(UiControllerReview):
            "on_eventbox_quit_button_press_event": self.quit_button,
            "on_exit_clicked" : self.quit})
 
-	self.w_tree = w_tree
+        self.w_tree = w_tree
 
 
     def update_dialog(self):
@@ -103,7 +104,7 @@ class HildonUiControllerReview(UiControllerReview):
         """ Call grade of answer """
 
         if widget and event:
-	    self.grade_answer(self.eventbox.index(widget))
+            self.grade_answer(self.eventbox_numeral.index(widget))
 
     def theme_new_question(self):
         """ Show New question on current theme """
