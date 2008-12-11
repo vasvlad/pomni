@@ -40,7 +40,7 @@ def ui_factory(model, interface=None):
         component_manager.register("ui_controller_review", CmdUiControllerReview())
         component_manager.register("review_widget", CmdReviewWdgt)
         component_manager.register("renderer", TextRenderer())
-        return CommandlineUI(model)
+        return CommandlineUI()
 
     if not interface or interface == "hildon":
         from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
@@ -55,7 +55,7 @@ def ui_factory(model, interface=None):
         component_manager.register("ui_controller_review", ui_theme_review())
         component_manager.register("review_widget", HildonReviewWdgt)
         component_manager.register("renderer", TextRenderer())
-        return HildonUI(model)
+        return HildonUI()
     
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)

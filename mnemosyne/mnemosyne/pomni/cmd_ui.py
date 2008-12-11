@@ -43,20 +43,11 @@ _ = gettext.gettext
 class CommandlineUI(cmd.Cmd):
     """ Commandline UI. Upper-level class """
 
-    def __init__(self, model):
+    def __init__(self):
 
         cmd.Cmd.__init__(self)
         self.prompt = '====== Main =======\nPomni: '
         ui_controller_main().widget = self
-        self.model = model
-        model.register(self)
-
-    def update(self, model):
-        """ This method is part of Observer pattern
-            it's called by observable(Model in our case) to notify
-            about its change
-        """
-        pass
 
     def information_box(self, message, ok_string):
         """ Widget method. DefaultMainController.create_new_cards calls it """
