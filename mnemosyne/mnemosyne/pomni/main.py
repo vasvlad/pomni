@@ -78,13 +78,9 @@ def main(argv):
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 
-    cscheduler = scheduler()
-    model = Model(cdatabase, cscheduler)
-    view = ui_factory(model, opts.ui)
-    
-    controller = Controller(model, view)
+    view = ui_factory(opts.ui)
 
-    return controller.start(opts.mode)
+    return view.start(opts.mode)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
