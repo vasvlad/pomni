@@ -34,15 +34,15 @@ def ui_factory(interface=None):
     """ Create UI(View in terms of MVC) """
 
     if interface == 'cmd':
-        # default UI
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
 
-        component_manager.register("ui_controller_review", CmdUiControllerReview())
+        component_manager.register("ui_controller_review",
+                                   CmdUiControllerReview())
         component_manager.register("renderer", TextRenderer())
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-        from pomni.hildon_ui import HildonUiControllerReview, HildonUI
+        from pomni.hildon_ui import HildonUI
         try:
             theme = config()["theme_path"].split("/")[-1]
         except:
@@ -62,7 +62,7 @@ def backend_factory(name=None):
     """ Create backend """
 
     if not name or name == "pickle":
-    	return Pickle()
+        return Pickle()
     if name == 'sqlite':
         raise NotImplementedError("SQLite backend is not implemented yet")
 
