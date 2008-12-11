@@ -97,14 +97,13 @@ class HildonUiControllerReview(UiControllerReview):
 
     def open_card_clicked(self, widget, event):
         """ Hook for showing a right answer """
-        if (widget and event):
-            self.show_answer()
+
+        self.show_answer()
 
     def numeral_pressed(self, widget, event):
         """ Call grade of answer """
 
-        if widget and event:
-            self.grade_answer(self.eventbox_numeral.index(widget))
+        self.grade_answer(self.eventbox_numeral.index(widget))
 
     def theme_new_question(self):
         """ Show New question on current theme """
@@ -138,7 +137,7 @@ class HildonUiControllerReview(UiControllerReview):
 
     def on_key_press(self, widget, event, *args):
         """ Key pressed """
-        if widget and event.keyval == gtk.keysyms.F6: 
+        if event.keyval == gtk.keysyms.F6: 
             # The "Full screen" hardware key has been pressed 
             if self.fullscreen:
                 self.window.unfullscreen()
@@ -156,15 +155,13 @@ class HildonUiControllerReview(UiControllerReview):
     def quit(self, widget):
         """ Close review window """
 
-        if (widget):
-            #Switch to Menu page
-            self.notebook_windows.set_current_page(0)
+    	#Switch to Menu page
+        self.notebook_windows.set_current_page(0)
 
     def quit_button(self, widget, event):
         """ If pressed quit button then close the window """
-
-        if (widget and event):
-            self.quit(widget)
+        
+        self.quit(widget)
 
 
 class MainWindow:
@@ -194,30 +191,27 @@ class MainWindow:
     def review_clicked(self, widget):
         """ Open Review Window """
 
-        if (widget):
-            ui_controller_review().start(self.w_tree)
+        ui_controller_review().start(self.w_tree)
 
     def input_clicked(self, widget):
         """ Open Input Window """
 
-        if (widget):
-            print "button Input clicked"
+        print "button Input clicked"
 
     def configure_clicked(self, widget):
         """ Open configure window """
 
-        if (widget):
-            print "button Configure clicked"
+        print "button Configure clicked"
 
     def quit(self, widget):
         """ Quit from application """
 
-        if (widget):
-            gtk.main_quit()
+        gtk.main_quit()
 
     def on_key_press(self, widget, event, *args):
         """ Key pressed """
-        if widget and event.keyval == gtk.keysyms.F6:
+
+        if event.keyval == gtk.keysyms.F6:
             # The "Full screen" hardware key has been pressed 
             if self.fullscreen:
                 self.window.unfullscreen ()
@@ -226,10 +220,9 @@ class MainWindow:
 
     def window_state_event(self, widget, event):
         """ Checking window state """
-        if widget and event.new_window_state & gtk.gdk.WINDOW_STATE_FULLSCREEN:
-            self.fullscreen = True
-        else:
-            self.fullscreen = False
+
+        self.fullscreen = bool(event.new_window_state & \
+            gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
 
 class HildonUI():
