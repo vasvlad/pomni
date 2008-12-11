@@ -76,9 +76,9 @@ def main(argv):
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 
-    view = ui_factory(opts.ui)
+    ui = ui_factory(opts.ui)
 
-    return view.start(opts.mode)
+    return ui.start(opts.mode)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

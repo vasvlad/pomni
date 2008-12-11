@@ -289,9 +289,6 @@ class CmdUiControllerReview(UiControllerReview):
             break
 
 
-class CmdReviewWdgt:
-    pass
-
 def _test():
     """ Run doctests
     """

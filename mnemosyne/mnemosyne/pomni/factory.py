@@ -35,15 +35,14 @@ def ui_factory(model, interface=None):
 
     if interface == 'cmd':
         # default UI
-        from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
+        from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
 
         component_manager.register("ui_controller_review", CmdUiControllerReview())
-        component_manager.register("review_widget", CmdReviewWdgt)
         component_manager.register("renderer", TextRenderer())
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-        from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
+        from pomni.hildon_ui import HildonUiControllerReview, HildonUI
         try:
             theme = config()["theme_path"].split("/")[-1]
         except:
@@ -53,7 +52,6 @@ def ui_factory(model, interface=None):
             locals(), [""]).HildonThemeUiControllerReview
 
         component_manager.register("ui_controller_review", ui_theme_review())
-        component_manager.register("review_widget", HildonReviewWdgt)
         component_manager.register("renderer", TextRenderer())
         return HildonUI()
     
