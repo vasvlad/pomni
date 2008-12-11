@@ -62,47 +62,13 @@ style "review-button" {
     image {
         function = FOCUS
 	file     = "textarea.png"
-	border   = { 8, 8, 8, 8 }
+	border   = { 60, 60, 60, 60 }
     }
 
     image {
 	function = BOX
 	file     = "textarea.png"
-  	border   = { 8, 8, 8, 8 }
-    }
-
-  }
-}
-
-style "getanswerarea-button" {
-
-  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
-  GtkWidget::focus-width = 0
-  GtkButton::default_border = { 0, 0, 0, 0 }
-  GtkButton::child-displacement-x = 0
-  GtkButton::child-displacement-y = 0
-  GtkButton::interior_focus = 0
-  GtkButton::child_spacing = 0
-  xthickness = 7
-  ythickness = 0
-
-  engine "pixmap" {
-
-    image {
-        function = FOCUS
-	state    = ACTIVE
-    }
-
-    image {
-        function = FOCUS
-	file     = "getanswerarea.png"
-	border   = { 8, 8, 8, 8 }
-    }
-
-    image {
-	function = BOX
-	file     = "getanswerarea.png"
-  	border   = { 8, 8, 8, 8 }
+  	border   = { 60, 60, 60, 60 }
     }
 
   }
@@ -186,11 +152,9 @@ style "nothing"
 
 
 widget "*.button_answer" style "review-button"
-widget "*.button_getanswer" style "getanswerarea-button"
 widget "*.title_label" style "review-title-label"
-widget "*.answer" style "review-question-label"
-widget "*.getanswer" style "review-getanswer-label"
-widget "*.question" style "review-question-label"
+widget "*.title_answer" style "review-title-label"
+widget "*.title_question" style "review-title-label"
 widget "*.button_question" style "review-button"
 widget "*.notebook_windows" style "nothing"
 widget "MainWindow" style "reviewwindow"
