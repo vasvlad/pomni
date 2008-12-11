@@ -38,11 +38,9 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 from optparse import OptionParser
 
 from mnemosyne.libmnemosyne import initialise
-from mnemosyne.libmnemosyne.component_manager import database, scheduler, config
+from mnemosyne.libmnemosyne.component_manager import database, config
 
 from pomni.factory import ui_factory
-from pomni.model import Model
-from pomni.controller import Controller
 
 def parse_commandline(argv):
     """ Parse commandline, check options """
