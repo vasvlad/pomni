@@ -30,7 +30,7 @@ from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 from mnemosyne.libmnemosyne.component_manager import config
 
 
-def ui_factory(model, interface=None):
+def ui_factory(interface=None):
     """ Create UI(View in terms of MVC) """
 
     if interface == 'cmd':
