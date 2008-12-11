@@ -50,7 +50,7 @@ latex = "latex"
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
 
 # path to default theme
-theme_path = "/usr/share/pomni/hildon-UI/draft"
+theme_path = "/usr/share/pomni/hildon-UI/eternal"
 """
 
 
@@ -99,7 +99,7 @@ class Configuration(Component):
         c.setdefault("latex_postamble", "\\end{document}")
         c.setdefault("latex", "latex -interaction=nonstopmode")       
         c.setdefault("dvipng", "dvipng -D 200 -T tight tmp.dvi")
-        c.setdefault("theme_path", "/usr/share/pomni/hildon-UI/draft")
+        c.setdefault("theme_path", "/usr/share/pomni/hildon-UI/eternal")
 
     def __getitem__(self, key):
         try:

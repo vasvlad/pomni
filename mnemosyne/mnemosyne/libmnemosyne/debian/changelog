@@ -1,3 +1,9 @@
+python-libmnemosyne (2.0.0-2) unstable; urgency=low
+
+  * make eternal default theme 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 11 Dec 2008 21:12:43 +0000
+
 python-libmnemosyne (2.0.0-1) unstable; urgency=low
 
   * Initial release

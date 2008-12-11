@@ -4,8 +4,9 @@ pomni (0.0.1) unstable; urgency=low
   * Fixed pylint findings
   * Code cleanup
   * Changed versioning scheme
+  * Get rid of MVC
 
- -- Ed Bartosh <bartosh@gmail.com>  Thu, 11 Dec 2008 08:11:28 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 11 Dec 2008 21:08:03 +0000
 
 pomni (0.0.0) unstable; urgency=low
 

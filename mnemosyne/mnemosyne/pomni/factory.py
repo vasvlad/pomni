@@ -46,7 +46,7 @@ def ui_factory(interface=None):
         try:
             theme = config()["theme_path"].split("/")[-1]
         except:
-            theme = "draft"
+            theme = "eternal"
         # Fix me - Check theme is not none 
         ui_theme_review = __import__("pomni.hildon_%s_ui" % theme, globals(), \
             locals(), [""]).HildonThemeUiControllerReview
