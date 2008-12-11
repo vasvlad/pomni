@@ -53,7 +53,7 @@ class HildonUiControllerReview(UiControllerReview):
         self.window = None
         self.question = None
         self.answer = None
-        self.eventbox_numeral = [None] * 6
+        self.eventbox_numeral = []
         self.fullscreen = False
         self.notebook_windows = None
 
@@ -83,7 +83,6 @@ class HildonUiControllerReview(UiControllerReview):
            "on_exit_clicked" : self.quit})
 
         self.w_tree = w_tree
-
 
     def update_dialog(self):
         """ This is part of UiControllerReview API """
@@ -115,19 +114,21 @@ class HildonUiControllerReview(UiControllerReview):
         if not database().card_count():
             raise HildonUiControllerException(_("Database is empty"))
         
-        self.card = scheduler().get_new_question(False)
+        card = scheduler().get_new_question(False)
 
-        if self.card != None:
-            self.question.set_text(self.card.question())
+        if card != None:
+            self.question.set_text(card.question())
             self.answer.set_text("")
             self.theme_new_question()
         else:
             #Fix me
 #           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
-            self.question.set_text(self.card.question())
+            self.question.set_text(card.question())
             self.answer.set_text("")
             self.theme_new_question()
+
+        self.card = card
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -147,10 +148,8 @@ class HildonUiControllerReview(UiControllerReview):
     def window_state_event(self, widget, event):
         """ Checking window state """
 
-        if widget and event.new_window_state & gtk.gdk.WINDOW_STATE_FULLSCREEN:
-            self.fullscreen = True
-        else:
-            self.fullscreen = False
+        self.fullscreen = bool(event.new_window_state & \
+            gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
     def quit(self, widget):
         """ Close review window """
@@ -184,9 +183,9 @@ class MainWindow:
 
         self.fullscreen = False
 
-        # Fix Me 
-        if (mode == 'review'):
-            ui_controller_review().start()
+        # FIXME
+        if mode == "review":
+            ui_controller_review().start(self.w_tree)
 
     def review_clicked(self, widget):
         """ Open Review Window """
