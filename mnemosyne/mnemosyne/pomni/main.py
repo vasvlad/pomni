@@ -89,6 +89,6 @@ if __name__ == "__main__":
 # Local Variables:
 # mode: python
 # py-indent-offset: 4
-# indent-tabs-mode nil
-# tab-width 4
+# indent-tabs-mode: nil
+# tab-width: 4
 # End:
