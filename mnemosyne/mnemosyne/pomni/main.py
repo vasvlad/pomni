@@ -25,7 +25,8 @@ Main
 """
 
 if __name__ != "__main__":
-    raise ImportError("Don't import this! This program is supposed to be run from command line")
+    raise ImportError("Don't import this! "\
+                      "This program is supposed to be run from command line")
 
 import sys
 import os
