@@ -41,12 +41,8 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         """ Show answer in review window for eternal theme """
 
         self.answer.set_text(self.card.answer())
-        self.eventbox_numeral0.set_sensitive(True)
-        self.eventbox_numeral1.set_sensitive(True)
-        self.eventbox_numeral2.set_sensitive(True)
-        self.eventbox_numeral3.set_sensitive(True)
-        self.eventbox_numeral4.set_sensitive(True)
-        self.eventbox_numeral5.set_sensitive(True)
+	for eventbox in self.eventbox_numeral:
+            eventbox.set_sensitive(True)
         self.eventbox_show_answer.set_sensitive(False)
 
     def start(self, w_tree):
@@ -69,12 +65,8 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
 
     def theme_new_question(self):
         """ Visible and Unvisible some items of review windows """
-        self.eventbox_numeral0.set_sensitive(False)
-        self.eventbox_numeral1.set_sensitive(False)
-        self.eventbox_numeral2.set_sensitive(False)
-        self.eventbox_numeral3.set_sensitive(False)
-        self.eventbox_numeral4.set_sensitive(False)
-        self.eventbox_numeral5.set_sensitive(False)
+	for eventbox in self.eventbox_numeral:
+           eventbox.set_sensitive(False)
         self.eventbox_show_answer.set_sensitive(True)
 
 def _test():

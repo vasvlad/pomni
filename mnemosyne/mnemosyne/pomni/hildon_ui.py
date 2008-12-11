@@ -52,34 +52,26 @@ class HildonUiControllerReview(UiControllerReview):
         self.window = None
         self.question = None
         self.answer = None
-        self.eventbox_numeral0 = None
-        self.eventbox_numeral1 = None
-        self.eventbox_numeral2 = None
-        self.eventbox_numeral3 = None
-        self.eventbox_numeral4 = None
-        self.eventbox_numeral5 = None
+        self.eventbox_numeral = [None] * 6
         self.fullscreen = False
         self.notebook_windows = None
 
     def start(self, w_tree):
         """ Start new review window """
 
-        #For common design
-        self.w_tree = w_tree
-        self.notebook_windows = self.w_tree.get_widget("notebook_windows")
-        #Switch to Page review
+        # For common design
+        self.notebook_windows = w_tree.get_widget("notebook_windows")
+
+        # Switch to Page review
         self.notebook_windows.set_current_page(1)
-        self.window = self.w_tree.get_widget("ReviewWindow")
-        self.question = self.w_tree.get_widget("question")
-        self.answer = self.w_tree.get_widget("answer")
-        self.eventbox_numeral0 = self.w_tree.get_widget("eventbox_numeral_0")
-        self.eventbox_numeral1 = self.w_tree.get_widget("eventbox_numeral_1")
-        self.eventbox_numeral2 = self.w_tree.get_widget("eventbox_numeral_2")
-        self.eventbox_numeral3 = self.w_tree.get_widget("eventbox_numeral_3")
-        self.eventbox_numeral4 = self.w_tree.get_widget("eventbox_numeral_4")
-        self.eventbox_numeral5 = self.w_tree.get_widget("eventbox_numeral_5")
-        #Connect to various signals
-        self.w_tree.signal_autoconnect({
+        self.window = w_tree.get_widget("ReviewWindow")
+        self.question = w_tree.get_widget("question")
+        self.answer = w_tree.get_widget("answer")
+        self.eventbox_numeral = \
+            [w_tree.get_widget("eventbox_numeral_%i" % i) for i in range(6)]
+
+	# Connect to signals
+        w_tree.signal_autoconnect({
            "on_eventbox_numeral0_button_press_event": self.numeral_pressed,
            "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
            "on_eventbox_numeral2_button_press_event": self.numeral_pressed,
@@ -88,6 +80,8 @@ class HildonUiControllerReview(UiControllerReview):
            "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
            "on_eventbox_quit_button_press_event": self.quit_button,
            "on_exit_clicked" : self.quit})
+
+	self.w_tree = w_tree
 
 
     def update_dialog(self):
@@ -105,24 +99,11 @@ class HildonUiControllerReview(UiControllerReview):
         if (widget and event):
             self.show_answer()
 
-
     def numeral_pressed(self, widget, event):
         """ Call grade of answer """
 
-        if not (widget and event):
-            return
-        if (widget == self.eventbox_numeral0):
-            self.grade_answer(0)
-        if (widget == self.eventbox_numeral1):
-            self.grade_answer(1)
-        if (widget == self.eventbox_numeral2):
-            self.grade_answer(2)
-        if (widget == self.eventbox_numeral3):
-            self.grade_answer(3)
-        if (widget == self.eventbox_numeral4):
-            self.grade_answer(4)
-        if (widget == self.eventbox_numeral5):
-            self.grade_answer(5)
+        if widget and event:
+	    self.grade_answer(self.eventbox.index(widget))
 
     def theme_new_question(self):
         """ Show New question on current theme """
@@ -131,23 +112,22 @@ class HildonUiControllerReview(UiControllerReview):
     def new_question(self):
         """ Create new question """
 
-        if database().card_count() == 0:
+        if not database().card_count():
             raise HildonUiControllerException(_("Database is empty"))
+        
+        self.card = scheduler().get_new_question(False)
+
+        if self.card != None:
+            self.question.set_text(self.card.question())
+            self.answer.set_text("")
+            self.theme_new_question()
         else:
-            self.card = scheduler().get_new_question(False)
-
-            if self.card != None:
-                self.question.set_text(self.card.question())
-                self.answer.set_text("")
-                self.theme_new_question()
-            else:
-                #Fix me
-#                value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
-                self.new_question(True)
-                self.question.set_text(self.card.question())
-                self.answer.set_text("")
-                self.theme_new_question()
-
+            #Fix me
+#           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
+            self.new_question(True)
+            self.question.set_text(self.card.question())
+            self.answer.set_text("")
+            self.theme_new_question()
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -160,9 +140,9 @@ class HildonUiControllerReview(UiControllerReview):
         if widget and event.keyval == gtk.keysyms.F6: 
             # The "Full screen" hardware key has been pressed 
             if self.fullscreen:
-                self.window.unfullscreen ()
+                self.window.unfullscreen()
             else:
-                self.window.fullscreen ()
+                self.window.fullscreen()
 
     def window_state_event(self, widget, event):
         """ Checking window state """
@@ -172,14 +152,12 @@ class HildonUiControllerReview(UiControllerReview):
         else:
             self.fullscreen = False
 
-
     def quit(self, widget):
         """ Close review window """
 
         if (widget):
             #Switch to Menu page
             self.notebook_windows.set_current_page(0)
-
 
     def quit_button(self, widget, event):
         """ If pressed quit button then close the window """
@@ -188,11 +166,11 @@ class HildonUiControllerReview(UiControllerReview):
             self.quit(widget)
 
 
-
 class MainWindow:
     """ GUI - Hildon """
 
     def __init__(self, mode):
+
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path,"rcfile"))
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
