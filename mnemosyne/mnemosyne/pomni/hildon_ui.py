@@ -276,11 +276,6 @@ class HildonUI():
         print line
 
 
-class HildonReviewWdgt:
-    """ HildonReviewWdgt Now I do not know, this class what for is necessary"""
-
-    def __init__(self):
-        pass
 
 def _test():
     """ Run doctests
