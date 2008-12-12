@@ -21,16 +21,16 @@
 #
 
 """
-Programming of "draft" design 
+Programming of "smile" design 
 """
 
 from pomni.hildon_ui import HildonUiControllerReview
 
 class HildonThemeUiControllerReview(HildonUiControllerReview):
-    """ Child of HildonUiControllerReview especialy for Etrenal theme """
+    """ Child of HildonUiControllerReview especialy for Smile theme """
 
     def __init__(self):
-        """ Initialization items of review window for Eternal theme """
+        """ Initialization items of review window for Smile theme """
 
         HildonUiControllerReview.__init__(self)
         self.estimate_box = None
@@ -38,19 +38,15 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         self.eventbox_show_answer = None
 
     def show_answer(self):
-        """ Show answer in review window for eternal theme """
+        """ Show answer in review window for Smile theme """
 
         self.answer.set_text(self.card.answer())
-        self.eventbox_numeral0.set_sensitive(True)
-        self.eventbox_numeral1.set_sensitive(True)
-        self.eventbox_numeral2.set_sensitive(True)
-        self.eventbox_numeral3.set_sensitive(True)
-        self.eventbox_numeral4.set_sensitive(True)
-        self.eventbox_numeral5.set_sensitive(True)
+        for eventbox in self.eventbox_numeral:
+            eventbox.set_sensitive(True)
         self.eventbox_show_answer.set_sensitive(False)
 
     def start(self, w_tree):
-        """ Start new review window for eternal theme """
+        """ Start new review window for Smile theme """
 
         HildonUiControllerReview.start(self, w_tree)
         self.eventbox_show_answer = \
@@ -69,12 +65,9 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
 
     def theme_new_question(self):
         """ Visible and Unvisible some items of review windows """
-        self.eventbox_numeral0.set_sensitive(False)
-        self.eventbox_numeral1.set_sensitive(False)
-        self.eventbox_numeral2.set_sensitive(False)
-        self.eventbox_numeral3.set_sensitive(False)
-        self.eventbox_numeral4.set_sensitive(False)
-        self.eventbox_numeral5.set_sensitive(False)
+
+        for eventbox in self.eventbox_numeral:
+           eventbox.set_sensitive(False)
         self.eventbox_show_answer.set_sensitive(True)
 
 def _test():
