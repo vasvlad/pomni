@@ -49,7 +49,7 @@ style "review-button" {
   GtkButton::child-displacement-y = 0
   GtkButton::interior_focus = 0
   GtkButton::child_spacing = 0
-  xthickness = 7
+  xthickness = 0
   ythickness = 0
 
   engine "pixmap" {
@@ -153,8 +153,10 @@ style "nothing"
 
 widget "*.button_answer" style "review-button"
 widget "*.title_label" style "review-title-label"
-widget "*.title_answer" style "review-title-label"
-widget "*.title_question" style "review-title-label"
+widget "*.answer_title" style "review-title-label"
+widget "*.question_title" style "review-title-label"
+widget "*.answer" style "review-title-label"
+widget "*.question" style "review-title-label"
 widget "*.button_question" style "review-button"
 widget "*.notebook_windows" style "nothing"
 widget "MainWindow" style "reviewwindow"

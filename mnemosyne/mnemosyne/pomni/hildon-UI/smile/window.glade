@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Dec 11 23:27:17 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Dec 12 06:39:11 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="visible">True</property>
@@ -121,6 +121,7 @@
                     <child>
                       <widget class="GtkEventBox" id="eventbox_quit">
                         <property name="visible">True</property>
+                        <property name="has_focus">True</property>
                         <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                         <property name="visible_window">False</property>
                         <property name="above_child">True</property>
@@ -224,8 +225,8 @@
                                         <property name="width_request">300</property>
                                         <property name="height_request">150</property>
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="response_id">0</property>
                                         <child>
                                           <widget class="GtkLabel" id="question">
@@ -308,8 +309,8 @@
                                       <widget class="GtkButton" id="button_answer">
                                         <property name="height_request">100</property>
                                         <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
+                                        <property name="can_focus">False</property>
                                         <property name="response_id">0</property>
                                         <child>
                                           <widget class="GtkLabel" id="answer">
