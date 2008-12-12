@@ -30,32 +30,30 @@ from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 from mnemosyne.libmnemosyne.component_manager import config
 
 
-def ui_factory(model, interface=None):
+def ui_factory(interface=None):
     """ Create UI(View in terms of MVC) """
 
     if interface == 'cmd':
-        # default UI
-        from pomni.cmd_ui import CmdUiControllerReview, CmdReviewWdgt, CommandlineUI
+        from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
 
-        component_manager.register("ui_controller_review", CmdUiControllerReview())
-        component_manager.register("review_widget", CmdReviewWdgt)
+        component_manager.register("ui_controller_review",
+                                   CmdUiControllerReview())
         component_manager.register("renderer", TextRenderer())
-        return CommandlineUI(model)
+        return CommandlineUI()
 
     if not interface or interface == "hildon":
-        from pomni.hildon_ui import HildonUiControllerReview, HildonReviewWdgt, HildonUI
+        from pomni.hildon_ui import HildonUI
         try:
             theme = config()["theme_path"].split("/")[-1]
         except:
-            theme = "draft"
+            theme = "eternal"
         # Fix me - Check theme is not none 
         ui_theme_review = __import__("pomni.hildon_%s_ui" % theme, globals(), \
             locals(), [""]).HildonThemeUiControllerReview
 
         component_manager.register("ui_controller_review", ui_theme_review())
-        component_manager.register("review_widget", HildonReviewWdgt)
         component_manager.register("renderer", TextRenderer())
-        return HildonUI(model)
+        return HildonUI()
     
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)
@@ -64,7 +62,7 @@ def backend_factory(name=None):
     """ Create backend """
 
     if not name or name == "pickle":
-    	return Pickle()
+        return Pickle()
     if name == 'sqlite':
         raise NotImplementedError("SQLite backend is not implemented yet")
 

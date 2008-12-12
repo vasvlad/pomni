@@ -25,7 +25,8 @@ Main
 """
 
 if __name__ != "__main__":
-    raise ImportError("Don't import this! This program is supposed to be run from command line")
+    raise ImportError("Don't import this! "\
+                      "This program is supposed to be run from command line")
 
 import sys
 import os
@@ -38,11 +39,9 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 from optparse import OptionParser
 
 from mnemosyne.libmnemosyne import initialise
-from mnemosyne.libmnemosyne.component_manager import database, scheduler, config
+from mnemosyne.libmnemosyne.component_manager import database, config
 
 from pomni.factory import ui_factory
-from pomni.model import Model
-from pomni.controller import Controller
 
 def parse_commandline(argv):
     """ Parse commandline, check options """
@@ -78,13 +77,9 @@ def main(argv):
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 
-    cscheduler = scheduler()
-    model = Model(cdatabase, cscheduler)
-    view = ui_factory(model, opts.ui)
-    
-    controller = Controller(model, view)
+    ui = ui_factory(opts.ui)
 
-    return controller.start(opts.mode)
+    return ui.start(opts.mode)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
@@ -93,6 +88,6 @@ if __name__ == "__main__":
 # Local Variables:
 # mode: python
 # py-indent-offset: 4
-# indent-tabs-mode nil
-# tab-width 4
+# indent-tabs-mode: nil
+# tab-width: 4
 # End:
