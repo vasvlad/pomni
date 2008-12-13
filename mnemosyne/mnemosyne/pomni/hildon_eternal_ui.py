@@ -35,9 +35,6 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         HildonUiControllerReview.__init__(self)
         self.get_answer_hbox = None
         self.estimate_box = None
-        self.answer_box = None
-        self.answer_box = None
-        self.w_tree = None
 
     def show_answer(self):
         """ Show answer in review window for eternal theme """
@@ -55,14 +52,13 @@ class HildonThemeUiControllerReview(HildonUiControllerReview):
         self.estimate_box = self.w_tree.get_widget("estimate_box")
         self.answer_box = self.w_tree.get_widget("answer_box")
 
-        #Connect to various signals
+        # Connect to signals
         self.w_tree.signal_autoconnect({
            "on_eventbox_show_answer_button_press_event": self.open_card_clicked
         })
 
-        #Begin the review window from a new question
+        # Begin the review window from a new question
         self.new_question()
-
 
     def theme_new_question(self):
         """ Visible and Unvisible some items of review windows """

@@ -47,6 +47,7 @@ class HildonUiControllerReview(UiControllerReview):
         """ Initialization items of review window """
 
         UiControllerReview.__init__(self, name="Hildon UI Controller")
+
         self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
         self.grade = 0
         self.w_tree = None
@@ -56,6 +57,11 @@ class HildonUiControllerReview(UiControllerReview):
         self.eventbox_numeral = []
         self.fullscreen = False
         self.notebook_windows = None
+        
+        # draft and smile
+        self.estimate_box = None
+        self.answer_box = None
+        self.eventbox_show_answer = None
 
     def start(self, w_tree):
         """ Start new review window """
@@ -71,7 +77,7 @@ class HildonUiControllerReview(UiControllerReview):
         self.eventbox_numeral = \
             [w_tree.get_widget("eventbox_numeral_%i" % i) for i in range(6)]
 
-	# Connect to signals
+        # Connect to signals
         w_tree.signal_autoconnect({
            "on_eventbox_numeral0_button_press_event": self.numeral_pressed,
            "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
@@ -84,15 +90,30 @@ class HildonUiControllerReview(UiControllerReview):
 
         self.w_tree = w_tree
 
+        self.eventbox_show_answer = \
+             self.w_tree.get_widget("eventbox_show_answer")
+        # Connect to various signals
+        self.w_tree.signal_autoconnect(
+            {"on_eventbox_show_answer_button_press_event": 
+             self.open_card_clicked})
+
+        self.estimate_box = self.w_tree.get_widget("estimate_box")
+        self.answer_box = self.w_tree.get_widget("answer_box")
+
+        # Begin the review window from a new question
+        self.new_question()
+
     def update_dialog(self):
         """ This is part of UiControllerReview API """
         print "Update dialog"
 
-
     def show_answer(self):
-        """ Show a right answer """
+        """ Show answer in review window """
 
-        pass
+        self.answer.set_text(self.card.answer())
+        for eventbox in self.eventbox_numeral:
+            eventbox.set_sensitive(True)
+        self.eventbox_show_answer.set_sensitive(False)
 
     def open_card_clicked(self, widget, event):
         """ Hook for showing a right answer """
@@ -105,8 +126,11 @@ class HildonUiControllerReview(UiControllerReview):
         self.grade_answer(self.eventbox_numeral.index(widget))
 
     def theme_new_question(self):
-        """ Show New question on current theme """
-        pass
+        """ Visible and Unvisible some items of review windows """
+
+        for eventbox in self.eventbox_numeral:
+            eventbox.set_sensitive(False)
+        self.eventbox_show_answer.set_sensitive(True)
 
     def new_question(self):
         """ Create new question """
@@ -121,7 +145,7 @@ class HildonUiControllerReview(UiControllerReview):
             self.answer.set_text("")
             self.theme_new_question()
         else:
-            #Fix me
+            # FIXME
 #           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
             self.question.set_text(card.question())
