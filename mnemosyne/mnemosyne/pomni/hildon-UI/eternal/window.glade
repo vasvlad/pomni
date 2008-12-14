@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Dec 14 19:41:31 2008 -->
+<!--Generated with glade3 3.4.5 on Sun Dec 14 21:35:04 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -15,6 +15,7 @@
         <child>
           <widget class="GtkNotebook" id="switcher">
             <property name="visible">True</property>
+            <property name="show_tabs">False</property>
             <property name="tab_border">0</property>
             <property name="tab_hborder">0</property>
             <property name="tab_vborder">1</property>
