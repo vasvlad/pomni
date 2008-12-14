@@ -250,12 +250,12 @@ class HildonUI():
 
     def start(self, mode):
         """ Start GUI application """
-        
+
         theme = config()["theme_path"].split("/")[-1]
         try:
-            MainWindowTheme = __import__("pomni.hildon_%s_ui" % theme, globals(), \
-                 locals(), [""]).HildonThemeMainWindow
-            MainWindowTheme(mode)
+            main_window = __import__("pomni.hildon_%s_ui" % theme, \
+                  globals(), locals(), [""]).HildonThemeMainWindow
+            main_window(mode)
         except:
             MainWindow(mode)
         gtk.main()

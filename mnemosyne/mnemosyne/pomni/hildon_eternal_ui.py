@@ -40,7 +40,7 @@ class HildonThemeMainWindow(MainWindow):
         self.spliter = self.w_tree.get_widget("spliter")
         self.spliter_trigger = True
 
-    def window_size_allocate(self, widget, event):
+    def window_size_allocate(self, widget, user_data):
         """ Checking window size """
         if (self.notebook_windows.get_current_page() == 1):
             if (self.spliter_trigger):
