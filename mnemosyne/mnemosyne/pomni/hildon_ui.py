@@ -27,7 +27,7 @@ Hildon UI
 import os
 import gettext
 import gtk
-from gtk import glade
+import gtk.glade
 from os.path import basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
@@ -43,116 +43,104 @@ class HildonUiControllerException(Exception):
 
 class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
+
+    # page's indexes in switcher
+    main_menu, review, input = range(3)
+
+    # widgets
+    wnames = ("window", "switcher", "get_answer", "question", "answer",
+              "grades", "get_answer_box", "answer_box",
+              "grade0", "grade1", "grade2", "grade3", "grade4", "grade5")
+
+    # signals
+    signals = ("get_answer", "grade", "to_main_menu", "window_state", 
+               "window_keypress")
+
     def __init__(self):
         """ Initialization items of review window """
 
         UiControllerReview.__init__(self, name="Hildon UI Controller")
 
-        self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
+        self.title = _("Mnemosyne") + " - " + \
+            os.path.splitext(basename(config()["path"]))[0]
+
         self.grade = 0
-        self.w_tree = None
-        self.window = None
-        self.question = None
-        self.answer = None
-        self.eventbox_numeral = []
+        self.card = None
         self.fullscreen = False
-        self.notebook_windows = None
-        
-        # draft and smile
-        self.estimate_box = None
-        self.answer_box = None
-        self.eventbox_show_answer = None
+        self.widgets = []
 
     def start(self, w_tree):
         """ Start new review window """
 
-        # For common design
-        self.notebook_windows = w_tree.get_widget("notebook_windows")
+        # store widgets objects
+        self.widgets = dict([(wname, w_tree.get_widget(wname)) \
+                            for wname in self.wnames])
 
-        # Switch to Page review
-        self.notebook_windows.set_current_page(1)
-        self.window = w_tree.get_widget("ReviewWindow")
-        self.question = w_tree.get_widget("question")
-        self.answer = w_tree.get_widget("answer")
-        self.eventbox_numeral = \
-            [w_tree.get_widget("eventbox_numeral_%i" % i) for i in range(6)]
+        # switch to Page review
+        # switcher - window with tabs. Each tab is for
+        # different mode (main_menu, review, conf, input, etc)
+        self.widgets["switcher"].set_current_page(self.review)
 
-        # Connect to signals
-        w_tree.signal_autoconnect({
-           "on_eventbox_numeral0_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral2_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral3_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral4_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
-           "on_eventbox_quit_button_press_event": self.quit_button,
-           "on_exit_clicked" : self.quit})
-
-        self.w_tree = w_tree
-
-        self.eventbox_show_answer = \
-             self.w_tree.get_widget("eventbox_show_answer")
-        # Connect to various signals
-        self.w_tree.signal_autoconnect(
-            {"on_eventbox_show_answer_button_press_event": 
-             self.open_card_clicked})
-
-        self.estimate_box = self.w_tree.get_widget("estimate_box")
-        self.answer_box = self.w_tree.get_widget("answer_box")
+        # connect signals to methods
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in self.signals]))
 
         # Begin the review window from a new question
         self.new_question()
 
+    # UiControllerReview API
+    
     def update_dialog(self):
         """ This is part of UiControllerReview API """
-        print "Update dialog"
-
-    def show_answer(self):
-        """ Show answer in review window """
-
-        self.answer.set_text(self.card.answer())
-        for eventbox in self.eventbox_numeral:
-            eventbox.set_sensitive(True)
-        self.eventbox_show_answer.set_sensitive(False)
-
-    def open_card_clicked(self, widget, event):
-        """ Hook for showing a right answer """
-
-        self.show_answer()
-
-    def numeral_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(self.eventbox_numeral.index(widget))
-
-    def theme_new_question(self):
-        """ Visible and Unvisible some items of review windows """
-
-        for eventbox in self.eventbox_numeral:
-            eventbox.set_sensitive(False)
-        self.eventbox_show_answer.set_sensitive(True)
+        pass
 
     def new_question(self):
         """ Create new question """
 
+        def theme_new_question(self):
+            """ Visible and Unvisible some items of review windows """
+
+            for grade in range(6):
+                self.widgets["grade%i" % grade].set_sensitive(False)
+            self.widgets["get_answer"].set_sensitive(True)
+
+            # eternal
+            self.widgets["grades"].set_property('visible', False)
+            self.widgets["get_answer_box"].set_property('visible', True)
+            self.widgets["answer_box"].set_property('visible', False)
+
         if not database().card_count():
             raise HildonUiControllerException(_("Database is empty"))
-        
+
         card = scheduler().get_new_question(False)
 
         if card != None:
-            self.question.set_text(card.question())
-            self.answer.set_text("")
-            self.theme_new_question()
+            self.widgets["question"].set_text(card.question())
+            self.widgets["answer"].set_text("")
+            theme_new_question(self)
         else:
             # FIXME
 #           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
-            self.question.set_text(card.question())
-            self.answer.set_text("")
-            self.theme_new_question()
+            self.widgets["question"].set_text(card.question())
+            self.widgets["answer"].set_text("")
+            theme_new_question(self)
 
         self.card = card
+
+    def show_answer(self):
+        """ Show answer in review window """
+
+        self.widgets["answer"].set_text(self.card.answer())
+        for widget in [self.widgets["grade%i" % num] for num in range(6)]:
+            widget.set_sensitive(True)
+        self.widgets["get_answer"].set_sensitive(False)
+
+        # eternal
+        self.widgets["get_answer_box"].set_property('visible', False)
+        self.widget["grades"].set_property('visible', True)
+        self.widget["answer_box"].set_property('visible', True)
+        self.widget["answer"].set_text(self.card.answer())
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -160,31 +148,42 @@ class HildonUiControllerReview(UiControllerReview):
         scheduler().process_answer(self.card, grade)
         self.new_question()
 
-    def on_key_press(self, widget, event, *args):
+    # Glade callbacks
+    def get_answer_cb(self, widget, event):
+        """ Hook for showing a right answer """
+
+        self.show_answer()
+
+    def grade_cb(self, widget, event):
+        """ Call grade of answer """
+
+        print "grade_cb", widget, event
+        self.grade_answer()
+
+    def to_main_menu_cb(self, widget):
+        """ Return to main menu """
+
+        self.widgets["switcher"].set_current_page(self.main_menu)
+
+    def exit_cb(self, widget):
+        """ If pressed quit button then close the window """
+
+        gtk.main_quit()
+
+    def window_keypress_cb(self, widget, event, *args):
         """ Key pressed """
         if event.keyval == gtk.keysyms.F6: 
             # The "Full screen" hardware key has been pressed 
             if self.fullscreen:
-                self.window.unfullscreen()
+                self.widgets["window"].unfullscreen()
             else:
-                self.window.fullscreen()
+                self.widgets["window"].fullscreen()
 
-    def window_state_event(self, widget, event):
+    def window_state_cb(self, widget, event):
         """ Checking window state """
 
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
-
-    def quit(self, widget):
-        """ Close review window """
-
-    	#Switch to Menu page
-        self.notebook_windows.set_current_page(0)
-
-    def quit_button(self, widget, event):
-        """ If pressed quit button then close the window """
-        
-        self.quit(widget)
 
 
 class MainWindow:
