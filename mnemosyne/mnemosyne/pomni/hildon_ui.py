@@ -256,8 +256,9 @@ class HildonUI():
             main_window = __import__("pomni.hildon_%s_ui" % theme, \
                   globals(), locals(), [""]).HildonThemeMainWindow
             main_window(mode)
-        except:
+        except ImportError:
             MainWindow(mode)
+
         gtk.main()
 
     def do_quit(self, line):
