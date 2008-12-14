@@ -113,7 +113,7 @@ class HildonUiControllerReview(UiControllerReview):
 
         if not database().card_count():
             raise HildonUiControllerException(_("Database is empty"))
-        
+
         card = scheduler().get_new_question(False)
 
         if card != None:
@@ -138,6 +138,7 @@ class HildonUiControllerReview(UiControllerReview):
 
     def on_key_press(self, widget, event, *args):
         """ Key pressed """
+
         if event.keyval == gtk.keysyms.F6: 
             # The "Full screen" hardware key has been pressed 
             if self.fullscreen:
@@ -154,12 +155,12 @@ class HildonUiControllerReview(UiControllerReview):
     def quit(self, widget):
         """ Close review window """
 
-    	#Switch to Menu page
+        #Switch to Menu page
         self.notebook_windows.set_current_page(0)
 
     def quit_button(self, widget, event):
         """ If pressed quit button then close the window """
-        
+
         self.quit(widget)
 
 
@@ -180,6 +181,7 @@ class MainWindow:
                 "on_MainWindow_window_state_event": self.window_state_event,
                 "on_exit_clicked" : self.quit})
         self.window = self.w_tree.get_widget("MainWindow")
+        self.notebook_windows = self.w_tree.get_widget("notebook_windows")
 
         self.fullscreen = False
 
@@ -248,8 +250,14 @@ class HildonUI():
 
     def start(self, mode):
         """ Start GUI application """
-
-        MainWindow(mode)
+        
+        theme = config()["theme_path"].split("/")[-1]
+        try:
+            MainWindowTheme = __import__("pomni.hildon_%s_ui" % theme, globals(), \
+                 locals(), [""]).HildonThemeMainWindow
+            MainWindowTheme(mode)
+        except:
+            MainWindow(mode)
         gtk.main()
 
     def do_quit(self, line):

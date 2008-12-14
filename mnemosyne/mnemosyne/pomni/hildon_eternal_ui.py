@@ -24,7 +24,33 @@
 Programming of "eternal" design 
 """
 
-from pomni.hildon_ui import HildonUiControllerReview
+from pomni.hildon_ui import HildonUiControllerReview, MainWindow
+
+class HildonThemeMainWindow(MainWindow):
+    """ Child of MainWindow class for Eternal theme """
+
+    def __init__(self, mode):
+        """ Added spliter widget to class """
+        
+        MainWindow.__init__(self, mode)
+        self.w_tree.signal_autoconnect({
+                "on_MainWindow_size_allocate": self.window_size_allocate,
+                })
+
+        self.spliter = self.w_tree.get_widget("spliter")
+        self.spliter_trigger = True
+
+    def window_size_allocate(self, widget, event):
+        """ Checking window size """
+        if (self.notebook_windows.get_current_page() == 1):
+            if (self.spliter_trigger):
+                # Set Spliter (GtkVpan) to pseudo medium
+                if (self.notebook_windows.get_current_page() == 1):
+                    self.spliter_trigger = False
+                    pseudo_medium = (widget.allocation.height - 70)/2 - 20
+                    self.spliter.set_property('position', pseudo_medium)
+            else:
+                self.spliter_trigger = True
 
 class HildonThemeUiControllerReview(HildonUiControllerReview):
     """ Child of HildonUiControllerReview especialy for Etrenal theme """
