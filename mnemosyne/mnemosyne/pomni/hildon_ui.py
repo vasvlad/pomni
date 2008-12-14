@@ -41,22 +41,14 @@ class HildonUiControllerException(Exception):
 
     pass
 
-class HildonUiControllerReview(UiControllerReview):
+class BaseHildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
 
     # page's indexes in switcher
     main_menu, review, input = range(3)
 
-    # widgets
-    wnames = ("window", "switcher", "get_answer", "question", "answer",
-              "grades", "get_answer_box", "answer_box",
-              "grade0", "grade1", "grade2", "grade3", "grade4", "grade5")
-
     # signals
-    signals = ("get_answer", "grade", "to_main_menu", "window_state", 
-               "window_keypress")
-
-    def __init__(self):
+    def __init__(self, wnames=None, signals=None):
         """ Initialization items of review window """
 
         UiControllerReview.__init__(self, name="Hildon UI Controller")
@@ -64,22 +56,36 @@ class HildonUiControllerReview(UiControllerReview):
         self.title = _("Mnemosyne") + " - " + \
             os.path.splitext(basename(config()["path"]))[0]
 
+        self.wnames = ["window", "switcher", "get_answer", "question", "answer",
+            "grade0", "grade1", "grade2", "grade3", "grade4", "grade5"]
+        if wnames:
+            self.wnames.extend(wnames)
+
+        self.signals = ["get_answer", "grade", "to_main_menu", "window_state",
+                       "window_keypress"]
+        if signals:
+            self.signals.extend(signals)
+
+        self.w_tree = None
         self.grade = 0
         self.card = None
         self.fullscreen = False
-        self.widgets = []
+        self._widgets = {}
+
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
+
+        return self.w_tree.get_widget(name)
 
     def start(self, w_tree):
         """ Start new review window """
 
-        # store widgets objects
-        self.widgets = dict([(wname, w_tree.get_widget(wname)) \
-                            for wname in self.wnames])
+        self.w_tree = w_tree
 
         # switch to Page review
         # switcher - window with tabs. Each tab is for
         # different mode (main_menu, review, conf, input, etc)
-        self.widgets["switcher"].set_current_page(self.review)
+        self.switcher.set_current_page(self.review)
 
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
@@ -101,13 +107,8 @@ class HildonUiControllerReview(UiControllerReview):
             """ Visible and Unvisible some items of review windows """
 
             for grade in range(6):
-                self.widgets["grade%i" % grade].set_sensitive(False)
-            self.widgets["get_answer"].set_sensitive(True)
-
-            # eternal
-            self.widgets["grades"].set_property('visible', False)
-            self.widgets["get_answer_box"].set_property('visible', True)
-            self.widgets["answer_box"].set_property('visible', False)
+                getattr(self, "grade%i" % grade).set_sensitive(False)
+            self.get_answer.set_sensitive(True)
 
         if not database().card_count():
             raise HildonUiControllerException(_("Database is empty"))
@@ -115,15 +116,15 @@ class HildonUiControllerReview(UiControllerReview):
         card = scheduler().get_new_question(False)
 
         if card != None:
-            self.widgets["question"].set_text(card.question())
-            self.widgets["answer"].set_text("")
+            self.question.set_text(card.question())
+            self.answer.set_text("")
             theme_new_question(self)
         else:
             # FIXME
 #           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
-            self.widgets["question"].set_text(card.question())
-            self.widgets["answer"].set_text("")
+            self.question.set_text(card.question())
+            self.answer.set_text("")
             theme_new_question(self)
 
         self.card = card
@@ -131,16 +132,11 @@ class HildonUiControllerReview(UiControllerReview):
     def show_answer(self):
         """ Show answer in review window """
 
-        self.widgets["answer"].set_text(self.card.answer())
-        for widget in [self.widgets["grade%i" % num] for num in range(6)]:
+        self.answer.set_text(self.card.answer())
+        for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(True)
-        self.widgets["get_answer"].set_sensitive(False)
-
-        # eternal
-        self.widgets["get_answer_box"].set_property('visible', False)
-        self.widget["grades"].set_property('visible', True)
-        self.widget["answer_box"].set_property('visible', True)
-        self.widget["answer"].set_text(self.card.answer())
+        self.get_answer.set_sensitive(False)
+        self.answer.set_text(self.card.answer())
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -157,13 +153,13 @@ class HildonUiControllerReview(UiControllerReview):
     def grade_cb(self, widget, event):
         """ Call grade of answer """
 
-        print "grade_cb", widget, event
-        self.grade_answer()
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            self.grade_answer(int(widget.name[-1]))
 
-    def to_main_menu_cb(self, widget):
+    def to_main_menu_cb(self, widget, event):
         """ Return to main menu """
 
-        self.widgets["switcher"].set_current_page(self.main_menu)
+        self.switcher.set_current_page(self.main_menu)
 
     def exit_cb(self, widget):
         """ If pressed quit button then close the window """
@@ -175,9 +171,9 @@ class HildonUiControllerReview(UiControllerReview):
         if event.keyval == gtk.keysyms.F6: 
             # The "Full screen" hardware key has been pressed 
             if self.fullscreen:
-                self.widgets["window"].unfullscreen()
+                self.window.unfullscreen()
             else:
-                self.widgets["window"].fullscreen()
+                self.window.fullscreen()
 
     def window_state_cb(self, widget, event):
         """ Checking window state """
@@ -185,6 +181,22 @@ class HildonUiControllerReview(UiControllerReview):
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
+class Eternal(BaseHildonUiControllerReview):
+    def __init__(self):
+        BaseHildonUiControllerReview.__init__(self, 
+            wnames=["grades", "get_answer_box", "answer_box"])
+
+    def new_question(self):
+        BaseHildonUiControllerReview.new_question(self)
+        self.grades.set_property('visible', False)
+        self.get_answer_box.set_property('visible', True)
+        self.answer_box.set_property('visible', False)
+
+    def show_answer(self):
+        BaseHildonUiControllerReview.show_answer(self)
+        self.get_answer_box.set_property('visible', False)
+        self.grades.set_property('visible', True)
+        self.answer_box.set_property('visible', True)
 
 class MainWindow:
     """ GUI - Hildon """

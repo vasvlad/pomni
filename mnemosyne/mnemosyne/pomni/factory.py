@@ -42,15 +42,16 @@ def ui_factory(interface=None):
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-        from pomni.hildon_ui import HildonUI, HildonUiControllerReview
+        from pomni.hildon_ui import HildonUI
         try:
             theme = config()["theme_path"].split("/")[-1]
         except:
             theme = "eternal"
-        # Fix me - Check theme is not none 
-        ui_theme_review = HildonUiControllerReview
 
-        component_manager.register("ui_controller_review", ui_theme_review())
+        from pomni import hildon_ui
+        review_class = getattr(hildon_ui, theme.capitalize())
+
+        component_manager.register("ui_controller_review", review_class())
         component_manager.register("renderer", TextRenderer())
         return HildonUI()
     
