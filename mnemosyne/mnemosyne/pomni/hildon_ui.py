@@ -65,7 +65,6 @@ class BaseHildonUiControllerReview(UiControllerReview):
         self.grade = 0
         self.card = None
         self.fullscreen = False
-        self._widgets = {}
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -101,30 +100,21 @@ class BaseHildonUiControllerReview(UiControllerReview):
     def new_question(self):
         """ Create new question """
 
-        def theme_new_question(self):
-            """ Visible and Unvisible some items of review windows """
-
-            for grade in range(6):
-                getattr(self, "grade%i" % grade).set_sensitive(False)
-            self.get_answer.set_sensitive(True)
-
         if not database().card_count():
             raise HildonUiControllerException(_("Database is empty"))
 
         card = scheduler().get_new_question(False)
 
-        if card != None:
+        if card:
             self.question.set_text(card.question())
-            self.answer.set_text("")
-            theme_new_question(self)
         else:
             # FIXME
 #           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
             self.question.set_text(card.question())
-            self.answer.set_text("")
-            theme_new_question(self)
 
+        self.answer.set_text("")
+        self.get_answer.set_sensitive(True)
         self.card = card
 
     def show_answer(self):
@@ -186,8 +176,8 @@ class EternalControllerReview(BaseHildonUiControllerReview):
 
     def new_question(self):
         self.base.new_question(self)
-        self.grades.set_property('visible', False)
         self.get_answer_box.set_property('visible', True)
+        self.grades.set_property('visible', False)
         self.answer_box.set_property('visible', False)
 
     def show_answer(self):
