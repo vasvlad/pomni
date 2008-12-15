@@ -49,7 +49,8 @@ def ui_factory(interface=None):
             theme = "eternal"
 
         from pomni import hildon_ui
-        review_class = getattr(hildon_ui, theme.capitalize())
+        review_class = getattr(hildon_ui, 
+            theme.capitalize() + 'ControllerReview')
 
         component_manager.register("ui_controller_review", review_class())
         component_manager.register("renderer", TextRenderer())

@@ -48,18 +48,13 @@ class BaseHildonUiControllerReview(UiControllerReview):
     main_menu, review, input = range(3)
 
     # signals
-    def __init__(self, wnames=None, signals=None):
+    def __init__(self, signals=None):
         """ Initialization items of review window """
 
         UiControllerReview.__init__(self, name="Hildon UI Controller")
 
         self.title = _("Mnemosyne") + " - " + \
             os.path.splitext(basename(config()["path"]))[0]
-
-        self.wnames = ["window", "switcher", "get_answer", "question", "answer",
-            "grade0", "grade1", "grade2", "grade3", "grade4", "grade5"]
-        if wnames:
-            self.wnames.extend(wnames)
 
         self.signals = ["get_answer", "grade", "to_main_menu", "window_state",
                        "window_keypress"]
@@ -74,8 +69,11 @@ class BaseHildonUiControllerReview(UiControllerReview):
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
-
-        return self.w_tree.get_widget(name)
+        
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
 
     def start(self, w_tree):
         """ Start new review window """
@@ -181,10 +179,9 @@ class BaseHildonUiControllerReview(UiControllerReview):
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
-class Eternal(BaseHildonUiControllerReview):
+class EternalControllerReview(BaseHildonUiControllerReview):
     def __init__(self):
-        BaseHildonUiControllerReview.__init__(self, 
-            wnames=["grades", "get_answer_box", "answer_box"])
+        BaseHildonUiControllerReview.__init__(self)
 
     def new_question(self):
         BaseHildonUiControllerReview.new_question(self)
