@@ -39,7 +39,14 @@ _ = gettext.gettext
 class HildonUiControllerException(Exception): 
     """ Exception hook """
 
-    pass
+    def __init__(self,  w_tree, exception):
+        """ Show Warning Window """
+
+        warning_window = w_tree.get_widget("WarningWindow")
+        warning_label = w_tree.get_widget("label_warning")
+        warning_label.set_text(exception)
+        warning_window.show()
+
 
 class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
@@ -71,7 +78,7 @@ class HildonUiControllerReview(UiControllerReview):
         self.eventbox_numeral = \
             [w_tree.get_widget("eventbox_numeral_%i" % i) for i in range(6)]
 
-	# Connect to signals
+        # Connect to signals
         w_tree.signal_autoconnect({
            "on_eventbox_numeral0_button_press_event": self.numeral_pressed,
            "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
@@ -112,7 +119,7 @@ class HildonUiControllerReview(UiControllerReview):
         """ Create new question """
 
         if not database().card_count():
-            raise HildonUiControllerException(_("Database is empty"))
+            raise HildonUiControllerException(self.w_tree, _("Database is empty"))
 
         card = scheduler().get_new_question(False)
 
@@ -182,6 +189,7 @@ class MainWindow:
                 "on_exit_clicked" : self.quit})
         self.window = self.w_tree.get_widget("MainWindow")
         self.notebook_windows = self.w_tree.get_widget("notebook_windows")
+
 
         self.fullscreen = False
 
@@ -256,6 +264,8 @@ class HildonUI():
             main_window = __import__("pomni.hildon_%s_ui" % theme, \
                   globals(), locals(), [""]).HildonThemeMainWindow
             main_window(mode)
+        except AttributeError:
+            MainWindow(mode)
         except ImportError:
             MainWindow(mode)
 

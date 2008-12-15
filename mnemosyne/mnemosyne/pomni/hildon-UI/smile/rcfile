@@ -126,6 +126,21 @@ style "reviewwindow"
      }
  }
 
+style "warningwindow"
+{
+   engine "pixmap"
+      {
+        image
+         {
+          function = FLAT_BOX
+          file = "warning_window.png"
+          border = {50, 50, 50, 50}
+          detail = "base"
+          }
+
+     }
+ }
+
 style "nothing"
 {
   GtkNotebook::inner_left_border = 0
@@ -135,7 +150,7 @@ style "nothing"
   GtkNotebook::label-padding = 2
 
   # Themings for images on different sides of the notebook.
-  engine "sapwood"
+  engine "pixmap"
   {
     image
       {
@@ -157,6 +172,10 @@ widget "*.answer_title" style "review-title-label"
 widget "*.question_title" style "review-title-label"
 widget "*.answer" style "review-title-label"
 widget "*.question" style "review-title-label"
+widget "*.label_warning" style "review-title-label"
 widget "*.button_question" style "review-button"
 widget "*.notebook_windows" style "nothing"
+widget "*.notebook_wwindows" style "nothing"
+widget "WarningWindow" style "warningwindow"
 widget "MainWindow" style "reviewwindow"
+
