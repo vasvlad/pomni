@@ -48,11 +48,11 @@ def parse_commandline(argv):
 
     parser = OptionParser(usage = "%prog [options]")
 
-    parser.add_option("-u", "--ui", help="ui type")
+    parser.add_option("-u", "--ui", help="ui type", default="hildon")
     parser.add_option("-b", "--backend", help="storage backend")
     parser.add_option("-d", "--datadir", help="data directory")
-    parser.add_option("--mode", help="working mode. "\
-                      "'input', 'review' or 'conf'")
+    parser.add_option("--mode", default='main', help="working mode. "\
+                      "'main', 'input', 'review' or 'conf'")
 
     return parser.parse_args(argv)
 

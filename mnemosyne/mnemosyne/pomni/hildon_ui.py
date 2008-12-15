@@ -28,11 +28,12 @@ import os
 import gettext
 import gtk
 import gtk.glade
-from os.path import basename
+from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 _ = gettext.gettext
 
@@ -41,52 +42,89 @@ class HildonUiControllerException(Exception):
 
     pass
 
-class BaseHildonUiControllerReview(UiControllerReview):
-    """ GUI - Hildon """
+class HildonBaseUi():
+    """ Base Hildon UI functionality """
 
     # page's indexes in switcher
     main_menu, review, input = range(3)
 
-    # signals
-    def __init__(self, signals=None):
-        """ Initialization items of review window """
+    def __init__(self, signals):
 
-        UiControllerReview.__init__(self, name="Hildon UI Controller")
-
-        self.title = _("Mnemosyne") + " - " + \
-            os.path.splitext(basename(config()["path"]))[0]
-
-        self.signals = ["get_answer", "grade", "to_main_menu", "window_state",
-                       "window_keypress"]
+        self.signals = ["exit", "to_main_menu", "window_state", "window_keypress"]
         if signals:
             self.signals.extend(signals)
 
         self.w_tree = None
-        self.grade = 0
-        self.card = None
         self.fullscreen = False
-
+    
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
-        
+
         widget = self.w_tree.get_widget(name)
         if widget:
             return widget
         raise AttributeError()
 
     def start(self, w_tree):
-        """ Start new review window """
+        """ Init w_tree, connect callbacks to signals """
 
         self.w_tree = w_tree
+
+        # connect signals to methods
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in self.signals]))
+
+    # Callbacks
+    def exit_cb(self, widget):
+        """ If pressed quit button then close the window """
+
+        gtk.main_quit()
+
+    def to_main_menu_cb(self, widget, event):
+        """ Return to main menu """
+
+        self.switcher.set_current_page(self.main_menu)
+
+    def window_keypress_cb(self, widget, event, *args):
+        """ Key pressed """
+        if event.keyval == gtk.keysyms.F6:
+            # The "Full screen" hardware key has been pressed
+            if self.fullscreen:
+                self.window.unfullscreen()
+            else:
+                self.window.fullscreen()
+
+    def window_state_cb(self, widget, event):
+        """ Checking window state """
+
+        self.fullscreen = bool(event.new_window_state & \
+            gtk.gdk.WINDOW_STATE_FULLSCREEN)
+
+    
+class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
+    """ Hildon Review controller """
+
+    def __init__(self):
+        """ Initialization items of review window """
+
+        HildonBaseUi.__init__(self, signals=["get_answer", "grade"])
+        UiControllerReview.__init__(self, name="Hildon UI Review Controller")
+
+        self.title = _("Mnemosyne") + " - " + \
+            splitext(basename(config()["path"]))[0]
+
+        self.grade = 0
+        self.card = None
+
+    def start(self, w_tree):
+        """ Start new review window """
+
+        HildonBaseUi.start(self, w_tree)
 
         # switch to Page review
         # switcher - window with tabs. Each tab is for
         # different mode (main_menu, review, conf, input, etc)
         self.switcher.set_current_page(self.review)
-
-        # connect signals to methods
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in self.signals]))
 
         # Begin the review window from a new question
         self.new_question()
@@ -144,161 +182,76 @@ class BaseHildonUiControllerReview(UiControllerReview):
         if event.type == gtk.gdk.BUTTON_PRESS:
             self.grade_answer(int(widget.name[-1]))
 
-    def to_main_menu_cb(self, widget, event):
-        """ Return to main menu """
+class EternalControllerReview(HildonUiControllerReview):
+    """ Eternal UI review controller """
 
-        self.switcher.set_current_page(self.main_menu)
-
-    def exit_cb(self, widget):
-        """ If pressed quit button then close the window """
-
-        gtk.main_quit()
-
-    def window_keypress_cb(self, widget, event, *args):
-        """ Key pressed """
-        if event.keyval == gtk.keysyms.F6: 
-            # The "Full screen" hardware key has been pressed 
-            if self.fullscreen:
-                self.window.unfullscreen()
-            else:
-                self.window.fullscreen()
-
-    def window_state_cb(self, widget, event):
-        """ Checking window state """
-
-        self.fullscreen = bool(event.new_window_state & \
-            gtk.gdk.WINDOW_STATE_FULLSCREEN)
-
-class EternalControllerReview(BaseHildonUiControllerReview):
     def __init__(self):
-        self.base = BaseHildonUiControllerReview
+        self.base = HildonUiControllerReview
         self.base.__init__(self)
 
     def new_question(self):
+        """ Show new question. Make get_answer_box visible """
+
         self.base.new_question(self)
         self.get_answer_box.set_property('visible', True)
         self.grades.set_property('visible', False)
         self.answer_box.set_property('visible', False)
 
     def show_answer(self):
+        """ Show answer. Make grades and answer_box visible """
+
         self.base.show_answer(self)
         self.get_answer_box.set_property('visible', False)
         self.grades.set_property('visible', True)
         self.answer_box.set_property('visible', True)
 
-class MainWindow:
-    """ GUI - Hildon """
 
-    def __init__(self, mode):
+class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
+    """ Hidon Main Controller  """
 
-        theme_path = config()["theme_path"]
-        gtk.rc_parse(os.path.join(theme_path,"rcfile"))
-        self.w_tree = gtk.glade.XML(os.path.join(theme_path,
-                                                 "window.glade"))
-        self.w_tree.signal_autoconnect({
-                "on_review_clicked": self.review_clicked,
-                "on_input_clicked" : self.input_clicked,
-                "on_configure_clicked" : self.configure_clicked,
-                "on_MainWindow_key_press_event" : self.on_key_press,
-                "on_MainWindow_window_state_event": self.window_state_event,
-                "on_exit_clicked" : self.quit})
-        self.window = self.w_tree.get_widget("MainWindow")
+    def __init__(self):
 
-        self.fullscreen = False
+        HildonBaseUi.__init__(self, signals=["review", "input", "configure"])
+        UiControllerMain.__init__(self, name="Hildon UI Main Controller")
 
-        # FIXME
-        if mode == "review":
-            ui_controller_review().start(self.w_tree)
+        ui_controller_main().widget = self
 
-    def review_clicked(self, widget):
-        """ Open Review Window """
+    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+        """ Create new cards. Mnenosyne API """
+
+        print 'Creating new cards', fact_data, card_type, grade, cat_names
+
+    # Callbacks
+    def review_cb(self, widget):
+        """ Start Review """
 
         ui_controller_review().start(self.w_tree)
 
-    def input_clicked(self, widget):
-        """ Open Input Window """
+    def input_cb(self, widget):
+        """ Start Input """
 
-        print "button Input clicked"
+        raise NotImplemented(widget)
 
-    def configure_clicked(self, widget):
-        """ Open configure window """
+    def configure_cb(self, widget):
+        """ Start configure mode """
 
-        print "button Configure clicked"
-
-    def quit(self, widget):
-        """ Quit from application """
-
-        gtk.main_quit()
-
-    def on_key_press(self, widget, event, *args):
-        """ Key pressed """
-
-        if event.keyval == gtk.keysyms.F6:
-            # The "Full screen" hardware key has been pressed 
-            if self.fullscreen:
-                self.window.unfullscreen ()
-            else:
-                self.window.fullscreen ()
-
-    def window_state_event(self, widget, event):
-        """ Checking window state """
-
-        self.fullscreen = bool(event.new_window_state & \
-            gtk.gdk.WINDOW_STATE_FULLSCREEN)
-
+        raise NotImplemented(widget)
 
 class HildonUI():
-    """ Hildon UI. Upper-level class """
+    """ Hildon UI """
 
     def __init__(self):
-        ui_controller_main().widget = self
+        """ Load theme's glade file """
 
-    def information_box(self, message, ok_string):
-        """ Output messsage """
-
-        print message
-
-    def question_box(self, question, option0, option1, option2):
-        """ Show question """
-
-        print question
-        print "0", option0
-        print "1", option1
-        print "2", option2
-        answer = raw_input(_("Enter number of answer for select it "))
-
-        return answer
-
+        theme_path = config()["theme_path"]
+        gtk.rc_parse(os.path.join(theme_path, "rcfile"))
+        self.w_tree = gtk.glade.XML(os.path.join(theme_path,
+                                                 "window.glade"))
     def start(self, mode):
-        """ Start GUI application """
-
-        MainWindow(mode)
+        """ Start UI """
+       
+        globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
-
-    def do_quit(self, line):
-        """ Quit from the program """
-
-        print line
-        return True
-
-    def do_review(self, line):
-        """ Review mode """
-
-        ui_controller_review().start()
-
-    def do_input(self, line):
-        """ Input mode """
-
-        print("=== Input mode === Not implemented yet")
-        print line
-
-    def do_conf(self, line):
-        """ Configuration mode """
-
-        print "Configuration mode. Not implemented yet"
-        print line
-
-
 
 def _test():
     """ Run doctests
