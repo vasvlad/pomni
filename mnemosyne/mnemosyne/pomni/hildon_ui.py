@@ -181,16 +181,17 @@ class BaseHildonUiControllerReview(UiControllerReview):
 
 class EternalControllerReview(BaseHildonUiControllerReview):
     def __init__(self):
-        BaseHildonUiControllerReview.__init__(self)
+        self.base = BaseHildonUiControllerReview
+        self.base.__init__(self)
 
     def new_question(self):
-        BaseHildonUiControllerReview.new_question(self)
+        self.base.new_question(self)
         self.grades.set_property('visible', False)
         self.get_answer_box.set_property('visible', True)
         self.answer_box.set_property('visible', False)
 
     def show_answer(self):
-        BaseHildonUiControllerReview.show_answer(self)
+        self.base.show_answer(self)
         self.get_answer_box.set_property('visible', False)
         self.grades.set_property('visible', True)
         self.answer_box.set_property('visible', True)
