@@ -50,7 +50,6 @@ latex = "latex"
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
 """
 
-
 class Configuration(dict, Component):
 
     def set_defaults(self):
@@ -92,7 +91,7 @@ class Configuration(dict, Component):
                               "\\pagestyle{empty}\n\\begin{document}",
              "latex_postamble": "\\end{document}", 
              "latex": "latex -interaction=nonstopmode",
-             "dvipng": "dvipng -D 200 -T tight tmp.dvi"
+             "dvipng": "dvipng -D 200 -T tight tmp.dvi",
             }.items():
             
             self.setdefault(key, value)
@@ -179,8 +178,7 @@ class Configuration(dict, Component):
                 for var in dir(user_config):
                     if var in self:
                         self[var] = getattr(user_config, var)
-            except Exception, exobj:
-                print 'Exception:', str(exobj)
+            except:
                 # Work around the unexplained fact that config.py cannot get 
                 # imported right after it has been created.
                 if self["first_run"] == True:
