@@ -149,61 +149,50 @@ class CommandlineUI(cmd.Cmd):
     def do_conf(self, line):
         """ Configuration mode """
 
+        def get_param(conf, param):
+            """ Get current param value """
+            if param not in conf._config:
+                print param, "is not exist. Try another!"
+                return
+            return conf.__getitem__(param)
+
+        def set_param(conf, param, value):
+            """ Set new param value """
+            conf[param] = value
+
         def show_configuration(conf):
             """ Show current configuration """
-            for i in conf._config.keys():
-                print i, ":", conf._config[i]
-        
-        def set_param(conf):
-            """ Set new param value """
-            param = raw_input("Enter param name to change: ")
-            if param not in conf._config.keys():
-                print param, "is not exist. Try another!"
-            else:
-                print "Current value of", param, ":", conf._config[param]
-                new_value = raw_input("Enter new value: ")
-                conf.__setitem__(param, new_value)
-
-        def get_param(conf):
-            """ Get current param value """
-            param = raw_input("Enter param name: ")
-            if param not in conf._config.keys():
-                print param, "is not exist. Try another!"
-            else:
-                print param, ":", conf._config[param]
-
-        def save_configuration(conf):
-            """ Save current configuration """
-            conf.save()
+            for key in conf._config:
+                print key, ":", conf._config[key]
 
         cfg = config()  # create instance
         cfg.load()      # load parameters from configuration file
         print "=== Config mode ==="
         print "Type 'help' to view config commands or 'quit' to quit."
 
-        help_promt = """help - This information
-quit - Quit from Config mode
-show - Show current configuration
-set - Set new param value
-get - Get current param value
-save - Save current configuration"""
+        help_promt = "\thelp - This information\n\tquit - Quit from Config mode"\
+        "\n\tshow - Show current configuration\n\tset - Set new param value"\
+        "\n\tget - Get current param value\n\tsave - Save current configuration"
 
-        cmd = 'nocmd'
-        while cmd != 'quit':
-            cmd = raw_input("> ")
-            if cmd == 'help':
+        user_cmd = 'nocmd'
+        while user_cmd != 'quit':
+            user_cmd = raw_input("> ")
+            if user_cmd == 'help':
                 print help_promt
-            elif cmd == 'show':
+            elif user_cmd == 'show':
                 show_configuration(cfg)
-            elif cmd == 'set':
-                set_param(cfg)
-            elif cmd == 'get':
-                get_param(cfg)
-            elif cmd == 'save':
-                save_configuration(cfg)
-            else:
-                if cmd != 'quit':
-                    print 'Unknown command. Type another!'
+            elif user_cmd == 'set':
+                param = raw_input("Enter param name: ")
+                value = raw_input("Enter new value: ")
+                set_param(cfg, param, value)
+            elif user_cmd == 'get':
+                param = raw_input("Enter param name: ")
+                value = get_param(cfg, param)
+                print value
+            elif user_cmd == 'save':
+                cfg.save()
+            elif user_cmd != 'quit':
+                print 'Unknown command. Type another!'
 
 
 class CmdUiControllerReview(UiControllerReview):
