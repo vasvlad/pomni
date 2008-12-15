@@ -151,44 +151,37 @@ class CommandlineUI(cmd.Cmd):
 
         def get_param(conf, param):
             """ Get current param value """
-            if param not in conf._config:
+            if param not in conf:
                 print param, "is not exist. Try another!"
-                return
-            return conf.__getitem__(param)
-
-        def set_param(conf, param, value):
-            """ Set new param value """
-            conf[param] = value
-
-        def show_configuration(conf):
-            """ Show current configuration """
-            for key in conf._config:
-                print key, ":", conf._config[key]
+                return ''
+            return conf[param]
 
         cfg = config()  # create instance
         cfg.load()      # load parameters from configuration file
         print "=== Config mode ==="
         print "Type 'help' to view config commands or 'quit' to quit."
 
-        help_promt = "\thelp - This information\n\tquit - Quit from Config mode"\
-        "\n\tshow - Show current configuration\n\tset - Set new param value"\
-        "\n\tget - Get current param value\n\tsave - Save current configuration"
+        help_promt = \
+            "\thelp - This information\n\tquit - Quit from Config mode"\
+            "\n\tshow - Show current configuration"\
+            "\n\tset - Set new param value"\
+            "\n\tget - Get current param value"\
+            "\n\tsave - Save current configuration"
 
         user_cmd = 'nocmd'
         while user_cmd != 'quit':
-            user_cmd = raw_input("> ")
+            user_cmd = raw_input("conf: ")
             if user_cmd == 'help':
                 print help_promt
             elif user_cmd == 'show':
-                show_configuration(cfg)
+                print '\n'.join(["%s:%s" % item for item in cfg.items()])
             elif user_cmd == 'set':
                 param = raw_input("Enter param name: ")
                 value = raw_input("Enter new value: ")
-                set_param(cfg, param, value)
+                cfg[param] = value
             elif user_cmd == 'get':
                 param = raw_input("Enter param name: ")
-                value = get_param(cfg, param)
-                print value
+                print get_param(cfg, param)
             elif user_cmd == 'save':
                 cfg.save()
             elif user_cmd != 'quit':
@@ -247,9 +240,9 @@ class CmdUiControllerReview(UiControllerReview):
 
         # get current encoding
         encoding = None
-        for alias in locale.locale_encoding_alias:
-            if locale.locale_encoding_alias[alias] == locale.getpreferredencoding():
-                encoding = locale.locale_encoding_alias[alias]
+        preferred_enc = locale.getpreferredencoding()
+        if preferred_enc in locale.locale_encoding_alias:
+            encoding = locale.locale_encoding_alias[preferred_enc]
 
         answer = self.card.answer()
         if encoding:
