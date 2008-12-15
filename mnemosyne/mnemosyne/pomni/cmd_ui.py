@@ -65,10 +65,10 @@ class CommandlineUI(cmd.Cmd):
 
     def start(self, mode):
         """ UI entry point. Called by controller  """
-        if mode:
-            self.onecmd(mode)
-        else:
+        if mode or mode == 'main':
             self.cmdloop()
+        else:
+            self.onecmd(mode)
 
     def do_quit(self, line):
         """ Quit the program """ 
