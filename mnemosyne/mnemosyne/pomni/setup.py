@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/python -tt
+
+""" Setup """
 
 import glob
 try:
@@ -6,9 +8,9 @@ try:
 except ImportError:
     from distutils.core import setup
 
-package_name = open('debian/changelog').readline().split(' ')[0]
+PKG = open('debian/changelog').readline().split(' ')[0]
 
-setup(name = package_name,
+setup(name = PKG,
     description='Learning tool based on spaced repetition technique',
     version = open('debian/changelog').readline().split(' ')[1][1:-1],
     author = "Pomni Development team",
@@ -16,10 +18,11 @@ setup(name = package_name,
     license='GPL 2',
     packages = ["pomni"],
     package_dir = {'pomni': ''},
-    data_files=[('share/%s/hildon-UI/draft' % package_name,  glob.glob('hildon-UI/draft/*')),
-		('share/%s/hildon-UI/eternal' % package_name,  glob.glob('hildon-UI/eternal/*')),
-		('share/dbus-1/services', ['maemo/%s.service' % package_name]),
-		('share/applications/hildon', ['maemo/%s.desktop' % package_name])],
+    data_files=[
+      ('share/%s/hildon-UI/draft' % PKG, glob.glob('hildon-UI/draft/*')),
+	  ('share/%s/hildon-UI/eternal' % PKG, glob.glob('hildon-UI/eternal/*')),
+      ('share/dbus-1/services', ['maemo/%s.service' % PKG]),
+      ('share/applications/hildon', ['maemo/%s.desktop' % PKG])],
     classifiers = [
     'Development Status :: 3 - Alpha',
     'Environment :: Console',
