@@ -48,10 +48,8 @@ latex = "latex"
 
 # Latex dvipng command.
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
-
-# path to default theme
-theme_path = "/usr/share/pomni/hildon-UI/eternal"
 """
+
 
 class Configuration(dict, Component):
 
@@ -94,8 +92,7 @@ class Configuration(dict, Component):
                               "\\pagestyle{empty}\n\\begin{document}",
              "latex_postamble": "\\end{document}", 
              "latex": "latex -interaction=nonstopmode",
-             "dvipng": "dvipng -D 200 -T tight tmp.dvi",
-             "theme_path": "/usr/share/pomni/hildon-UI/eternal"
+             "dvipng": "dvipng -D 200 -T tight tmp.dvi"
             }.items():
             
             self.setdefault(key, value)
