@@ -18,6 +18,7 @@ setup(name = package_name,
     package_dir = {'pomni': ''},
     data_files=[('share/%s/hildon-UI/draft' % package_name,  glob.glob('hildon-UI/draft/*')),
 		('share/%s/hildon-UI/eternal' % package_name,  glob.glob('hildon-UI/eternal/*')),
+		('share/%s/hildon-UI/smile' % package_name,  glob.glob('hildon-UI/smile/*')),		
 		('share/dbus-1/services', ['maemo/%s.service' % package_name]),
 		('share/applications/hildon', ['maemo/%s.desktop' % package_name])],
     classifiers = [

@@ -42,11 +42,17 @@ class HildonUiControllerException(Exception):
     def __init__(self,  w_tree, exception):
         """ Show Warning Window """
 
-        warning_window = w_tree.get_widget("WarningWindow")
+        self.warning_window = w_tree.get_widget("WarningWindow")
         warning_label = w_tree.get_widget("label_warning")
+        w_tree.signal_autoconnect({"ok" : self.close })
         warning_label.set_text(exception)
-        warning_window.show()
+        self.warning_window.show()
+        Exception(exception)
 
+    def close(self, widget, event):
+        """ Close Warning Window """
+
+        self.warning_window.destroy()
 
 class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
