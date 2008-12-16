@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Dec 16 14:45:25 2008 -->
+<!--Generated with glade3 3.4.5 on Tue Dec 16 15:08:19 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="visible">True</property>
@@ -368,6 +368,7 @@
                                     <child>
                                       <widget class="GtkEventBox" id="eventbox_numeral_0">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                         <property name="visible_window">False</property>
                                         <property name="above_child">True</property>
@@ -383,6 +384,7 @@
                                     <child>
                                       <widget class="GtkEventBox" id="eventbox_numeral_1">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                         <property name="visible_window">False</property>
                                         <signal name="button_press_event" handler="on_eventbox_numeral1_button_press_event"/>
@@ -400,6 +402,7 @@
                                     <child>
                                       <widget class="GtkEventBox" id="eventbox_numeral_2">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                         <property name="visible_window">False</property>
                                         <signal name="button_press_event" handler="on_eventbox_numeral2_button_press_event"/>
@@ -417,6 +420,7 @@
                                     <child>
                                       <widget class="GtkEventBox" id="eventbox_numeral_3">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                         <property name="visible_window">False</property>
                                         <signal name="button_press_event" handler="on_eventbox_numeral3_button_press_event"/>
@@ -434,6 +438,7 @@
                                     <child>
                                       <widget class="GtkEventBox" id="eventbox_numeral_4">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                         <property name="visible_window">False</property>
                                         <signal name="button_press_event" handler="on_eventbox_numeral4_button_press_event"/>
@@ -451,6 +456,7 @@
                                     <child>
                                       <widget class="GtkEventBox" id="eventbox_numeral_5">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                         <property name="visible_window">False</property>
                                         <signal name="button_press_event" handler="on_eventbox_numeral5_button_press_event"/>
@@ -554,6 +560,7 @@
                             <child>
                               <widget class="GtkEventBox" id="eventbox_show_answer">
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="events">GDK_BUTTON_PRESS_MASK</property>
                                 <property name="visible_window">False</property>
                                 <property name="above_child">True</property>
