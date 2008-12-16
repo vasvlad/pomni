@@ -52,7 +52,7 @@ class HildonUiControllerException(Exception):
     def close(self, widget, event):
         """ Close Warning Window """
 
-        self.warning_window.destroy()
+        self.warning_window.hide()
 
 class HildonUiControllerReview(UiControllerReview):
     """ GUI - Hildon """
