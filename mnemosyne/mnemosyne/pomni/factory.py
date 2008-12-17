@@ -50,9 +50,11 @@ def ui_factory(interface=None):
         from pomni import hildon_ui
         from hildon_ui import HildonUI
 
-        review_class = getattr(hildon_ui, 
+        review_class = getattr(hildon_ui,
             theme.capitalize() + 'ControllerReview')
-        main_class = hildon_ui.HildonUiControllerMain
+#        main_class = hildon_ui.HildonUiControllerMain
+        main_class = getattr(hildon_ui,
+            theme.capitalize() + 'ControllerMain')
 
         component_manager.register("ui_controller_main", main_class())
         component_manager.register("ui_controller_review", review_class())

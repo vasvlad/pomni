@@ -249,6 +249,34 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         raise NotImplemented(widget)
 
+class EternalControllerMain(HildonUiControllerMain):
+    """ Eternal UI Main Controller """
+
+    def __init__(self):
+        """ Added spliter widget to class """
+        
+        self.base = HildonUiControllerMain
+        self.base.__init__(self)
+        self.w_tree.signal_autoconnect({
+            "on_MainWindow_size_allocate": self.window_size_allocate
+                                        })
+        self.spliter = self.w_tree.get_widget("spliter")
+        self.spliter_trigger = True
+
+    def window_size_allocate(self, widget, user_data):
+        """ Checking window size """
+
+        if (self.notebook_windows.get_current_page() == 1):
+            if (self.spliter_trigger):
+            # Set Spliter (GtkVpan) to pseudo medium
+                if (self.notebook_windows.get_current_page() == 1):
+                    self.spliter_trigger = False
+                    pseudo_medium = (widget.allocation.height - 70)/2 - 20
+                    self.spliter.set_property('position', pseudo_medium)
+                else:
+                    self.spliter_trigger = True
+
+
 class HildonUI():
     """ Hildon UI """
 
@@ -262,17 +290,7 @@ class HildonUI():
     def start(self, mode):
         """ Start UI  """
 
-        theme = config()["theme_path"].split("/")[-1]
-        try:
-            main_window = __import__("pomni.hildon_%s_ui" % theme, \
-                  globals(), locals(), [""]).HildonThemeMainWindow
-            main_window(mode)
-        except AttributeError:
-            MainWindow(mode)
-        except ImportError:
-            MainWindow(mode)
-
-#        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+        globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
 def _test():
