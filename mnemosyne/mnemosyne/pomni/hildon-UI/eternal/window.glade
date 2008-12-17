@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
 <!--Generated with glade3 3.4.5 on Sat Dec 13 22:14:48 2008 -->
-=======
-<!--Generated with glade3 3.4.5 on Mon Dec 15 05:43:19 2008 -->
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
 <glade-interface>
-  <widget class="GtkWindow" id="window">
+  <widget class="GtkWindow" id="MainWindow">
     <property name="visible">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="default_width">800</property>
     <property name="default_height">480</property>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
     <signal name="key_press_event" handler="on_MainWindow_key_press_event"/>
     <signal name="size_allocate" handler="on_MainWindow_size_allocate"/>
     <signal name="window_state_event" handler="on_MainWindow_window_state_event"/>
-=======
-    <signal name="key_press_event" handler="window_keypress"/>
-    <signal name="window_state_event" handler="window_state"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
         <child>
-          <widget class="GtkNotebook" id="switcher">
+          <widget class="GtkNotebook" id="notebook_windows">
             <property name="visible">True</property>
             <property name="show_tabs">False</property>
             <property name="tab_border">0</property>
@@ -51,7 +42,7 @@
                         <property name="receives_default">True</property>
                         <property name="label" translatable="yes">Review</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="review"/>
+                        <signal name="clicked" handler="on_review_clicked"/>
                       </widget>
                     </child>
                     <child>
@@ -61,7 +52,7 @@
                         <property name="receives_default">True</property>
                         <property name="label" translatable="yes">Input</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="input"/>
+                        <signal name="clicked" handler="on_input_clicked"/>
                       </widget>
                       <packing>
                         <property name="position">1</property>
@@ -74,7 +65,7 @@
                         <property name="receives_default">True</property>
                         <property name="label" translatable="yes">Configure</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="configure"/>
+                        <signal name="clicked" handler="on_configure_clicked"/>
                       </widget>
                       <packing>
                         <property name="position">2</property>
@@ -87,7 +78,7 @@
                         <property name="receives_default">True</property>
                         <property name="label" translatable="yes">Exit</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="exit"/>
+                        <signal name="clicked" handler="on_exit_clicked"/>
                       </widget>
                       <packing>
                         <property name="position">3</property>
@@ -212,44 +203,11 @@
                   <widget class="GtkVBox" id="vbox4">
                     <property name="visible">True</property>
                     <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                       <widget class="GtkHBox" id="answer_box">
                         <child>
                           <widget class="GtkAlignment" id="alignment8">
                             <property name="width_request">16</property>
                             <property name="visible">True</property>
-=======
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="grades">
-                    <property name="height_request">105</property>
-                    <child>
-                      <widget class="GtkAlignment" id="alignment9">
-                        <property name="visible">True</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkHBox" id="box5">
-                        <property name="width_request">660</property>
-                        <property name="height_request">100</property>
-                        <property name="visible">True</property>
-                        <child>
-                          <widget class="GtkEventBox" id="grade0">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                            <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="button_press_event" handler="grade"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                             <child>
                               <placeholder/>
                             </child>
@@ -259,20 +217,12 @@
                           </packing>
                         </child>
                         <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                           <widget class="GtkButton" id="button_answer">
                             <property name="height_request">100</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-=======
-                          <widget class="GtkEventBox" id="grade1">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                            <property name="visible_window">False</property>
-                            <signal name="button_press_event" handler="grade"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                             <child>
                               <widget class="GtkLabel" id="answer">
                                 <property name="visible">True</property>
@@ -285,17 +235,9 @@
                           </packing>
                         </child>
                         <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                           <widget class="GtkAlignment" id="alignment12">
                             <property name="width_request">16</property>
                             <property name="visible">True</property>
-=======
-                          <widget class="GtkEventBox" id="grade2">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                            <property name="visible_window">False</property>
-                            <signal name="button_press_event" handler="grade"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                             <child>
                               <placeholder/>
                             </child>
@@ -311,34 +253,18 @@
                       <widget class="GtkHBox" id="estimate_box">
                         <property name="height_request">105</property>
                         <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                           <widget class="GtkAlignment" id="alignment9">
                             <property name="visible">True</property>
-=======
-                          <widget class="GtkEventBox" id="grade3">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                            <property name="visible_window">False</property>
-                            <signal name="button_press_event" handler="grade"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                             <child>
                               <placeholder/>
                             </child>
                           </widget>
                         </child>
                         <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                           <widget class="GtkHBox" id="box5">
                             <property name="width_request">660</property>
                             <property name="height_request">100</property>
                             <property name="visible">True</property>
-=======
-                          <widget class="GtkEventBox" id="grade4">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                            <property name="visible_window">False</property>
-                            <signal name="button_press_event" handler="grade"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                             <child>
                               <widget class="GtkEventBox" id="eventbox_numeral_0">
                                 <property name="visible">True</property>
@@ -445,16 +371,8 @@
                           </packing>
                         </child>
                         <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                           <widget class="GtkAlignment" id="alignment10">
                             <property name="visible">True</property>
-=======
-                          <widget class="GtkEventBox" id="grade5">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                            <property name="visible_window">False</property>
-                            <signal name="button_press_event" handler="grade"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                             <child>
                               <placeholder/>
                             </child>
@@ -469,31 +387,7 @@
                       </packing>
                     </child>
                     <child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                       <widget class="GtkHBox" id="get_answer_hbox">
-=======
-                      <widget class="GtkAlignment" id="alignment10">
-                        <property name="visible">True</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="position">5</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="get_answer_box">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkAlignment" id="alignment6">
-                        <property name="width_request">16</property>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkAlignment" id="alignment6">
@@ -507,21 +401,6 @@
                             <property name="expand">False</property>
                           </packing>
                         </child>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
-=======
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkEventBox" id="get_answer">
-                        <property name="visible">True</property>
-                        <property name="events">GDK_BUTTON_PRESS_MASK</property>
-                        <property name="visible_window">False</property>
-                        <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="get_answer"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                         <child>
                           <widget class="GtkEventBox" id="eventbox_show_answer">
                             <property name="visible">True</property>
@@ -582,22 +461,6 @@
                     <child>
                       <widget class="GtkHBox" id="hbox3">
                         <property name="visible">True</property>
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
-=======
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">7</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkEventBox" id="to_main_menu">
-                        <property name="visible">True</property>
-                        <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                        <property name="visible_window">False</property>
-                        <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="to_main_menu"/>
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
                         <child>
                           <widget class="GtkImage" id="image1">
                             <property name="visible">True</property>
