@@ -78,32 +78,8 @@ class HildonBaseUi():
             return widget
         raise AttributeError()
 
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-        # For common design
-        self.notebook_windows = w_tree.get_widget("notebook_windows")
-
-        # Switch to Page review
-        self.notebook_windows.set_current_page(1)
-        self.window = w_tree.get_widget("ReviewWindow")
-        self.question = w_tree.get_widget("question")
-        self.answer = w_tree.get_widget("answer")
-        self.eventbox_numeral = \
-            [w_tree.get_widget("eventbox_numeral_%i" % i) for i in range(6)]
-
-        # Connect to signals
-        w_tree.signal_autoconnect({
-           "on_eventbox_numeral0_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral1_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral2_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral3_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral4_button_press_event": self.numeral_pressed,
-           "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
-           "on_eventbox_quit_button_press_event": self.quit_button,
-           "on_exit_clicked" : self.quit})
-=======
     def start(self, w_tree):
         """ Init w_tree, connect callbacks to signals """
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
         self.w_tree = w_tree
 
@@ -176,11 +152,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Create new question """
 
         if not database().card_count():
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
             raise HildonUiControllerException(self.w_tree, _("Database is empty"))
-=======
-            raise HildonUiControllerException(_("Database is empty"))
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
         card = scheduler().get_new_question(False)
 
@@ -211,45 +183,19 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         scheduler().process_answer(self.card, grade)
         self.new_question()
 
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-    def on_key_press(self, widget, event, *args):
-        """ Key pressed """
-
-        if event.keyval == gtk.keysyms.F6: 
-            # The "Full screen" hardware key has been pressed 
-            if self.fullscreen:
-                self.window.unfullscreen()
-            else:
-                self.window.fullscreen()
-
-    def window_state_event(self, widget, event):
-        """ Checking window state """
-=======
     # Glade callbacks
     def get_answer_cb(self, widget, event):
         """ Hook for showing a right answer """
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
         self.show_answer()
 
     def grade_cb(self, widget, event):
         """ Call grade of answer """
 
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-        #Switch to Menu page
-        self.notebook_windows.set_current_page(0)
-
-    def quit_button(self, widget, event):
-        """ If pressed quit button then close the window """
-
-        self.quit(widget)
-=======
-        if event.type == gtk.gdk.BUTTON_PRESS:
-            self.grade_answer(int(widget.name[-1]))
+        self.grade_answer(int(widget.name[-1]))
 
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
     def __init__(self):
         self.base = HildonUiControllerReview
@@ -263,27 +209,8 @@ class EternalControllerReview(HildonUiControllerReview):
         self.grades.set_property('visible', False)
         self.answer_box.set_property('visible', False)
 
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-        theme_path = config()["theme_path"]
-        gtk.rc_parse(os.path.join(theme_path,"rcfile"))
-        self.w_tree = gtk.glade.XML(os.path.join(theme_path,
-                                                 "window.glade"))
-        self.w_tree.signal_autoconnect({
-                "on_review_clicked": self.review_clicked,
-                "on_input_clicked" : self.input_clicked,
-                "on_configure_clicked" : self.configure_clicked,
-                "on_MainWindow_key_press_event" : self.on_key_press,
-                "on_MainWindow_window_state_event": self.window_state_event,
-                "on_exit_clicked" : self.quit})
-        self.window = self.w_tree.get_widget("MainWindow")
-        self.notebook_windows = self.w_tree.get_widget("notebook_windows")
-
-
-        self.fullscreen = False
-=======
     def show_answer(self):
         """ Show answer. Make grades and answer_box visible """
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
         self.base.show_answer(self)
         self.get_answer_box.set_property('visible', False)
@@ -333,8 +260,7 @@ class HildonUI():
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
                                                  "window.glade"))
     def start(self, mode):
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-        """ Start GUI application """
+        """ Start UI  """
 
         theme = config()["theme_path"].split("/")[-1]
         try:
@@ -346,11 +272,7 @@ class HildonUI():
         except ImportError:
             MainWindow(mode)
 
-=======
-        """ Start UI """
-       
-        globals()["ui_controller_%s" % mode]().start(self.w_tree)
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
+#        globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
 def _test():
