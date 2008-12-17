@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Dec 16 17:05:00 2008 -->
+<!--Generated with glade3 3.4.5 on Wed Dec 17 11:05:39 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="MainWindow">
     <property name="visible">True</property>
@@ -636,6 +636,7 @@
   </widget>
   <widget class="GtkDialog" id="WarningWindow">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">Warning</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
