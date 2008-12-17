@@ -1,13 +1,11 @@
--allow non-unicode filenames: encode/decode in expand/contract path?
+-announce new translations on website
 
--how to best limit total queue size?
+-allow non-unicode filenames: encode/decode in expand/contract path?
 
 
 * Mnemosyne 2.0:
 
--buttons in 'add card' are smaller than in the review widget.
-
--statusbar
+-update widget after adding cards
 
 -complete UI controller review
 
@@ -34,8 +32,6 @@
 -test uploading of logs
 
 -show latex errors in GUI?
-
--button group strangely rendered?
 
 -ghost out 3.4 and 5 for unlearned cards?
 
@@ -115,8 +111,6 @@
 -teacher mode?
 
 -make really sure the same question isn't asked twice in a row
-
--bug in Qt? : get rid of dummy '.' status tips
 
 -bug in Qt? : shortcuts don't change back after changing 'show answer'
  button text

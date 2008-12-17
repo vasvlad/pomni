@@ -27,12 +27,13 @@ Hildon UI
 import os
 import gettext
 import gtk
-from gtk import glade
-from os.path import basename
+import gtk.glade
+from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 _ = gettext.gettext
 
@@ -54,25 +55,30 @@ class HildonUiControllerException(Exception):
 
         self.warning_window.hide()
 
-class HildonUiControllerReview(UiControllerReview):
-    """ GUI - Hildon """
-    def __init__(self):
-        """ Initialization items of review window """
+class HildonBaseUi():
+    """ Base Hildon UI functionality """
 
-        UiControllerReview.__init__(self, name="Hildon UI Controller")
-        self.title = _("Mnemosyne") + " - " + basename(config()["path"])[:-4]
-        self.grade = 0
+    # page's indexes in switcher
+    main_menu, review, input = range(3)
+
+    def __init__(self, signals):
+
+        self.signals = ["exit", "to_main_menu", "window_state", "window_keypress"]
+        if signals:
+            self.signals.extend(signals)
+
         self.w_tree = None
-        self.window = None
-        self.question = None
-        self.answer = None
-        self.eventbox_numeral = []
         self.fullscreen = False
-        self.notebook_windows = None
+    
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
 
-    def start(self, w_tree):
-        """ Start new review window """
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
 
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
         # For common design
         self.notebook_windows = w_tree.get_widget("notebook_windows")
 
@@ -94,54 +100,110 @@ class HildonUiControllerReview(UiControllerReview):
            "on_eventbox_numeral5_button_press_event": self.numeral_pressed,
            "on_eventbox_quit_button_press_event": self.quit_button,
            "on_exit_clicked" : self.quit})
+=======
+    def start(self, w_tree):
+        """ Init w_tree, connect callbacks to signals """
+>>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
         self.w_tree = w_tree
 
+        # connect signals to methods
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in self.signals]))
+
+    # Callbacks
+    def exit_cb(self, widget):
+        """ If pressed quit button then close the window """
+
+        gtk.main_quit()
+
+    def to_main_menu_cb(self, widget, event):
+        """ Return to main menu """
+
+        self.switcher.set_current_page(self.main_menu)
+
+    def window_keypress_cb(self, widget, event, *args):
+        """ Key pressed """
+        if event.keyval == gtk.keysyms.F6:
+            # The "Full screen" hardware key has been pressed
+            if self.fullscreen:
+                self.window.unfullscreen()
+            else:
+                self.window.fullscreen()
+
+    def window_state_cb(self, widget, event):
+        """ Checking window state """
+
+        self.fullscreen = bool(event.new_window_state & \
+            gtk.gdk.WINDOW_STATE_FULLSCREEN)
+
+    
+class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
+    """ Hildon Review controller """
+
+    def __init__(self):
+        """ Initialization items of review window """
+
+        HildonBaseUi.__init__(self, signals=["get_answer", "grade"])
+        UiControllerReview.__init__(self, name="Hildon UI Review Controller")
+
+        self.title = _("Mnemosyne") + " - " + \
+            splitext(basename(config()["path"]))[0]
+
+        self.grade = 0
+        self.card = None
+
+    def start(self, w_tree):
+        """ Start new review window """
+
+        HildonBaseUi.start(self, w_tree)
+
+        # switch to Page review
+        # switcher - window with tabs. Each tab is for
+        # different mode (main_menu, review, conf, input, etc)
+        self.switcher.set_current_page(self.review)
+
+        # Begin the review window from a new question
+        self.new_question()
+
+    # UiControllerReview API
+    
     def update_dialog(self):
         """ This is part of UiControllerReview API """
-        print "Update dialog"
-
-
-    def show_answer(self):
-        """ Show a right answer """
-
-        pass
-
-    def open_card_clicked(self, widget, event):
-        """ Hook for showing a right answer """
-
-        self.show_answer()
-
-    def numeral_pressed(self, widget, event):
-        """ Call grade of answer """
-
-        self.grade_answer(self.eventbox_numeral.index(widget))
-
-    def theme_new_question(self):
-        """ Show New question on current theme """
         pass
 
     def new_question(self):
         """ Create new question """
 
         if not database().card_count():
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
             raise HildonUiControllerException(self.w_tree, _("Database is empty"))
+=======
+            raise HildonUiControllerException(_("Database is empty"))
+>>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
         card = scheduler().get_new_question(False)
 
-        if card != None:
+        if card:
             self.question.set_text(card.question())
-            self.answer.set_text("")
-            self.theme_new_question()
         else:
-            #Fix me
+            # FIXME
 #           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
             self.question.set_text(card.question())
-            self.answer.set_text("")
-            self.theme_new_question()
 
+        self.answer.set_text("")
+        self.get_answer.set_sensitive(True)
         self.card = card
+
+    def show_answer(self):
+        """ Show answer in review window """
+
+        self.answer.set_text(self.card.answer())
+        for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
+            widget.set_sensitive(True)
+        self.get_answer.set_sensitive(False)
+        self.answer.set_text(self.card.answer())
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -149,6 +211,7 @@ class HildonUiControllerReview(UiControllerReview):
         scheduler().process_answer(self.card, grade)
         self.new_question()
 
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
     def on_key_press(self, widget, event, *args):
         """ Key pressed """
 
@@ -161,13 +224,18 @@ class HildonUiControllerReview(UiControllerReview):
 
     def window_state_event(self, widget, event):
         """ Checking window state """
+=======
+    # Glade callbacks
+    def get_answer_cb(self, widget, event):
+        """ Hook for showing a right answer """
+>>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
-        self.fullscreen = bool(event.new_window_state & \
-            gtk.gdk.WINDOW_STATE_FULLSCREEN)
+        self.show_answer()
 
-    def quit(self, widget):
-        """ Close review window """
+    def grade_cb(self, widget, event):
+        """ Call grade of answer """
 
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
         #Switch to Menu page
         self.notebook_windows.set_current_page(0)
 
@@ -175,13 +243,27 @@ class HildonUiControllerReview(UiControllerReview):
         """ If pressed quit button then close the window """
 
         self.quit(widget)
+=======
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            self.grade_answer(int(widget.name[-1]))
 
+class EternalControllerReview(HildonUiControllerReview):
+    """ Eternal UI review controller """
+>>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
-class MainWindow:
-    """ GUI - Hildon """
+    def __init__(self):
+        self.base = HildonUiControllerReview
+        self.base.__init__(self)
 
-    def __init__(self, mode):
+    def new_question(self):
+        """ Show new question. Make get_answer_box visible """
 
+        self.base.new_question(self)
+        self.get_answer_box.set_property('visible', True)
+        self.grades.set_property('visible', False)
+        self.answer_box.set_property('visible', False)
+
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path,"rcfile"))
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
@@ -198,71 +280,60 @@ class MainWindow:
 
 
         self.fullscreen = False
+=======
+    def show_answer(self):
+        """ Show answer. Make grades and answer_box visible """
+>>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
-        # FIXME
-        if mode == "review":
-            ui_controller_review().start(self.w_tree)
+        self.base.show_answer(self)
+        self.get_answer_box.set_property('visible', False)
+        self.grades.set_property('visible', True)
+        self.answer_box.set_property('visible', True)
 
-    def review_clicked(self, widget):
-        """ Open Review Window """
+
+class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
+    """ Hidon Main Controller  """
+
+    def __init__(self):
+
+        HildonBaseUi.__init__(self, signals=["review", "input", "configure"])
+        UiControllerMain.__init__(self, name="Hildon UI Main Controller")
+
+        ui_controller_main().widget = self
+
+    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+        """ Create new cards. Mnenosyne API """
+
+        print 'Creating new cards', fact_data, card_type, grade, cat_names
+
+    # Callbacks
+    def review_cb(self, widget):
+        """ Start Review """
 
         ui_controller_review().start(self.w_tree)
 
-    def input_clicked(self, widget):
-        """ Open Input Window """
+    def input_cb(self, widget):
+        """ Start Input """
 
-        print "button Input clicked"
+        raise NotImplemented(widget)
 
-    def configure_clicked(self, widget):
-        """ Open configure window """
+    def configure_cb(self, widget):
+        """ Start configure mode """
 
-        print "button Configure clicked"
-
-    def quit(self, widget):
-        """ Quit from application """
-
-        gtk.main_quit()
-
-    def on_key_press(self, widget, event, *args):
-        """ Key pressed """
-
-        if event.keyval == gtk.keysyms.F6:
-            # The "Full screen" hardware key has been pressed 
-            if self.fullscreen:
-                self.window.unfullscreen ()
-            else:
-                self.window.fullscreen ()
-
-    def window_state_event(self, widget, event):
-        """ Checking window state """
-
-        self.fullscreen = bool(event.new_window_state & \
-            gtk.gdk.WINDOW_STATE_FULLSCREEN)
-
+        raise NotImplemented(widget)
 
 class HildonUI():
-    """ Hildon UI. Upper-level class """
+    """ Hildon UI """
 
     def __init__(self):
-        ui_controller_main().widget = self
+        """ Load theme's glade file """
 
-    def information_box(self, message, ok_string):
-        """ Output messsage """
-
-        print message
-
-    def question_box(self, question, option0, option1, option2):
-        """ Show question """
-
-        print question
-        print "0", option0
-        print "1", option1
-        print "2", option2
-        answer = raw_input(_("Enter number of answer for select it "))
-
-        return answer
-
+        theme_path = config()["theme_path"]
+        gtk.rc_parse(os.path.join(theme_path, "rcfile"))
+        self.w_tree = gtk.glade.XML(os.path.join(theme_path,
+                                                 "window.glade"))
     def start(self, mode):
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
         """ Start GUI application """
 
         theme = config()["theme_path"].split("/")[-1]
@@ -275,32 +346,12 @@ class HildonUI():
         except ImportError:
             MainWindow(mode)
 
+=======
+        """ Start UI """
+       
+        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+>>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon_ui.py
         gtk.main()
-
-    def do_quit(self, line):
-        """ Quit from the program """
-
-        print line
-        return True
-
-    def do_review(self, line):
-        """ Review mode """
-
-        ui_controller_review().start()
-
-    def do_input(self, line):
-        """ Input mode """
-
-        print("=== Input mode === Not implemented yet")
-        print line
-
-    def do_conf(self, line):
-        """ Configuration mode """
-
-        print "Configuration mode. Not implemented yet"
-        print line
-
-
 
 def _test():
     """ Run doctests

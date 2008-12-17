@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/python -tt
+
+""" Setup """
 
 import glob
 try:
@@ -6,9 +8,9 @@ try:
 except ImportError:
     from distutils.core import setup
 
-package_name = open('debian/changelog').readline().split(' ')[0]
+PKG = open('debian/changelog').readline().split(' ')[0]
 
-setup(name = package_name,
+setup(name = PKG,
     description='Learning tool based on spaced repetition technique',
     version = open('debian/changelog').readline().split(' ')[1][1:-1],
     author = "Pomni Development team",
