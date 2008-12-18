@@ -82,68 +82,61 @@ class CommandlineUI(cmd.Cmd):
         """ Input mode """
         print("=== Input mode ===")
 
-        once_again = "y"
         card = ui_controller_main()
-        while once_again == "y":
+        
+        card_type_by_id = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+        
+        category_names_by_id = dict([(i, name) for (i, name) in \
+            enumerate(database().category_names())])
+        
+        while True:
             # Select Card Type by user:
             print "Select Card Type:"
-            card_type_by_id = {}
-            for card_type in card_types():
-                print card_type.id, card_type.name
-                card_type_by_id[card_type.id] = card_type
-
+            print '\n'.join(["%s %s" % (type_id, card_type_by_id[type_id].name) \
+                for type_id in sorted(card_type_by_id.keys())])
             while True:
-                card_type_id = \
+                inp = \
                 raw_input(_("Enter number of Card Type or 'q' to quit ... "))
-                if card_type_id in ("q", "Q"):
+                if inp in ("q", "Q"):
                     return
-                try:
-                    card_type = card_type_by_id[card_type_id]
-                except KeyError:
-                    print(_("Input error, try again"))
-                    continue
-                break
+                if inp in card_type_by_id:
+                    card_type = card_type_by_id[inp]
+                    break
+                print(_("Input error, try again"))
 
-            # Select the exist or Add the new Categore  
-            i = 0
-            category_names_by_id = {}
-            for name in database().category_names():
-                print i, name
-                category_names_by_id[str(i)] = name
-                i += 1
- 
-            while True:
-                category_name_id = raw_input(_("Enter number of Category or "\
-                    "enter new category or 'q' to quit ... "))
-                if category_name_id in ("q", "Q"):
-                    return
-                try:
-                    category_name = category_names_by_id[category_name_id]
-                except KeyError:
-                    category_name = category_name_id
-                break
-
+            # Select the exist or Add the new Category
+            print '\n'.join(["%s %s" % (cat_id, category_names_by_id[cat_id]) \
+                for cat_id in sorted(category_names_by_id.keys())])
+            inp = raw_input(_("Enter number of Category or "\
+                "enter new category or 'q' to quit ... "))
+            if inp in ("q", "Q"):
+                return
+            category_name = inp
+            if inp in category_names_by_id:
+                category_name = category_names_by_id[inp]
 
             # Enter all fields for the current type
             fact = {}
-            problem_field = False
-            for fact_key, fact_key_name in card_type.fields:
-                print _("Enter field"), fact_key_name
-                text = raw_input()
-                if text:
-                    fact[fact_key] = text
+            for key, name in card_type.fields:
+                print _("Enter field"), name
+                inp = raw_input()
+                if inp:
+                    fact[key] = inp
+
             # Check necesary fields and create new card
             for required in card_type.required_fields():
-                if not required in fact.keys():
+                if required not in fact:
                     print(_("Error.This card is not saved in a database !!!"))
                     print(_("You didn't enter all necesary field(s) !!!"))
-                    problem_field = True
-            # Create new card
-            if not problem_field :
+                    break
+            else:
+                # Create new card
                 card.create_new_cards(fact, card_type, 0, [category_name])
                 database().save(config()['path'])
 
-            once_again = raw_input(_("Do you want to add a new record? y/n "))
+            if raw_input(_("Do you want to add a new record? y/n ")) != "y":
+                break
 	    
        
     def do_conf(self, line):
@@ -197,6 +190,7 @@ class CmdUiControllerReview(UiControllerReview):
         self.title = _("Mnemosyne") + " - " + \
             os.path.basename(config()["path"])[:-4]
         self.grade = 0
+        self.learn_ahead = False
 
     def update_dialog(self):
         """ This is part of UiControllerReview API """
@@ -214,20 +208,21 @@ class CmdUiControllerReview(UiControllerReview):
                 print(exobj)
                 break
 
-    def new_question(self, learn_ahead=False):
+    def new_question(self):
         """ Print new question """
 
         if database().card_count() == 0:
             raise CmdUiControllerException(_("Database is empty"))
         else:
-            self.card = scheduler().get_new_question(learn_ahead)
+            self.card = scheduler().get_new_question(self.learn_ahead)
             if self.card != None:
                 print _("Question:"), self.card.question()
             else:
                 value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
                 if value in ("y", "Y"):
                     print("\n")
-                    self.new_question(learn_ahead=True)
+                    self.learn_ahead = True
+                    self.new_question()
                 else:
                     raise CmdUiControllerException(_("Finished"))
 
