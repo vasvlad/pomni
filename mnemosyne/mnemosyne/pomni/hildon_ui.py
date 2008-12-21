@@ -37,7 +37,7 @@ from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 _ = gettext.gettext
 
-class HildonUiControllerException(Exception): 
+class HildonUiControllerException(Exception):
     """ Exception hook """
 
     def __init__(self,  w_tree, exception):
@@ -45,12 +45,25 @@ class HildonUiControllerException(Exception):
 
         self.warning_window = w_tree.get_widget("WarningWindow")
         warning_label = w_tree.get_widget("label_warning")
-        w_tree.signal_autoconnect({"ok" : self.close })
+        self.signals = ["close"]
+        # connect signals to methods
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in self.signals]))
+        # Show warning text
         warning_label.set_text(exception)
         self.warning_window.show()
-        Exception(exception)
 
-    def close(self, widget, event):
+        Exception.__init__(self)
+
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
+
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
+
+    def close_cb(self, widget, event):
         """ Close Warning Window """
 
         self.warning_window.hide()
@@ -63,7 +76,8 @@ class HildonBaseUi():
 
     def __init__(self, signals):
 
-        self.signals = ["exit", "to_main_menu", "window_state", "window_keypress"]
+        self.signals = \
+         ["exit", "to_main_menu", "window_state", "window_keypress"]
         if signals:
             self.signals.extend(signals)
 
@@ -152,7 +166,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Create new question """
 
         if not database().card_count():
-            raise HildonUiControllerException(self.w_tree, _("Database is empty"))
+            raise HildonUiControllerException(self.w_tree, \
+                _("Database is empty"))
 
         card = scheduler().get_new_question(False)
 
@@ -223,7 +238,7 @@ class EternalControllerReview(HildonUiControllerReview):
 class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
     """ Hidon Main Controller  """
 
-    def __init__(self,extrasignals=None):
+    def __init__(self, extrasignals=None):
         """ Iniitialization """
 
         signals = ["review", "input", "configure"]
@@ -263,10 +278,11 @@ class EternalControllerMain(HildonUiControllerMain):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self,["size_allocate"])
+        self.base.__init__(self, ["size_allocate"])
         self.spliter_trigger = True
 
     def start(self, w_tree):
+        """ Start base class """
         HildonBaseUi.start(self, w_tree)
 
     def size_allocate_cb(self, widget, user_data):
@@ -282,15 +298,23 @@ class EternalControllerMain(HildonUiControllerMain):
                 self.spliter_trigger = True
 
 class SmileControllerMain(HildonUiControllerMain):
+    """ Smile UI Main Controller """
+
     pass
 
 class SmileControllerReview(HildonUiControllerReview):
+    """ Smile UI Review Controller """
+
     pass
 
 class DraftControllerMain(HildonUiControllerMain):
+    """ Draft UI Main Controller """
+
     pass
 
 class DraftControllerReview(HildonUiControllerReview):
+    """ Draft UI Review Controller """
+
     pass
 
 

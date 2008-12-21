@@ -44,7 +44,7 @@ def ui_factory(interface=None):
     if not interface or interface == "hildon":
         try:
             theme = config()["theme_path"].split("/")[-1]
-        except:
+        except KeyError:
             theme = "eternal"
 
         from pomni import hildon_ui
