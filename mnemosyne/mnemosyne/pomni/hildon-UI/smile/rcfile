@@ -112,7 +112,7 @@ style "review-frame" {
   }
 }
 
-style "reviewwindow"
+style "mainwindow"
 {
    engine "pixmap"
       {
@@ -196,8 +196,8 @@ widget "*.answer" style "review-title-label"
 widget "*.question" style "review-title-label"
 widget "*.label_warning" style "review-title-label"
 widget "*.button_question" style "review-button"
-widget "*.notebook_windows" style "nothing"
+widget "*.switcher" style "nothing"
 widget "*.notebook_wwindows" style "warning-notebook"
-widget "WarningWindow" style "reviewwindow"
-widget "MainWindow" style "reviewwindow"
+widget "WarningWindow" style "mainwindow"
+widget "window" style "mainwindow"
 
