@@ -146,7 +146,7 @@ style "review-frame" {
   }
 }
 
-style "reviewwindow"
+style "mainwindow"
 {
    engine "pixmap"
       {
@@ -211,4 +211,4 @@ widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
-widget "window" style "reviewwindow"
+widget "window" style "mainwindow"

@@ -69,7 +69,7 @@ class HildonBaseUi():
 
         self.w_tree = None
         self.fullscreen = False
-    
+
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
 
@@ -165,6 +165,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             self.question.set_text(card.question())
 
         self.answer.set_text("")
+        for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
+            widget.set_sensitive(False)
         self.get_answer.set_sensitive(True)
         self.card = card
 
@@ -276,10 +278,20 @@ class EternalControllerMain(HildonUiControllerMain):
                 self.spliter_trigger = False
                 pseudo_medium = (widget.allocation.height - 70)/2 - 20
                 self.spliter.set_property('position', pseudo_medium)
-                print "FLASE"
             else:
                 self.spliter_trigger = True
-                print "TRUE"
+
+class SmileControllerMain(HildonUiControllerMain):
+    pass
+
+class SmileControllerReview(HildonUiControllerReview):
+    pass
+
+class DraftControllerMain(HildonUiControllerMain):
+    pass
+
+class DraftControllerReview(HildonUiControllerReview):
+    pass
 
 
 class HildonUI():
