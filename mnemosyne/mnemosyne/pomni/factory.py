@@ -52,9 +52,8 @@ def ui_factory(interface=None):
 
         review_class = getattr(hildon_ui,
             theme.capitalize() + 'ControllerReview')
-        main_class = hildon_ui.HildonUiControllerMain
-#        main_class = getattr(hildon_ui,
-#            theme.capitalize() + 'ControllerMain')
+        main_class = getattr(hildon_ui,
+            theme.capitalize() + 'ControllerMain')
 
         component_manager.register("ui_controller_main", main_class())
         component_manager.register("ui_controller_review", review_class())

@@ -143,7 +143,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.new_question()
 
     # UiControllerReview API
-    
+
     def update_dialog(self):
         """ This is part of UiControllerReview API """
         pass
@@ -264,18 +264,22 @@ class EternalControllerMain(HildonUiControllerMain):
         self.base.__init__(self,["size_allocate"])
         self.spliter_trigger = True
 
-    def size_allocate(self, widget, user_data):
+    def start(self, w_tree):
+        HildonBaseUi.start(self, w_tree)
+
+    def size_allocate_cb(self, widget, user_data):
         """ Checking window size """
 
-        if (self.notebook_windows.get_current_page() == 1):
+        if (self.switcher.get_current_page() == self.review):
             if (self.spliter_trigger):
-            # Set Spliter (GtkVpan) to pseudo medium
-                if (self.notebook_windows.get_current_page() == 1):
-                    self.spliter_trigger = False
-                    pseudo_medium = (widget.allocation.height - 70)/2 - 20
-                    self.spliter.set_property('position', pseudo_medium)
-                else:
-                    self.spliter_trigger = True
+                # Set Spliter (GtkVpan) to pseudo medium
+                self.spliter_trigger = False
+                pseudo_medium = (widget.allocation.height - 70)/2 - 20
+                self.spliter.set_property('position', pseudo_medium)
+                print "FLASE"
+            else:
+                self.spliter_trigger = True
+                print "TRUE"
 
 
 class HildonUI():
