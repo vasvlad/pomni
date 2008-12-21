@@ -8,7 +8,7 @@
     <property name="default_width">800</property>
     <property name="default_height">480</property>
     <signal name="key_press_event" handler="window_keypress"/>
-    <signal name="size_allocate" handler="on_MainWindow_size_allocate"/>
+    <signal name="size_allocate" handler="size_allocate"/>
     <signal name="window_state_event" handler="window_state"/>
     <child>
       <widget class="GtkVBox" id="vbox1">

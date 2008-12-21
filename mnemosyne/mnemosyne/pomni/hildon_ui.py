@@ -221,9 +221,14 @@ class EternalControllerReview(HildonUiControllerReview):
 class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
     """ Hidon Main Controller  """
 
-    def __init__(self):
+    def __init__(self,extrasignals=None):
+        """ Iniitialization """
 
-        HildonBaseUi.__init__(self, signals=["review", "input", "configure"])
+        signals = ["review", "input", "configure"]
+        if extrasignals:
+            signals.extend(extrasignals)
+
+        HildonBaseUi.__init__(self, signals)
         UiControllerMain.__init__(self, name="Hildon UI Main Controller")
 
         ui_controller_main().widget = self
@@ -254,16 +259,12 @@ class EternalControllerMain(HildonUiControllerMain):
 
     def __init__(self):
         """ Added spliter widget to class """
-        
+
         self.base = HildonUiControllerMain
-        self.base.__init__(self)
-        self.w_tree.signal_autoconnect({
-            "on_MainWindow_size_allocate": self.window_size_allocate
-                                        })
-        self.spliter = self.w_tree.get_widget("spliter")
+        self.base.__init__(self,["size_allocate"])
         self.spliter_trigger = True
 
-    def window_size_allocate(self, widget, user_data):
+    def size_allocate(self, widget, user_data):
         """ Checking window size """
 
         if (self.notebook_windows.get_current_page() == 1):
