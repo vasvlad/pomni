@@ -17,12 +17,15 @@ class UiControllerMain(Component):
         self.name = None
         self.description = None
         self.widget = None
+        
+    def add_cards(self):
+        raise NotImplementedError
 
     def create_new_cards(self, fact_data, card_type, grade, cat_names):
         raise NotImplementedError
 
-
-    # TODO: list calls made back to widget.
-
-    # information_box(self, message, OK_string)
-    # question_box(self, question, option0, option1, option2):
+    def file_new(self):
+        raise NotImplementedError
+    
+    def file_open(self):
+        raise NotImplementedError

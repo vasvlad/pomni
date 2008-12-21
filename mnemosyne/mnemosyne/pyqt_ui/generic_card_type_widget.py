@@ -34,15 +34,19 @@ class GenericCardTypeWdgt(QWidget):
         self.resize(QSize(QRect(0,0,325,264).size()).\
                     expandedTo(self.minimumSizeHint()))
 
+    def contains_data(self):
+        for edit_box in self.edit_boxes:
+            if unicode(edit_box.document().toPlainText()):
+                return True
+        return False
+
     def get_data(self):
         fact = {}
         for edit_box, fact_key in self.edit_boxes.iteritems():
-            text = unicode(edit_box.document().toPlainText())
-            if text:
-                fact[fact_key] = text
+            fact[fact_key] = unicode(edit_box.document().toPlainText())
         for required in self.card_type.required_fields():
-            if not required in fact.keys():
-                return None
+            if not fact[required]:
+                raise ValueError
         return fact
 
     def clear(self):

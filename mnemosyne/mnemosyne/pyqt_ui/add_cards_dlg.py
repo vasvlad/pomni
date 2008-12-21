@@ -57,14 +57,19 @@ class AddCardsDlg(QDialog, Ui_AddCardsDlg):
         #self.categories.setFont(font)
 
     def update_card_widget(self):
+        if self.card_widget:
+            self.vboxlayout.removeWidget(self.card_widget)
+            self.card_widget.close()
+            del self.card_widget
         card_type_name = unicode(self.card_types.currentText())
         card_type = self.card_type_by_name[card_type_name]
         try:
             card_type.widget = component_manager.\
                    get_current("card_type_widget",
-                               used_for=card_type.__class__.__name__)()
+                               used_for=card_type.__class__.__name__)\
+                                                       (parent=self)
         except KeyError:
-            card_type.widget = GenericCardTypeWdgt(card_type)
+            card_type.widget = GenericCardTypeWdgt(card_type, parent=self)
         self.card_widget = card_type.widget
         self.card_widget.show()
         self.vboxlayout.insertWidget(1, self.card_widget)
@@ -89,9 +94,10 @@ class AddCardsDlg(QDialog, Ui_AddCardsDlg):
         cause corruption for the current card.  The new cards will show up
         after the old queue is empty."""
 
-        fact_data = self.card_widget.get_data()
-        if fact_data is None:
-            return
+        try:
+            fact_data = self.card_widget.get_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
         cat_names = [unicode(self.categories.currentText())]
         card_type_name = unicode(self.card_types.currentText())
         card_type = self.card_type_by_name[card_type_name]
@@ -102,13 +108,14 @@ class AddCardsDlg(QDialog, Ui_AddCardsDlg):
         self.card_widget.clear()
 
     def reject(self):
-        if self.card_widget.get_data() is None:
-            QDialog.reject(self)
-            return
-        status = QMessageBox.warning(None, _("Mnemosyne"),
-                _("Abandon current card?"),
-                _("&Yes"), _("&No"), "", 1, -1)
-        if status == 0:
+        if self.card_widget.contains_data():
+            status = QMessageBox.warning(None, _("Mnemosyne"),
+                                         _("Abandon current card?"),
+                                         _("&Yes"), _("&No"), "", 1, -1)
+            if status == 0:
+                QDialog.reject(self)
+                return
+        else:
             QDialog.reject(self)
 
     def preview(self):

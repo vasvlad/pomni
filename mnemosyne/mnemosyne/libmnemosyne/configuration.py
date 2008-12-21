@@ -6,6 +6,7 @@ import random
 import os
 import sys
 import cPickle
+import locale
 
 try:
     from hashlib import md5
@@ -103,8 +104,8 @@ class Configuration(dict, Component):
     def load(self):
         try:
             config_file = file(os.path.join(self.basedir, "config"), 'rb')
-            for k,v in cPickle.load(config_file).iteritems():
-                self[k] = v
+            for key, value in cPickle.load(config_file).iteritems():
+                self[key] = value
             self.set_defaults()
         except:
             raise ConfigError(stack_trace=True)
@@ -132,12 +133,16 @@ class Configuration(dict, Component):
     def determine_basedir(self, basedir):
         self.old_basedir = None
         if basedir == None:
-            home = os.path.expanduser("~").decode(locale.getdefaultlocale()[1])
+            home = os.path.expanduser("~")
+            try:
+                home = home.decode(locale.getdefaultlocale()[1])
+            except:
+                pass
             if sys.platform == "darwin":
                 self.old_basedir = os.path.join(home, ".mnemosyne")
                 self.basedir = os.path.join(home, "Library", "Mnemosyne")
                 if not os.path.exists(self.basedir) \
-                   and os.path.exists(self._old_basedir):
+                   and os.path.exists(self.old_basedir):
                     self.migrate_basedir(self.old_basedir, self.basedir)
             else:
                 self.basedir = os.path.join(home, ".mnemosyne")
@@ -182,8 +187,7 @@ class Configuration(dict, Component):
                 for var in dir(user_config):
                     if var in self:
                         self[var] = getattr(user_config, var)
-            except Exception, exobj:
-                print 'Exception:', str(exobj)
+            except:
                 # Work around the unexplained fact that config.py cannot get 
                 # imported right after it has been created.
                 if self["first_run"] == True:
@@ -209,8 +213,8 @@ class Configuration(dict, Component):
                 user, index = last.split('_')
                 index = int(index.split('.')[0]) + 1
 
-    def migrate_basedir(old, new):
-        if os.path.islink(self, _old_basedir):
+    def migrate_basedir(self, old, new):
+        if os.path.islink(self.old_basedir):
             print "Not migrating %s to %s because " % (old, new) \
                     + "it is a symlink."
             return

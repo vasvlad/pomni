@@ -43,7 +43,6 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
         self.grade_buttons.addButton(self.grade_5_button, 5)
         self.connect(self.grade_buttons, SIGNAL("buttonClicked(int)"),\
                     self.grade_answer)
-        self.controller.new_question()
 
     def show_answer(self):
         self.controller.show_answer()
@@ -52,7 +51,7 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
         self.controller.grade_answer(grade)
 
     def set_window_title(self, title):
-        ui_controller_main().widget.setWindowTitle(title)
+        self.parent().setWindowTitle(title)
     
     def enable_edit_current_card(self, enable):
         return
@@ -82,9 +81,11 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
         self.answer.setHtml(_empty)
         
     def update_show_button(self, text, default, show_enabled):
-        self.show_button.setText(text)
-        self.show_button.setDefault(default)
         self.show_button.setEnabled(show_enabled)
+        self.show_button.setText(text)
+        self.show_button.setEnabled(show_enabled)
+        if default:
+            self.show_button.setFocus()        
 
     def question_box_visible(self, visible):
         if visible:
@@ -92,7 +93,7 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
             self.question_label.show()
         else:
             self.question.hide()
-            self.quesion_label.hide()            
+            self.quesion_label.hide()
 
     def answer_box_visible(self, visible):
         if visible:
@@ -102,31 +103,11 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
             self.answer.hide()
             self.quesion_label.hide()
 
-    # TODO: implement
-
     def grade_4_default(self, use_4):
-
-        return
-
-        # Revert to blank slate.
-        
-        self.grade_0_button.setDefault(False)
-        self.grade_4_button.setDefault(False)
-
-        self.disconnect(self.defaultAction,SIGNAL("activated()"),
-                        self.grade_0_button.animateClick)
-        
-        self.disconnect(self.defaultAction,SIGNAL("activated()"),
-                        self.grade_4_button.animateClick)
-
         if use_4:
-            self.grade_4_button.setDefault(grades_enabled)
-            self.connect(self.actionDefault,SIGNAL("activated()"),
-                         self.grade_4_button.animateClick)
+            self.grade_4_button.setFocus()
         else:
-            self.grade_0_button.setDefault(grades_enabled)
-            self.connect(self.actionDefault,SIGNAL("activated()"),
-                         self.grade_0_button.animateClick)
+            self.grade_0_button.setFocus()            
 
     def enable_grades(self, grades_enabled):
         self.grades.setEnabled(grades_enabled)
@@ -139,9 +120,6 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
         
     def set_grade_tooltip(self, grade, text):
         self.grade_buttons.button(grade).setToolTip(text)
-
-    def update_status_bar(self):
-        self.parent().update_statusbar()
   
        
             
@@ -151,6 +129,9 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
     #
     #   Contains the updating of the dialog that is not specifically
     #   handled by the UI controller.
+    #
+    #   TODO: everything here will either have to be reimplemented in a
+    #   completely different way or will become obsolete.
     #
     ##########################################################################
 
@@ -168,8 +149,6 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
 
         # Update question and answer alignment.
 
-        # TODO: reimplement as a filter, or throw out?
-
         #if get_config("left_align") == True:
         #    alignment = Qt.AlignAuto    | Qt.AlignVCenter | Qt.TextWordWrap
         #else:
@@ -177,10 +156,6 @@ class ReviewWdgt(QWidget, Ui_ReviewWdgt, ReviewWidget):
 
         #self.question.setAlignment(alignment)
         #self.answer.setAlignment(alignment)
-
-        # TODO: autoshrinking?
-        #if self.shrink == True:
-        #    self.adjustSize()
 
 # Register widget.
 

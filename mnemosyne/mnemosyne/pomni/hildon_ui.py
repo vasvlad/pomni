@@ -76,8 +76,8 @@ class HildonBaseUi():
 
     def __init__(self, signals):
 
-        self.signals = \
-         ["exit", "to_main_menu", "window_state", "window_keypress"]
+        self.signals = ["exit", "to_main_menu", "window_state", 
+                        "window_keypress"]
         if signals:
             self.signals.extend(signals)
 
@@ -174,8 +174,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         if card:
             self.question.set_text(card.question())
         else:
-            # FIXME
-#           value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
+            # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
             self.question.set_text(card.question())
 

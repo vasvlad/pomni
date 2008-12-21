@@ -25,7 +25,6 @@ from add_cards_dlg import *
 #from tip_dlg import *
 #from about_dlg import *
 from sound import * # TODO
-from message_boxes import * # TODO
 from mnemosyne.libmnemosyne import initialise_user_plugins
 from mnemosyne.libmnemosyne.stopwatch import stopwatch
 from mnemosyne.libmnemosyne.component_manager import component_manager
@@ -53,15 +52,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             initialise_user_plugins()
         except MnemosyneError, e:
-            messagebox_errors(self, e)
+            self.error_box(e)
         if filename == None:
             filename = config()["path"]
         try:
             database().load(filename)
         except MnemosyneError, e:
-            messagebox_errors(self, LoadErrorCreateTmp())
+            self.error_box(e)            
             filename = os.path.join(os.path.split(filename)[0],"___TMP___.mem")
             database().new(filename)
+        ui_controller_main().widget = self
         self.update_review_widget()
         ui_controller_review().new_question()
 
@@ -72,6 +72,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return QMessageBox.question(None, _("Mnemosyne"),
                                     question, option0, option1, option2, 0, -1)
 
+    def error_box(self, event):
+        if event.info:
+            event.msg += "\n" + event.info        
+            QMessageBox.critical(None, _("Mnemosyne"), event.msg,
+                                 _("&OK"), "", "", 0, -1)
+
+    def save_file_dialog(self, path, filter, caption=""):
+        return unicode(QFileDialog.getSaveFileName(self,caption,path,filter))
+    
+    def open_file_dialog(self, path, filter, caption=""):
+        return unicode(QFileDialog.getOpenFileName(self,caption,path,filter))
+    
     def update_review_widget(self):
         w = self.centralWidget()
         if w:
@@ -81,47 +93,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             component_manager.get_current("review_widget")(parent=self)
         self.setCentralWidget(ui_controller_review().widget)
 
-    def fileNew(self):
-        stopwatch.pause()
-        out = unicode(QFileDialog.getSaveFileName(config().get_basedir(),
-                        _("Mnemosyne databases (*.mem)"), self, None,\
-                        _("New")))
-        if out != "":
-            if out[-4:] != ".mem":
-                out += ".mem"
-            if os.path.exists(out):
-                if not queryOverwriteFile(self, out):
-                    stopwatch.unpause()
-                    return
-            unload_database()
-            self.state = "EMPTY"
-            self.card = None
-            new_database(out)
-            load_database(config()["path"])
-        self.updateDialog()
-        stopwatch.unpause()
+    def add_cards(self):
+        ui_controller_main().add_cards()
 
-    def fileOpen(self):
-        stopwatch.pause()
-        oldPath = expand_path(config()["path"])
-        out = unicode(QFileDialog.getOpenFileName(oldPath,\
-                    _("Mnemosyne databases (*.mem)"), self))
-        if out != "":
-            try:
-                unload_database()
-            except MnemosyneError, e:
-                messagebox_errors(self, e)
-            self.state = "EMPTY"
-            self.card = None
-            try:
-                load_database(out)
-            except MnemosyneError, e:
-                messagebox_errors(self, e)
-                stopwatch.unpause()
-                return
-            self.newQuestion()
-        self.updateDialog()
-        stopwatch.unpause()
+    def run_add_cards_dialog(self):
+        dlg = AddCardsDlg(self)
+        dlg.exec_()
+        
+    def file_new(self):
+        ui_controller_main().file_new()
+
+    def file_open(self):
+        ui_controller_main().file_open()
 
     def fileSave(self):
         stopwatch.pause()
@@ -180,6 +163,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         controller = ui_controller_review()
         if controller.card == None:
             controller.new_question()
+        else:
+            self.update_status_bar()
         stopwatch.unpause()
 
     def editCards(self):
@@ -191,6 +176,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.newQuestion()
         else:
             remove_from_revision_queue(self.card) # It's already being asked.
+        ui_controller_review().update_dialog(redraw_all=True)
         self.updateDialog()
         stopwatch.unpause()
 
@@ -214,7 +200,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         stopwatch.pause()
         dlg = EditCardDlg(self.card, self)
         dlg.exec_()
-        self.updateDialog()
+        ui_controller_review().update_dialog(redraw_all=True)
         stopwatch.unpause()
 
     def deleteCurrentCard(self):
@@ -230,7 +216,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if status == 0:
             delete_card(self.card)
             self.newQuestion()
-        self.updateDialog()
+        ui_controller_review().update_dialog(redraw_all=True)
         stopwatch.unpause()
 
     def activateCategories(self):
@@ -288,7 +274,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dlg.exec_()
         stopwatch.unpause()
 
-    def update_statusbar(self):
+    def update_status_bar(self, message=None):
         db = database()
         self.sched.setText(_("Scheduled: ") + \
                            str(db.scheduled_count()) + " ")
@@ -296,3 +282,5 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             str(db.non_memorised_count()) + " ")
         self.all.setText(_("All: ") \
                          + str(db.active_count()) + " ")
+        if message:
+            self.statusBar().showMessage(message)

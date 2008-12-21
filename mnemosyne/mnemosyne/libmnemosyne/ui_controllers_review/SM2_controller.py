@@ -10,6 +10,7 @@ _ = gettext.gettext
 from mnemosyne.libmnemosyne.stopwatch import stopwatch
 from mnemosyne.libmnemosyne.component_manager import database, config
 from mnemosyne.libmnemosyne.component_manager import scheduler
+from mnemosyne.libmnemosyne.component_manager import ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
 
@@ -45,6 +46,10 @@ class SM2Controller(UiControllerReview):
     def __init__(self):
         UiControllerReview.__init__(self, name="SM2 Controller")
 
+    def clear(self):
+        self.state = "EMPTY"
+        self.card = None        
+
     def new_question(self, learn_ahead=False):
         if database().card_count() == 0:
             self.state = "EMPTY"
@@ -67,14 +72,11 @@ class SM2Controller(UiControllerReview):
         self.update_dialog()
 
     def grade_answer(self, grade):
-        # TODO: optimise by displaying new question before grading the
-        # answer, provided the queue contains at least one card.
         interval = scheduler().process_answer(self.card, grade)
         self.new_question()
-        # TODO: implement hidden feature?
-        #if config()["show_intervals"] == "statusbar":
-        #    self.statusBar().message(_("Returns in") + " " + \
-        #          str(interval) + _(" day(s)."))
+        if config()["show_intervals"] == "statusbar":
+            self.widget.update_sta(_("Returns in") + " " + \
+                  str(interval) + _(" day(s)."))
         
     def next_rep_string(self, days):
         if days == 0:
@@ -84,7 +86,7 @@ class SM2Controller(UiControllerReview):
         else:
             return '\n' + _("Next repetition in ") + str(days) + _(" days.")
                    
-    def update_dialog(self):
+    def update_dialog(self, redraw_all=False):
         w = self.widget
         # Update title.
         database_name = os.path.basename(config()["path"])[:-4]
@@ -121,13 +123,10 @@ class SM2Controller(UiControllerReview):
             for c in self.card.fact.cat:
                 question_label_text += " " + c.name
         w.set_question_label(question_label_text)
-        # TODO: optimisation to make sure that this does not run several
-        # times during card display. People expect there custom filters
-        # to run only once if they have side effects...
         # Update question content.
         if self.card == None:
             w.clear_question()
-        else:
+        elif self.state == "SELECT SHOW" or redraw_all == True:
             w.set_question(self.card.question())
         # Update answer content.
         if self.card == None or self.state == "SELECT SHOW":
@@ -156,8 +155,9 @@ class SM2Controller(UiControllerReview):
         else:
             i = 1 # Retention phase.
             default_4 = True
-        w.grade_4_default(default_4)
         w.enable_grades(grades_enabled)
+        if grades_enabled:
+            w.grade_4_default(default_4)            
         # Tooltips and texts for the grade buttons.
         for grade in range(0,6):
             # Tooltip.
@@ -180,8 +180,8 @@ class SM2Controller(UiControllerReview):
             # TODO: accelerator update needed?
             #self.grade_buttons[grade].setAccel(QKeySequence(str(grade)))
         # Update status bar.
-        w.update_status_bar()
+        ui_controller_main().widget.update_status_bar()
         # Run possible update code that independent of the controller state.
-        # TODO: needed?
+        # TODO: remove when migration is complete.
         w.update_dialog()
 

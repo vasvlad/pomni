@@ -8,7 +8,11 @@ _ = gettext.gettext
 import copy
 
 from mnemosyne.libmnemosyne.fact import Fact
-from mnemosyne.libmnemosyne.component_manager import database
+from mnemosyne.libmnemosyne.utils import expand_path
+from mnemosyne.libmnemosyne.stopwatch import stopwatch
+from mnemosyne.libmnemosyne.exceptions import MnemosyneError
+from mnemosyne.libmnemosyne.component_manager import database, config
+from mnemosyne.libmnemosyne.component_manager import ui_controller_review
 from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 
@@ -16,6 +20,16 @@ class DefaultMainController(UiControllerMain):
 
     def __init__(self):
         UiControllerMain.__init__(self, name="Default main Controller")
+
+    def add_cards(self):
+        stopwatch.pause()
+        self.widget.run_add_cards_dialog()
+        review_controller = ui_controller_review()
+        if review_controller.card == None:
+            review_controller.new_question()
+        else:
+            self.widget.update_status_bar()
+        stopwatch.unpause()
 
     def create_new_cards(self, fact_data, card_type, grade, cat_names):
 
@@ -51,4 +65,46 @@ class DefaultMainController(UiControllerMain):
                 return
         db.add_fact(fact)
         card_type.create_related_cards(fact, grade)
+
+    def file_new(self):
+        stopwatch.pause()
+        out = self.widget.save_file_dialog(path=config().basedir,
+                            filter=_("Mnemosyne databases (*.mem)"),
+                            caption=_("New"))
+        if not out:
+            stopwatch.unpause()
+            return
+        if not out.endswith(".mem"):
+            out += ".mem"
+        db = database()
+        db.unload()
+        db.new(out)
+        db.load(config()["path"])
+        ui_controller_review().clear()
+        ui_controller_review().update_dialog()
+        stopwatch.unpause()
+
+    def file_open(self):
+        stopwatch.pause()
+        old_path = expand_path(config()["path"])
+        out = self.widget.open_file_dialog(path=old_path,
+                            filter=_("Mnemosyne databases (*.mem)"))
+        if not out:
+            stopwatch.unpause()
+            return
+        try:
+            database().unload()
+        except MnemosyneError, e:
+            self.widget.error_box(e)
+            stopwatch.unpause()
+            return            
+        ui_controller_review().clear()
+        try:
+                database().load(out)
+        except MnemosyneError, e:
+            self.widget.error_box(e)
+            stopwatch.unpause()
+            return
+        ui_controller_review().new_question()
+        stopwatch.unpause()
 

@@ -92,6 +92,16 @@
       </layout>
      </item>
      <item>
+      <widget class="QPushButton" name="show_button" >
+       <property name="text" >
+        <string>Show &amp;answer</string>
+       </property>
+       <property name="autoDefault" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QGroupBox" name="grades" >
        <property name="title" >
         <string>Grade your answer:</string>
@@ -109,6 +119,9 @@
             </property>
             <property name="shortcut" >
              <string>0</string>
+            </property>
+            <property name="autoDefault" >
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -157,8 +170,11 @@
             <property name="shortcut" >
              <string>4</string>
             </property>
-            <property name="default" >
+            <property name="autoDefault" >
              <bool>true</bool>
+            </property>
+            <property name="default" >
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -175,13 +191,6 @@
          </layout>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="show_button" >
-       <property name="text" >
-        <string>Show &amp;answer</string>
-       </property>
       </widget>
      </item>
     </layout>
