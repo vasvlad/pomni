@@ -198,6 +198,6 @@ widget "*.label_warning" style "review-title-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.notebook_wwindows" style "warning-notebook"
-widget "WarningWindow" style "mainwindow"
+widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
 

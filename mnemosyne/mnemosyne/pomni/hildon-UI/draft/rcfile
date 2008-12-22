@@ -188,6 +188,27 @@ style "nothing"
   }
 }
 
+style "warning-notebook"
+{
+  GtkNotebook::inner_left_border = 0
+  GtkNotebook::inner_right_border = 0
+  GtkNotebook::tab-overlap = 0
+  GtkNotebook::arrow-spacing = 6
+  GtkNotebook::label-padding = 2
+
+  # Themings for images on different sides of the notebook.
+  engine "pixmap"
+  {
+    image
+      {
+        function = BOX
+	detail   = "notebook"
+          file = "warning_window.png"
+          border = {30, 30, 75, 75}
+      }
+  }
+}
+
 
 
 widget "*.button_answer" style "review-button"
@@ -198,4 +219,7 @@ widget "*.button_question" style "review-button"
 widget "*.notebook_button" style "review-button-background"
 widget "*.notebook_qa" style "review-qabutton-background"
 widget "*.switcher" style "nothing"
+widget "*.label_warning" style "review-question-label"
+widget "*.notebook_wwindows" style "nothing"
+widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"

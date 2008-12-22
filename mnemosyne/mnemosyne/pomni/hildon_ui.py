@@ -43,7 +43,7 @@ class HildonUiControllerException(Exception):
     def __init__(self,  w_tree, exception):
         """ Show Warning Window """
 
-        self.warning_window = w_tree.get_widget("WarningWindow")
+        self.warning_window = w_tree.get_widget("warningwindow")
         warning_label = w_tree.get_widget("label_warning")
         self.signals = ["close"]
         # connect signals to methods
@@ -65,7 +65,6 @@ class HildonUiControllerException(Exception):
 
     def close_cb(self, widget, event):
         """ Close Warning Window """
-
         self.warning_window.hide()
 
 class HildonBaseUi():
