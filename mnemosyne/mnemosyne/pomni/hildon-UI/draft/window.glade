@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Dec 22 12:13:57 2008 -->
+<!--Generated with glade3 3.4.5 on Mon Dec 22 21:19:06 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -634,18 +634,23 @@
                   <widget class="GtkVBox" id="vbox9">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkButton" id="ok">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Ok</property>
-                        <property name="response_id">0</property>
-                        <signal name="enter" handler="close"/>
-                        <signal name="clicked" handler="close"/>
-                      </widget>
+                      <placeholder/>
                     </child>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkEventBox" id="eventbox1">
+                        <property name="visible">True</property>
+                        <signal name="button_press_event" handler="close"/>
+                        <signal name="key_press_event" handler="close"/>
+                        <child>
+                          <widget class="GtkLabel" id="label_ok">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Ok</property>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                     <child>
                       <placeholder/>
