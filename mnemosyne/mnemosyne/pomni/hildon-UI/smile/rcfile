@@ -112,7 +112,7 @@ style "review-frame" {
   }
 }
 
-style "reviewwindow"
+style "mainwindow"
 {
    engine "pixmap"
       {
@@ -126,6 +126,22 @@ style "reviewwindow"
      }
  }
 
+style "warningwindow"
+{
+   engine "pixmap"
+      {
+        image
+         {
+          function = FLAT_BOX
+          file = "warning_window.png"
+          border = {30, 30, 75, 75}
+          detail = "base"
+          }
+
+     }
+ }
+
+
 style "nothing"
 {
   GtkNotebook::inner_left_border = 0
@@ -135,7 +151,7 @@ style "nothing"
   GtkNotebook::label-padding = 2
 
   # Themings for images on different sides of the notebook.
-  engine "sapwood"
+  engine "pixmap"
   {
     image
       {
@@ -143,6 +159,27 @@ style "nothing"
 	detail   = "notebook"
         border   = { 0, 0, 0, 0 }
         file     = "nothing.png"
+      }
+  }
+}
+
+style "warning-notebook"
+{
+  GtkNotebook::inner_left_border = 0
+  GtkNotebook::inner_right_border = 0
+  GtkNotebook::tab-overlap = 0
+  GtkNotebook::arrow-spacing = 6
+  GtkNotebook::label-padding = 2
+
+  # Themings for images on different sides of the notebook.
+  engine "pixmap"
+  {
+    image
+      {
+        function = BOX
+	detail   = "notebook"
+          file = "warning_window.png"
+          border = {30, 30, 75, 75}
       }
   }
 }
@@ -157,6 +194,10 @@ widget "*.answer_title" style "review-title-label"
 widget "*.question_title" style "review-title-label"
 widget "*.answer" style "review-title-label"
 widget "*.question" style "review-title-label"
+widget "*.label_warning" style "review-title-label"
 widget "*.button_question" style "review-button"
-widget "*.notebook_windows" style "nothing"
-widget "MainWindow" style "reviewwindow"
+widget "*.switcher" style "nothing"
+widget "*.notebook_wwindows" style "warning-notebook"
+widget "WarningWindow" style "mainwindow"
+widget "window" style "mainwindow"
+

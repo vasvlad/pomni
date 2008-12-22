@@ -146,7 +146,7 @@ style "review-frame" {
   }
 }
 
-style "reviewwindow"
+style "mainwindow"
 {
    engine "pixmap"
       {
@@ -169,7 +169,7 @@ style "nothing"
   GtkNotebook::label-padding = 2
 
   # Themings for images on different sides of the notebook.
-  engine "sapwood"
+  engine "pixmap"
   {
     image
       {
@@ -182,6 +182,23 @@ style "nothing"
 }
 
 
+style "spliter-paned"  {
+
+    GtkPaned::handle_size = 1
+
+    engine "pixmap"
+    {
+        image
+        {
+            function    = HANDLE
+            file        = "nothing.png"
+            overlay_file= "nothing.png"
+            orientation = HORIZONTAL
+            border      = {0,0,0,0}
+            overlay_stretch = FALSE
+        }
+    }
+}
 
 
 
@@ -192,5 +209,6 @@ widget "*.answer" style "review-question-label"
 widget "*.getanswer" style "review-getanswer-label"
 widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
-widget "*.notebook_windows" style "nothing"
-widget "MainWindow" style "reviewwindow"
+widget "*.switcher" style "nothing"
+widget "*.spliter" style "spliter-paned"
+widget "window" style "mainwindow"

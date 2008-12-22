@@ -37,10 +37,36 @@ from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 _ = gettext.gettext
 
-class HildonUiControllerException(Exception): 
+class HildonUiControllerException(Exception):
     """ Exception hook """
 
-    pass
+    def __init__(self,  w_tree, exception):
+        """ Show Warning Window """
+
+        self.warning_window = w_tree.get_widget("WarningWindow")
+        warning_label = w_tree.get_widget("label_warning")
+        self.signals = ["close"]
+        # connect signals to methods
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in self.signals]))
+        # Show warning text
+        warning_label.set_text(exception)
+        self.warning_window.show()
+
+        Exception.__init__(self)
+
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
+
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
+
+    def close_cb(self, widget, event):
+        """ Close Warning Window """
+
+        self.warning_window.hide()
 
 class HildonBaseUi():
     """ Base Hildon UI functionality """
@@ -57,7 +83,7 @@ class HildonBaseUi():
 
         self.w_tree = None
         self.fullscreen = False
-    
+
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
 
@@ -131,7 +157,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.new_question()
 
     # UiControllerReview API
-    
+
     def update_dialog(self):
         """ This is part of UiControllerReview API """
         pass
@@ -140,7 +166,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Create new question """
 
         if not database().card_count():
-            raise HildonUiControllerException(_("Database is empty"))
+            raise HildonUiControllerException(self.w_tree, \
+                _("Database is empty"))
 
         card = scheduler().get_new_question(False)
 
@@ -152,6 +179,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             self.question.set_text(card.question())
 
         self.answer.set_text("")
+        for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
+            widget.set_sensitive(False)
         self.get_answer.set_sensitive(True)
         self.card = card
 
@@ -179,8 +208,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     def grade_cb(self, widget, event):
         """ Call grade of answer """
 
-        if event.type == gtk.gdk.BUTTON_PRESS:
-            self.grade_answer(int(widget.name[-1]))
+        self.grade_answer(int(widget.name[-1]))
 
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
@@ -209,9 +237,14 @@ class EternalControllerReview(HildonUiControllerReview):
 class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
     """ Hidon Main Controller  """
 
-    def __init__(self):
+    def __init__(self, extrasignals=None):
+        """ Iniitialization """
 
-        HildonBaseUi.__init__(self, signals=["review", "input", "configure"])
+        signals = ["review", "input", "configure"]
+        if extrasignals:
+            signals.extend(extrasignals)
+
+        HildonBaseUi.__init__(self, signals)
         UiControllerMain.__init__(self, name="Hildon UI Main Controller")
 
         ui_controller_main().widget = self
@@ -237,6 +270,53 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         raise NotImplemented(widget)
 
+class EternalControllerMain(HildonUiControllerMain):
+    """ Eternal UI Main Controller """
+
+    def __init__(self):
+        """ Added spliter widget to class """
+
+        self.base = HildonUiControllerMain
+        self.base.__init__(self, ["size_allocate"])
+        self.spliter_trigger = True
+
+    def start(self, w_tree):
+        """ Start base class """
+        HildonBaseUi.start(self, w_tree)
+
+    def size_allocate_cb(self, widget, user_data):
+        """ Checking window size """
+
+        if (self.switcher.get_current_page() == self.review):
+            if (self.spliter_trigger):
+                # Set Spliter (GtkVpan) to pseudo medium
+                self.spliter_trigger = False
+                pseudo_medium = (widget.allocation.height - 70)/2 - 20
+                self.spliter.set_property('position', pseudo_medium)
+            else:
+                self.spliter_trigger = True
+
+class SmileControllerMain(HildonUiControllerMain):
+    """ Smile UI Main Controller """
+
+    pass
+
+class SmileControllerReview(HildonUiControllerReview):
+    """ Smile UI Review Controller """
+
+    pass
+
+class DraftControllerMain(HildonUiControllerMain):
+    """ Draft UI Main Controller """
+
+    pass
+
+class DraftControllerReview(HildonUiControllerReview):
+    """ Draft UI Review Controller """
+
+    pass
+
+
 class HildonUI():
     """ Hildon UI """
 
@@ -248,8 +328,8 @@ class HildonUI():
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
                                                  "window.glade"))
     def start(self, mode):
-        """ Start UI """
-       
+        """ Start UI  """
+
         globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
