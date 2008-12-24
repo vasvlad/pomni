@@ -26,7 +26,7 @@ class Database(Component):
     def backup(self):
         raise NotImplementedError
 
-    def load(self):
+    def load(self, fname):
         raise NotImplementedError
 
     def unload(self):
@@ -86,6 +86,9 @@ class Database(Component):
         
     # Queries.
 
+    def category_names(self):
+        raise NotImplementedError
+
     def has_fact_with_data(self, fact_data):
         raise NotImplementedError
 
@@ -104,7 +107,7 @@ class Database(Component):
     def non_memorised_count(self):
         raise NotImplementedError
 
-    def scheduled_count(self):
+    def scheduled_count(self, days=0):
         raise NotImplementedError
 
     def active_count(self):
