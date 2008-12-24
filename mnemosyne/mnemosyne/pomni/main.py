@@ -51,7 +51,7 @@ def parse_commandline(argv):
     parser.add_option("-u", "--ui", help="ui type", default="hildon")
     parser.add_option("-b", "--backend", help="storage backend")
     parser.add_option("-d", "--datadir", help="data directory")
-    parser.add_option("--mode", default='main', help="working mode. "\
+    parser.add_option("-m", "--mode", default='main', help="working mode. "\
                       "'main', 'input', 'review' or 'conf'")
 
     return parser.parse_args(argv)
@@ -73,7 +73,6 @@ def main(argv):
 
     cdatabase = database()
     db_name = os.path.join(basedir, config()['path'])
-
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 
