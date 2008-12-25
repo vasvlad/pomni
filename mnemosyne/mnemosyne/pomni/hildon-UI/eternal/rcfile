@@ -110,6 +110,19 @@ style "getanswerarea-button" {
 
 
 
+style "question_answer_frame" {
+  xthickness = 8
+  ythickness = 8
+  
+  engine "pixmap" {
+    image {
+	function = BOX
+	file     = "textarea.png"
+	border   = { 8, 8, 8, 8 }
+    }
+  }
+}
+
 style "review-title-label" {
 	font_name = "Nokia Sans 16.0"
 	fg[NORMAL] = "#c2c1bf"
@@ -130,21 +143,6 @@ style "review-getanswer-label" {
 	fg[NORMAL] = "#FFFFFF"
 }
 
-# Normal Button styles:
-style "review-frame" {
-
-  engine "pixmap" {
-
-    image
-         {
-          function = FLAT_BOX
-	file     = "textarea.png"
-  	border   = { 8, 8, 8, 8 }
-
-          }
-
-  }
-}
 
 style "mainwindow"
 {
@@ -232,8 +230,13 @@ widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
+widget "*.answer_frame" style "question_answer_frame"
+widget "*.question_frame" style "question_answer_frame"
+widget "*.category_label" style "review-title-label"
 widget "*.label_warning" style "review-question-label"
 widget "*.label_ok" style "review-question-label"
 widget "*.notebook_wwindows" style "nothing"
 widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
+
+
