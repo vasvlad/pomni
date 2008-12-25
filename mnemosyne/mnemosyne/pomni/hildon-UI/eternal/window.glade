@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Dec 25 20:02:55 2008 -->
+<!--Generated with glade3 3.4.5 on Thu Dec 25 20:24:21 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -16,7 +16,6 @@
         <child>
           <widget class="GtkNotebook" id="switcher">
             <property name="visible">True</property>
-            <property name="show_tabs">False</property>
             <property name="tab_border">0</property>
             <property name="tab_hborder">0</property>
             <property name="tab_vborder">1</property>
@@ -613,12 +612,9 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="button1">
+                  <widget class="GtkEntry" id="entry1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">button</property>
-                    <property name="response_id">0</property>
                   </widget>
                   <packing>
                     <property name="position">3</property>
@@ -636,12 +632,9 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="button2">
+                  <widget class="GtkEntry" id="entry2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">button</property>
-                    <property name="response_id">0</property>
                   </widget>
                   <packing>
                     <property name="position">5</property>

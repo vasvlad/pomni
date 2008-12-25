@@ -359,6 +359,10 @@ class HildonUI():
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         self.w_tree = gtk.glade.XML(os.path.join(theme_path,
                                                  "window.glade"))
+        # Set unvisible tabs of switcher
+        switcher = self.w_tree.get_widget("switcher")
+        switcher.set_property('show_tabs', False)
+
     def start(self, mode):
         """ Start UI  """
 
