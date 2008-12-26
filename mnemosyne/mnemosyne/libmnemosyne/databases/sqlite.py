@@ -2,8 +2,11 @@
 # vim: sw=4 ts=4 expandtab ai
 #
 # sqlite.py 
+#
 # Author: Ed Bartosh <bartosh@gmail.com>
 #
+
+""" Sqlite backend """
 
 from datetime import datetime
 import sqlite3 as sqlite
@@ -13,6 +16,9 @@ from mnemosyne.libmnemosyne.utils import expand_path
 from mnemosyne.libmnemosyne.component_manager import config, log
 from mnemosyne.libmnemosyne.database import Database
 from mnemosyne.libmnemosyne.category import Category
+from mnemosyne.libmnemosyne.fact import Fact
+from mnemosyne.libmnemosyne.card import Card
+from mnemosyne.libmnemosyne.fact_view import FactView
 
 class Sqlite(Database):
 
@@ -26,6 +32,7 @@ class Sqlite(Database):
         self.start_date = None
         self.load_failed = False
         self.start_date = None
+        self.filter = ""
 
     @property
     def connection(self):
@@ -33,7 +40,7 @@ class Sqlite(Database):
         
         if not self._connection:
             self._connection = sqlite.connect(self.path, 
-            detect_types=sqlite.PARSE_DECLTYPES|sqlite.PARSE_COLNAMES)
+                detect_types=sqlite.PARSE_DECLTYPES|sqlite.PARSE_COLNAMES)
             self._connection.row_factory = sqlite.Row
         
         return self._connection
@@ -50,7 +57,7 @@ class Sqlite(Database):
         config()["path"] = path
         log().new_database()
 
-        self.connection.executescript('''
+        self.connection.executescript("""
             create table facts(
                 id integer primary key, 
                 guid int default 0, 
@@ -69,19 +76,19 @@ class Sqlite(Database):
             create table facttypes(
                 id integer primary key,
                 name varchar(20) UNIQUE NOT NULL,
-                enabled default TRUE
+                enabled default 1
             );
 
             create table views(
-                id integer primary key,
+                id,
                 facttype_id int,
                 name varchar(20) UNIQUE NOT NULL,
-                enabled boolean default TRUE
+                enabled boolean default 1
             );
 
             create table reviewstats(
-                id integer primary key,
-                fact_id int, 
+                id,
+                fact_id int,
                 view_id int, 
                 grade int,
                 easiness int,
@@ -95,7 +102,7 @@ class Sqlite(Database):
                 id integer primary key, 
                 parent_id int default 0, 
                 name varchar(20) UNIQUE NOT NULL, 
-                enabled boolean default TRUE
+                enabled boolean default 1
             );
 
             create table fact_categories(
@@ -117,11 +124,11 @@ class Sqlite(Database):
                 key, 
                 value
             );
-        ''')
+        """)
 
         # save start_date as a string. Object StartDate can't be stored
         self.connection.execute("insert into meta(key, value) values(?,?)", 
-        ('start_date', datetime.strftime(self.start_date.start, 
+        ("start_date", datetime.strftime(self.start_date.start, 
                                          '%Y-%m-%d %H:%M:%S')))
 
         self.save()
@@ -146,11 +153,11 @@ class Sqlite(Database):
 
         self.path = expand_path(fname, config().basedir)
         try:
-            res = self.connection.execute('select value from meta where key=?',
-                ('start_date',)).fetchone()
+            res = self.connection.execute("select value from meta where key=?",
+                ("start_date",)).fetchone()
             self.load_failed = False
-            self.set_start_date(StartDate(datetime.strptime(res['value'], 
-                '%Y-%m-%d %H:%M:%S')))
+            self.set_start_date(StartDate(datetime.strptime(res["value"], 
+                "%Y-%m-%d %H:%M:%S")))
             self.load_failed = False
         except sqlite.OperationalError:
             self.load_failed = True
@@ -169,6 +176,59 @@ class Sqlite(Database):
 
         return bool(self._connection)
 
+    # Get objects from the database
+
+    def get_view(self, view_id):
+        """ Get view object by id """
+
+        res = self.connection.execute("select name from views where id=?",
+            (view_id,)).fetchone()
+
+        fact_view = FactView(view_id, res["name"])
+
+        # FIXME: get rid of hardcoded attributes
+        fact_view.q_fields = ["a"]
+        fact_view.a_fields = ["q"]
+        fact_view.required_fields = ["a"]
+
+        return fact_view
+
+    def get_fact(self, guid=None, fact_id=None):
+        """ Get fact object by guid """
+
+        # Get fact by id or guid
+        if guid:
+            res = self.connection.execute("select * from facts where guid=?",
+                (guid,)).fetchone()
+        elif fact_id:
+            res = self.connection.execute("select * from facts where id=?",
+                            (fact_id,)).fetchone()
+        else:
+            raise RuntimeError("get_fact: No guid nor fact_id provided")
+        
+        # Get fact data by fact id
+        cursor = self.connection.execute("""select * from factdata 
+            where fact_id=?""", (res["id"],))
+
+        data = dict([(item["key"], item["value"]) for item in cursor])
+
+        # FIXME: how to get card_type and categories?
+        categories = []
+        card_type = None
+        return Fact(data, card_type, categories, uid=res['guid'], 
+            added=res['ctime'])
+
+    @staticmethod
+    def get_card(fact, view, sql_res):
+        """ Get card object from fact, view and query result """
+
+        card = Card(fact, view)
+        for attr in ("id", "grade", "easiness", "acq_reps",
+                     "acq_reps_since_lapse", "last_rep", "next_rep"):
+            setattr(card, attr, sql_res[attr])
+
+        return card
+
     # Start date.
 
     def set_start_date(self, start_date_obj):
@@ -180,81 +240,122 @@ class Sqlite(Database):
     # Adding, modifying and deleting categories, facts and cards.
 
     def add_category(self, category):
-        raise NotImplementedError
-    
-    def modify_category(self, modified_category):
-        raise NotImplementedError
+        """ Add new category """
 
+        self.connection.execute("insert into categories(name) values(?)", 
+            (category.name,))
+    
     def delete_category(self, category):
-        raise NotImplementedError
+        """ Delete category """
+
+        self.connection.execute("delete from categories were name=?",
+            (category.name,))
 
     def get_or_create_category_with_name(self, name):
         """ Try to get category from the database
             create if not found
         """
 
-        category = self.connection.execute('''select *
-            from categories where name=?''', (name,)).fetchone()
+        category = self.connection.execute("""select *
+            from categories where name=?""", (name,)).fetchone()
         if category:
             return Category(category[0])
        
-        self.connection.execute('''insert into categories(name)
-            values(?)''', (name,))
+        self.connection.execute("""insert into categories(name)
+            values(?)""", (name,))
         self.connection.commit()
 
         return Category(name)
-
-    def remove_category_if_unused(self, cat):
-        raise NotImplementedError
 
     def add_fact(self, fact):
         """ Add new fact """
 
         # Add record into fact types if needed
-        if self.connection.execute('''select count() from facttypes where
-            name=?''', (fact.card_type.name,)).fetchone()[0] != 0:
+        if self.connection.execute("""select count() from facttypes where
+            name=?""", (fact.card_type.name,)).fetchone()[0] == 0:
             self.connection.execute('insert into facttypes(name) values(?)',
                 (fact.card_type.name,))
 
         # Add fact to facts and factdata tables
-        fid = self.connection.execute('''insert into facts(guid, facttype_id,
-            ctime) values(?,?,?)''', (fact.uid, fact.card_type.id,
+        fact_id = self.connection.execute("""insert into facts(guid, facttype_id,
+            ctime) values(?,?,?)""", (fact.uid, fact.card_type.id,
             fact.added)).lastrowid
 
-        self.connection.execute('''insert into factdata(fact_id,key,value)
-            values(?,?,?)''', (fid, fact['q'], fact['a']))
+        self.connection.executemany("""insert into factdata(fact_id,key,value)
+            values(?,?,?)""", ((fact_id, key, value) 
+                for key, value in fact.data.items()))
+
+        # Link fact to its categories
+        for cat in fact.cat:
+            print ">>>>", cat.name
+            cat_id = self.connection.execute("""select id from categories 
+                where name=?""", (cat.name,)).fetchone()[0]
+            self.connection.execute('''insert into fact_categories(category_id,
+                fact_id) values(?,?)''', (fact.uid, cat_id))
 
         self.connection.commit()
 
     def update_fact(self, fact):
-        raise NotImplementedError
+        """ Update fact """
+
+        # update factdata
+        self.connection.executemany("""update factdata set value=?
+            where fact_id=? and key=?""", ((value, fact.uid, key) 
+                for key, value in fact.data.items()))
         
+        # update timestamp
+        self.connection.execute("update facts set mtime=? where guid=?",
+            (datetime.now(), fact.uid))
+
     def add_fact_view(self, fact_view):
-        raise NotImplementedError
+        """ Add new view and facttype (if needed) """
+
+        # FIXME: where to get facttype_id from ?
+        self.connection.execute("""insert into views(id, facttype_id, name)
+            values(?,?,?)""", (fact_view.id, 0, fact_view.name))
 
     def update_fact_view(self, fact_view):
-        raise NotImplementedError
+        """ Update view """
+
+        self.connection.execute("update views set name=? where id=?", 
+            (fact_view.name, fact_view.id))
 
     def add_card(self, card):
         """ Add new card """
 
-        self.connection.execute('''insert into reviewstats(fact_id, view_id,
-           grade, easiness, acq_reps, acq_reps_since_lapse, last_rep, next_rep)
-           values(?,?,?,?,?,?,?,?)''', (card.fact.uid, card.fact_view.id, 
-           card.grade, card.easiness, card.acq_reps, card.acq_reps_since_lapse,
-           card.last_rep, card.next_rep))
+        self.connection.execute("""insert into reviewstats(id, fact_id, 
+            view_id, grade, easiness, acq_reps, acq_reps_since_lapse, last_rep,
+            next_rep) values(?,?,?,?,?,?,?,?,?)""", (card.id, card.fact.uid, 
+            card.fact_view.id, card.grade, card.easiness, card.acq_reps,
+            card.acq_reps_since_lapse, card.last_rep, card.next_rep))
 
         log().new_card(card)
 
     def update_card(self, card):
-        raise NotImplementedError
+        """ Update card """
         
+        self.connection.execute("""update reviewstats set grade=?, easiness=?,
+            acq_reps=?, acq_reps_since_lapse=?, last_rep=?, next_rep=? 
+            where id=?""", (card.grade, card.easiness, card.acq_reps, 
+            card.acq_reps_since_lapse, card.last_rep, card.next_rep, card.id))
+
     def cards_from_fact(self, fact):
-        raise NotImplementedError
-        
+       
+        cursor = self.connection.execute("""select * from reviewstats
+            where fact_id=?""", (fact.uid,))
+
+        return (self.get_card(fact, self.get_view(res['view_id']), res)
+            for res in cursor)
+
     def delete_fact_and_related_cards(self, fact):
-        raise NotImplementedError
-        
+        """ delete fact and all relations to it """
+
+        for table in ("reviewstats", "factdata"):
+            self.connection.execute("delete from %s where fact_id=?" % table,
+                (fact.uid,))
+        self.connection.execute("delete from facts were guid=?",
+                    (fact.uid,))
+
     # Queries.
 
     def category_names(self):
@@ -264,24 +365,28 @@ class Sqlite(Database):
             self.connection.execute("select name from categories"))
 
     def has_fact_with_data(self, fact_data):
-        return bool(self.connection.execute('''select count() from factdata
-            where key=? and value=?;''', 
+        return bool(self.connection.execute("""select count() from factdata
+            where key=? and value=?;""",
             (fact_data['q'], fact_data['a'])).fetchone()[0])
 
     def duplicates_for_fact(self, fact):
-        """Return list of facts which have the same unique key."""
+        """ Return list of facts with the same key """
 
         # find duplicate fact data
-        result = self.connection.execute('''select * from factdata where
-            key=? and value=?''', (fact['q'], fact['a'])).fetchall()
-
-        # FIXME: filter out other categories for found fact ids
-
         duplicates = []
+        for key in fact.data:
+            for res in self.connection.execute("""select * from factdata
+                where key=?""", (key,)):
+                
+                # FIXME: filter out other categories for found fact ids
+                duplicates.append(self.get_fact(fact_id=res['fact_id']))
+        # FIXME: remove this
+        return []
         return duplicates
 
     def fact_count(self):
-        raise NotImplementedError
+        return self.connection.execute(
+            "select count() from facts").fetchone()[0]
 
     def card_count(self):
         return self.connection.execute("select count() from reviews").\
@@ -317,16 +422,26 @@ class Sqlite(Database):
  
     # Filter is a SQL filter, used e.g. to filter out inactive categories.
 
-    def set_filter(self, filter):
-        raise NotImplementedError
+    def set_filter(self, attr):
+        """ Set filter for category attribute. 
+            See below methods for details 
+        """
 
-    # The following functions should return an iterator, in order to 
-    # save memory. sort_key is an attribute of card to be used for sorting.
-    # (Note that this is different from the sort key used to sort lists in
-    # the Python itself, in order to allow easier interfacing with SQL.)
+        self.filter = attr
 
     def cards_due_for_ret_rep(self, sort_key=""):
-        raise NotImplementedError
+        """ Generate cards due for repetition """
+
+        if not sort_key:
+            sort_key = 'id'
+
+        for res in self.connection.execute("""select * from reviewstats 
+            where grade >=2 and next_rep <= ? order by %s""" % sort_key, 
+            (self.start_date.days_since_start())):
+            card = self.get_card(self.get_fact(res["fact_id"]), 
+                self.get_view(res["view_id"]), res)
+            # FIXME: set card attributes here if needed
+            yield card
 
     def cards_due_for_final_review(self, grade, sort_key=""):
         raise NotImplementedError
