@@ -9,7 +9,7 @@ from datetime import datetime
 import sqlite3 as sqlite
 
 from mnemosyne.libmnemosyne.start_date import StartDate
-from mnemosyne.libmnemosyne.utils import expand_path, contract_path
+from mnemosyne.libmnemosyne.utils import expand_path
 from mnemosyne.libmnemosyne.component_manager import config, log
 from mnemosyne.libmnemosyne.database import Database
 from mnemosyne.libmnemosyne.category import Category
@@ -46,7 +46,7 @@ class Sqlite(Database):
         if self.is_loaded():
             self.unload()
 
-        self.start_date=StartDate()
+        self.start_date = StartDate()
         config()["path"] = path
         log().new_database()
 
@@ -152,7 +152,7 @@ class Sqlite(Database):
             self.set_start_date(StartDate(datetime.strptime(res['value'], 
                 '%Y-%m-%d %H:%M:%S')))
             self.load_failed = False
-        except sqlite.OperationalError, exobj:
+        except sqlite.OperationalError:
             self.load_failed = True
  
     def unload(self):
@@ -208,9 +208,7 @@ class Sqlite(Database):
         raise NotImplementedError
 
     def add_fact(self, fact):
-        print ">>> fact:", fact.data, fact.card_type, fact.added, fact.cat, fact.uid
-        ct = fact.card_type
-        print ">>> fact card_type:", ct.id, ct.name, ct.fact_views
+        """ Add new fact """
 
         # Add record into fact types if needed
         if self.connection.execute('''select count() from facttypes where
@@ -219,11 +217,12 @@ class Sqlite(Database):
                 (fact.card_type.name,))
 
         # Add fact to facts and factdata tables
-        fid = self.connection.execute('''insert into facts(guid, facttype_id, ctime)
-            values(?,?,?)''', (fact.uid, fact.card_type.id, fact.added)).lastrowid
+        fid = self.connection.execute('''insert into facts(guid, facttype_id,
+            ctime) values(?,?,?)''', (fact.uid, fact.card_type.id,
+            fact.added)).lastrowid
 
         self.connection.execute('''insert into factdata(fact_id,key,value)
-            values(?,?,?)''', (fid,fact['q'],fact['a']))
+            values(?,?,?)''', (fid, fact['q'], fact['a']))
 
         self.connection.commit()
 
@@ -278,7 +277,6 @@ class Sqlite(Database):
 
         # FIXME: filter out other categories for found fact ids
 
-        print ">>>> result:", result
         duplicates = []
         return duplicates
 
