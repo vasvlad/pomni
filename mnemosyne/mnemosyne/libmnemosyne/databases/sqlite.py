@@ -6,12 +6,13 @@
 #
 
 from datetime import datetime
-from sqlite3 import connect, OperationalError
+import sqlite3 as sqlite
 
 from mnemosyne.libmnemosyne.start_date import StartDate
 from mnemosyne.libmnemosyne.utils import expand_path, contract_path
 from mnemosyne.libmnemosyne.component_manager import config, log
 from mnemosyne.libmnemosyne.database import Database
+from mnemosyne.libmnemosyne.category import Category
 
 class Sqlite(Database):
 
@@ -49,13 +50,11 @@ class Sqlite(Database):
         config()["path"] = path
         log().new_database()
 
-        connection = connect(path)
-        
-        connection.executescript('''
+        self.connection.executescript('''
             create table facts(
                 id integer primary key, 
-                guid int, 
-                facttype_id int, 
+                guid int default 0, 
+                facttype_id int,
                 ctime timestamp, 
                 mtime timestamp
             );
@@ -85,8 +84,11 @@ class Sqlite(Database):
                 fact_id int, 
                 view_id int, 
                 grade int,
-                easiness int, 
-                next_rep timestamp
+                easiness int,
+                acq_reps int,
+                acq_reps_since_lapse int,
+                last_rep int,
+                next_rep int
             );
 
             create table categories(
@@ -124,8 +126,13 @@ class Sqlite(Database):
 
         self.save()
 
-    def save(self):
+    def save(self, path=None):
         """ Commit changes  """
+
+        # Saving to another file not implemented
+        if path and path != self.path:
+            raise NotImplementedError
+        
         self.connection.commit()
 
     def backup(self):
@@ -182,13 +189,43 @@ class Sqlite(Database):
         raise NotImplementedError
 
     def get_or_create_category_with_name(self, name):
-        raise NotImplementedError
+        """ Try to get category from the database
+            create if not found
+        """
+
+        category = self.connection.execute('''select *
+            from categories where name=?''', (name,)).fetchone()
+        if category:
+            return Category(category[0])
+       
+        self.connection.execute('''insert into categories(name)
+            values(?)''', (name,))
+        self.connection.commit()
+
+        return Category(name)
 
     def remove_category_if_unused(self, cat):
         raise NotImplementedError
 
     def add_fact(self, fact):
-        raise NotImplementedError
+        print ">>> fact:", fact.data, fact.card_type, fact.added, fact.cat, fact.uid
+        ct = fact.card_type
+        print ">>> fact card_type:", ct.id, ct.name, ct.fact_views
+
+        # Add record into fact types if needed
+        if self.connection.execute('''select count() from facttypes where
+            name=?''', (fact.card_type.name,)).fetchone()[0] != 0:
+            self.connection.execute('insert into facttypes(name) values(?)',
+                (fact.card_type.name,))
+
+        # Add fact to facts and factdata tables
+        fid = self.connection.execute('''insert into facts(guid, facttype_id, ctime)
+            values(?,?,?)''', (fact.uid, fact.card_type.id, fact.added)).lastrowid
+
+        self.connection.execute('''insert into factdata(fact_id,key,value)
+            values(?,?,?)''', (fid,fact['q'],fact['a']))
+
+        self.connection.commit()
 
     def update_fact(self, fact):
         raise NotImplementedError
@@ -200,13 +237,21 @@ class Sqlite(Database):
         raise NotImplementedError
 
     def add_card(self, card):
-        raise NotImplementedError
+        """ Add new card """
+
+        self.connection.execute('''insert into reviewstats(fact_id, view_id,
+           grade, easiness, acq_reps, acq_reps_since_lapse, last_rep, next_rep)
+           values(?,?,?,?,?,?,?,?)''', (card.fact.uid, card.fact_view.id, 
+           card.grade, card.easiness, card.acq_reps, card.acq_reps_since_lapse,
+           card.last_rep, card.next_rep))
+
+        log().new_card(card)
 
     def update_card(self, card):
         raise NotImplementedError
         
     def cards_from_fact(self, fact):
-        return NotImplementedError
+        raise NotImplementedError
         
     def delete_fact_and_related_cards(self, fact):
         raise NotImplementedError
@@ -214,7 +259,10 @@ class Sqlite(Database):
     # Queries.
 
     def category_names(self):
-        return self.connection.execute("select name from categories")
+        """ Generate names from categories table """
+
+        return (res[0] for res in 
+            self.connection.execute("select name from categories"))
 
     def has_fact_with_data(self, fact_data):
         return bool(self.connection.execute('''select count() from factdata
@@ -222,10 +270,17 @@ class Sqlite(Database):
             (fact_data['q'], fact_data['a'])).fetchone()[0])
 
     def duplicates_for_fact(self, fact):
+        """Return list of facts which have the same unique key."""
 
-        """Returns list of facts which have the same unique key."""
+        # find duplicate fact data
+        result = self.connection.execute('''select * from factdata where
+            key=? and value=?''', (fact['q'], fact['a'])).fetchall()
 
-        raise NotImplementedError
+        # FIXME: filter out other categories for found fact ids
+
+        print ">>>> result:", result
+        duplicates = []
+        return duplicates
 
     def fact_count(self):
         raise NotImplementedError
@@ -253,8 +308,15 @@ class Sqlite(Database):
                 categories.enabled=1""").fetchone()[0]
 
     def average_easiness(self):
-        raise NotImplementedError
-
+        """ Count easiness as a average of reviewstat's easiness values """
+        
+        average = self.connection.execute("""select sum(easiness)/count()
+            from reviewstats""").fetchone()[0]
+        if average:
+            return average
+        else:
+            return 2.5
+ 
     # Filter is a SQL filter, used e.g. to filter out inactive categories.
 
     def set_filter(self, filter):
