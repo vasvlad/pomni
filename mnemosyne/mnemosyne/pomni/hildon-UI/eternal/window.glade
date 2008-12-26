@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Dec 26 18:50:06 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Dec 26 21:23:32 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -585,14 +585,7 @@
                       <widget class="GtkHBox" id="hbox9">
                         <property name="visible">True</property>
                         <child>
-                          <widget class="GtkLabel" id="category_label">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Category</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
                           <widget class="GtkAlignment" id="alignment17">
@@ -633,6 +626,7 @@
                           <widget class="GtkEntry" id="comboboxentry-entry2">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="text" translatable="yes">Categories</property>
                           </widget>
                         </child>
                       </widget>
@@ -898,14 +892,23 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button3">
+                      <widget class="GtkButton" id="addcard">
+                        <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Add card</property>
                         <property name="response_id">0</property>
+                        <child>
+                          <widget class="GtkLabel" id="addcardlabel">
+                            <property name="visible">True</property>
+                            <property name="xpad">20</property>
+                            <property name="label" translatable="yes">Add card</property>
+                            <property name="single_line_mode">True</property>
+                          </widget>
+                        </child>
                       </widget>
                       <packing>
+                        <property name="fill">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -921,14 +924,23 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="button4">
+                      <widget class="GtkButton" id="additional">
+                        <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Additional</property>
                         <property name="response_id">0</property>
+                        <child>
+                          <widget class="GtkLabel" id="additionallabel">
+                            <property name="visible">True</property>
+                            <property name="xpad">20</property>
+                            <property name="label" translatable="yes">Additional</property>
+                            <property name="single_line_mode">True</property>
+                          </widget>
+                        </child>
                       </widget>
                       <packing>
+                        <property name="fill">False</property>
                         <property name="position">3</property>
                       </packing>
                     </child>
@@ -948,6 +960,18 @@
                   </widget>
                   <packing>
                     <property name="position">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkAlignment" id="alignment29">
+                    <property name="height_request">10</property>
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">8</property>
                   </packing>
                 </child>
                 <child>
@@ -1043,7 +1067,7 @@
                   </widget>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                   </packing>
                 </child>
               </widget>
