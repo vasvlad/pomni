@@ -49,11 +49,13 @@ class CommandlineUI(cmd.Cmd):
         self.prompt = '====== Main =======\nPomni: '
         ui_controller_main().widget = self
 
-    def information_box(self, message, ok_string):
+    @staticmethod
+    def information_box(message, ok_string):
         """ Widget method. DefaultMainController.create_new_cards calls it """
         print message
 
-    def question_box(self, question, option0, option1, option2):
+    @staticmethod
+    def question_box(question, option0, option1, option2):
         """ Widget method. DefaultMainController.create_new_cards calls it """
         print question
         print "0", option0
@@ -70,15 +72,18 @@ class CommandlineUI(cmd.Cmd):
         else:
             self.onecmd(mode)
 
-    def do_quit(self, line):
+    @staticmethod
+    def do_quit(line):
         """ Quit the program """ 
         return True
 
-    def do_review(self, line):
+    @staticmethod
+    def do_review(line):
         """ Review mode """
         ui_controller_review().start()
 
-    def do_input(self, line):
+    @staticmethod
+    def do_input(line):
         """ Input mode """
         print("=== Input mode ===")
 
@@ -138,8 +143,8 @@ class CommandlineUI(cmd.Cmd):
             if raw_input(_("Do you want to add a new record? y/n ")) != "y":
                 break
 	    
-       
-    def do_conf(self, line):
+    @staticmethod   
+    def do_conf(line):
         """ Configuration mode """
 
         def get_param(conf, param):
@@ -191,6 +196,7 @@ class CmdUiControllerReview(UiControllerReview):
             os.path.basename(config()["path"])[:-4]
         self.grade = 0
         self.learn_ahead = False
+        self.card = None
 
     def update_dialog(self):
         """ This is part of UiControllerReview API """
