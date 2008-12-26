@@ -294,13 +294,13 @@ style "theme-button" {
     image {
         function = FOCUS
 	file     = "button_theme.png"
-	border   = { 80, 80, 39, 39 }
+	border   = { 0, 0, 0, 0 }
     }
 
     image {
 	function = BOX
 	file     = "button_theme.png"
-  	border   = { 80, 80, 39, 39 }
+  	border   = { 0, 0, 0, 0 }
     }
 
   }
@@ -326,6 +326,14 @@ widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-
 widget "*.label_warning" style "review-question-label"
 widget "*.label_ok" style "review-question-label"
 widget "*.notebook_wwindows" style "nothing"
+widget "*.review" style "theme-button"
+widget "*.input" style "theme-button"
+widget "*.configure" style "theme-button"
+widget "*.exit" style "theme-button"
+widget "*.review.GtkLabel" style "button-label"
+widget "*.input.GtkLabel" style "button-label"
+widget "*.configure.GtkLabel" style "button-label"
+widget "*.exit.GtkLabel" style "button-label"
 widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
 
