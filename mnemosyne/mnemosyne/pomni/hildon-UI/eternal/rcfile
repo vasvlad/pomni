@@ -220,6 +220,52 @@ style "warning-notebook"
   }
 }
 
+style "input-combobox-entry-entry" {
+
+  engine "pixmap"
+    {
+      image
+        {
+	  function = SHADOW
+	  state    = INSENSITIVE
+  	  file = "comboboxarea.png"
+	  border   = { 8, 8, 8, 8 }
+	}
+      image
+        {
+	  function = FLAT_BOX
+        }
+      image
+        {
+	  function = SHADOW
+ 	  file = "comboboxarea.png"
+	  border   = { 8, 8, 8, 8 }
+	}
+    }
+}
+style "input-combobox-entry-button-down" {
+
+	engine "pixmap" {
+		image {
+			function = FOCUS
+		}
+		image {
+			function = BOX
+			file = "combobox_right_bottom.png"
+			state = INSENSITIVE
+			border = { 8, 8, 8, 8 }
+		}
+		image {
+			function = BOX
+			file = "combobox_right_bottom.png"
+			border = { 8, 8, 8, 8 }
+		}
+		image {
+			function = TAB
+		}
+	}
+}
+
 
 widget "*.button_answer" style "review-button"
 widget "*.button_getanswer" style "getanswerarea-button"
@@ -233,10 +279,46 @@ widget "*.spliter" style "spliter-paned"
 widget "*.answer_frame" style "question_answer_frame"
 widget "*.question_frame" style "question_answer_frame"
 widget "*.category_label" style "review-title-label"
+widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
+widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
 widget "*.label_warning" style "review-question-label"
 widget "*.label_ok" style "review-question-label"
 widget "*.notebook_wwindows" style "nothing"
 widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
+
+
+
+
+style "input-combobox-entry-arrow"
+{
+  engine "sapwood"
+    {
+      image 
+        {
+          function = ARROW
+          state = ACTIVE
+          overlay_file = "input_arrow_down.png"
+          overlay_stretch = FALSE
+        }
+      image
+        {
+          function = ARROW
+          state = NORMAL
+          overlay_file = "input_arrow_down.png"
+          overlay_stretch = FALSE
+        }
+      image
+        {
+          function = ARROW
+          state    = INSENSITIVE
+          overlay_file = "input_arrow_down.png"
+          overlay_stretch = FALSE
+        }
+    }
+}
+
+widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
+
 
 
