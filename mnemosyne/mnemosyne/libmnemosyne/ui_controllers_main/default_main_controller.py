@@ -12,6 +12,7 @@ from mnemosyne.libmnemosyne.utils import expand_path
 from mnemosyne.libmnemosyne.stopwatch import stopwatch
 from mnemosyne.libmnemosyne.exceptions import MnemosyneError
 from mnemosyne.libmnemosyne.component_manager import database, config
+from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.component_manager import ui_controller_review
 from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
@@ -35,6 +36,11 @@ class DefaultMainController(UiControllerMain):
 
         """Create a new set of related cards"""
 
+        # Allow this function to be overridden by a function hook.
+        f = component_manager.get_current("function_hook", "create_new_cards")
+        if f:
+            return f.run()
+        
         db = database()
         if db.has_fact_with_data(fact_data):
             self.widget.information_box(\
@@ -100,7 +106,7 @@ class DefaultMainController(UiControllerMain):
             return            
         ui_controller_review().clear()
         try:
-                database().load(out)
+            database().load(out)
         except MnemosyneError, e:
             self.widget.error_box(e)
             stopwatch.unpause()
@@ -108,3 +114,30 @@ class DefaultMainController(UiControllerMain):
         ui_controller_review().new_question()
         stopwatch.unpause()
 
+    def file_save(self):
+        stopwatch.pause()
+        path = config()["path"]
+        try:
+            database().save(path)
+        except MnemosyneError, e:
+            self.widget.error_box(e)
+        stopwatch.unpause()
+
+    def file_save_as(self):
+        stopwatch.pause()
+        old_path = expand_path(config()["path"])
+        out = self.widget.save_file_dialog(path=old_path,
+                            filter=_("Mnemosyne databases (*.mem)"))
+        if not out:
+            stopwatch.unpause()
+            return
+        if not out.endswith(".mem"):
+            out += ".mem"
+        try:
+            database().save(out)
+        except MnemosyneError, e:
+            self.widget.error_box(e)
+            stopwatch.unpause()
+            return
+        ui_controller_review().update_dialog()
+        stopwatch.unpause()

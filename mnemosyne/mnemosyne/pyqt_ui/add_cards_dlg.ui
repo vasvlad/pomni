@@ -5,16 +5,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>330</width>
-    <height>176</height>
+    <width>297</width>
+    <height>175</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Add cards</string>
   </property>
-  <layout class="QHBoxLayout" >
+  <layout class="QHBoxLayout" name="horizontalLayout_2" >
    <item>
-    <layout class="QVBoxLayout" >
+    <layout class="QVBoxLayout" name="verticalLayout" >
      <item>
       <layout class="QGridLayout" >
        <item row="0" column="0" >
@@ -37,7 +37,7 @@
        <item row="1" column="0" >
         <widget class="QLabel" name="label" >
          <property name="text" >
-          <string>Category:</string>
+          <string>Categories:</string>
          </property>
         </widget>
        </item>
@@ -195,7 +195,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="mnemosyne.qrc" />
+ </resources>
  <connections>
   <connection>
    <sender>card_types</sender>
