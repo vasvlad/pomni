@@ -20,7 +20,7 @@ class Database(Component):
     def new(self, path):
         raise NotImplementedError
 
-    def save(self):
+    def save(self, path):
         raise NotImplementedError
 
     def backup(self):
@@ -79,7 +79,7 @@ class Database(Component):
         raise NotImplementedError
         
     def cards_from_fact(self, fact):
-        return NotImplementedError
+        raise NotImplementedError
         
     def delete_fact_and_related_cards(self, fact):
         raise NotImplementedError
