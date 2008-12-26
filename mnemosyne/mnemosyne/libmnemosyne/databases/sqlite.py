@@ -20,15 +20,28 @@ class Sqlite(Database):
     # Creating, loading and saving the entire database.
 
     def __init__(self):
-        self.connection = None
+        self._connection = None
         self.path = None
         self.start_date = None
         self.load_failed = False
         self.start_date = None
 
+    @property
+    def connection(self):
+        """ Connect to the database. Lazy """
+        
+        if not self._connection:
+            self._connection = sqlite.connect(self.path, 
+            detect_types=sqlite.PARSE_DECLTYPES|sqlite.PARSE_COLNAMES)
+            self._connection.row_factory = sqlite.Row
+        
+        return self._connection
+
     def new(self, path):
         """ Create new database """
-        
+       
+        self.path = path
+
         if self.is_loaded():
             self.unload()
 
@@ -105,17 +118,15 @@ class Sqlite(Database):
         ''')
 
         # save start_date as a string. Object StartDate can't be stored
-        connection.execute("insert into meta(key, value) values(?,?)", 
+        self.connection.execute("insert into meta(key, value) values(?,?)", 
         ('start_date', datetime.strftime(self.start_date.start, 
                                          '%Y-%m-%d %H:%M:%S')))
 
-        self.connection = connection
         self.save()
 
     def save(self):
         """ Commit changes  """
-        if self.connection:
-            self.connection.commit()
+        self.connection.commit()
 
     def backup(self):
         raise NotImplementedError
@@ -126,33 +137,30 @@ class Sqlite(Database):
         # Unload opened database if exists
         self.unload()
 
-        path = expand_path(fname, config().basedir)
+        self.path = expand_path(fname, config().basedir)
         try:
-            self.connection = connect(path)
             res = self.connection.execute('select value from meta where key=?',
                 ('start_date',)).fetchone()
             self.load_failed = False
-            self.path = path
-            self.set_start_date(StartDate(datetime.strptime(res[0], 
+            self.set_start_date(StartDate(datetime.strptime(res['value'], 
                 '%Y-%m-%d %H:%M:%S')))
             self.load_failed = False
-            self.path = path
-        except OperationalError, exobj:
+        except sqlite.OperationalError, exobj:
             self.load_failed = True
  
     def unload(self):
-        """ Unload/Close the database """
-
-        self.save()
-        if self.connection:
-            self.connection.close()
-            self.connection = None
+        """ Commit changes and close connection to the database """
+        
+        if self._connection:
+            self._connection.commit()
+            self._connection.close()
+            self._connection = None
             self.load_failed = False
 
     def is_loaded(self):
-        """ Is it alive? """
+        """ Is connection set? """
 
-        return self.connection != None
+        return bool(self._connection)
 
     # Start date.
 
