@@ -8,6 +8,77 @@
 
 """ Sqlite backend """
 
+SCHEMA = """
+    create table facts(
+        id integer primary key, 
+        guid int default 0, 
+        facttype_id int,
+        ctime timestamp, 
+        mtime timestamp
+    );
+
+    create table factdata(
+        id integer primary key,
+        fact_id int,
+        key text,
+        value text
+    );
+
+    create table facttypes(
+        id,
+        name varchar(20) UNIQUE NOT NULL,
+        enabled default 1
+    );
+
+    create table views(
+        id,
+        facttype_id int,
+        name varchar(20) UNIQUE NOT NULL,
+        enabled boolean default 1
+    );
+
+    create table reviewstats(
+        id,
+        fact_id int,
+        view_id int, 
+        grade int,
+        easiness int,
+        lapses int,
+        acq_reps int,
+        acq_reps_since_lapse int,
+        last_rep int,
+        next_rep int,
+        unseen boolean default 0
+    );
+
+    create table categories(
+        id integer primary key, 
+        parent_id int default 0, 
+        name varchar(20) UNIQUE NOT NULL, 
+        enabled boolean default 1
+    );
+
+    create table fact_categories(
+        id integer primary key,
+        category_id int,
+        fact_id int
+    ); 
+
+    create table reviews(
+        card_id int,
+        time timestamp,
+        number int,
+        prev int,
+        client_guid int
+    );
+
+    create table meta(
+        id integer primary key,
+        key,
+        value
+    );
+"""
+
 from datetime import datetime
 import sqlite3 as sqlite
 
@@ -23,7 +94,7 @@ from mnemosyne.libmnemosyne.fact_view import FactView
 
 class Sqlite(Database):
 
-    """ Sqllite backend """
+    """ Sqlite database backend class """
 
     # Creating, loading and saving the entire database.
 
@@ -57,79 +128,11 @@ class Sqlite(Database):
         self.start_date = StartDate()
         config()["path"] = path
         log().new_database()
-
-        self.connection.executescript("""
-            create table facts(
-                id integer primary key, 
-                guid int default 0, 
-                facttype_id int,
-                ctime timestamp, 
-                mtime timestamp
-            );
-
-            create table factdata(
-                id integer primary key,
-                fact_id int,
-                key text,
-                value text
-            );
-
-            create table facttypes(
-                id,
-                name varchar(20) UNIQUE NOT NULL,
-                enabled default 1
-            );
-
-            create table views(
-                id,
-                facttype_id int,
-                name varchar(20) UNIQUE NOT NULL,
-                enabled boolean default 1
-            );
-
-            create table reviewstats(
-                id,
-                fact_id int,
-                view_id int, 
-                grade int,
-                easiness int,
-                lapses int,
-                acq_reps int,
-                acq_reps_since_lapse int,
-                last_rep int,
-                next_rep int,
-                unseen boolean default 0
-            );
-
-            create table categories(
-                id integer primary key, 
-                parent_id int default 0, 
-                name varchar(20) UNIQUE NOT NULL, 
-                enabled boolean default 1
-            );
-
-            create table fact_categories(
-                id integer primary key,
-                category_id int,
-                fact_id int
-            ); 
-            
-            create table reviews(
-                card_id int, 
-                time timestamp, 
-                number int, 
-                prev int, 
-                client_guid int
-            );
-
-            create table meta(
-                id integer primary key, 
-                key, 
-                value
-            );
-        """)
-
-        # save start_date as a string. Object StartDate can't be stored
+        
+        # create tables according to schema
+        self.connection.executescript(SCHEMA)
+        
+        # save start_date
         self.connection.execute("insert into meta(key, value) values(?,?)", 
         ("start_date", datetime.strftime(self.start_date.start, 
                                          '%Y-%m-%d %H:%M:%S')))
@@ -146,7 +149,8 @@ class Sqlite(Database):
         self.connection.commit()
 
     def backup(self):
-        raise NotImplementedError
+        pass
+        #raise NotImplementedError
 
     def load(self, fname):
         """ Load database from file """
@@ -215,10 +219,10 @@ class Sqlite(Database):
 
         data = dict([(item["key"], item["value"]) for item in cursor])
 
-        categories = [Category(cat["name"]) for cat in self.connection.execute("""
-            select cat.name from categories as cat, fact_categories as f_cat 
-            where f_cat.category_id=cat.id and f_cat.fact_id=?""", 
-            (fact["id"],))]
+        categories = [Category(cat["name"]) for cat in 
+            self.connection.execute("""select cat.name from categories as cat,
+            fact_categories as f_cat where f_cat.category_id=cat.id and 
+            f_cat.fact_id=?""", (fact["id"],))]
 
         card_type = card_type_by_id(str(fact["facttype_id"]))
 
@@ -239,9 +243,13 @@ class Sqlite(Database):
     # Start date.
 
     def set_start_date(self, start_date_obj):
+        """ Setter for start_date attribute """
+        
         self.start_date = start_date_obj
 
     def days_since_start(self):
+        """ Return amount of days since start_date  """
+
         return self.start_date.days_since_start()
 
     # Adding, modifying and deleting categories, facts and cards.
@@ -284,8 +292,8 @@ class Sqlite(Database):
                     values(?,?)""", (fact.card_type.id, fact.card_type.name,))
 
         # Add fact to facts and factdata tables
-        fact_id = self.connection.execute("""insert into facts(guid, facttype_id,
-            ctime) values(?,?,?)""", (fact.uid, fact.card_type.id,
+        fact_id = self.connection.execute("""insert into facts(guid,
+            facttype_id, ctime) values(?,?,?)""", (fact.uid, fact.card_type.id,
             fact.added)).lastrowid
 
         self.connection.executemany("""insert into factdata(fact_id,key,value)
@@ -354,6 +362,7 @@ class Sqlite(Database):
             card.last_rep, card.next_rep, card.unseen, card.id))
 
     def cards_from_fact(self, fact):
+        """ Generate cards related to fact """
        
         cursor = self.connection.execute("""select * from reviewstats
             where fact_id=?""", (fact.uid,))
@@ -362,11 +371,22 @@ class Sqlite(Database):
             for res in cursor)
 
     def delete_fact_and_related_data(self, fact):
-        """ delete fact and all relations to it """
+        """ Delete fact and all relations to it """
 
-        for table in ("reviewstats", "factdata"):
+        # Get fact id by uid
+        fact_id = self.connection.execute("select id from facts where guid=?",
+            (fact.uid,)).fetchone()["id"]
+
+        # Delete related records from other tables (linked by id)
+        for table in ("factdata", "fact_categories"):
             self.connection.execute("delete from %s where fact_id=?" % table,
+                (fact_id,))
+        
+        # Delete from reviewstats (linked by uid)
+        self.connection.execute("delete from reviewstats where fact_id=?",
                 (fact.uid,))
+
+        # Delete record from facts table
         self.connection.execute("delete from facts were guid=?",
                     (fact.uid,))
 
@@ -379,6 +399,8 @@ class Sqlite(Database):
             self.connection.execute("select name from categories"))
 
     def has_fact_with_data(self, fact_data):
+        """ Check if there is already the fact with fact_data """
+
         return bool(self.connection.execute("""select count() from factdata
             where key=? and value=?;""",
             (fact_data['q'], fact_data['a'])).fetchone()[0])
@@ -400,19 +422,25 @@ class Sqlite(Database):
         return duplicates
 
     def fact_count(self):
+        """ Get total of facts """
+        
         return self.connection.execute(
             "select count() from facts").fetchone()[0]
 
     def card_count(self):
+        """ Get total number of cards """
+
         return self.connection.execute("select count() from reviewstats").\
             fetchone()[0]
 
     def non_memorised_count(self):
+        """ Get number of non memorised cards """
+
         return self.connection.execute("""select count() from reviewstats
             where grade < 2""").fetchone()[0]
 
     def scheduled_count(self, days=0):
-        """ Number of cards scheduled within 'days' days."""
+        """ Get number of cards scheduled within 'days' days."""
 
         count = self.connection.execute("""select count() from reviewstats
             where grade >=2 and ? >= next_rep - ?""", 
@@ -420,14 +448,14 @@ class Sqlite(Database):
         return count
 
     def active_count(self):
-        """ Return number of cards in an active category """
+        """ Get number of cards in an active category """
 
         return self.connection.execute("""select count() from fact_categories,
                 categories where category_id = categories.id and
                 categories.enabled=1""").fetchone()[0]
 
     def average_easiness(self):
-        """ Count easiness as a average of reviewstat's easiness values """
+        """ Get average easiness of cards """
         
         average = self.connection.execute("""select sum(easiness)/count()
             from reviewstats""").fetchone()[0]
@@ -482,9 +510,14 @@ class Sqlite(Database):
                 self.connection.execute("""select * from reviewstats
                 where unseen = 1 order by %s""" % sort_key))
 
-    def cards_learn_ahead(self, sort_key=""):
-        raise NotImplementedError
-
+    def cards_learn_ahead(self, sort_key="id"):
+        """ Generates cards for learning ahead """
+        return(self.get_card(self.get_fact(res["fact_id"]),
+               self.get_view(res["view_id"]), res) for res in
+               self.connection.execute("""select * from reviewstats 
+               where grade >=2 and ? < next_rep order by %s""" % sort_key,
+               (self.start_date.days_since_start(),)))
+        
 # Local Variables:
 # mode: python
 # py-indent-offset: 4
