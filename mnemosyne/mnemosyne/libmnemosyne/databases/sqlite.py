@@ -310,7 +310,7 @@ class Sqlite(Database):
         self.connection.execute("update facts set mtime=? where guid=?",
             (datetime.now(), fact.uid))
 
-    def add_fact_view(self, fact_view):
+    def add_fact_view(self, fact_view, card):
         """ Add new view and facttype (if needed) """
 
         # FIXME: where to get facttype_id from ?
