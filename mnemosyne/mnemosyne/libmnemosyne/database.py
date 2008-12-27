@@ -26,7 +26,7 @@ class Database(Component):
     def backup(self):
         raise NotImplementedError
 
-    def load(self, fname):
+    def load(self, path):
         raise NotImplementedError
 
     def unload(self):
