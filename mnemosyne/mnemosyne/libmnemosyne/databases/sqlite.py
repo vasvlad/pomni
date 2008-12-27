@@ -93,10 +93,12 @@ class Sqlite(Database):
                 view_id int, 
                 grade int,
                 easiness int,
+                lapses int,
                 acq_reps int,
                 acq_reps_since_lapse int,
                 last_rep int,
-                next_rep int
+                next_rep int,
+                unseen boolean default 0
             );
 
             create table categories(
@@ -213,9 +215,10 @@ class Sqlite(Database):
 
         data = dict([(item["key"], item["value"]) for item in cursor])
 
-        categories = (Category(cat) for cat in self.connection.execute("""
+        categories = [Category(cat["name"]) for cat in self.connection.execute("""
             select cat.name from categories as cat, fact_categories as f_cat 
-            where f_cat.category_id=cat.id and f_cat.fact_id=?""", (fact["id"],)))
+            where f_cat.category_id=cat.id and f_cat.fact_id=?""", 
+            (fact["id"],))]
 
         card_type = card_type_by_id(str(fact["facttype_id"]))
 
@@ -227,8 +230,8 @@ class Sqlite(Database):
         """ Get card object from fact, view and query result """
 
         card = Card(fact, view)
-        for attr in ("id", "grade", "easiness", "acq_reps",
-                     "acq_reps_since_lapse", "last_rep", "next_rep"):
+        for attr in ("id", "grade", "lapses", "easiness", "acq_reps",
+                     "acq_reps_since_lapse", "last_rep", "next_rep", "unseen"):
             setattr(card, attr, sql_res[attr])
 
         return card
@@ -293,8 +296,8 @@ class Sqlite(Database):
         for cat in fact.cat:
             cat_id = self.connection.execute("""select id from categories 
                 where name=?""", (cat.name,)).fetchone()[0]
-            self.connection.execute('''insert into fact_categories(category_id,
-                fact_id) values(?,?)''', (fact.uid, cat_id))
+            self.connection.execute("""insert into fact_categories(category_id,
+                fact_id) values(?,?)""", (cat_id, fact_id))
 
         self.connection.commit()
 
@@ -328,10 +331,11 @@ class Sqlite(Database):
         """ Add new card and its fact_view """
 
         self.connection.execute("""insert into reviewstats(id, fact_id, 
-            view_id, grade, easiness, acq_reps, acq_reps_since_lapse, last_rep,
-            next_rep) values(?,?,?,?,?,?,?,?,?)""", (card.id, card.fact.uid, 
-            card.fact_view.id, card.grade, card.easiness, card.acq_reps,
-            card.acq_reps_since_lapse, card.last_rep, card.next_rep))
+            view_id, grade, lapses, easiness, acq_reps, acq_reps_since_lapse,
+            last_rep, next_rep, unseen) values(?,?,?,?,?,?,?,?,?,?,?)""", 
+            (card.id, card.fact.uid, card.fact_view.id, card.grade, card.lapses,
+            card.easiness, card.acq_reps, card.acq_reps_since_lapse, 
+            card.last_rep, card.next_rep, card.unseen))
 
         # Add view if doesn't exist
         if not self.connection.execute("select count() from views where id=?",
@@ -344,9 +348,10 @@ class Sqlite(Database):
         """ Update card """
         
         self.connection.execute("""update reviewstats set grade=?, easiness=?,
-            acq_reps=?, acq_reps_since_lapse=?, last_rep=?, next_rep=? 
-            where id=?""", (card.grade, card.easiness, card.acq_reps, 
-            card.acq_reps_since_lapse, card.last_rep, card.next_rep, card.id))
+            lapses = ?, acq_reps=?, acq_reps_since_lapse=?, last_rep=?, 
+            next_rep=? unseen=? where id=?""", (card.grade, card.easiness, 
+            card.lapses, card.acq_reps, card.acq_reps_since_lapse, 
+            card.last_rep, card.next_rep, card.unseen, card.id))
 
     def cards_from_fact(self, fact):
        
@@ -356,7 +361,7 @@ class Sqlite(Database):
         return (self.get_card(fact, self.get_view(res['view_id']), res)
             for res in cursor)
 
-    def delete_fact_and_related_cards(self, fact):
+    def delete_fact_and_related_data(self, fact):
         """ delete fact and all relations to it """
 
         for table in ("reviewstats", "factdata"):
@@ -368,7 +373,7 @@ class Sqlite(Database):
     # Queries.
 
     def category_names(self):
-        """ Generate names from categories table """
+        """ Generate categories' names """
 
         return (res[0] for res in 
             self.connection.execute("select name from categories"))
@@ -399,7 +404,7 @@ class Sqlite(Database):
             "select count() from facts").fetchone()[0]
 
     def card_count(self):
-        return self.connection.execute("select count() from reviews").\
+        return self.connection.execute("select count() from reviewstats").\
             fetchone()[0]
 
     def non_memorised_count(self):
@@ -409,9 +414,10 @@ class Sqlite(Database):
     def scheduled_count(self, days=0):
         """ Number of cards scheduled within 'days' days."""
 
-        return self.connection.execute("""select count() from reviewstats
+        count = self.connection.execute("""select count() from reviewstats
             where grade >=2 and ? >= next_rep - ?""", 
             (self.days_since_start(), days)).fetchone()[0]
+        return count
 
     def active_count(self):
         """ Return number of cards in an active category """
@@ -439,28 +445,43 @@ class Sqlite(Database):
 
         self.filter = attr
 
-    def cards_due_for_ret_rep(self, sort_key=""):
+    def cards_due_for_ret_rep(self, sort_key="id"):
         """ Generate cards due for repetition """
 
-        if not sort_key:
-            sort_key = 'id'
+        if sort_key == "interval":
+            sort_key = "next_rep - last_rep"
 
-        for res in self.connection.execute("""select * from reviewstats 
-            where grade >=2 and next_rep <= ? order by %s""" % sort_key, 
-            (self.start_date.days_since_start())):
-            card = self.get_card(self.get_fact(res["fact_id"]), 
-                self.get_view(res["view_id"]), res)
-            yield card
+        return(self.get_card(self.get_fact(res["fact_id"]),
+               self.get_view(res["view_id"]), res) for res in 
+               self.connection.execute("""select * from reviewstats 
+                where grade >=2 and ? >= next_rep order by %s""" % sort_key, 
+                (self.start_date.days_since_start(),)))
 
-    def cards_due_for_final_review(self, grade, sort_key=""):
-        raise NotImplementedError
+    def cards_due_for_final_review(self, grade, sort_key="id"):
+        """ Generate cards for final review """
 
-    def cards_new_memorising(self, grade, sort_key=""):
-        raise NotImplementedError
+        return (self.get_card(self.get_fact(res["fact_id"]), 
+                self.get_view(res["view_id"]), res) for res in 
+                self.connection.execute("""select * from reviewstats 
+                where grade = ? and lapses > 0 order by %s""" % sort_key,
+                (grade,)))
 
-    def cards_unseen(self, sort_key=""):
-        raise NotImplementedError
-    
+    def cards_new_memorising(self, grade, sort_key="id"):
+        """ Generate cards for new memorising (lapses=0 and unseen=0) """
+        
+        return (self.get_card(self.get_fact(res["fact_id"]),
+               self.get_view(res["view_id"]), res) for res in
+               self.connection.execute("""select * from reviewstats 
+               where grade = ? and lapses = 0 and unseen = 0 
+               order by %s""" % sort_key, (grade,))) 
+
+    def cards_unseen(self, sort_key="id"):
+        """ Generate unseen cards """
+        return (self.get_card(self.get_fact(res["fact_id"]),
+                self.get_view(res["view_id"]), res) for res in
+                self.connection.execute("""select * from reviewstats
+                where unseen = 1 order by %s""" % sort_key))
+
     def cards_learn_ahead(self, sort_key=""):
         raise NotImplementedError
 
