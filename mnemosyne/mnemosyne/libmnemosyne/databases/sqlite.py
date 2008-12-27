@@ -14,6 +14,7 @@ import sqlite3 as sqlite
 from mnemosyne.libmnemosyne.start_date import StartDate
 from mnemosyne.libmnemosyne.utils import expand_path
 from mnemosyne.libmnemosyne.component_manager import config, log
+from mnemosyne.libmnemosyne.component_manager import card_type_by_id
 from mnemosyne.libmnemosyne.database import Database
 from mnemosyne.libmnemosyne.category import Category
 from mnemosyne.libmnemosyne.fact import Fact
@@ -198,25 +199,28 @@ class Sqlite(Database):
 
         # Get fact by id or guid
         if guid:
-            res = self.connection.execute("select * from facts where guid=?",
+            fact = self.connection.execute("select * from facts where guid=?",
                 (guid,)).fetchone()
         elif fact_id:
-            res = self.connection.execute("select * from facts where id=?",
+            fact = self.connection.execute("select * from facts where id=?",
                             (fact_id,)).fetchone()
         else:
             raise RuntimeError("get_fact: No guid nor fact_id provided")
         
         # Get fact data by fact id
         cursor = self.connection.execute("""select * from factdata 
-            where fact_id=?""", (res["id"],))
+            where fact_id=?""", (fact["id"],))
 
         data = dict([(item["key"], item["value"]) for item in cursor])
 
-        # FIXME: how to get card_type and categories?
-        categories = []
-        card_type = None
-        return Fact(data, card_type, categories, uid=res['guid'], 
-            added=res['ctime'])
+        categories = (Category(cat) for cat in self.connection.execute("""
+            select cat.name from categories as cat, fact_categories as f_cat 
+            where f_cat.category_id=cat.id and f_cat.fact_id=?""", (fact["id"],)))
+
+        card_type = card_type_by_id(fact["facttype_id"]) 
+
+        return Fact(data, card_type, categories, 
+                    uid=res['guid'], added=res['ctime'])
 
     @staticmethod
     def get_card(fact, view, sql_res):
@@ -259,7 +263,7 @@ class Sqlite(Database):
         category = self.connection.execute("""select *
             from categories where name=?""", (name,)).fetchone()
         if category:
-            return Category(category[0])
+            return Category(category["name"])
        
         self.connection.execute("""insert into categories(name)
             values(?)""", (name,))
@@ -287,7 +291,6 @@ class Sqlite(Database):
 
         # Link fact to its categories
         for cat in fact.cat:
-            print ">>>>", cat.name
             cat_id = self.connection.execute("""select id from categories 
                 where name=?""", (cat.name,)).fetchone()[0]
             self.connection.execute('''insert into fact_categories(category_id,
@@ -374,14 +377,11 @@ class Sqlite(Database):
 
         # find duplicate fact data
         duplicates = []
-        for key in fact.data:
+        for value in fact.data.values():
             for res in self.connection.execute("""select * from factdata
-                where key=?""", (key,)):
-                
+                where value=?""", (value,)):
                 # FIXME: filter out other categories for found fact ids
                 duplicates.append(self.get_fact(fact_id=res['fact_id']))
-        # FIXME: remove this
-        return []
         return duplicates
 
     def fact_count(self):
