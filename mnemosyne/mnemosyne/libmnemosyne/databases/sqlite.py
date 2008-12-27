@@ -362,7 +362,7 @@ class Sqlite(Database):
         
         self.conn.execute("""update reviewstats set grade=?, easiness=?,
             lapses = ?, acq_reps=?, acq_reps_since_lapse=?, last_rep=?, 
-            next_rep=? unseen=? where id=?""", (card.grade, card.easiness, 
+            next_rep=?, unseen=? where id=?""", (card.grade, card.easiness, 
             card.lapses, card.acq_reps, card.acq_reps_since_lapse, 
             card.last_rep, card.next_rep, card.unseen, card.id))
 
