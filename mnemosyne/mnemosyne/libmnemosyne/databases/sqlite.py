@@ -75,7 +75,7 @@ class Sqlite(Database):
             );
 
             create table facttypes(
-                id integer primary key,
+                id,
                 name varchar(20) UNIQUE NOT NULL,
                 enabled default 1
             );
@@ -217,10 +217,10 @@ class Sqlite(Database):
             select cat.name from categories as cat, fact_categories as f_cat 
             where f_cat.category_id=cat.id and f_cat.fact_id=?""", (fact["id"],)))
 
-        card_type = card_type_by_id(fact["facttype_id"]) 
+        card_type = card_type_by_id(str(fact["facttype_id"]))
 
-        return Fact(data, card_type, categories, 
-                    uid=res['guid'], added=res['ctime'])
+        return Fact(data, card_type, categories,
+                    uid=fact['guid'], added=fact['ctime'])
 
     @staticmethod
     def get_card(fact, view, sql_res):
@@ -277,8 +277,8 @@ class Sqlite(Database):
         # Add record into fact types if needed
         if self.connection.execute("""select count() from facttypes where
             name=?""", (fact.card_type.name,)).fetchone()[0] == 0:
-            self.connection.execute('insert into facttypes(name) values(?)',
-                (fact.card_type.name,))
+            self.connection.execute("""insert into facttypes(id, name) 
+                    values(?,?)""", (fact.card_type.id, fact.card_type.name,))
 
         # Add fact to facts and factdata tables
         fact_id = self.connection.execute("""insert into facts(guid, facttype_id,
@@ -313,9 +313,10 @@ class Sqlite(Database):
     def add_fact_view(self, fact_view, card):
         """ Add new view and facttype (if needed) """
 
-        # FIXME: where to get facttype_id from ?
+        fact = self.get_fact(card.fact.uid)
+
         self.connection.execute("""insert into views(id, facttype_id, name)
-            values(?,?,?)""", (fact_view.id, 0, fact_view.name))
+            values(?,?,?)""", (fact_view.id, fact.card_type.id, fact_view.name))
 
     def update_fact_view(self, fact_view):
         """ Update view """
@@ -324,13 +325,18 @@ class Sqlite(Database):
             (fact_view.name, fact_view.id))
 
     def add_card(self, card):
-        """ Add new card """
+        """ Add new card and its fact_view """
 
         self.connection.execute("""insert into reviewstats(id, fact_id, 
             view_id, grade, easiness, acq_reps, acq_reps_since_lapse, last_rep,
             next_rep) values(?,?,?,?,?,?,?,?,?)""", (card.id, card.fact.uid, 
             card.fact_view.id, card.grade, card.easiness, card.acq_reps,
             card.acq_reps_since_lapse, card.last_rep, card.next_rep))
+
+        # Add view if doesn't exist
+        if not self.connection.execute("select count() from views where id=?",
+                (card.fact_view.id,)).fetchone()[0]:
+            self.add_fact_view(card.fact_view, card)
 
         log().new_card(card)
 
@@ -380,8 +386,12 @@ class Sqlite(Database):
         for value in fact.data.values():
             for res in self.connection.execute("""select * from factdata
                 where value=?""", (value,)):
-                # FIXME: filter out other categories for found fact ids
-                duplicates.append(self.get_fact(fact_id=res['fact_id']))
+                fact_db = self.get_fact(fact_id=res['fact_id'])
+                # Filter out facts from other categories
+                for cat in fact_db.cat:
+                    if cat in fact.cat:
+                        duplicates.append(fact_db)
+                        break
         return duplicates
 
     def fact_count(self):
@@ -440,7 +450,6 @@ class Sqlite(Database):
             (self.start_date.days_since_start())):
             card = self.get_card(self.get_fact(res["fact_id"]), 
                 self.get_view(res["view_id"]), res)
-            # FIXME: set card attributes here if needed
             yield card
 
     def cards_due_for_final_review(self, grade, sort_key=""):
