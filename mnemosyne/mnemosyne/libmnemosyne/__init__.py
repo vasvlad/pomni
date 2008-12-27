@@ -80,8 +80,10 @@ def initialise_system_components():
     component_manager.register("log", TxtLogger())   
     
     # Database.
-    from mnemosyne.libmnemosyne.databases.pickle import Pickle
-    component_manager.register("database", Pickle())
+    #from mnemosyne.libmnemosyne.databases.pickle import Pickle
+    #component_manager.register("database", Pickle())
+    from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
+    component_manager.register("database", Sqlite())
     
     # Scheduler.
     from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne \
