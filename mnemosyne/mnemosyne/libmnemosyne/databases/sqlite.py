@@ -11,7 +11,7 @@
 SCHEMA = """
     create table facts(
         id integer primary key, 
-        guid int default 0, 
+        guid, 
         facttype_id int,
         ctime timestamp, 
         mtime timestamp
@@ -85,7 +85,7 @@ import sqlite3 as sqlite
 from mnemosyne.libmnemosyne.start_date import StartDate
 from mnemosyne.libmnemosyne.utils import expand_path
 from mnemosyne.libmnemosyne.component_manager import config, log
-from mnemosyne.libmnemosyne.component_manager import card_type_by_id
+from mnemosyne.libmnemosyne.component_manager import card_type_by_id, card_types
 from mnemosyne.libmnemosyne.database import Database
 from mnemosyne.libmnemosyne.category import Category
 from mnemosyne.libmnemosyne.fact import Fact
@@ -149,8 +149,9 @@ class Sqlite(Database):
         self.connection.commit()
 
     def backup(self):
+        """ Backup database. Not Implemented """
+        # FIXME: wait for pickle implementation, then implement
         pass
-        #raise NotImplementedError
 
     def load(self, fname):
         """ Load database from file """
@@ -193,10 +194,15 @@ class Sqlite(Database):
 
         fact_view = FactView(view_id, res["name"])
 
-        # FIXME: get rid of hardcoded attributes
-        fact_view.q_fields = ["a"]
-        fact_view.a_fields = ["q"]
-        fact_view.required_fields = ["a"]
+        # Find fact view in registered card_types and copy
+        # *fields attributes from it
+        for card_type in card_types():
+            for view in card_type.fact_views:
+                if view.id == view_id:
+                    fact_view.q_fields = view.q_fields
+                    fact_view.a_fields = view.a_fields
+                    fact_view.required_fields = view.required_fields
+                    break
 
         return fact_view
 
