@@ -76,7 +76,7 @@ class HildonBaseUi():
 
     def __init__(self, signals):
 
-        self.signals = ["exit", "to_main_menu", "window_state", 
+        self.signals = ["exit", "to_main_menu", "window_state",
                         "window_keypress"]
         if signals:
             self.signals.extend(signals)
@@ -127,7 +127,7 @@ class HildonBaseUi():
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
-    
+
 class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     """ Hildon Review controller """
 

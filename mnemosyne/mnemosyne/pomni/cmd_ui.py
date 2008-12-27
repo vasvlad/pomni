@@ -74,7 +74,7 @@ class CommandlineUI(cmd.Cmd):
 
     @staticmethod
     def do_quit(line):
-        """ Quit the program """ 
+        """ Quit the program """
         return True
 
     @staticmethod
@@ -88,13 +88,13 @@ class CommandlineUI(cmd.Cmd):
         print("=== Input mode ===")
 
         card = ui_controller_main()
-        
+
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
-        
+
         category_names_by_id = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
-        
+
         while True:
             # Select Card Type by user:
             print "Select Card Type:"
@@ -142,8 +142,8 @@ class CommandlineUI(cmd.Cmd):
 
             if raw_input(_("Do you want to add a new record? y/n ")) != "y":
                 break
-	    
-    @staticmethod   
+
+    @staticmethod
     def do_conf(line):
         """ Configuration mode """
 
@@ -188,9 +188,9 @@ class CommandlineUI(cmd.Cmd):
 
 class CmdUiControllerReview(UiControllerReview):
     """ Commandline UI controller. Review mode """
-    
+
     def __init__(self):
-        
+
         UiControllerReview.__init__(self, name="Command line UI Controller")
         self.title = _("Mnemosyne") + " - " + \
             os.path.basename(config()["path"])[:-4]

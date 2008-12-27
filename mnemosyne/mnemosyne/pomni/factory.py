@@ -59,7 +59,7 @@ def ui_factory(interface=None):
         component_manager.register("ui_controller_review", review_class())
         component_manager.register("renderer", TextRenderer())
         return HildonUI()
-    
+
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)
 
