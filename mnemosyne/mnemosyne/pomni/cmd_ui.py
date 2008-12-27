@@ -34,11 +34,13 @@ from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         ui_controller_review, config, ui_controller_main, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
+
 class CmdUiControllerException(Exception):
     """ This module's exception type """
     pass
 
 _ = gettext.gettext
+
 
 class CommandlineUI(cmd.Cmd):
     """ Commandline UI. Upper-level class """
@@ -98,8 +100,9 @@ class CommandlineUI(cmd.Cmd):
         while True:
             # Select Card Type by user:
             print "Select Card Type:"
-            print '\n'.join(["%s %s" % (type_id, card_type_by_id[type_id].name) \
-                for type_id in sorted(card_type_by_id.keys())])
+            print '\n'.join(["%s %s" % \
+                  (type_id, card_type_by_id[type_id].name)\
+                    for type_id in sorted(card_type_by_id.keys())])
             while True:
                 inp = \
                 raw_input(_("Enter number of Card Type or 'q' to quit ... "))
@@ -233,7 +236,8 @@ class CmdUiControllerReview(UiControllerReview):
     def show_answer(self):
         """ Print answer or quit  """
 
-        value = raw_input(_("Press enter to see the answer or 'q' to quit ..."))
+        value = raw_input(\
+                _("Press enter to see the answer or 'q' to quit ..."))
         if value in ("q", "Q"):
             raise CmdUiControllerException(_("Exited"))
 

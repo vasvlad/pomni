@@ -43,6 +43,7 @@ from mnemosyne.libmnemosyne.component_manager import database, config
 
 from pomni.factory import ui_factory
 
+
 def parse_commandline(argv):
     """ Parse commandline, check options """
 
@@ -55,6 +56,7 @@ def parse_commandline(argv):
                       "'main', 'input', 'review' or 'conf'")
 
     return parser.parse_args(argv)
+
 
 def main(argv):
     """ Main """

@@ -63,6 +63,7 @@ def ui_factory(interface=None):
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)
 
+
 def backend_factory(name=None):
     """ Create backend """
 
@@ -72,6 +73,7 @@ def backend_factory(name=None):
         raise NotImplementedError("SQLite backend is not implemented yet")
 
     raise ValueError("No idea how to create %s backend" % name)
+
 
 def _test():
     """ Run doctests

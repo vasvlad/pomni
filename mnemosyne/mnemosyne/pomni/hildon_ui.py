@@ -37,10 +37,11 @@ from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 _ = gettext.gettext
 
+
 class HildonUiControllerException(Exception):
     """ Exception hook """
 
-    def __init__(self,  w_tree, exception):
+    def __init__(self, w_tree, exception):
         """ Show Warning Window """
 
         self.warning_window = w_tree.get_widget("WarningWindow")
@@ -67,6 +68,7 @@ class HildonUiControllerException(Exception):
         """ Close Warning Window """
 
         self.warning_window.hide()
+
 
 class HildonBaseUi():
     """ Base Hildon UI functionality """
@@ -102,6 +104,7 @@ class HildonBaseUi():
             for sig in self.signals]))
 
     # Callbacks
+
     def exit_cb(self, widget):
         """ If pressed quit button then close the window """
 
@@ -200,6 +203,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.new_question()
 
     # Glade callbacks
+
     def get_answer_cb(self, widget, event):
         """ Hook for showing a right answer """
 
@@ -209,6 +213,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Call grade of answer """
 
         self.grade_answer(int(widget.name[-1]))
+
 
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
@@ -255,6 +260,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
         print 'Creating new cards', fact_data, card_type, grade, cat_names
 
     # Callbacks
+
     def review_cb(self, widget):
         """ Start Review """
 
@@ -269,6 +275,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
         """ Start configure mode """
 
         raise NotImplemented(widget)
+
 
 class EternalControllerMain(HildonUiControllerMain):
     """ Eternal UI Main Controller """
@@ -296,20 +303,24 @@ class EternalControllerMain(HildonUiControllerMain):
             else:
                 self.spliter_trigger = True
 
+
 class SmileControllerMain(HildonUiControllerMain):
     """ Smile UI Main Controller """
 
     pass
+
 
 class SmileControllerReview(HildonUiControllerReview):
     """ Smile UI Review Controller """
 
     pass
 
+
 class DraftControllerMain(HildonUiControllerMain):
     """ Draft UI Main Controller """
 
     pass
+
 
 class DraftControllerReview(HildonUiControllerReview):
     """ Draft UI Review Controller """
@@ -325,13 +336,14 @@ class HildonUI():
 
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
-        self.w_tree = gtk.glade.XML(os.path.join(theme_path,
-                                                 "window.glade"))
+        self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
+
     def start(self, mode):
         """ Start UI  """
 
         globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
+
 
 def _test():
     """ Run doctests
