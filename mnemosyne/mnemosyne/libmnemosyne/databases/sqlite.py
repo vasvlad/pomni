@@ -96,8 +96,6 @@ class Sqlite(Database):
 
     """ Sqlite database backend class """
 
-    # Creating, loading and saving the entire database.
-
     def __init__(self):
         self._connection = None
         self.path = None
@@ -107,7 +105,7 @@ class Sqlite(Database):
         self.filter = ""
 
     @property
-    def connection(self):
+    def conn(self):
         """ Connect to the database. Lazy """
         
         if not self._connection:
@@ -130,10 +128,10 @@ class Sqlite(Database):
         log().new_database()
         
         # create tables according to schema
-        self.connection.executescript(SCHEMA)
+        self.conn.executescript(SCHEMA)
         
         # save start_date
-        self.connection.execute("insert into meta(key, value) values(?,?)", 
+        self.conn.execute("insert into meta(key, value) values(?,?)", 
         ("start_date", datetime.strftime(self.start_date.start, 
                                          '%Y-%m-%d %H:%M:%S')))
 
@@ -146,10 +144,11 @@ class Sqlite(Database):
         if path and path != self.path:
             raise NotImplementedError
         
-        self.connection.commit()
+        self.conn.commit()
 
     def backup(self):
         """ Backup database. Not Implemented """
+
         # FIXME: wait for pickle implementation, then implement
         pass
 
@@ -161,7 +160,7 @@ class Sqlite(Database):
 
         self.path = expand_path(fname, config().basedir)
         try:
-            res = self.connection.execute("select value from meta where key=?",
+            res = self.conn.execute("select value from meta where key=?",
                 ("start_date",)).fetchone()
             self.load_failed = False
             self.set_start_date(StartDate(datetime.strptime(res["value"], 
@@ -189,7 +188,7 @@ class Sqlite(Database):
     def get_view(self, view_id):
         """ Get view object by id """
 
-        res = self.connection.execute("select name from views where id=?",
+        res = self.conn.execute("select name from views where id=?",
             (view_id,)).fetchone()
 
         fact_view = FactView(view_id, res["name"])
@@ -211,22 +210,22 @@ class Sqlite(Database):
 
         # Get fact by id or guid
         if guid:
-            fact = self.connection.execute("select * from facts where guid=?",
+            fact = self.conn.execute("select * from facts where guid=?",
                 (guid,)).fetchone()
         elif fact_id:
-            fact = self.connection.execute("select * from facts where id=?",
+            fact = self.conn.execute("select * from facts where id=?",
                             (fact_id,)).fetchone()
         else:
             raise RuntimeError("get_fact: No guid nor fact_id provided")
         
         # Get fact data by fact id
-        cursor = self.connection.execute("""select * from factdata 
+        cursor = self.conn.execute("""select * from factdata 
             where fact_id=?""", (fact["id"],))
 
         data = dict([(item["key"], item["value"]) for item in cursor])
 
         categories = [Category(cat["name"]) for cat in 
-            self.connection.execute("""select cat.name from categories as cat,
+            self.conn.execute("""select cat.name from categories as cat,
             fact_categories as f_cat where f_cat.category_id=cat.id and 
             f_cat.fact_id=?""", (fact["id"],))]
 
@@ -263,13 +262,13 @@ class Sqlite(Database):
     def add_category(self, category):
         """ Add new category """
 
-        self.connection.execute("insert into categories(name) values(?)", 
+        self.conn.execute("insert into categories(name) values(?)", 
             (category.name,))
     
     def delete_category(self, category):
         """ Delete category """
 
-        self.connection.execute("delete from categories were name=?",
+        self.conn.execute("delete from categories were name=?",
             (category.name,))
 
     def get_or_create_category_with_name(self, name):
@@ -277,14 +276,14 @@ class Sqlite(Database):
             create if not found
         """
 
-        category = self.connection.execute("""select *
+        category = self.conn.execute("""select *
             from categories where name=?""", (name,)).fetchone()
         if category:
             return Category(category["name"])
        
-        self.connection.execute("""insert into categories(name)
+        self.conn.execute("""insert into categories(name)
             values(?)""", (name,))
-        self.connection.commit()
+        self.conn.commit()
 
         return Category(name)
 
@@ -292,39 +291,39 @@ class Sqlite(Database):
         """ Add new fact """
 
         # Add record into fact types if needed
-        if self.connection.execute("""select count() from facttypes where
+        if self.conn.execute("""select count() from facttypes where
             name=?""", (fact.card_type.name,)).fetchone()[0] == 0:
-            self.connection.execute("""insert into facttypes(id, name) 
+            self.conn.execute("""insert into facttypes(id, name) 
                     values(?,?)""", (fact.card_type.id, fact.card_type.name,))
 
         # Add fact to facts and factdata tables
-        fact_id = self.connection.execute("""insert into facts(guid,
+        fact_id = self.conn.execute("""insert into facts(guid,
             facttype_id, ctime) values(?,?,?)""", (fact.uid, fact.card_type.id,
             fact.added)).lastrowid
 
-        self.connection.executemany("""insert into factdata(fact_id,key,value)
+        self.conn.executemany("""insert into factdata(fact_id,key,value)
             values(?,?,?)""", ((fact_id, key, value) 
                 for key, value in fact.data.items()))
 
         # Link fact to its categories
         for cat in fact.cat:
-            cat_id = self.connection.execute("""select id from categories 
+            cat_id = self.conn.execute("""select id from categories 
                 where name=?""", (cat.name,)).fetchone()[0]
-            self.connection.execute("""insert into fact_categories(category_id,
+            self.conn.execute("""insert into fact_categories(category_id,
                 fact_id) values(?,?)""", (cat_id, fact_id))
 
-        self.connection.commit()
+        self.conn.commit()
 
     def update_fact(self, fact):
         """ Update fact """
 
         # update factdata
-        self.connection.executemany("""update factdata set value=?
+        self.conn.executemany("""update factdata set value=?
             where fact_id=? and key=?""", ((value, fact.uid, key) 
                 for key, value in fact.data.items()))
         
         # update timestamp
-        self.connection.execute("update facts set mtime=? where guid=?",
+        self.conn.execute("update facts set mtime=? where guid=?",
             (datetime.now(), fact.uid))
 
     def add_fact_view(self, fact_view, card):
@@ -332,19 +331,19 @@ class Sqlite(Database):
 
         fact = self.get_fact(card.fact.uid)
 
-        self.connection.execute("""insert into views(id, facttype_id, name)
+        self.conn.execute("""insert into views(id, facttype_id, name)
             values(?,?,?)""", (fact_view.id, fact.card_type.id, fact_view.name))
 
     def update_fact_view(self, fact_view):
         """ Update view """
 
-        self.connection.execute("update views set name=? where id=?", 
+        self.conn.execute("update views set name=? where id=?", 
             (fact_view.name, fact_view.id))
 
     def add_card(self, card):
         """ Add new card and its fact_view """
 
-        self.connection.execute("""insert into reviewstats(id, fact_id, 
+        self.conn.execute("""insert into reviewstats(id, fact_id, 
             view_id, grade, lapses, easiness, acq_reps, acq_reps_since_lapse,
             last_rep, next_rep, unseen) values(?,?,?,?,?,?,?,?,?,?,?)""", 
             (card.id, card.fact.uid, card.fact_view.id, card.grade, card.lapses,
@@ -352,7 +351,7 @@ class Sqlite(Database):
             card.last_rep, card.next_rep, card.unseen))
 
         # Add view if doesn't exist
-        if not self.connection.execute("select count() from views where id=?",
+        if not self.conn.execute("select count() from views where id=?",
                 (card.fact_view.id,)).fetchone()[0]:
             self.add_fact_view(card.fact_view, card)
 
@@ -361,7 +360,7 @@ class Sqlite(Database):
     def update_card(self, card):
         """ Update card """
         
-        self.connection.execute("""update reviewstats set grade=?, easiness=?,
+        self.conn.execute("""update reviewstats set grade=?, easiness=?,
             lapses = ?, acq_reps=?, acq_reps_since_lapse=?, last_rep=?, 
             next_rep=? unseen=? where id=?""", (card.grade, card.easiness, 
             card.lapses, card.acq_reps, card.acq_reps_since_lapse, 
@@ -370,7 +369,7 @@ class Sqlite(Database):
     def cards_from_fact(self, fact):
         """ Generate cards related to fact """
        
-        cursor = self.connection.execute("""select * from reviewstats
+        cursor = self.conn.execute("""select * from reviewstats
             where fact_id=?""", (fact.uid,))
 
         return (self.get_card(fact, self.get_view(res['view_id']), res)
@@ -380,20 +379,20 @@ class Sqlite(Database):
         """ Delete fact and all relations to it """
 
         # Get fact id by uid
-        fact_id = self.connection.execute("select id from facts where guid=?",
+        fact_id = self.conn.execute("select id from facts where guid=?",
             (fact.uid,)).fetchone()["id"]
 
         # Delete related records from other tables (linked by id)
         for table in ("factdata", "fact_categories"):
-            self.connection.execute("delete from %s where fact_id=?" % table,
+            self.conn.execute("delete from %s where fact_id=?" % table,
                 (fact_id,))
         
         # Delete from reviewstats (linked by uid)
-        self.connection.execute("delete from reviewstats where fact_id=?",
+        self.conn.execute("delete from reviewstats where fact_id=?",
                 (fact.uid,))
 
         # Delete record from facts table
-        self.connection.execute("delete from facts were guid=?",
+        self.conn.execute("delete from facts were guid=?",
                     (fact.uid,))
 
     # Queries.
@@ -402,12 +401,12 @@ class Sqlite(Database):
         """ Generate categories' names """
 
         return (res[0] for res in 
-            self.connection.execute("select name from categories"))
+            self.conn.execute("select name from categories"))
 
     def has_fact_with_data(self, fact_data):
         """ Check if there is already the fact with fact_data """
 
-        return bool(self.connection.execute("""select count() from factdata
+        return bool(self.conn.execute("""select count() from factdata
             where key=? and value=?;""",
             (fact_data['q'], fact_data['a'])).fetchone()[0])
 
@@ -417,7 +416,7 @@ class Sqlite(Database):
         # find duplicate fact data
         duplicates = []
         for value in fact.data.values():
-            for res in self.connection.execute("""select * from factdata
+            for res in self.conn.execute("""select * from factdata
                 where value=?""", (value,)):
                 fact_db = self.get_fact(fact_id=res['fact_id'])
                 # Filter out facts from other categories
@@ -430,25 +429,24 @@ class Sqlite(Database):
     def fact_count(self):
         """ Get total of facts """
         
-        return self.connection.execute(
-            "select count() from facts").fetchone()[0]
+        return self.conn.execute("select count() from facts").fetchone()[0]
 
     def card_count(self):
         """ Get total number of cards """
 
-        return self.connection.execute("select count() from reviewstats").\
-            fetchone()[0]
+        return self.conn.execute("select count() from reviewstats").\
+                fetchone()[0]
 
     def non_memorised_count(self):
         """ Get number of non memorised cards """
 
-        return self.connection.execute("""select count() from reviewstats
+        return self.conn.execute("""select count() from reviewstats
             where grade < 2""").fetchone()[0]
 
     def scheduled_count(self, days=0):
         """ Get number of cards scheduled within 'days' days."""
 
-        count = self.connection.execute("""select count() from reviewstats
+        count = self.conn.execute("""select count() from reviewstats
             where grade >=2 and ? >= next_rep - ?""", 
             (self.days_since_start(), days)).fetchone()[0]
         return count
@@ -456,14 +454,14 @@ class Sqlite(Database):
     def active_count(self):
         """ Get number of cards in an active category """
 
-        return self.connection.execute("""select count() from fact_categories,
+        return self.conn.execute("""select count() from fact_categories,
                 categories where category_id = categories.id and
                 categories.enabled=1""").fetchone()[0]
 
     def average_easiness(self):
         """ Get average easiness of cards """
         
-        average = self.connection.execute("""select sum(easiness)/count()
+        average = self.conn.execute("""select sum(easiness)/count()
             from reviewstats""").fetchone()[0]
         if average:
             return average
@@ -487,7 +485,7 @@ class Sqlite(Database):
 
         return(self.get_card(self.get_fact(res["fact_id"]),
                self.get_view(res["view_id"]), res) for res in 
-               self.connection.execute("""select * from reviewstats 
+               self.conn.execute("""select * from reviewstats 
                 where grade >=2 and ? >= next_rep order by %s""" % sort_key, 
                 (self.start_date.days_since_start(),)))
 
@@ -496,16 +494,15 @@ class Sqlite(Database):
 
         return (self.get_card(self.get_fact(res["fact_id"]), 
                 self.get_view(res["view_id"]), res) for res in 
-                self.connection.execute("""select * from reviewstats 
-                where grade = ? and lapses > 0 order by %s""" % sort_key,
-                (grade,)))
+                self.conn.execute("""select * from reviewstats where grade = ?
+                    and lapses > 0 order by %s""" % sort_key, (grade,)))
 
     def cards_new_memorising(self, grade, sort_key="id"):
         """ Generate cards for new memorising (lapses=0 and unseen=0) """
         
         return (self.get_card(self.get_fact(res["fact_id"]),
                self.get_view(res["view_id"]), res) for res in
-               self.connection.execute("""select * from reviewstats 
+               self.conn.execute("""select * from reviewstats 
                where grade = ? and lapses = 0 and unseen = 0 
                order by %s""" % sort_key, (grade,))) 
 
@@ -513,14 +510,14 @@ class Sqlite(Database):
         """ Generate unseen cards """
         return (self.get_card(self.get_fact(res["fact_id"]),
                 self.get_view(res["view_id"]), res) for res in
-                self.connection.execute("""select * from reviewstats
+                self.conn.execute("""select * from reviewstats
                 where unseen = 1 order by %s""" % sort_key))
 
     def cards_learn_ahead(self, sort_key="id"):
         """ Generates cards for learning ahead """
         return(self.get_card(self.get_fact(res["fact_id"]),
                self.get_view(res["view_id"]), res) for res in
-               self.connection.execute("""select * from reviewstats 
+               self.conn.execute("""select * from reviewstats 
                where grade >=2 and ? < next_rep order by %s""" % sort_key,
                (self.start_date.days_since_start(),)))
         
