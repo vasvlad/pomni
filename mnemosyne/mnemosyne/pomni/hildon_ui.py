@@ -105,7 +105,8 @@ class HildonBaseUi():
 
     # Callbacks
 
-    def exit_cb(self, widget):
+    @staticmethod
+    def exit_cb(widget):
         """ If pressed quit button then close the window """
 
         gtk.main_quit()
@@ -222,7 +223,7 @@ class EternalControllerReview(HildonUiControllerReview):
         self.base = HildonUiControllerReview
         self.base.__init__(self)
 
-    def new_question(self):
+    def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible """
 
         self.base.new_question(self)
@@ -254,7 +255,8 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         ui_controller_main().widget = self
 
-    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+    @staticmethod
+    def create_new_cards(fact_data, card_type, grade, cat_names):
         """ Create new cards. Mnenosyne API """
 
         print 'Creating new cards', fact_data, card_type, grade, cat_names
@@ -266,12 +268,14 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         ui_controller_review().start(self.w_tree)
 
-    def input_cb(self, widget):
+    @staticmethod
+    def input_cb(widget):
         """ Start Input """
 
         raise NotImplemented(widget)
 
-    def configure_cb(self, widget):
+    @staticmethod
+    def configure_cb(widget):
         """ Start configure mode """
 
         raise NotImplemented(widget)
