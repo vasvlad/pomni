@@ -202,9 +202,9 @@ class Sqlite(Database):
                     fact_view.q_fields = view.q_fields
                     fact_view.a_fields = view.a_fields
                     fact_view.required_fields = view.required_fields
-                    break
+                    return fact_view
 
-        return fact_view
+        raise RuntimeError("Wrong view(id=%d) found in the database" % view_id)
 
     def get_fact(self, guid=None, fact_id=None):
         """ Get fact object by guid """
