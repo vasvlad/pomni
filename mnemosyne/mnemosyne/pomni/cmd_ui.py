@@ -195,7 +195,6 @@ class CmdUiControllerReview(UiControllerReview):
         self.title = _("Mnemosyne") + " - " + \
             os.path.basename(config()["path"])[:-4]
         self.grade = 0
-        self.learn_ahead = False
         self.card = None
 
     def update_dialog(self):
@@ -214,21 +213,20 @@ class CmdUiControllerReview(UiControllerReview):
                 print(exobj)
                 break
 
-    def new_question(self):
+    def new_question(self, learn_ahead=False):
         """ Print new question """
 
         if database().card_count() == 0:
             raise CmdUiControllerException(_("Database is empty"))
         else:
-            self.card = scheduler().get_new_question(self.learn_ahead)
-            if self.card != None:
+            self.card = scheduler().get_new_question(learn_ahead)
+            if self.card:
                 print _("Question:"), self.card.question()
             else:
                 value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
                 if value in ("y", "Y"):
                     print("\n")
-                    self.learn_ahead = True
-                    self.new_question()
+                    self.new_question(True)
                 else:
                     raise CmdUiControllerException(_("Finished"))
 

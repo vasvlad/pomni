@@ -162,21 +162,21 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ This is part of UiControllerReview API """
         pass
 
-    def new_question(self):
+    def new_question(self, learn_ahead=False):
         """ Create new question """
 
         if not database().card_count():
             raise HildonUiControllerException(self.w_tree, \
                 _("Database is empty"))
 
-        card = scheduler().get_new_question(False)
+        card = scheduler().get_new_question(learn_ahead)
 
         if card:
             self.question.set_text(card.question())
         else:
             # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
-            self.question.set_text(card.question())
+            #self.question.set_text(card.question())
 
         self.answer.set_text("")
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
