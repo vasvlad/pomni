@@ -1,3 +1,10 @@
+python-libmnemosyne (2.0.0-4) unstable; urgency=low
+
+  * Implemented Sqlite backend
+  * Implemented scheduler with generators
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 28 Dec 2008 19:15:53 +0000
+
 python-libmnemosyne (2.0.0-3) unstable; urgency=low
 
   * Configuration cleanup & pylint fixes 
