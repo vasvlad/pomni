@@ -7,7 +7,6 @@
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="default_width">800</property>
     <property name="default_height">480</property>
-    <property name="opacity">0</property>
     <signal name="key_press_event" handler="window_keypress"/>
     <signal name="window_state_event" handler="window_state"/>
     <child>
