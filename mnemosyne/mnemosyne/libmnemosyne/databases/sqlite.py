@@ -5,6 +5,7 @@
 #
 # Author: Ed Bartosh <bartosh@gmail.com>
 #
+# Sun Dec 28 09:23:54 UTC 2008 
 
 """ Sqlite backend """
 
@@ -199,7 +200,7 @@ class Sqlite(Database):
         # *fields attributes from it
         for card_type in card_types():
             for view in card_type.fact_views:
-                if view.id == view_id:
+                if view.name == res["name"]:
                     fact_view.q_fields = view.q_fields
                     fact_view.a_fields = view.a_fields
                     fact_view.required_fields = view.required_fields
@@ -277,7 +278,7 @@ class Sqlite(Database):
         """ Try to get category from the database
             create if not found
         """
-
+        
         category = self.conn.execute("""select *
             from categories where name=?""", (name, )).fetchone()
         if category:
@@ -409,9 +410,30 @@ class Sqlite(Database):
     def has_fact_with_data(self, fact_data):
         """ Check if there is already the fact with fact_data """
 
-        return bool(self.conn.execute("""select count() from factdata
-            where key=? and value=?;""",
-            (fact_data['q'], fact_data['a'])).fetchone()[0])
+        fact_ids = set()
+        for key, value in fact_data.items():
+            item_fact_ids = set()
+            # if key and value from fact_data isn't in the database
+            # we don't have such a fact
+            if not self.conn.execute("""select count() from factdata
+                where key=? and value=?""", (key, value)).fetchone()[0]:
+                return False
+
+            for res in self.conn.execute("""select fact_id from factdata
+                where key=? and value=?""", (key, value)):
+                item_fact_ids.add(res["fact_id"])
+
+            # save fact_ids found on the first run
+            if not fact_ids:
+                fact_ids = item_fact_ids
+            else:
+                # assign common ids to fact_ids
+                fact_ids = fact_ids.intersection(item_fact_ids)
+                # if there is no common fact_ids we don't have
+                # fact with fact_data
+                if not fact_ids:
+                    return False
+        return True
 
     def duplicates_for_fact(self, fact):
         """ Return list of facts with the same key """
@@ -509,12 +531,16 @@ class Sqlite(Database):
                where grade = ? and lapses = 0 and unseen = 0
                order by %s""" % sort_key, (grade, )))
 
-    def cards_unseen(self, sort_key="id"):
+    def cards_unseen(self, sort_key="id", randomise=False):
         """ Generate unseen cards """
-        return (self.get_card(self.get_fact(res["fact_id"]),
-                self.get_view(res["view_id"]), res) for res in
-                self.conn.execute("""select * from reviewstats
-                where unseen = 1 order by %s""" % sort_key))
+    
+        if randomise:
+            sort_key = "random()"
+
+        for res in self.conn.execute("""select * from reviewstats
+            where unseen = 1 order by %s""" % sort_key):
+            yield self.get_card(self.get_fact(res["fact_id"]),
+                    self.get_view(res["view_id"]), res)
 
     def cards_learn_ahead(self, sort_key="id"):
         """ Generates cards for learning ahead """
