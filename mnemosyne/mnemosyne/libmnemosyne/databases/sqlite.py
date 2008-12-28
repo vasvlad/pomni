@@ -514,7 +514,7 @@ class Sqlite(Database):
                 where grade >=2 and ? >= next_rep order by %s""" % sort_key,
                 (self.start_date.days_since_start(), )))
 
-    def cards_due_for_final_review(self, grade, sort_key="id"):
+    def cards_due_for_final_review(self, grade, sort_key="random()"):
         """ Generate cards for final review """
 
         return (self.get_card(self.get_fact(res["fact_id"]),
@@ -522,7 +522,7 @@ class Sqlite(Database):
                 self.conn.execute("""select * from reviewstats where grade = ?
                     and lapses > 0 order by %s""" % sort_key, (grade, )))
 
-    def cards_new_memorising(self, grade, sort_key="id"):
+    def cards_new_memorising(self, grade, sort_key="random()"):
         """ Generate cards for new memorising (lapses=0 and unseen=0) """
 
         return (self.get_card(self.get_fact(res["fact_id"]),
