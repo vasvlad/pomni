@@ -1,7 +1,8 @@
 # Mnemosyne configuration file.
 
 # Upload server. Only change when prompted by the developers.
-upload_server = "mnemosyne-proj.dyndns.org:80"
+upload_server = "xxxxmnemosyne-proj.dyndns.org:80"
+upload_logs = False
 
 # Set to True to prevent you from accidentally revealing the answer
 # when clicking the edit button.
