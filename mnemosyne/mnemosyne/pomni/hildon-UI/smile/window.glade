@@ -7,7 +7,6 @@
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="default_width">800</property>
     <property name="default_height">480</property>
-    <property name="opacity">0</property>
     <signal name="key_press_event" handler="window_keypress"/>
     <signal name="window_state_event" handler="window_state"/>
     <child>
@@ -634,7 +633,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="WarningWindow">
+  <widget class="GtkDialog" id="warningwindow">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Warning</property>
     <property name="resizable">False</property>
@@ -720,8 +719,8 @@
                         <property name="is_focus">True</property>
                         <property name="visible_window">False</property>
                         <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="ok"/>
-                        <signal name="key_press_event" handler="ok"/>
+                        <signal name="button_press_event" handler="close"/>
+                        <signal name="key_press_event" handler="close"/>
                         <child>
                           <widget class="GtkImage" id="image11">
                             <property name="visible">True</property>

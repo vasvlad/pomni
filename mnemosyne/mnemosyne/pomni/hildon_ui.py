@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/python -tt7
 # vim: sw=4 ts=4 expandtab ai
 #
 # Pomni. Learning tool based on spaced repetition technique
@@ -31,7 +31,7 @@ import gtk.glade
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main
+        ui_controller_review, config, ui_controller_main, ui_controller_input
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
@@ -44,7 +44,7 @@ class HildonUiControllerException(Exception):
     def __init__(self, w_tree, exception):
         """ Show Warning Window """
 
-        self.warning_window = w_tree.get_widget("WarningWindow")
+        self.warning_window = w_tree.get_widget("warningwindow")
         warning_label = w_tree.get_widget("label_warning")
         self.signals = ["close"]
         # connect signals to methods
@@ -66,7 +66,6 @@ class HildonUiControllerException(Exception):
 
     def close_cb(self, widget, event):
         """ Close Warning Window """
-
         self.warning_window.hide()
 
 
@@ -216,6 +215,29 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.grade_answer(int(widget.name[-1]))
 
 
+class HildonUiControllerInput(HildonBaseUi):
+    """ Hildon Review controller """
+
+    def __init__(self):
+        """ Initialization items of review window """
+
+        HildonBaseUi.__init__(self, signals=[])
+
+        self.title = _("Mnemosyne") + " - " + \
+            splitext(basename(config()["path"]))[0]
+
+
+    def start(self, w_tree):
+        """ Start new review window """
+
+        HildonBaseUi.start(self, w_tree)
+
+        # switch to Page review
+        # switcher - window with tabs. Each tab is for
+        # different mode (main_menu, review, conf, input, etc)
+        self.switcher.set_current_page(self.input)
+
+
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
 
@@ -272,7 +294,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
     def input_cb(widget):
         """ Start Input """
 
-        raise NotImplemented(widget)
+        ui_controller_input().start(self.w_tree)
 
     @staticmethod
     def configure_cb(widget):
@@ -331,6 +353,11 @@ class DraftControllerReview(HildonUiControllerReview):
 
     pass
 
+class EternalControllerInput(HildonUiControllerInput):
+    """ Eteranl UI Input Controller """
+
+    pass
+
 
 class HildonUI():
     """ Hildon UI """
@@ -341,6 +368,10 @@ class HildonUI():
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
+
+        # Set unvisible tabs of switcher
+        switcher = self.w_tree.get_widget("switcher")
+        switcher.set_property('show_tabs', False)
 
     def start(self, mode):
         """ Start UI  """

@@ -110,6 +110,19 @@ style "getanswerarea-button" {
 
 
 
+style "question_answer_frame" {
+  xthickness = 8
+  ythickness = 8
+  
+  engine "pixmap" {
+    image {
+	function = BOX
+	file     = "textarea.png"
+	border   = { 8, 8, 8, 8 }
+    }
+  }
+}
+
 style "review-title-label" {
 	font_name = "Nokia Sans 16.0"
 	fg[NORMAL] = "#c2c1bf"
@@ -130,21 +143,11 @@ style "review-getanswer-label" {
 	fg[NORMAL] = "#FFFFFF"
 }
 
-# Normal Button styles:
-style "review-frame" {
-
-  engine "pixmap" {
-
-    image
-         {
-          function = FLAT_BOX
-	file     = "textarea.png"
-  	border   = { 8, 8, 8, 8 }
-
-          }
-
-  }
+style "button-label" {
+	font_name = "Nokia Sans 20.0"
+	fg[NORMAL] = "#FFFFFF"
 }
+
 
 style "mainwindow"
 {
@@ -201,6 +204,107 @@ style "spliter-paned"  {
 }
 
 
+style "warning-notebook"
+{
+  GtkNotebook::inner_left_border = 0
+  GtkNotebook::inner_right_border = 0
+  GtkNotebook::tab-overlap = 0
+  GtkNotebook::arrow-spacing = 6
+  GtkNotebook::label-padding = 2
+
+  # Themings for images on different sides of the notebook.
+  engine "pixmap"
+  {
+    image
+      {
+        function = BOX
+	detail   = "notebook"
+          file = "warning_window.png"
+          border = {30, 30, 75, 75}
+      }
+  }
+}
+
+style "input-combobox-entry-entry" {
+
+  engine "pixmap"
+    {
+      image
+        {
+	  function = SHADOW
+	  state    = INSENSITIVE
+  	  file = "comboboxarea.png"
+	  border   = { 8, 8, 8, 8 }
+	}
+      image
+        {
+	  function = FLAT_BOX
+        }
+      image
+        {
+	  function = SHADOW
+ 	  file = "comboboxarea.png"
+	  border   = { 8, 8, 8, 8 }
+	}
+    }
+}
+style "input-combobox-entry-button-down" {
+
+	engine "pixmap" {
+		image {
+			function = FOCUS
+		}
+		image {
+			function = BOX
+			file = "combobox_right_bottom.png"
+			state = INSENSITIVE
+			border = { 8, 8, 8, 8 }
+		}
+		image {
+			function = BOX
+			file = "combobox_right_bottom.png"
+			border = { 8, 8, 8, 8 }
+		}
+		image {
+			function = TAB
+		}
+	}
+}
+
+
+style "theme-button" {
+
+  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
+  GtkWidget::focus-width = 0
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::child-displacement-x = 0
+  GtkButton::child-displacement-y = 0
+  GtkButton::interior_focus = 0
+  GtkButton::child_spacing = 0
+  xthickness = 7
+  ythickness = 0
+
+  engine "pixmap" {
+
+    image {
+        function = FOCUS
+	state    = ACTIVE
+    }
+
+    image {
+        function = FOCUS
+	file     = "button_theme.png"
+	border   = { 0, 0, 0, 0 }
+    }
+
+    image {
+	function = BOX
+	file     = "button_theme.png"
+  	border   = { 0, 0, 0, 0 }
+    }
+
+  }
+}
 
 widget "*.button_answer" style "review-button"
 widget "*.button_getanswer" style "getanswerarea-button"
@@ -211,4 +315,60 @@ widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
+widget "*.answer_frame" style "question_answer_frame"
+widget "*.question_frame" style "question_answer_frame"
+widget "*.addcard" style "theme-button"
+widget "*.additional" style "theme-button"
+widget "*.additionallabel" style "button-label"
+widget "*.addcardlabel" style "button-label"
+widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
+widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
+widget "*.label_warning" style "review-question-label"
+widget "*.label_ok" style "review-question-label"
+widget "*.notebook_wwindows" style "nothing"
+widget "*.review" style "theme-button"
+widget "*.input" style "theme-button"
+widget "*.configure" style "theme-button"
+widget "*.exit" style "theme-button"
+widget "*.review.GtkLabel" style "button-label"
+widget "*.input.GtkLabel" style "button-label"
+widget "*.configure.GtkLabel" style "button-label"
+widget "*.exit.GtkLabel" style "button-label"
+widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
+
+
+
+
+style "input-combobox-entry-arrow"
+{
+  engine "sapwood"
+    {
+      image 
+        {
+          function = ARROW
+          state = ACTIVE
+          overlay_file = "input_arrow_down.png"
+          overlay_stretch = FALSE
+        }
+      image
+        {
+          function = ARROW
+          state = NORMAL
+          overlay_file = "input_arrow_down.png"
+          overlay_stretch = FALSE
+        }
+      image
+        {
+          function = ARROW
+          state    = INSENSITIVE
+          overlay_file = "input_arrow_down.png"
+          overlay_stretch = FALSE
+        }
+    }
+}
+
+widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
+
+
+

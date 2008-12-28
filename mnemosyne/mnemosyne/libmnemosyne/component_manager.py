@@ -56,7 +56,7 @@ class ComponentManager(object):
         if type not in ["config", "log", "database", "scheduler", "filter",
                         "card_type", "card_type_widget", "renderer",
                         "ui_controller_main", "ui_controller_review", 
-                        "review_widget", "plugin"]:
+                        "review_widget", "ui_controller_input", "plugin"]:
            raise KeyError("Invalid component type % s.", type)
         if not self.components.has_key(used_for):
             self.components[used_for] = {}
@@ -115,6 +115,9 @@ def ui_controller_main():
 
 def ui_controller_review():
     return component_manager.get_current("ui_controller_review")
+
+def ui_controller_input():
+    return component_manager.get_current("ui_controller_input")
 
 def card_types():
     return component_manager.get_all("card_type")
