@@ -43,7 +43,7 @@ SCHEMA = """
         fact_id int,
         view_id int,
         grade int,
-        easiness int,
+        easiness real,
         lapses int,
         acq_reps int,
         acq_reps_since_lapse int,
