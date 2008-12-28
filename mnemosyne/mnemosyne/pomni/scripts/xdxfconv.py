@@ -34,8 +34,11 @@ from xml.sax.handler import ContentHandler
 
 from mnemosyne import libmnemosyne
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
-from mnemosyne.libmnemosyne.component_manager import database, config, \
-                                              ui_controller_main
+from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
+from mnemosyne.libmnemosyne.component_manager import database, config
+from mnemosyne.libmnemosyne.component_manager import ui_controller_main
+from mnemosyne.libmnemosyne.category import Category
+from mnemosyne.libmnemosyne.fact import Fact
 
 class XDXFHandler(ContentHandler):
     """ XDXF format handler """
@@ -66,18 +69,20 @@ class XDXFHandler(ContentHandler):
         """ callback for character data """
 
         if self.state["k"]:
-            #self.key = content.encode("utf8").strip()
-            self.key = content
+            self.key = content.encode("utf8").strip()
+            #self.key = content
         elif self.state["tr"]:
-            self.transcription = content
-            #self.transcription = content.encode("utf8").strip()
+            #self.transcription = content
+            self.transcription = content.encode("utf8").strip()
         elif self.state["ar"]:
-            self.translation.extend([c for c in content.split("\n") 
-                                        if c != self.key])
+            #self.translation.extend([c for c in content.split("\n") 
+            #                            if c != self.key])
 
             #self.translation.extend([c.encode("utf8").strip() \
             #    for c in content.split("\n") \
             #        if c and c.encode("utf8").strip() != self.key])
+
+            self.translation = content.encode("utf8").strip()
 
 class TextOut(object):
     """ Text output """
@@ -107,9 +112,11 @@ class MnemosyneOut(object):
             datadir = os.path.abspath(os.path.join(os.path.expanduser("~"), 
                         ".mnemosyne"))
 
+        print 'datadir=', datadir
+
         libmnemosyne.initialise(datadir)
 
-        self.card_type = ThreeSided()
+        self.card_type = FrontToBack()
         self.database = database()
         self.saved = False
         
@@ -119,9 +126,9 @@ class MnemosyneOut(object):
             self.records = -1
 
         if not category:
-            self.category = ["category1"]
-        else:
-            self.category = [category]
+            category = "English-Russian"
+        
+        self.category = category #Category(category)
 
         self.controller = ui_controller_main()
 
@@ -132,19 +139,23 @@ class MnemosyneOut(object):
             """ Check if fact with the same key is 
                 in database
             """
+            return False
             for fact in self.database.facts:
                 if fact.data["f"] == name:
                     return True
        
         # skip duplicate names and short words (ugly)
         if self.records and len(obj.key) > 3 and not fact_exists(obj.key):
-            fact = {"f": obj.key, "t": obj.translation}
-            if obj.transcription:
-                fact["p"] = obj.transcription
-            else:
-                fact["p"] = ""
-       
-            self.controller.create_new_cards(fact, self.card_type, 0, 
+
+            data = {"q": obj.key, "a": obj.translation}
+            #if obj.transcription:
+            #    data["p"] = obj.transcription
+
+            #print 'f:', obj.key
+            #print 't:', obj.translation
+            #print 'p:', obj.transcription
+
+            self.controller.create_new_cards(data, self.card_type, 0, 
                                             [self.category])
             self.records -= 1
 
