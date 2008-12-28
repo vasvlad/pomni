@@ -290,8 +290,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         ui_controller_review().start(self.w_tree)
 
-    @staticmethod
-    def input_cb(widget):
+    def input_cb(self, widget):
         """ Start Input """
 
         ui_controller_input().start(self.w_tree)
