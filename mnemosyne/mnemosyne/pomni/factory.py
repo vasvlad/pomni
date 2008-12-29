@@ -25,6 +25,8 @@ UI Factory. Creates UI objects
 """
 
 from mnemosyne.libmnemosyne.databases.pickle import Pickle
+from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
+from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 from mnemosyne.libmnemosyne.component_manager import config
@@ -70,10 +72,16 @@ def ui_factory(interface=None):
 def backend_factory(name=None):
     """ Create backend """
 
-    if not name or name == "pickle":
+    if name == "pickle":
+        from mnemosyne.libmnemosyne.databases.pickle import Pickle
         return Pickle()
-    if name == 'sqlite':
-        raise NotImplementedError("SQLite backend is not implemented yet")
+
+    if not name or name == 'sqlite':
+        from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
+        # register scheduller. Temporary
+        from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
+        component_manager.register("scheduler", SM2Gen())
+        return Sqlite()
 
     raise ValueError("No idea how to create %s backend" % name)
 
