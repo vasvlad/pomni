@@ -3,10 +3,15 @@ pomni (0.0.4) unstable; urgency=low
   * disabled log uploading
   * added -m (short variant of --mode) command line option
   * Code cleaned up with pylint, pep8 and reindent
-  * Added dependency to new libmnemosyne with sqlite backend
+  * added dependency to new libmnemosyne with sqlite backend
     and generator-based scheduler
+  * Modified Main window in Eterenal Theme (Vlad)
+  * Done first variant of input window in Etrenal Theme (Vlad)
+  * Made unvisible tabs of switcher  in code (Vlad)
+  * Eternal&Draft themes warning window is done (Vlad)
+  * added demo database to the package 
 
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 28 Dec 2008 19:12:07 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Mon, 29 Dec 2008 21:23:41 +0000
 
 pomni (0.0.3) unstable; urgency=low
 
