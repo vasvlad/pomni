@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+SRC="/usr/share/pomni/demo/default.mem"
+DESTDIR="$MYDOCSDIR/.documents/pomni"
+DEST="$DESTDIR/default.mem"
+
+if [ "$1" = "configure" -a -r $SRC ]; then
+    [ -d $DESTDIR ] || mkdir $DESTDIR
+    [ -f $DEST ] || cp $SRC $DEST
+fi
+

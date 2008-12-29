@@ -63,9 +63,10 @@ def main(argv):
 
     opts, argv = parse_commandline(argv)
 
-    # FIXME: move this to config module
     if opts.datadir:
         basedir = os.path.abspath(opts.datadir)
+    elif os.path.exists(os.path.join(os.environ["MYDOCSDIR"], ".documents")):
+        basedir = os.path.join(os.environ['MYDOCSDIR'], ".documents/pomni")
     elif os.path.exists(os.path.join(os.getcwdu(), ".pomni")):
         basedir = os.path.abspath(os.path.join(os.getcwdu(), ".pomni"))
     else:
