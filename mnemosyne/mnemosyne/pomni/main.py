@@ -65,7 +65,8 @@ def main(argv):
 
     if opts.datadir:
         basedir = os.path.abspath(opts.datadir)
-    elif os.path.exists(os.path.join(os.environ["MYDOCSDIR"], ".documents")):
+    elif "MYDOCSDIR" in os.environ and os.path.exists(os.path.join(\
+            os.environ["MYDOCSDIR"], ".documents")):
         basedir = os.path.join(os.environ['MYDOCSDIR'], ".documents/pomni")
     elif os.path.exists(os.path.join(os.getcwdu(), ".pomni")):
         basedir = os.path.abspath(os.path.join(os.getcwdu(), ".pomni"))
