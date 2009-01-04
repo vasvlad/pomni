@@ -10,8 +10,9 @@ pomni (0.0.4) unstable; urgency=low
   * Made unvisible tabs of switcher  in code (Vlad)
   * Eternal&Draft themes warning window is done (Vlad)
   * added demo database to the package 
+  * added csv converter and dictionaries
 
- -- Ed Bartosh <bartosh@gmail.com>  Mon, 29 Dec 2008 21:23:41 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 04 Jan 2009 14:04:12 +0000
 
 pomni (0.0.3) unstable; urgency=low
 
