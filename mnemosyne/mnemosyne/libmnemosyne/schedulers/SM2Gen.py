@@ -180,7 +180,7 @@ class SM2Gen(SM2Mnemosyne):
         queue = CardQueue(limit=20)
         
         if learn_ahead:
-            queue.mkgroup("learn ahead", limit=5)
+            queue.mkgroup("learn ahead", limit=50)
             queue.add(datab.cards_learn_ahead(sort_key="next_rep"))
 
         else:
