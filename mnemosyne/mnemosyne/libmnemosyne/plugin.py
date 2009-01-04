@@ -32,3 +32,7 @@ class Plugin(Component):
         component_manager.unregister(Plugin.provides, self)
         self.active = False
 
+#def getplugin(category, name):
+#    """ Return plugin object by category and name """
+#    pass
+

@@ -16,7 +16,7 @@ import sys
 from mnemosyne.libmnemosyne.exceptions import PluginError, traceback_string
 from mnemosyne.libmnemosyne.component_manager import config, log
 from mnemosyne.libmnemosyne.component_manager import component_manager
-
+#from mnemosyne.libmnemosyne.plugins import getplugin
 
 def initialise(basedir):
     
@@ -84,11 +84,13 @@ def initialise_system_components():
     #component_manager.register("database", Pickle())
     from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
     component_manager.register("database", Sqlite())
-    
+
     # Scheduler.
-    from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne \
-                                                   import SM2Mnemosyne
-    component_manager.register("scheduler", SM2Mnemosyne())
+    from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
+    component_manager.register("scheduler", SM2Gen())
+    
+    #for item in ("database", "scheduler"):
+    #    component_manager.register(item, getplugin(config()[item]))
     
     # Card types.
     from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
