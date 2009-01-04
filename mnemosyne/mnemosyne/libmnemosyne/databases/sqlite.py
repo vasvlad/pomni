@@ -234,8 +234,10 @@ class Sqlite(Database):
 
         card_type = card_type_by_id(str(fact["facttype_id"]))
 
-        return Fact(data, card_type, categories,
-                    uid=fact['guid'], added=fact['ctime'])
+        fact_obj = Fact(data, card_type, uid=fact['guid'], added=fact['ctime'])
+        fact_obj.categories = categories
+
+        return fact_obj
 
     @staticmethod
     def get_card(fact, view, sql_res):
