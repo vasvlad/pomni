@@ -20,7 +20,8 @@ config_py = \
 """# Mnemosyne configuration file.
 
 # Upload server. Only change when prompted by the developers.
-upload_server = "mnemosyne-proj.dyndns.org:80"
+upload_server = "xxxmnemosyne-proj.dyndns.org:80"
+upload_logs = False
 
 # Set to True to prevent you from accidentally revealing the answer
 # when clicking the edit button.
@@ -52,6 +53,12 @@ dvipng = "dvipng -D 200 -T tight tmp.dvi"
 
 # path to default theme
 theme_path = "/usr/share/pomni/hildon-UI/eternal"
+
+# default scheduler
+scheduler = "SM2"
+
+# default database
+database = "sqlite"
 """
 
 class Configuration(dict, Component):
@@ -73,7 +80,7 @@ class Configuration(dict, Component):
              "import_img_dir": self.basedir, 
              "import_sound_dir": self.basedir,
              "user_id": md5(str(random.random())).hexdigest()[0:8],
-             "upload_logs": True, 
+             "upload_logs": False, 
              "upload_server": "mnemosyne-proj.dyndns.org:80",
              "log_index": 1, 
              "QA_font": None,
@@ -96,7 +103,9 @@ class Configuration(dict, Component):
              "latex_postamble": "\\end{document}", 
              "latex": "latex -interaction=nonstopmode",
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
-             "theme_path": "/usr/share/pomni/hildon-UI/eternal"
+             "theme_path": "/usr/share/pomni/hildon-UI/eternal",
+             "scheduler": "SM2",
+             "database": "sqlite"
             }.items():
             
             self.setdefault(key, value)
