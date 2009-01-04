@@ -2,8 +2,12 @@ python-libmnemosyne (2.0.0-4) unstable; urgency=low
 
   * Implemented Sqlite backend
   * Implemented scheduler with generators
+  * disabled logs upload
+  * added 'scheduler' and 'database' config options
+  * SM2Gen: make max amount of cards = 50 for learn ahead
+  * sqlite: adopted Fact API change 
 
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 28 Dec 2008 19:15:53 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 04 Jan 2009 14:02:35 +0000
 
 python-libmnemosyne (2.0.0-3) unstable; urgency=low
 
