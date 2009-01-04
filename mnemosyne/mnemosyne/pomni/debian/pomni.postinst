@@ -1,11 +1,13 @@
 #!/bin/sh -e
 
-SRC="/usr/share/pomni/demo/default.mem"
-DESTDIR="$MYDOCSDIR/.documents/pomni"
-DEST="$DESTDIR/default.mem"
+PKG="pomni"
+FNAME="default.mem"
+SRC="/usr/share/$PKG/demo/$FNAME"
+DESTDIR="$MYDOCSDIR/.documents/$PKG"
+DEST="$DESTDIR/$FNAME"
 
 if [ "$1" = "configure" -a -r $SRC ]; then
     [ -d $DESTDIR ] || mkdir $DESTDIR
-    [ -f $DEST ] || cp $SRC $DEST
+    [ -f $DEST ] || (cp $SRC $DEST && chown user $DEST)
 fi
 
