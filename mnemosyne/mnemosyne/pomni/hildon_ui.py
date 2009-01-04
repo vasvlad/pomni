@@ -219,6 +219,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.card = None
 
+
 class HildonUiControllerInput(HildonBaseUi):
     """ Hildon Review controller """
 
@@ -287,6 +288,11 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         print 'Creating new cards', fact_data, card_type, grade, cat_names
 
+    def add_cards(self):
+       """ Add cards.Mnenosyne API """
+
+       print 'Adding new cards'
+
     # Callbacks
 
     def review_cb(self, widget):
@@ -304,6 +310,37 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
         """ Start configure mode """
 
         raise NotImplemented(widget)
+
+    def edit_current_card(self):
+        """ Not Implemented Yet """
+
+        pass
+
+    def update_related_cards(self, fact, new_fact_data, new_card_type, \
+                             new_cat_names):
+        """ Not Implemented """
+
+        pass
+
+    def file_new(self):
+        """ Not Implemented Yet """
+
+        pass
+
+    def file_open(self):
+        """ Not Implemented Yet """
+
+        pass
+
+    def file_save(self):
+        """ Not Implemented Yet """
+
+        pass
+
+    def file_save_as(self):
+        """ Not Implemented Yet """
+
+        pass
 
 
 class EternalControllerMain(HildonUiControllerMain):
