@@ -214,6 +214,10 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.grade_answer(int(widget.name[-1]))
 
+    def clear(self):
+        """ Unknown """
+
+        self.card = None
 
 class HildonUiControllerInput(HildonBaseUi):
     """ Hildon Review controller """
