@@ -253,7 +253,7 @@ class EternalControllerReview(HildonUiControllerReview):
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible """
 
-        self.base.new_question(self)
+        self.base.new_question(self, learn_ahead)
         self.get_answer_box.set_property('visible', True)
         self.grades.set_property('visible', False)
         self.answer_box.set_property('visible', False)
@@ -287,8 +287,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         print 'Creating new cards', fact_data, card_type, grade, cat_names
 
-    @staticmethod
-    def add_cards():
+    def add_cards(self):
         """ Add cards.Mnenosyne API """
 
         print 'Adding new cards'
