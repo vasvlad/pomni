@@ -282,13 +282,13 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         ui_controller_main().widget = self
 
-    @staticmethod
-    def create_new_cards(fact_data, card_type, grade, cat_names):
+    def create_new_cards(self, fact_data, card_type, grade, cat_names):
         """ Create new cards. Mnenosyne API """
 
         print 'Creating new cards', fact_data, card_type, grade, cat_names
 
-    def add_cards(self):
+    @staticmethod
+    def add_cards():
         """ Add cards.Mnenosyne API """
 
         print 'Adding new cards'
