@@ -28,6 +28,8 @@ import os
 import gettext
 import gtk
 import gtk.glade
+import gtkhtml2
+
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
@@ -175,7 +177,16 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         card = scheduler().get_new_question(learn_ahead)
 
         if card:
-            self.question.set_text(card.question())
+            document = gtkhtml2.Document()
+            document.clear()
+            document.open_stream('text/html')
+            document.write_stream(card.question())
+            document.close_stream()
+            view = gtkhtml2.View()
+            view.set_document(document)
+
+            self.question.add(view)
+            view.show()
         else:
             # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)

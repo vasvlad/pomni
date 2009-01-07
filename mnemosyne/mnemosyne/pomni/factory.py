@@ -62,7 +62,7 @@ def ui_factory(interface=None):
         component_manager.register("ui_controller_main", main_class())
         component_manager.register("ui_controller_review", review_class())
         component_manager.register("ui_controller_input", input_class())
-        component_manager.register("renderer", TextRenderer())
+#        component_manager.register("renderer", TextRenderer())
         return HildonUI()
 
     # add next gui here
