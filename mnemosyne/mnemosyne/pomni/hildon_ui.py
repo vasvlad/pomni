@@ -177,16 +177,27 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         card = scheduler().get_new_question(learn_ahead)
 
         if card:
+            view = gtkhtml2.View()
+            view.set_name('question_text')
+            self.question.add(view)
+            
+            print view.get_style().font_desc
+            
             document = gtkhtml2.Document()
             document.clear()
             document.open_stream('text/html')
             document.write_stream(card.question())
+#            document.write_stream('<html><head><style>*{font-size:31px;}</style> </head><body>Hello, World!<br><a href="http://www.gnome.org/">click me</a></body></html>')
             document.close_stream()
-            view = gtkhtml2.View()
+                 
+            print view.get_name()
             view.set_document(document)
+            
 
-            self.question.add(view)
+
             view.show()
+            
+            print card.question()
         else:
             # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
