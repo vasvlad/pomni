@@ -144,7 +144,7 @@ class Sqlite(Database):
         """Commit changes."""
 
         # Saving to another file not implemented
-        if path and path != self.path:
+        if path and expand_path(path, config().basedir) != self.path:
             raise NotImplementedError
 
         self.conn.commit()
