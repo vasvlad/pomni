@@ -129,12 +129,12 @@ style "review-title-label" {
 }
 
 style "review-answer-label" {
-	font_name = "Nokia Sans 16.0"
+	font_name = "Nokia Sans 25.0"
 	fg[NORMAL] = "#000000"
 }
 
 style "review-question-label" {
-	font_name = "Nokia Sans 16.0"
+	font_name = "Nokia Sans 25.0"
 	fg[NORMAL] = "#000000"
 }
 
@@ -340,11 +340,11 @@ style "theme-button" {
 widget "*.button_answer" style "review-button"
 widget "*.button_getanswer" style "getanswerarea-button"
 widget "*.title_label" style "review-title-label"
-widget "*.answer" style "review-question-label"
-widget "*.question_text" style "review-question-label"
+widget "*.answer" style "nothingviewport"
+widget "*.answer_text" style "review-answer-label"
 widget "*.question" style "nothingviewport"
+widget "*.question_text" style "review-question-label"
 widget "*.getanswer" style "review-getanswer-label"
-widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"

@@ -148,10 +148,12 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.grade = 0
         self.card = None
 
+
     def start(self, w_tree):
         """ Start new review window """
 
         HildonBaseUi.start(self, w_tree)
+
 
         # switch to Page review
         # switcher - window with tabs. Each tab is for
@@ -177,33 +179,31 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         card = scheduler().get_new_question(learn_ahead)
 
         if card:
-            view = gtkhtml2.View()
-            view.set_name('question_text')
-            self.question.add(view)
-            
-            print view.get_style().font_desc
-            
-            document = gtkhtml2.Document()
+            document = getattr(self,'question_text').document
+            view = getattr(self,'question_text')
             document.clear()
             document.open_stream('text/html')
-            document.write_stream(card.question())
-#            document.write_stream('<html><head><style>*{font-size:31px;}</style> </head><body>Hello, World!<br><a href="http://www.gnome.org/">click me</a></body></html>')
+            # Adapting for html
+            question_text = card.question()
+            #FIXME Need check for space before <html>
+            if question_text.startswith('<html>'):
+                font_size = view.get_style().font_desc.get_size()/1024
+                question_text = question_text.replace('<head>',
+                 '<meta http-equiv="Content-Type" content="text/html; \
+                 charset=UTF-8"><style>*{font-size:%spx;}</style>' % font_size)
+            else:
+                # FIXME
+                print "Not a html!!!!!!!!!"
+
+            document.write_stream(question_text)
             document.close_stream()
-                 
-            print view.get_name()
-            view.set_document(document)
-            
 
 
-            view.show()
-            
-            print card.question()
         else:
             # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
             #self.question.set_text(card.question())
 
-        self.answer.set_text("")
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
         self.get_answer.set_sensitive(True)
@@ -212,11 +212,29 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     def show_answer(self):
         """ Show answer in review window """
 
-        self.answer.set_text(self.card.answer())
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(True)
         self.get_answer.set_sensitive(False)
-        self.answer.set_text(self.card.answer())
+
+        view = getattr(self,'answer_text')
+        answer_text = self.card.answer()
+        document = getattr(self,'answer_text').document
+        document.clear()
+        document.open_stream('text/html')
+        # Adapting for html
+        #FIXME Need check for space before <html>
+        if answer_text.startswith('<html>'):
+            font_size = view.get_style().font_desc.get_size()/1024
+            answer_text = answer_text.replace('<head>', \
+            '<meta http-equiv="Content-Type" content="text/html; \
+            charset=UTF-8"><style>*{font-size:%spx;}</style>' % font_size)
+        else:
+            # FIXME
+            print "Not a html!!!!!!!!!"
+
+        document.write_stream(answer_text)
+        document.close_stream()
+
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -428,6 +446,7 @@ class HildonUI():
 
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
+        gtk.glade.set_custom_handler(self.custom_handler)
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
         # Set unvisible tabs of switcher
@@ -440,6 +459,25 @@ class HildonUI():
         globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
+    def custom_handler(self, glade, function_name, widget_name, *args):
+
+        """ Hook for custom widgets """
+
+        if glade and widget_name and  hasattr(self, function_name):
+            handler = getattr(self, function_name)
+            return handler(args)
+
+    @staticmethod
+    def create_gtkhtml(args):
+        """ Create gtkhtml2 widget """
+
+
+        view = gtkhtml2.View()
+        document = gtkhtml2.Document()
+        view.set_document(document)
+        view.document = document
+        view.show()
+        return view
 
 def _test():
     """ Run doctests
