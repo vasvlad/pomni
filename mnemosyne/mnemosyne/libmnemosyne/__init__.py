@@ -45,14 +45,15 @@ def initialise_new_empty_database():
 
 upload_thread = None
 def initialise_logging():
-    global upload_thread
-    from mnemosyne.libmnemosyne.log_uploader import LogUploader
-    log().archive_old_log()
-    log().start_logging()
-    log().program_started()
     if config()["upload_logs"]:
-        upload_thread = LogUploader()
-        upload_thread.start()
+        global upload_thread
+        from mnemosyne.libmnemosyne.log_uploader import LogUploader
+        log().archive_old_log()
+        log().start_logging()
+        log().program_started()
+        if config()["upload_logs"]:
+            upload_thread = LogUploader()
+            upload_thread.start()
 
 
 def initialise_error_handling():
@@ -169,11 +170,14 @@ def initialise_user_plugins():
 
 
 def finalise():
-    global upload_thread
-    if upload_thread:
-        print "Waiting for uploader thread to stop..."
-        upload_thread.join()
-        print "done!"
+    
+    if config()["upload_logs"]:
+        global upload_thread
+        if upload_thread:
+            print "Waiting for uploader thread to stop..."
+            upload_thread.join()
+            print "done!"
+            
     log().program_stopped()
     try:
         os.remove(os.path.join(config().basedir,"MNEMOSYNE_LOCK"))
