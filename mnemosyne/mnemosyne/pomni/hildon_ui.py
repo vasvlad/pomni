@@ -31,7 +31,7 @@ import gtk.glade
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main, ui_controller_input
+        ui_controller_review, config, ui_controller_main #, ui_controller_input
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
@@ -220,27 +220,27 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.card = None
 
 
-class HildonUiControllerInput(HildonBaseUi):
-    """ Hildon Review controller """
-
-    def __init__(self):
-        """ Initialization items of review window """
-
-        HildonBaseUi.__init__(self, signals=[])
-
-        self.title = _("Mnemosyne") + " - " + \
-            splitext(basename(config()["path"]))[0]
-
-
-    def start(self, w_tree):
-        """ Start new review window """
-
-        HildonBaseUi.start(self, w_tree)
-
-        # switch to Page review
-        # switcher - window with tabs. Each tab is for
-        # different mode (main_menu, review, conf, input, etc)
-        self.switcher.set_current_page(self.input)
+#class HildonUiControllerInput(HildonBaseUi):
+#    """ Hildon Review controller """
+#
+#    def __init__(self):
+#        """ Initialization items of review window """
+#
+#        HildonBaseUi.__init__(self, signals=[])
+#
+#        self.title = _("Mnemosyne") + " - " + \
+#            splitext(basename(config()["path"]))[0]
+#
+#
+#    def start(self, w_tree):
+#        """ Start new review window """
+#
+#        HildonBaseUi.start(self, w_tree)
+#
+#        # switch to Page review
+#        # switcher - window with tabs. Each tab is for
+#        # different mode (main_menu, review, conf, input, etc)
+#        self.switcher.set_current_page(self.input)
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -392,10 +392,10 @@ class DraftControllerReview(HildonUiControllerReview):
 
     pass
 
-class EternalControllerInput(HildonUiControllerInput):
-    """ Eteranl UI Input Controller """
-
-    pass
+#class EternalControllerInput(HildonUiControllerInput):
+#    """ Eteranl UI Input Controller """
+#
+#    pass
 
 
 class HildonUI():
