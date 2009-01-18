@@ -24,9 +24,6 @@
 UI Factory. Creates UI objects
 """
 
-from mnemosyne.libmnemosyne.databases.pickle import Pickle
-from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
-from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 from mnemosyne.libmnemosyne.component_manager import config

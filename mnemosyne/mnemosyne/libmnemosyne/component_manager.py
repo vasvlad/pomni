@@ -19,45 +19,48 @@ class ComponentManager(object):
 
     Managed components:
 
-       ======================   ===============================
+       ======================   ===========================================
        "config"                 configuration instance
        "log"                    logger instance
        "database"               database instance
        "scheduler"              scheduler instance
        "filter"                 filter instance
        "card_type"              card_type instance
+       "card_type_converter"    card_type_converter instance
+                                used for (old_type class, new_type class)
        "card_type_widget"       card_type_widget class,
-                                used_for card_type class name
+                                used_for card_type class
        "renderer"               renderer instance,
-                                used_for card_type class name
+                                used_for card_type class
        "ui_controller_main"     ui_controller_main instance
        "ui_controller_review"   ui_controller_review instance
        "review_widget"          review_widget class
        "plugin"                 plugin instance
        "function_hook"          function hook instance
                                 used_for hookpoint_name
-       ======================   ===============================
+       ======================   ===========================================
        
     Note: for widgets we store the class name as opposed to an instance,
     since creating widgets can be time consuming, and we want to create
     e.g. card type widgets only when they are really needed.
 
     """
-    
-    # TODO KW: investigate inheritance in the context of used_for.
         
     def __init__(self):
         self.components = {} # { used_for : {type : [component]} }
         self.card_type_by_id = {}
 
     def register(self, type, component, used_for=None):
+        
         """For type, component and used_for, see the table above."""
         
         if type not in ["config", "log", "database", "scheduler", "filter",
-                        "card_type", "card_type_widget", "renderer",
+                        "card_type", "card_type_converter",
+                        "card_type_widget", "renderer",
                         "ui_controller_main", "ui_controller_review", 
-                        "review_widget", "ui_controller_input", "plugin"]:
+                        "review_widget", "plugin", "function_hook"]:
            raise KeyError("Invalid component type % s.", type)
+       
         if not self.components.has_key(used_for):
             self.components[used_for] = {}
         if not self.components[used_for].has_key(type):
@@ -65,6 +68,7 @@ class ComponentManager(object):
         else:
             if component not in self.components[used_for][type]:
                 self.components[used_for][type].append(component)
+                
         if type == "card_type":
             self.card_type_by_id[component.id] = component
 
@@ -72,24 +76,54 @@ class ComponentManager(object):
         self.components[used_for][type].remove(component)
 
     def get_all(self, type, used_for=None):
-
+        
         """For components for which there can be many active at once."""
 
+        if used_for == None or isinstance(used_for, str):
+            try:
+                return self.components[used_for][type]
+            except:
+                return []
+
+        # See if there is a component registered for the exact type.
         try:
             return self.components[used_for][type]
         except:
-            return []
+            # See if there is a component registered for the parent class.
+            class_keys = [key for key in self.components.keys() if \
+                          not isinstance(key, str) and not (key == None)]
+            if isinstance(used_for, tuple):
+                for key in class_keys:
+                    if issubclass(used_for[0], key[0]) and \
+                       issubclass(used_for[1], key[1]):
+                        try:
+                            return self.components[key][type]
+                        except:
+                            return []
+                return []
+            else:
+                for key in class_keys:
+                    if issubclass(used_for, key):
+                        try:
+                            return self.components[key][type]
+                        except:
+                            return []
+                    return []
         
     def get_current(self, type, used_for=None):
+        
+        """For components for which there can be only one active at any
+        time.
 
-        """For component for which there can be only one active at one time."""
+        """
 
-        try:
-            return self.components[used_for][type][-1]
-        except:
+        all = self.get_all(type, used_for)
+        if all == []:
             return None
+        else:
+            return all[-1]
 
-
+        
 # The component manager needs to be accessed by many different parts of the
 # library, so we hold it in a global variable.
 
@@ -122,8 +156,7 @@ def ui_controller_input():
 def card_types():
     return component_manager.get_all("card_type")
 
-def card_type_by_id(id):
-    # TODO KW: use named components for this.
+def card_type_by_id(id): # TODO KW: use named components for this.
     return component_manager.card_type_by_id[id]
 
 def filters():
