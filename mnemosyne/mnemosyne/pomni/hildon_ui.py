@@ -188,13 +188,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             #FIXME Need check for space before <html>
             if question_text.startswith('<html>'):
                 font_size = view.get_style().font_desc.get_size()/1024
-                question_text = question_text.replace('<head>',
-                 '<meta http-equiv="Content-Type" content="text/html; \
-                 charset=UTF-8"><style>*{font-size:%spx;}</style>' % font_size)
+                question_text = question_text.replace('*{font-size:14px;}',
+                 '*{font-size:%spx;}' % font_size)
             else:
                 # FIXME
                 print "Not a html!!!!!!!!!"
-
             document.write_stream(question_text)
             document.close_stream()
 
@@ -225,9 +223,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         #FIXME Need check for space before <html>
         if answer_text.startswith('<html>'):
             font_size = view.get_style().font_desc.get_size()/1024
-            answer_text = answer_text.replace('<head>', \
-            '<meta http-equiv="Content-Type" content="text/html; \
-            charset=UTF-8"><style>*{font-size:%spx;}</style>' % font_size)
+            answer_text = answer_text.replace('<head>', 
+            '<head> <style>*{font-size:%spx;}</style>' % font_size)
         else:
             # FIXME
             print "Not a html!!!!!!!!!"
