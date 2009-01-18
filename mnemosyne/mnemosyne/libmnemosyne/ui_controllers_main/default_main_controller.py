@@ -36,6 +36,9 @@ class DefaultMainController(UiControllerMain):
         stopwatch.pause()
         review_controller = ui_controller_review()
         self.widget.run_edit_fact_dialog(review_controller.card.fact)
+        if review_controller.card == None:
+            self.widget.update_status_bar()
+            review_controller.new_question()         
         review_controller.update_dialog(redraw_all=True)
         stopwatch.unpause()
 
@@ -81,26 +84,80 @@ class DefaultMainController(UiControllerMain):
             db.add_card(card)
 
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
-                             new_cat_names):
+                             new_cat_names, correspondence):
         # Allow this function to be overridden by a function hook.
         f = component_manager.get_current("function_hook", "update_related_cards")
         if f:
             return f.run()
 
-        # Partial implementation. Still to do: change card type, duplicate checking.     
+        # Change card type.
         db = database()
+        old_card_type = fact.card_type
+        if old_card_type != new_card_type:
+            converter = component_manager.get_current\
+                  ("card_type_converter", used_for=(old_card_type.__class__,
+                                                    new_card_type.__class__))
+            if not converter:
+                answer = self.widget.question_box(\
+          _("Can't preserve history when converting between these card types.")\
+                  + " " + _("The learning history of the cards will be reset."),
+                  _("&OK"), _("&Cancel"), "")
+                if answer == 1: # Cancel.
+                    return -1
+                else:
+                    db.delete_fact_and_related_data(fact)
+                    self.create_new_cards(new_fact_data, new_card_type,
+                                          grade=0, cat_names=new_cat_names)
+                    return 0
+            else:
+
+                print 'before'
+                for c in db.cards_from_fact(fact):
+                    print c
+                    print c.question(), c.answer()
+                
+                new_cards, updated_cards, deleted_cards = \
+                   converter.convert(db.cards_from_fact(fact), old_card_type,
+                                     new_card_type, correspondence)
+                if len(deleted_cards) != 0:
+                    answer = self.widget.question_box(\
+          _("This will delete cards and their history.") + " " +\
+          _("Are you sure you want to do this,") + " " +\
+          _("and not just deactivate cards in the 'Activate cards' dialog?"),
+                      _("&Proceed and delete"), _("&Cancel"), "")
+                    if answer == 1: # Cancel.
+                        return -1   
+                fact.card_type = new_card_type
+                for card in new_cards:
+                    db.add_card(card)
+                for card in updated_cards:
+                    db.update_card(card)
+                for card in deleted_cards:
+                    db.delete_card(card)
+                    
+        # Update categories, facts and cards.
+        old_cats = fact.cat
         fact.cat = []
         for cat_name in new_cat_names:
-            fact.cat.append(db.get_or_create_category_with_name(cat_name)) 
+            fact.cat.append(db.get_or_create_category_with_name(cat_name))
+        for cat in old_cats:
+            db.remove_category_if_unused(cat)
         new_cards, updated_cards = fact.card_type.update_related_cards(fact, \
                                                 new_fact_data)
+        fact.data = new_fact_data
         db.update_fact(fact)
         for card in new_cards:
             db.add_card(card)
         for card in updated_cards:
             db.update_card(card)
-        return
-        
+
+        print 'after'
+        for c in db.cards_from_fact(fact):
+            print c
+            print c.question(), c.answer()
+        return 0
+    
+        # TODO: duplicate checking.
         if db.has_fact_with_data(fact_data):
             self.widget.information_box(\
               _("Card is already in database.\nDuplicate not added."), _("OK"))

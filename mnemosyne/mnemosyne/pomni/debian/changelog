@@ -1,3 +1,11 @@
+pomni (0.0.5) unstable; urgency=low
+
+  * fixed bug in postinst which prevented to install package
+    on desktop
+  * hildon_ui: fixed pylint warnings (Vlad) 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Mon, 05 Jan 2009 20:31:25 +0000
+
 pomni (0.0.4) unstable; urgency=low
 
   * disabled log uploading

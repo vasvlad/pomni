@@ -51,6 +51,14 @@ class CardType(Component):
         self.renderer = None
         self.fact_views_can_be_deactivated = True
 
+    def keys(self):
+        return set(fact_key for (fact_key, fact_key_name) in self.fields)
+
+    def key_with_name(self, key_name):
+        for fact_key, fact_key_name in self.fields:
+            if fact_key_name == key_name:
+                return fact_key
+
     def required_fields(self):
 
         """Collect required fields from registered views."""
@@ -72,7 +80,7 @@ class CardType(Component):
             return self.renderer
         else:
             self.renderer = component_manager.\
-                   get_current("renderer", used_for=self.__class__.__name__)
+                   get_current("renderer", used_for=self.__class__)
             if not self.renderer:
                  self.renderer = component_manager.get_current("renderer")
             return self.renderer
