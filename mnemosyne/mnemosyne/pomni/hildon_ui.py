@@ -33,7 +33,7 @@ import gtkhtml2
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main, ui_controller_input
+        ui_controller_review, config, ui_controller_main, ui_controller_input, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
@@ -269,6 +269,8 @@ class HildonUiControllerInput(HildonBaseUi):
             splitext(basename(config()["path"]))[0]
 
 
+
+
     def start(self, w_tree):
         """ Start new review window """
 
@@ -278,6 +280,21 @@ class HildonUiControllerInput(HildonBaseUi):
         # switcher - window with tabs. Each tab is for
         # different mode (main_menu, review, conf, input, etc)
         self.switcher.set_current_page(self.input)
+
+        card_type_by_id = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+
+        category_names_by_id = dict([(i, name) for (i, name) in \
+            enumerate(database().category_names())])
+        
+        categories = w_tree.get_widget("categories")
+        s = categories.list.get()
+        print s
+#        self.card_type_by_name = {}
+#        for card_type in card_types():
+#            self.card_types.addItem(card_type.name)
+#            self.card_type_by_name[card_type.name] = card_type
+
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -338,8 +355,18 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
     def input_cb(self, widget):
         """ Start Input """
+        # FIX ME This block must be remvoved to the factory.py
+        from pomni import hildon_ui
+        from hildon_ui import HildonUI
+        try:
+            theme = config()["theme_path"].split("/")[-1]
+        except KeyError:
+            theme = "eternal"
 
-        ui_controller_input().start(self.w_tree)
+
+        input_class = getattr(hildon_ui,
+            theme.capitalize() + 'ControllerInput')
+        input_class().start(self.w_tree)
 
     @staticmethod
     def configure_cb(widget):

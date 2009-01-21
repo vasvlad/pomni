@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Jan 11 20:50:41 2009 -->
+<!--Generated with glade3 3.4.5 on Wed Jan 21 11:16:25 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -636,7 +636,7 @@
                         <property name="height_request">26</property>
                         <property name="visible">True</property>
                         <child internal-child="entry">
-                          <widget class="GtkEntry" id="comboboxentry-entry2">
+                          <widget class="GtkEntry" id="categories-entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="text" translatable="yes">Categories</property>
