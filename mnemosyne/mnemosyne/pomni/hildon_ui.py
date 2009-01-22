@@ -286,10 +286,15 @@ class HildonUiControllerInput(HildonBaseUi):
 
         category_names_by_id = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
-        
+
         categories = w_tree.get_widget("categories")
-        s = categories.list.get()
-        print s
+        liststore = gtk.ListStore(str)
+
+        for category in category_names_by_id.values():
+            liststore.append([category])
+        categories.set_model(liststore)
+        categories.set_text_column(0)
+
 #        self.card_type_by_name = {}
 #        for card_type in card_types():
 #            self.card_types.addItem(card_type.name)
