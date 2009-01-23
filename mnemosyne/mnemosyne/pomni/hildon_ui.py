@@ -263,7 +263,7 @@ class HildonUiControllerInput(HildonBaseUi):
     def __init__(self):
         """ Initialization items of review window """
 
-        HildonBaseUi.__init__(self, signals=[])
+        HildonBaseUi.__init__(self, signals=['add_card'])
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
@@ -295,11 +295,8 @@ class HildonUiControllerInput(HildonBaseUi):
         categories.set_model(liststore)
         categories.set_text_column(0)
 
-#        self.card_type_by_name = {}
-#        for card_type in card_types():
-#            self.card_types.addItem(card_type.name)
-#            self.card_type_by_name[card_type.name] = card_type
-
+    def add_card_cb(self, widget):
+        print "sdddddddddddddddddddd"
 
 
 class EternalControllerReview(HildonUiControllerReview):
