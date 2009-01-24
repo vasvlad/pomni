@@ -697,7 +697,7 @@
                         <property name="can_focus">True</property>
                         <property name="show_tabs">False</property>
                         <child>
-                          <widget class="GtkTextView" id="question_entry">
+                          <widget class="GtkTextView" id="Question">
                             <property name="height_request">100</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -800,7 +800,7 @@
                         <property name="can_focus">True</property>
                         <property name="show_tabs">False</property>
                         <child>
-                          <widget class="GtkTextView" id="answer_entry">
+                          <widget class="GtkTextView" id="Answer">
                             <property name="height_request">100</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>

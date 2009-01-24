@@ -274,6 +274,21 @@ class HildonUiControllerInput(HildonBaseUi):
     def start(self, w_tree):
         """ Start new review window """
 
+        card_type_by_id = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+
+        #FIX ME for all types of card type
+        #Now default card type 1 (Front-to-back only) 
+        card_type = card_type_by_id['1']
+        self.edit_boxes = {}
+
+        for fact_key, fact_key_name in card_type.fields:
+            widget = w_tree.get_widget(fact_key_name)
+            self.edit_boxes[widget] = fact_key
+
+        category_names_by_id = dict([(i, name) for (i, name) in \
+            enumerate(database().category_names())])
+
         HildonBaseUi.start(self, w_tree)
 
         # switch to Page review
@@ -281,11 +296,6 @@ class HildonUiControllerInput(HildonBaseUi):
         # different mode (main_menu, review, conf, input, etc)
         self.switcher.set_current_page(self.input)
 
-        card_type_by_id = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
-
-        category_names_by_id = dict([(i, name) for (i, name) in \
-            enumerate(database().category_names())])
 
         categories = w_tree.get_widget("categories")
         liststore = gtk.ListStore(str)
