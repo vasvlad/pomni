@@ -277,7 +277,7 @@ class HildonUiControllerInput(HildonBaseUi):
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
 
-        #FIX ME for all types of card type
+        #FIX ME for all types of card 
         #Now default card type 1 (Front-to-back only) 
         card_type = card_type_by_id['1']
         self.edit_boxes = {}
