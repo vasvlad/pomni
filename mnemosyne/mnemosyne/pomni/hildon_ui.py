@@ -466,6 +466,11 @@ class EternalControllerInput(HildonUiControllerInput):
 
     pass
 
+class SmileControllerInput(HildonUiControllerInput):
+    """ Smile UI Input Controller """
+
+    pass
+
 
 class HildonUI():
     """ Hildon UI """
