@@ -279,12 +279,13 @@ class HildonUiControllerInput(HildonBaseUi):
 
         #FIX ME for all types of card 
         #Now default card type 1 (Front-to-back only) 
-        card_type = card_type_by_id['1']
+        self.card_type = card_type_by_id.get('1')
         self.edit_boxes = {}
 
-        for fact_key, fact_key_name in card_type.fields:
+        for fact_key, fact_key_name in self.card_type.fields:
             widget = w_tree.get_widget(fact_key_name)
             self.edit_boxes[widget] = fact_key
+            print fact_key, fact_key_name
 
         category_names_by_id = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
@@ -307,6 +308,33 @@ class HildonUiControllerInput(HildonBaseUi):
 
     def add_card_cb(self, widget):
         print "sdddddddddddddddddddd"
+        try:
+            fact_data = self.get_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
+        self.create_new_cards(fact_data, self.card_type, 5, "Categories")
+
+    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+        """ Create new cards. Mnenosyne API """
+        # Create new card
+        c = ui_controller_main()
+        c.create_new_cards(fact_data, card_type, grade, cat_names)
+        database().save(config()['path'])
+
+        print 'Creating new cards', fact_data, card_type, grade, cat_names
+
+
+    def get_data(self, check_for_required=True):
+        fact = {}
+        for edit_box, fact_key in self.edit_boxes.iteritems():
+            start,end = edit_box.get_buffer().get_bounds()
+            fact[fact_key] = edit_box.get_buffer().get_text(start,end)
+        if not check_for_required:
+            return fact
+        for required in self.card_type.required_fields():
+            if not fact[required]:
+                raise ValueError
+        return fact
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -348,15 +376,15 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
         ui_controller_main().widget = self
 
-    def create_new_cards(self, fact_data, card_type, grade, cat_names):
-        """ Create new cards. Mnenosyne API """
-
-        print 'Creating new cards', fact_data, card_type, grade, cat_names
-
-    def add_cards(self):
-        """ Add cards.Mnenosyne API """
-
-        print 'Adding new cards'
+#    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+#        """ Create new cards. Mnenosyne API """
+#        
+#        print 'Creating new cards', fact_data, card_type, grade, cat_names
+#
+#    def add_cards(self):
+#        """ Add cards.Mnenosyne API """
+#
+#        print 'Adding new cards'
 
     # Callbacks
 
