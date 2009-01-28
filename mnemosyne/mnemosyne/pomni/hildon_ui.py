@@ -381,7 +381,8 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
         """ Create new cards. Mnenosyne API """
         
         print 'Creating new cards', fact_data, card_type, grade, cat_names
-
+        UiControllerMain.create_new_cards(self,fact_data, card_type, grade, cat_names)
+        
     def add_cards(self):
         """ Add cards.Mnenosyne API """
 
