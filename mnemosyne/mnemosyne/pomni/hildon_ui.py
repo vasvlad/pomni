@@ -271,10 +271,9 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
 
-    def start(self, w_tree, uicontrollermain):
+    def start(self, w_tree):
         """ Start new review window """
 
-        self.uicontrollermain = uicontrollermain
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
 
@@ -308,7 +307,7 @@ class HildonUiControllerInput(HildonBaseUi):
         categories.set_text_column(0)
 
     def add_card_cb(self, widget):
-        print "sdddddddddddddddddddd"
+
         try:
             fact_data = self.get_data()
         except ValueError:
@@ -318,8 +317,8 @@ class HildonUiControllerInput(HildonBaseUi):
     def create_new_cards(self, fact_data, card_type, grade, cat_names):
         """ Create new cards. Mnenosyne API """
         # Create new card
-        
-        self.uicontrollermain.create_new_cards(fact_data, card_type, grade, cat_names)
+        c = ui_controller_main()
+        c.create_new_cards(fact_data, card_type, grade, cat_names)
         database().save(config()['path'])
 
         print 'Creating new cards', fact_data, card_type, grade, cat_names
@@ -362,7 +361,8 @@ class EternalControllerReview(HildonUiControllerReview):
         self.answer_box.set_property('visible', True)
 
 
-class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
+class HildonUiControllerMain(HildonBaseUi):
+#class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
     """ Hidon Main Controller  """
 
     def __init__(self, extrasignals=None):
@@ -373,20 +373,20 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
             signals.extend(extrasignals)
 
         HildonBaseUi.__init__(self, signals)
-        UiControllerMain.__init__(self, name="Hildon UI Main Controller")
+#        UiControllerMain.__init__(self, name="Hildon UI Main Controller")
 
         ui_controller_main().widget = self
 
-    def create_new_cards(self, fact_data, card_type, grade, cat_names):
-        """ Create new cards. Mnenosyne API """
+#    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+#        """ Create new cards. Mnenosyne API """
+#        
+#        print 'Creating new cards', fact_data, card_type, grade, cat_names
+#        UiControllerMain.create_new_cards(self,fact_data, card_type, grade, cat_names)
         
-        print 'Creating new cards', fact_data, card_type, grade, cat_names
-        UiControllerMain.create_new_cards(self,fact_data, card_type, grade, cat_names)
-        
-    def add_cards(self):
-        """ Add cards.Mnenosyne API """
-
-        print 'Adding new cards'
+#    def add_cards(self):
+#        """ Add cards.Mnenosyne API """
+#
+#        print 'Adding new cards'
 
     # Callbacks
 
@@ -526,7 +526,7 @@ class HildonUI():
 
     def start(self, mode):
         """ Start UI  """
-
+        print getattr(hildon_ui,globals[theme])
         globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 

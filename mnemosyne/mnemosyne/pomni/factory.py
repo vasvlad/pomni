@@ -45,7 +45,7 @@ def ui_factory(interface=None):
         try:
             theme = config()["theme_path"].split("/")[-1]
         except KeyError:
-            theme = "eternal"
+            globals()[theme] = "eternal"
 
         from pomni import hildon_ui
         from hildon_ui import HildonUI
@@ -57,7 +57,7 @@ def ui_factory(interface=None):
         main_class = getattr(hildon_ui,
             theme.capitalize() + 'ControllerMain')
 
-        component_manager.register("ui_controller_main", main_class())
+#        component_manager.register("ui_controller_main", main_class())
         component_manager.register("ui_controller_review", review_class())
 #        component_manager.register("ui_controller_input", input_class())
         component_manager.register("renderer", HtmlHildon())
