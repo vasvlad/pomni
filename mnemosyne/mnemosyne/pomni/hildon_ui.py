@@ -408,7 +408,7 @@ class HildonUiControllerMain(HildonBaseUi):
 
         input_class = getattr(hildon_ui,
             theme.capitalize() + 'ControllerInput')
-        input_class().start(self.w_tree,self)
+        input_class().start(self.w_tree)
 
     @staticmethod
     def configure_cb(widget):
@@ -526,8 +526,16 @@ class HildonUI():
 
     def start(self, mode):
         """ Start UI  """
-        print getattr(hildon_ui,globals[theme])
-        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+#        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+        if not mode or mode == 'main' :
+            #FIX ME. It will be in factory.ui
+            try:
+                theme = config()["theme_path"].split("/")[-1]
+            except KeyError:
+                globals()[theme] = "eternal"
+            EternalControllerMain().start(self.w_tree)
+        else:
+            globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
