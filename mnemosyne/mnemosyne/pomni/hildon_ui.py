@@ -356,11 +356,12 @@ class HildonUiControllerInput(HildonBaseUi):
 
     def add_card_cb(self, widget):
 
+        print self.categories.get_child().get_text()
         try:
             fact_data = self.get_data()
         except ValueError:
             return # Let the user try again to fill out the missing data.
-        self.create_new_cards(fact_data, self.card_type, 5, [self.categories.get_text()])
+        self.create_new_cards(fact_data, self.card_type, 5, [self.categories.get_child().get_text()])
 
     def add_card2_cb(self, widget, event):
         # Hook for add_card for evenboxes
