@@ -1,3 +1,9 @@
+python-libmnemosyne (2.0.0-5) unstable; urgency=low
+
+  * updates from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 22 Jan 2009 21:39:18 +0000
+
 python-libmnemosyne (2.0.0-4) unstable; urgency=low
 
   * Implemented Sqlite backend

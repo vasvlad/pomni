@@ -280,7 +280,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
         HildonBaseUi.__init__(self, signals)
         UiControllerMain.__init__(self, name="Hildon UI Main Controller")
 
-        ui_controller_main().widget = self
+        #ui_controller_main().widget = self
 
     def create_new_cards(self, fact_data, card_type, grade, cat_names):
         """ Create new cards. Mnenosyne API """

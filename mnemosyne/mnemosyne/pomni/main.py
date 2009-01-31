@@ -38,11 +38,10 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 
 from optparse import OptionParser
 
-from mnemosyne.libmnemosyne import initialise
-from mnemosyne.libmnemosyne.component_manager import database, config
+from mnemosyne.libmnemosyne.component_manager import component_manager, \
+    database, config
 
 from pomni.factory import ui_factory
-
 
 def parse_commandline(argv):
     """ Parse commandline, check options """
@@ -57,6 +56,39 @@ def parse_commandline(argv):
 
     return parser.parse_args(argv)
 
+def initialise(basedir):
+    """Custom initialise.
+    Faster replacement for libmnemosyne.initialise
+    """
+    from mnemosyne.libmnemosyne.component_manager import component_manager
+    from mnemosyne.libmnemosyne import initialise_new_empty_database
+
+    # Configuration.
+    from mnemosyne.libmnemosyne.configuration import Configuration
+    component_manager.register("config", Configuration())
+    
+    # Logger.
+    from mnemosyne.libmnemosyne.loggers.txt_logger import TxtLogger
+    component_manager.register("log", TxtLogger())   
+    
+    # Database.
+    from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
+    component_manager.register("database", Sqlite())
+
+    # Scheduler.
+    from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
+    component_manager.register("scheduler", SM2Gen())
+    
+    # Card types.
+    from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
+    component_manager.register("card_type", FrontToBack())
+    from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
+    component_manager.register("card_type", BothWays())
+    from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
+    component_manager.register("card_type", ThreeSided())
+
+    config().initialise(basedir)
+    initialise_new_empty_database()
 
 def main(argv):
     """ Main """
@@ -80,6 +112,8 @@ def main(argv):
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 
+    ui = ui_factory(opts.ui)
+    return 0
     return ui_factory(opts.ui).start(opts.mode)
 
 if __name__ == "__main__":
