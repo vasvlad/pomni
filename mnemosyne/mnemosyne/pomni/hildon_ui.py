@@ -268,7 +268,7 @@ class HildonUiControllerInput(HildonBaseUi):
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
         self.fields_container = None
-
+        self.liststore = None
 
     def start(self, w_tree):
         """ Start new review window """
@@ -347,11 +347,11 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
         categories = w_tree.get_widget("categories")
-        liststore = gtk.ListStore(str)
+        self.liststore = gtk.ListStore(str)
 
         for category in category_names_by_id.values():
-            liststore.append([category])
-        categories.set_model(liststore)
+            self.liststore.append([category])
+        categories.set_model(self.liststore)
         categories.set_text_column(0)
 
     def add_card_cb(self, widget):
@@ -360,7 +360,7 @@ class HildonUiControllerInput(HildonBaseUi):
             fact_data = self.get_data()
         except ValueError:
             return # Let the user try again to fill out the missing data.
-        self.create_new_cards(fact_data, self.card_type, 5, "Categories")
+        self.create_new_cards(fact_data, self.card_type, 5, [self.categories.get_text()])
 
     def add_card2_cb(self, widget, event):
         # Hook for add_card for evenboxes
@@ -395,6 +395,9 @@ class HildonUiControllerInput(HildonBaseUi):
         #Destroy fields_container
         if self.fields_container:
             self.fields_container.destroy()
+      #Destroy categories entry
+        if self.listsore:
+            self.liststore.destroy()
 
 
 class EternalControllerReview(HildonUiControllerReview):
