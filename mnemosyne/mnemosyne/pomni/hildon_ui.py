@@ -365,7 +365,8 @@ class HildonUiControllerInput(HildonBaseUi):
             return # Let the user try again to fill out the missing data.
         # Create new card
         main = ui_controller_main()
-        main.create_new_cards(fact_data, self.card_type, 5, [self.categories.get_child().get_text()])
+        main.create_new_cards(fact_data, self.card_type, 5, 
+            [self.categories.get_child().get_text()])
         database().save(config()['path'])
 
 
@@ -437,7 +438,7 @@ class HildonUiControllerMain(HildonBaseUi):
 
         HildonBaseUi.__init__(self, signals)
 
-#        ui_controller_main().widget = self
+        #ui_controller_main().widget = self
 
 
     # Callbacks
@@ -449,7 +450,7 @@ class HildonUiControllerMain(HildonBaseUi):
 
     def input_cb(self, widget):
         """ Start Input """
-        # FIX ME This block must be remvoved to the factory.py
+        # FIX ME This block must be moved to the factory.py
         from pomni import hildon_ui
         try:
             theme = config()["theme_path"].split("/")[-1]
