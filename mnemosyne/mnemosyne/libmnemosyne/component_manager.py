@@ -100,7 +100,6 @@ class ComponentManager(object):
                             return self.components[key][type]
                         except:
                             return []
-                return []
             else:
                 for key in class_keys:
                     if issubclass(used_for, key):
@@ -109,6 +108,7 @@ class ComponentManager(object):
                         except:
                             return []
                     return []
+            return []
         
     def get_current(self, type, used_for=None):
         
@@ -118,9 +118,7 @@ class ComponentManager(object):
         """
 
         all = self.get_all(type, used_for)
-        if all == []:
-            return None
-        else:
+        if all:
             return all[-1]
 
         
