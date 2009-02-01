@@ -3,8 +3,9 @@ pomni (0.0.5) unstable; urgency=low
   * fixed bug in postinst which prevented to install package
     on desktop
   * hildon_ui: fixed pylint warnings (Vlad) 
+  * Implemented input mode for hildon UI (Vlad) 
 
- -- Ed Bartosh <bartosh@gmail.com>  Mon, 05 Jan 2009 20:31:25 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 01 Feb 2009 18:00:39 +0000
 
 pomni (0.0.4) unstable; urgency=low
 
