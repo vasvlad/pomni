@@ -25,6 +25,7 @@ UI Factory. Creates UI objects
 """
 
 from mnemosyne.libmnemosyne.component_manager import component_manager
+from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 from mnemosyne.libmnemosyne.component_manager import config
 
@@ -43,7 +44,7 @@ def ui_factory(interface=None):
         try:
             theme = config()["theme_path"].split("/")[-1]
         except KeyError:
-            theme = "eternal"
+            globals()[theme] = "eternal"
 
         from pomni import hildon_ui
         from hildon_ui import HildonUI
@@ -55,10 +56,10 @@ def ui_factory(interface=None):
         main_class = getattr(hildon_ui,
             theme.capitalize() + 'ControllerMain')
 
-        component_manager.register("ui_controller_main", main_class())
+#        component_manager.register("ui_controller_main", main_class())
         component_manager.register("ui_controller_review", review_class())
-        #component_manager.register("ui_controller_input", input_class())
-        component_manager.register("renderer", TextRenderer())
+#        component_manager.register("ui_controller_input", input_class())
+        component_manager.register("renderer", HtmlHildon())
         return HildonUI()
 
     # add next gui here

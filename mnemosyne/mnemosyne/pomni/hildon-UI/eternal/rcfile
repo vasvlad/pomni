@@ -129,12 +129,12 @@ style "review-title-label" {
 }
 
 style "review-answer-label" {
-	font_name = "Nokia Sans 16.0"
+	font_name = "Nokia Sans 25.0"
 	fg[NORMAL] = "#000000"
 }
 
 style "review-question-label" {
-	font_name = "Nokia Sans 16.0"
+	font_name = "Nokia Sans 25.0"
 	fg[NORMAL] = "#000000"
 }
 
@@ -182,6 +182,36 @@ style "nothing"
         file     = "nothing.png"
       }
   }
+}
+
+style "nothingviewport"
+{
+
+    xthickness = 0
+    ythickness = 0
+    GtkScrolledWindow ::scrollbars-within-bevel = 0
+    GtkScrolledWindow ::scrollbar-spacing = 0
+    GtkScrolledWindow ::inner_left_border = 0
+    GtkScrolledWindow ::inner_right_border = 0
+
+    engine "pixmap"
+    {
+       image
+        {
+            function = SHADOW
+            file = "nothing.png"
+            border = {0, 0, 0, 0}
+#            detail = "scrolled_window"
+         }
+      image
+      {
+        function = BOX
+#	detail   = "scrolled_window"
+        border   = { 0, 0, 0, 0 }
+        file     = "nothing.png"
+      }
+
+    }
 }
 
 
@@ -306,12 +336,15 @@ style "theme-button" {
   }
 }
 
+
 widget "*.button_answer" style "review-button"
 widget "*.button_getanswer" style "getanswerarea-button"
 widget "*.title_label" style "review-title-label"
-widget "*.answer" style "review-question-label"
+widget "*.answer" style "nothingviewport"
+widget "*.answer_text" style "review-answer-label"
+widget "*.question" style "nothingviewport"
+widget "*.question_text" style "review-question-label"
 widget "*.getanswer" style "review-getanswer-label"
-widget "*.question" style "review-question-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"

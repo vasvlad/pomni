@@ -28,12 +28,13 @@ import os
 import gettext
 import gtk
 import gtk.glade
+import gtkhtml2
+
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main #, ui_controller_input
+        ui_controller_review, config, ui_controller_main, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
-from mnemosyne.libmnemosyne.ui_controller_main import UiControllerMain
 
 _ = gettext.gettext
 
@@ -146,10 +147,12 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.grade = 0
         self.card = None
 
+
     def start(self, w_tree):
         """ Start new review window """
 
         HildonBaseUi.start(self, w_tree)
+
 
         # switch to Page review
         # switcher - window with tabs. Each tab is for
@@ -175,13 +178,29 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         card = scheduler().get_new_question(learn_ahead)
 
         if card:
-            self.question.set_text(card.question())
+            document = getattr(self,'question_text').document
+            view = getattr(self,'question_text')
+            document.clear()
+            document.open_stream('text/html')
+            # Adapting for html
+            question_text = card.question()
+            #FIXME Need check for space before <html>
+            if question_text.startswith('<html>'):
+                font_size = view.get_style().font_desc.get_size()/1024
+                question_text = question_text.replace('*{font-size:14px;}',
+                 '*{font-size:%spx;}' % font_size)
+            else:
+                # FIXME
+                print "Not a html!!!!!!!!!"
+            document.write_stream(question_text)
+            document.close_stream()
+
+
         else:
             # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
             #self.question.set_text(card.question())
 
-        self.answer.set_text("")
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
         self.get_answer.set_sensitive(True)
@@ -190,11 +209,28 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     def show_answer(self):
         """ Show answer in review window """
 
-        self.answer.set_text(self.card.answer())
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(True)
         self.get_answer.set_sensitive(False)
-        self.answer.set_text(self.card.answer())
+
+        view = getattr(self,'answer_text')
+        answer_text = self.card.answer()
+        document = getattr(self,'answer_text').document
+        document.clear()
+        document.open_stream('text/html')
+        # Adapting for html
+        #FIXME Need check for space before <html>
+        if answer_text.startswith('<html>'):
+            font_size = view.get_style().font_desc.get_size()/1024
+            answer_text = answer_text.replace('<head>', 
+            '<head> <style>*{font-size:%spx;}</style>' % font_size)
+        else:
+            # FIXME
+            print "Not a html!!!!!!!!!"
+
+        document.write_stream(answer_text)
+        document.close_stream()
+
 
     def grade_answer(self, grade):
         """ Grade the answer """
@@ -220,6 +256,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.card = None
 
 
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
 #class HildonUiControllerInput(HildonBaseUi):
 #    """ Hildon Review controller """
 #
@@ -241,6 +278,151 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 #        # switcher - window with tabs. Each tab is for
 #        # different mode (main_menu, review, conf, input, etc)
 #        self.switcher.set_current_page(self.input)
+=======
+class HildonUiControllerInput(HildonBaseUi):
+    """ Hildon Review controller """
+
+    def __init__(self):
+        """ Initialization items of review window """
+
+        HildonBaseUi.__init__(self, signals=['add_card', 'add_card2'])
+
+        self.title = _("Mnemosyne") + " - " + \
+            splitext(basename(config()["path"]))[0]
+        self.fields_container = None
+        self.liststore = None
+        self.card_type = None
+        self.edit_boxes = {}
+
+    def create_entries (self):
+        ''' Create widget inclusive varios entries '''
+        
+        fields_container = gtk.VBox()
+        fields_container.set_name('fields_container')
+        fields_container.show()
+        for fact_key, fact_key_name in self.card_type.fields:
+            # Top Alignment
+            aligment = gtk.Alignment()
+            aligment.set_property("height-request", 100)
+            fields_container.pack_start(aligment, True, True, 0)
+            # Label of field
+            labelbox = gtk.HBox()
+            left_aligment_of_label = gtk.Alignment()
+            left_aligment_of_label.set_property("width-request", 10)
+            left_aligment_of_label.show()
+            name_field = gtk.Label(fact_key_name)
+            labelbox.pack_start(left_aligment_of_label, False, False, 0)
+            labelbox.pack_start(name_field, False, False, 0)
+            labelbox.pack_start(gtk.Alignment(), True, True, 0)
+            name_field.show()
+            labelbox.show()
+            fields_container.pack_start(labelbox, True, True, 0)
+            # Entry
+            framebox = gtk.HBox()
+            #Left Alignment
+            left_aligment_of_frame = gtk.Alignment()
+            left_aligment_of_frame.set_property("width-request", 10)
+            left_aligment_of_frame.show()
+            framebox.pack_start(left_aligment_of_frame, False, False, 0)
+            #TextView itself
+            surface = gtk.Notebook()
+            surface.set_property('show_tabs', False)
+            surface.set_name('question_frame')
+            entry_field = gtk.TextView()
+            entry_field.set_property("height-request", 50)
+            entry_field.set_name(fact_key_name)
+            entry_field.show()
+            self.edit_boxes[entry_field] = fact_key
+            surface.append_page(entry_field)
+            framebox.pack_start(surface, True, True, 0)
+            surface.show()
+            #Right Alignment
+            right_aligment_of_frame = gtk.Alignment()
+            right_aligment_of_frame.set_property("width-request", 10)
+            framebox.pack_start(right_aligment_of_frame, False, False, 0)
+            right_aligment_of_frame.show()
+            framebox.show()
+
+            fields_container.pack_start(framebox, True, True, 0)
+
+        return fields_container
+
+    def start(self, w_tree):
+        """ Start new review window """
+
+        card_type_by_id = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+
+        #FIX ME for all types of card 
+        #Now default card type 1 (Front-to-back only) 
+        self.card_type = card_type_by_id.get('1')
+
+        #Prepare fields_container
+        parent_fields_container = w_tree.get_widget('fields_container_parent')
+        self.fields_container = self.create_entries()
+        parent_fields_container.pack_start(self.fields_container, True, True, 0)
+
+        category_names_by_id = dict([(i, name) for (i, name) in \
+            enumerate(database().category_names())])
+
+        HildonBaseUi.start(self, w_tree)
+
+        # switch to Page Input
+        self.switcher.set_current_page(self.input)
+>>>>>>> 7a6b02e55afd147bc26130ea25b00c33a502b340:mnemosyne/mnemosyne/pomni/hildon_ui.py
+
+        categories = w_tree.get_widget("categories")
+        self.liststore = gtk.ListStore(str)
+
+        for category in category_names_by_id.values():
+            self.liststore.append([category])
+        categories.set_model(self.liststore)
+        categories.set_text_column(0)
+
+
+    def add_card_cb(self, widget):
+        """ Add card to database """
+
+        try:
+            fact_data = self.get_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
+        # Create new card
+        main = ui_controller_main()
+        main.create_new_cards(fact_data, self.card_type, 5, [self.categories.get_child().get_text()])
+        database().save(config()['path'])
+
+
+    def add_card2_cb(self, widget, event):
+        """ Hook for add_card for evenboxes """
+        
+        self.add_card_cb (widget)
+
+
+
+    def get_data(self, check_for_required=True):
+        """ get data from widgets """
+
+        fact = {}
+        for edit_box, fact_key in self.edit_boxes.iteritems():
+            start, end = edit_box.get_buffer().get_bounds()
+            fact[fact_key] = edit_box.get_buffer().get_text(start, end)
+        if not check_for_required:
+            return fact
+        for required in self.card_type.required_fields():
+            if not fact[required]:
+                raise ValueError
+        return fact
+
+    def to_main_menu_cb(self, widget, event):
+        """ Return to main menu """
+
+        #Destroy fields_container
+        if self.fields_container:
+            self.fields_container.destroy()
+        #Destroy categories entry
+#        if self.listsore:
+#            self.liststore.destroy()
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -267,7 +449,7 @@ class EternalControllerReview(HildonUiControllerReview):
         self.answer_box.set_property('visible', True)
 
 
-class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
+class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
     def __init__(self, extrasignals=None):
@@ -278,6 +460,7 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
             signals.extend(extrasignals)
 
         HildonBaseUi.__init__(self, signals)
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
         UiControllerMain.__init__(self, name="Hildon UI Main Controller")
 
         #ui_controller_main().widget = self
@@ -286,11 +469,11 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
         """ Create new cards. Mnenosyne API """
 
         print 'Creating new cards', fact_data, card_type, grade, cat_names
+=======
+>>>>>>> 7a6b02e55afd147bc26130ea25b00c33a502b340:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
-    def add_cards(self):
-        """ Add cards.Mnenosyne API """
+#        ui_controller_main().widget = self
 
-        print 'Adding new cards'
 
     # Callbacks
 
@@ -301,8 +484,16 @@ class HildonUiControllerMain(HildonBaseUi, UiControllerMain):
 
     def input_cb(self, widget):
         """ Start Input """
+        # FIX ME This block must be remvoved to the factory.py
+        from pomni import hildon_ui
+        try:
+            theme = config()["theme_path"].split("/")[-1]
+        except KeyError:
+            theme = "eternal"
 
-        ui_controller_input().start(self.w_tree)
+        input_class = getattr(hildon_ui,
+            theme.capitalize() + 'ControllerInput')
+        input_class().start(self.w_tree)
 
     @staticmethod
     def configure_cb(widget):
@@ -397,6 +588,11 @@ class DraftControllerReview(HildonUiControllerReview):
 #
 #    pass
 
+class SmileControllerInput(HildonUiControllerInput):
+    """ Smile UI Input Controller """
+
+    pass
+
 
 class HildonUI():
     """ Hildon UI """
@@ -406,6 +602,7 @@ class HildonUI():
 
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
+        gtk.glade.set_custom_handler(self.custom_handler)
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
         # Set unvisible tabs of switcher
@@ -414,10 +611,37 @@ class HildonUI():
 
     def start(self, mode):
         """ Start UI  """
-
-        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+#        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+        if not mode or mode == 'main' :
+            #FIX ME. It will be in factory.ui
+            try:
+                theme = config()["theme_path"].split("/")[-1]
+            except KeyError:
+                globals()[theme] = "eternal"
+            EternalControllerMain().start(self.w_tree)
+        else:
+            globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
+    def custom_handler(self, glade, function_name, widget_name, *args):
+
+        """ Hook for custom widgets """
+
+        if glade and widget_name and  hasattr(self, function_name):
+            handler = getattr(self, function_name)
+            return handler(args)
+
+    @staticmethod
+    def create_gtkhtml(args):
+        """ Create gtkhtml2 widget """
+
+
+        view = gtkhtml2.View()
+        document = gtkhtml2.Document()
+        view.set_document(document)
+        view.document = document
+        view.show()
+        return view
 
 def _test():
     """ Run doctests
