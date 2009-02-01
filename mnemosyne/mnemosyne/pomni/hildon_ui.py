@@ -256,29 +256,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.card = None
 
 
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-#class HildonUiControllerInput(HildonBaseUi):
-#    """ Hildon Review controller """
-#
-#    def __init__(self):
-#        """ Initialization items of review window """
-#
-#        HildonBaseUi.__init__(self, signals=[])
-#
-#        self.title = _("Mnemosyne") + " - " + \
-#            splitext(basename(config()["path"]))[0]
-#
-#
-#    def start(self, w_tree):
-#        """ Start new review window """
-#
-#        HildonBaseUi.start(self, w_tree)
-#
-#        # switch to Page review
-#        # switcher - window with tabs. Each tab is for
-#        # different mode (main_menu, review, conf, input, etc)
-#        self.switcher.set_current_page(self.input)
-=======
 class HildonUiControllerInput(HildonBaseUi):
     """ Hildon Review controller """
 
@@ -369,8 +346,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
         # switch to Page Input
         self.switcher.set_current_page(self.input)
->>>>>>> 7a6b02e55afd147bc26130ea25b00c33a502b340:mnemosyne/mnemosyne/pomni/hildon_ui.py
-
+        
         categories = w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
 
@@ -460,17 +436,6 @@ class HildonUiControllerMain(HildonBaseUi):
             signals.extend(extrasignals)
 
         HildonBaseUi.__init__(self, signals)
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
-        UiControllerMain.__init__(self, name="Hildon UI Main Controller")
-
-        #ui_controller_main().widget = self
-
-    def create_new_cards(self, fact_data, card_type, grade, cat_names):
-        """ Create new cards. Mnenosyne API """
-
-        print 'Creating new cards', fact_data, card_type, grade, cat_names
-=======
->>>>>>> 7a6b02e55afd147bc26130ea25b00c33a502b340:mnemosyne/mnemosyne/pomni/hildon_ui.py
 
 #        ui_controller_main().widget = self
 
