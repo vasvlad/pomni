@@ -325,7 +325,7 @@ class HildonUiControllerInput(HildonBaseUi):
         return fields_container
 
     def start(self, w_tree):
-        """ Start new review window """
+        """ Start input window """
 
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
@@ -374,8 +374,6 @@ class HildonUiControllerInput(HildonBaseUi):
         """ Hook for add_card for evenboxes """
         
         self.add_card_cb (widget)
-
-
 
     def get_data(self, check_for_required=True):
         """ get data from widgets """
@@ -549,10 +547,10 @@ class DraftControllerReview(HildonUiControllerReview):
 
     pass
 
-#class EternalControllerInput(HildonUiControllerInput):
-#    """ Eteranl UI Input Controller """
-#
-#    pass
+class EternalControllerInput(HildonUiControllerInput):
+    """ Eteranl UI Input Controller """
+
+    pass
 
 class SmileControllerInput(HildonUiControllerInput):
     """ Smile UI Input Controller """
