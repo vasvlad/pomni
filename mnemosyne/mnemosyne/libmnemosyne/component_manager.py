@@ -107,8 +107,7 @@ class ComponentManager(object):
                             return self.components[key][type]
                         except:
                             return []
-                    return []
-            return []
+                return []
         
     def get_current(self, type, used_for=None):
         
