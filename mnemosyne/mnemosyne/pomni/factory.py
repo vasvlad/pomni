@@ -32,6 +32,10 @@ from mnemosyne.libmnemosyne.component_manager import config
 def ui_factory(interface=None):
     """ Create UI(View in terms of MVC) """
 
+    from mnemosyne.libmnemosyne.ui_controllers_main.default_main_controller \
+                                               import DefaultMainController
+    component_manager.register("ui_controller_main", DefaultMainController())
+
     if interface == 'cmd':
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
 
@@ -56,9 +60,8 @@ def ui_factory(interface=None):
         main_class = getattr(hildon_ui,
             theme.capitalize() + 'ControllerMain')
 
-        component_manager.register("ui_controller_main", main_class())
+
         component_manager.register("ui_controller_review", review_class())
-        #component_manager.register("ui_controller_input", input_class())
         component_manager.register("renderer", HtmlHildon())
         return HildonUI()
 
