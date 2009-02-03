@@ -269,11 +269,12 @@ class HildonUiControllerInput(HildonBaseUi):
         self.fields_container = None
         self.liststore = None
         self.card_type = None
+        self.w_tree = None
         self.edit_boxes = {}
 
     def create_entries (self):
         ''' Create widget inclusive varios entries '''
-        
+
         fields_container = gtk.VBox()
         fields_container.set_name('fields_container')
         fields_container.show()
@@ -326,7 +327,8 @@ class HildonUiControllerInput(HildonBaseUi):
 
     def start(self, w_tree):
         """ Start input window """
-
+        
+        self.w_tree = w_tree
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
 
@@ -346,7 +348,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
         # switch to Page Input
         self.switcher.set_current_page(self.input)
-        
+
         categories = w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
 
@@ -363,31 +365,54 @@ class HildonUiControllerInput(HildonBaseUi):
             fact_data = self.get_data()
         except ValueError:
             return # Let the user try again to fill out the missing data.
+
         # Create new card
         main = ui_controller_main()
-        main.create_new_cards(fact_data, self.card_type, 5, 
+        main.create_new_cards(fact_data, self.card_type, 5,
             [self.categories.get_child().get_text()])
+
         database().save(config()['path'])
+
+        #FIX ME need checking for success for previous operations
+        self.clear_data_widgets()
 
 
     def add_card2_cb(self, widget, event):
-        """ Hook for add_card for evenboxes """
-        
+        """ Hook for add_card for eventboxes """
+
         self.add_card_cb (widget)
 
     def get_data(self, check_for_required=True):
-        """ get data from widgets """
+        """ Get data from widgets """
 
         fact = {}
         for edit_box, fact_key in self.edit_boxes.iteritems():
             start, end = edit_box.get_buffer().get_bounds()
             fact[fact_key] = edit_box.get_buffer().get_text(start, end)
+
         if not check_for_required:
             return fact
         for required in self.card_type.required_fields():
             if not fact[required]:
                 raise ValueError
         return fact
+
+    def clear_data_widgets(self):
+        """ Clear data in widgets """
+
+        self.edit_boxes = {}
+
+        #FIX ME It may work more faster if I make clearing only edit_box
+
+        #Destroy fields_container 
+        if self.fields_container:
+            self.fields_container.destroy()
+
+        #Prepare fields_container
+        parent_fields_container = self.w_tree.get_widget('fields_container_parent')
+        self.fields_container = self.create_entries()
+        parent_fields_container.pack_start(self.fields_container, True, True, 0)
+
 
     def to_main_menu_cb(self, widget, event):
         """ Return to main menu """
@@ -435,8 +460,6 @@ class HildonUiControllerMain(HildonBaseUi):
             signals.extend(extrasignals)
 
         HildonBaseUi.__init__(self, signals)
-
-        #ui_controller_main().widget = self
 
 
     # Callbacks
