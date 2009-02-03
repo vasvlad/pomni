@@ -471,6 +471,7 @@ class HildonUiControllerMain(HildonBaseUi):
 
     def input_cb(self, widget):
         """ Start Input """
+
         # FIX ME This block must be moved to the factory.py
         from pomni import hildon_ui
         try:
@@ -587,6 +588,7 @@ class HildonUI():
     def __init__(self):
         """ Load theme's glade file """
 
+        ui_controller_main().widget = self
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
@@ -629,6 +631,18 @@ class HildonUI():
         view.document = document
         view.show()
         return view
+
+    @staticmethod
+    def information_box(message, ok_string):
+         """ Create Information message """
+
+         #FIX ME Need glade window
+         message_window = gtk.MessageDialog(None,gtk.DIALOG_DESTROY_WITH_PARENT,gtk.MESSAGE_INFO,
+         gtk.BUTTONS_OK, message)
+         message_window.run()
+         message_window.destroy()
+
+
 
 def _test():
     """ Run doctests
