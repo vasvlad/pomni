@@ -352,11 +352,13 @@ class HildonUiControllerInput(HildonBaseUi):
         categories = w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
 
+        category = None
         for category in category_names_by_id.values():
             self.liststore.append([category])
         categories.set_model(self.liststore)
         categories.set_text_column(0)
-        categories.get_child().set_text(category)
+        if category:
+            categories.get_child().set_text(category)
 
 
     def add_card_cb(self, widget):
