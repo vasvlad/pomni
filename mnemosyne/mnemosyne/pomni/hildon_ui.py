@@ -352,13 +352,12 @@ class HildonUiControllerInput(HildonBaseUi):
         categories = w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
 
-        category = None
         for category in category_names_by_id.values():
             self.liststore.append([category])
         categories.set_model(self.liststore)
         categories.set_text_column(0)
-        if category:
-            categories.get_child().set_text(category)
+        if category_names_by_id.values():
+            categories.get_child().set_text(category_names_by_id.values()[0])
 
 
     def add_card_cb(self, widget):
@@ -637,13 +636,13 @@ class HildonUI():
 
     @staticmethod
     def information_box(message, ok_string):
-         """ Create Information message """
+        """ Create Information message """
 
-         #FIX ME Need glade window
-         message_window = gtk.MessageDialog(None,gtk.DIALOG_DESTROY_WITH_PARENT,gtk.MESSAGE_INFO,
-         gtk.BUTTONS_OK, message)
-         message_window.run()
-         message_window.destroy()
+        #FIX ME Need glade window
+        message_window = gtk.MessageDialog(None, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO,
+        gtk.BUTTONS_OK, message)
+        message_window.run()
+        message_window.destroy()
 
 
 
