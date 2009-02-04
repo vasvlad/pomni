@@ -1,9 +1,3 @@
-pomni (0.0.6) unstable; urgency=low
-
-  * Implented clearing edit fields after action 'Add' in input mode for hildon (Vlad)
-
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 01 Feb 2009 18:00:39 +0000
-
 pomni (0.0.5) unstable; urgency=low
 
   * fixed bug in postinst which prevented to install package

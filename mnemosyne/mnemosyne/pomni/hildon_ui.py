@@ -356,6 +356,7 @@ class HildonUiControllerInput(HildonBaseUi):
             self.liststore.append([category])
         categories.set_model(self.liststore)
         categories.set_text_column(0)
+        categories.get_child().set_text(category)
 
 
     def add_card_cb(self, widget):
