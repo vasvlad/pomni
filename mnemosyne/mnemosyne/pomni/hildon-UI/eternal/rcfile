@@ -148,20 +148,19 @@ style "button-label" {
 	fg[NORMAL] = "#FFFFFF"
 }
 
-
 style "mainwindow"
 {
-   engine "pixmap"
+    engine "sapwood"
+    {
+      image
       {
-        image
-         {
-          function = FLAT_BOX
-          file = "background.png"
-          border = {10, 10, 10, 10}
-          detail = "base"
-          }
-     }
- }
+         function = FLAT_BOX
+         file = "background.png"
+         border = {359, 359, 215, 215}
+         detail = "base"
+       }
+    }
+}
 
 style "nothing"
 {
