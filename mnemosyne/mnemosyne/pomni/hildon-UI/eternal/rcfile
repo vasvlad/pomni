@@ -62,13 +62,13 @@ style "review-button" {
     image {
         function = FOCUS
 	file     = "textarea.png"
-	border   = { 8, 8, 8, 8 }
+	border   = { 16, 16, 15, 15 }
     }
 
     image {
 	function = BOX
 	file     = "textarea.png"
-  	border   = { 8, 8, 8, 8 }
+  	border   = { 16, 16, 15, 15 }
     }
 
   }
@@ -313,7 +313,7 @@ style "theme-button" {
   xthickness = 7
   ythickness = 0
 
-  engine "sapwood" {
+  engine "pixmap" {
 
     image {
         function = FOCUS
@@ -323,13 +323,13 @@ style "theme-button" {
     image {
         function = FOCUS
 	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0 }
+	border   = { 0, 0, 0, 0}
     }
 
     image {
 	function = BOX
 	file     = "button_theme.png"
-  	border   = { 0, 0, 0, 0 }
+	border   = { 0, 0, 0, 0 }
     }
 
   }
