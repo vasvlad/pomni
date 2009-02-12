@@ -16,7 +16,6 @@ try:
 except ImportError:
     from md5 import md5
 
-from mnemosyne.libmnemosyne.component import Component
 from mnemosyne.libmnemosyne.exceptions import ConfigError, SaveError
 
 config_py = \
@@ -64,7 +63,7 @@ scheduler = "SM2"
 database = "sqlite"
 """
 
-class Configuration(dict, Component):
+class Configuration(dict):
 
     def set_defaults(self):
         
