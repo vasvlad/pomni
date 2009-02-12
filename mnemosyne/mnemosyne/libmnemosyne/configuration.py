@@ -110,7 +110,8 @@ class Configuration(dict):
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
              "scheduler": "SM2",
-             "database": "sqlite"
+             "database": "sqlite",
+             "active_plugins": set() # plugin class
             }.items():
             
             self.setdefault(key, value)
@@ -123,7 +124,7 @@ class Configuration(dict):
             self.set_defaults()
         except:
             raise ConfigError(stack_trace=True)
-
+        
     def save(self):
         try:
             config_file = file(os.path.join(self.basedir, "config"), 'wb')
