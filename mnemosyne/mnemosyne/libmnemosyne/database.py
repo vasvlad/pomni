@@ -87,7 +87,7 @@ class Database(object):
     # Queries.
 
     def category_names(self):
-        raise NotImplementedError
+        raise NotImplementedError    
 
     def has_fact_with_data(self, fact_data):
         raise NotImplementedError
