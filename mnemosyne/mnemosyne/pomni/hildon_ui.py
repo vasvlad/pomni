@@ -84,7 +84,7 @@ class HildonBaseUi():
             self.signals.extend(signals)
 
         self.w_tree = None
-        self.fullscreen = False
+        self.fullscreen = config()['fullscreen']
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -102,6 +102,8 @@ class HildonBaseUi():
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
+
+        if self.fullscreen: self.window.fullscreen()
 
     # Callbacks
 
