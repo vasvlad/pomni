@@ -52,7 +52,7 @@ style "review-button" {
   xthickness = 7
   ythickness = 0
 
-  engine "pixmap" {
+  engine "sapwood" {
 
     image {
         function = FOCUS
@@ -62,13 +62,13 @@ style "review-button" {
     image {
         function = FOCUS
 	file     = "textarea.png"
-	border   = { 8, 8, 8, 8 }
+	border   = { 16, 16, 15, 15 }
     }
 
     image {
 	function = BOX
 	file     = "textarea.png"
-  	border   = { 8, 8, 8, 8 }
+  	border   = { 16, 16, 15, 15 }
     }
 
   }
@@ -86,7 +86,7 @@ style "getanswerarea-button" {
   xthickness = 7
   ythickness = 0
 
-  engine "pixmap" {
+  engine "sapwood" {
 
     image {
         function = FOCUS
@@ -96,13 +96,15 @@ style "getanswerarea-button" {
     image {
         function = FOCUS
 	file     = "getanswerarea.png"
-	border   = { 8, 8, 8, 8 }
+	border   = { 15, 15, 15, 15 }
+	
     }
 
     image {
 	function = BOX
 	file     = "getanswerarea.png"
-  	border   = { 8, 8, 8, 8 }
+  	border   = { 15, 15, 15, 15 }
+  	
     }
 
   }
@@ -114,7 +116,7 @@ style "question_answer_frame" {
   xthickness = 8
   ythickness = 8
   
-  engine "pixmap" {
+  engine "sapwood" {
     image {
 	function = BOX
 	file     = "textarea.png"
@@ -151,17 +153,17 @@ style "button-label" {
 
 style "mainwindow"
 {
-   engine "pixmap"
-      {
+   engine "sapwood"
+    {
         image
          {
           function = FLAT_BOX
           file = "background.png"
-          border = {10, 10, 10, 10}
+          border = {359, 359, 215, 215}
           detail = "base"
           }
      }
- }
+}
 
 style "nothing"
 {
@@ -172,12 +174,12 @@ style "nothing"
   GtkNotebook::label-padding = 2
 
   # Themings for images on different sides of the notebook.
-  engine "pixmap"
+  engine "sapwood"
   {
     image
       {
         function = BOX
-	detail   = "notebook"
+        detail   = "notebook"
         border   = { 0, 0, 0, 0 }
         file     = "nothing.png"
       }
@@ -194,23 +196,20 @@ style "nothingviewport"
     GtkScrolledWindow ::inner_left_border = 0
     GtkScrolledWindow ::inner_right_border = 0
 
-    engine "pixmap"
+    engine "sapwood"
     {
        image
         {
             function = SHADOW
             file = "nothing.png"
             border = {0, 0, 0, 0}
-#            detail = "scrolled_window"
          }
       image
       {
         function = BOX
-#	detail   = "scrolled_window"
         border   = { 0, 0, 0, 0 }
         file     = "nothing.png"
       }
-
     }
 }
 
@@ -219,7 +218,7 @@ style "spliter-paned"  {
 
     GtkPaned::handle_size = 1
 
-    engine "pixmap"
+    engine "sapwood"
     {
         image
         {
@@ -243,7 +242,7 @@ style "warning-notebook"
   GtkNotebook::label-padding = 2
 
   # Themings for images on different sides of the notebook.
-  engine "pixmap"
+  engine "sapwood"
   {
     image
       {
@@ -257,7 +256,7 @@ style "warning-notebook"
 
 style "input-combobox-entry-entry" {
 
-  engine "pixmap"
+  engine "sapwood"
     {
       image
         {
@@ -280,7 +279,7 @@ style "input-combobox-entry-entry" {
 }
 style "input-combobox-entry-button-down" {
 
-	engine "pixmap" {
+	engine "sapwood" {
 		image {
 			function = FOCUS
 		}
@@ -324,13 +323,13 @@ style "theme-button" {
     image {
         function = FOCUS
 	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0 }
+	border   = { 0, 0, 0, 0}
     }
 
     image {
 	function = BOX
 	file     = "button_theme.png"
-  	border   = { 0, 0, 0, 0 }
+	border   = { 0, 0, 0, 0 }
     }
 
   }
