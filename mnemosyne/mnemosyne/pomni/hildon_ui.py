@@ -33,7 +33,7 @@ import gtkhtml2
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main, card_types
+        config, ui_controller_main, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
 _ = gettext.gettext
@@ -492,26 +492,24 @@ class HildonUiControllerMain(HildonBaseUi):
     def __init__(self, controllers, extrasignals=None):
         """ Iniitialization """
 
+        def gen_callback(mode):
+            """Generate callback for mode."""
+            def callback(widget):
+                self.controllers[mode]().start(self.w_tree)
+            return callback
+
         signals = ["review", "input", "configure"]
+
+        # Callbacks
+        for signal in signals:
+            setattr(self, signal + '_cb', gen_callback(signal))
+
         if extrasignals:
             signals.extend(extrasignals)
 
         self.controllers = controllers
 
         HildonBaseUi.__init__(self, signals)
-
-    # Callbacks
-    def review_cb(self, widget):
-        """ Start Review """
-        self.controllers["review"]().start(self.w_tree)
-
-    def input_cb(self, widget):
-        """ Start Input """
-        self.controllers["input"]().start(self.w_tree)
-
-    def configure_cb(self, widget):
-        """ Start configure mode """
-        self.controllers["config"]().start(self.w_tree)
 
     def edit_current_card(self):
         """ Not Implemented Yet """
@@ -572,8 +570,8 @@ class EternalControllerMain(HildonUiControllerMain):
                 self.spliter_trigger = True
 
 
-class EternalControllerConfig(HildonUiControllerConfig):
-    """ Eternal UI Controller Config """
+class EternalControllerConfigure(HildonUiControllerConfig):
+    """ Eternal UI Controller Configure """
     pass
 
 
