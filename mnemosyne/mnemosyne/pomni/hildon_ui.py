@@ -103,7 +103,8 @@ class HildonBaseUi():
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-        if self.fullscreen: self.window.fullscreen()
+        if self.fullscreen:
+            self.window.fullscreen()
 
     # Callbacks
 
@@ -413,9 +414,11 @@ class HildonUiControllerInput(HildonBaseUi):
             self.fields_container.destroy()
 
         #Prepare fields_container
-        parent_fields_container = self.w_tree.get_widget('fields_container_parent')
+        parent_fields_container = \
+            self.w_tree.get_widget('fields_container_parent')
         self.fields_container = self.create_entries()
-        parent_fields_container.pack_start(self.fields_container, True, True, 0)
+        parent_fields_container.pack_start(self.fields_container, 
+            True, True, 0)
 
 
     def to_main_menu_cb(self, widget, event):
@@ -435,14 +438,16 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self, signals=['save_changes', 'change_fullscreen'])
+        HildonBaseUi.__init__(self, 
+            signals=['save_changes', 'change_fullscreen'])
         self.configuration = config()
     
     def start(self, w_tree):
         """ Start config window """
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
-        self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
+        self.checkbox_fullscreen_mode.set_active(\
+            self.configuration['fullscreen'])
         self.switcher.set_current_page(self.config)
 
     def save_changes_cb(self, widget, event):
@@ -452,8 +457,8 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
-        self.configuration['fullscreen'] = self.checkbox_fullscreen_mode.get_active()
-        
+        self.configuration['fullscreen'] = \
+            self.checkbox_fullscreen_mode.get_active()        
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -493,9 +498,7 @@ class HildonUiControllerMain(HildonBaseUi):
 
         HildonBaseUi.__init__(self, signals)
 
-
     # Callbacks
-
     def review_cb(self, widget):
         """ Start Review """
         ui_controller_review().start(self.w_tree)
@@ -682,8 +685,9 @@ class HildonUI():
         """ Create Information message """
 
         #FIX ME Need glade window
-        message_window = gtk.MessageDialog(None, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO,
-        gtk.BUTTONS_OK, message)
+        message_window = gtk.MessageDialog(None, 
+            gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, 
+            gtk.BUTTONS_OK, message)
         message_window.run()
         message_window.destroy()
 
