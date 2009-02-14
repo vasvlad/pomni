@@ -441,16 +441,7 @@ class HildonUiControllerConfig(HildonBaseUi):
         """ Start config window """
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
-        self.load_configuration()
-        self.set_widgets()
-
-    def load_configuration(self):
-        """ Load current configuration parameters """
         self.configuration = config()
-        self.configuration.load()
-
-    def set_widgets(self):
-        """ Set widgets state like in configuration """
         self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
         self.switcher.set_current_page(self.config)
 
