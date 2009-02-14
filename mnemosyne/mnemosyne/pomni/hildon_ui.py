@@ -45,25 +45,14 @@ class HildonUiControllerException(Exception):
     def __init__(self, w_tree, exception):
         """ Show Warning Window """
 
-        self.warning_window = w_tree.get_widget("warningwindow")
-        warning_label = w_tree.get_widget("label_warning")
-        self.signals = ["close"]
-        # connect signals to methods
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in self.signals]))
+        w_tree.signal_autoconnect({"close": self.close_cb})
+        
         # Show warning text
-        warning_label.set_text(exception)
+        w_tree.get_widget("label_warning").set_text(exception)
+        self.warning_window = w_tree.get_widget("warningwindow")
         self.warning_window.show()
 
         Exception.__init__(self)
-
-    def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
 
     def close_cb(self, widget, event):
         """ Close Warning Window """
