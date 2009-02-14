@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jan 31 20:23:12 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Feb 14 16:44:24 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -925,6 +925,48 @@
               <packing>
                 <property name="type">tab</property>
                 <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox10">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkButton" id="button_back">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="label" translatable="yes">Back to menu</property>
+                    <property name="response_id">0</property>
+                    <signal name="button_press_event" handler="to_main_menu"/>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="changeimportformat">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="label" translatable="yes">change IMPORT FORMAT, ok?</property>
+                    <property name="response_id">0</property>
+                    <signal name="button_press_event" handler="change_import_format"/>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="Config">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Config</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="position">3</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>

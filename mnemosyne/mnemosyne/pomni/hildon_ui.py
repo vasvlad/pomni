@@ -74,7 +74,7 @@ class HildonBaseUi():
     """ Base Hildon UI functionality """
 
     # page's indexes in switcher
-    main_menu, review, input = range(3)
+    main_menu, review, input, config = range(4)
 
     def __init__(self, signals):
 
@@ -139,7 +139,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Initialization items of review window """
 
         HildonBaseUi.__init__(self, signals=["get_answer", "grade"])
-        UiControllerReview.__init__(self, name="Hildon UI Review Controller")
+        UiControllerReview.__init__(self)
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
@@ -427,6 +427,29 @@ class HildonUiControllerInput(HildonBaseUi):
 #            self.liststore.destroy()
 
 
+
+class HildonUiControllerConfig(HildonBaseUi):
+    """ Hildon Config controller """
+
+    def __init__(self):
+        """ Initialization items of config window """
+        HildonBaseUi.__init__(self, signals=['change_import_format'])
+        self.w_tree = None
+    
+    def start(self, w_tree):
+        """ Start config window """
+        self.w_tree = w_tree
+        HildonBaseUi.start(self, w_tree)
+        self.switcher.set_current_page(self.config)
+
+    def change_import_format_cb(self, widget, event):
+        """ changes import format parameter """
+        cfg = config()
+        cfg.load()
+        cfg['import_format'] = "DWG"
+        cfg.save()
+
+
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
 
@@ -451,6 +474,7 @@ class EternalControllerReview(HildonUiControllerReview):
         self.answer_box.set_property('visible', True)
 
 
+
 class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
@@ -468,8 +492,8 @@ class HildonUiControllerMain(HildonBaseUi):
 
     def review_cb(self, widget):
         """ Start Review """
-
         ui_controller_review().start(self.w_tree)
+
 
     def input_cb(self, widget):
         """ Start Input """
@@ -485,11 +509,20 @@ class HildonUiControllerMain(HildonBaseUi):
             theme.capitalize() + 'ControllerInput')
         input_class().start(self.w_tree)
 
-    @staticmethod
-    def configure_cb(widget):
-        """ Start configure mode """
 
-        raise NotImplemented(widget)
+    def configure_cb(self, widget):
+        """ Start configure mode """
+        # FIX ME This block must be moved to the factory.py
+        from pomni import hildon_ui
+        try:
+            theme = config()["theme_path"].split("/")[-1]
+        except KeyError:
+            theme = "eternal"
+
+        config_class = getattr(hildon_ui,
+            theme.capitalize() + 'ControllerConfig')
+        config_class().start(self.w_tree)
+
 
     def edit_current_card(self):
         """ Not Implemented Yet """
@@ -550,6 +583,11 @@ class EternalControllerMain(HildonUiControllerMain):
                 self.spliter_trigger = True
 
 
+class EternalControllerConfig(HildonUiControllerConfig):
+    """ Eternal UI Controller Config """
+    pass
+
+
 class SmileControllerMain(HildonUiControllerMain):
     """ Smile UI Main Controller """
 
@@ -580,7 +618,6 @@ class EternalControllerInput(HildonUiControllerInput):
 
 class SmileControllerInput(HildonUiControllerInput):
     """ Smile UI Input Controller """
-
     pass
 
 
