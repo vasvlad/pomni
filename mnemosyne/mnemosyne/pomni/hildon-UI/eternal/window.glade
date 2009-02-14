@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Feb 14 16:44:24 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Feb 14 21:04:38 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -929,29 +929,52 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox10">
+              <widget class="GtkFixed" id="fixed1">
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkButton" id="button_back">
+                    <property name="width_request">800</property>
+                    <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">Back to menu</property>
+                    <property name="label" translatable="yes">Back to main window</property>
                     <property name="response_id">0</property>
                     <signal name="button_press_event" handler="to_main_menu"/>
                   </widget>
+                  <packing>
+                    <property name="y">480</property>
+                  </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="changeimportformat">
+                  <widget class="GtkButton" id="button_save_changes">
+                    <property name="width_request">800</property>
+                    <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">change IMPORT FORMAT, ok?</property>
+                    <property name="label" translatable="yes">Save changes</property>
                     <property name="response_id">0</property>
-                    <signal name="button_press_event" handler="change_import_format"/>
+                    <signal name="button_press_event" handler="save_changes"/>
                   </widget>
                   <packing>
-                    <property name="position">1</property>
+                    <property name="y">400</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
+                    <property name="width_request">200</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Fullscreen mode</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="change_fullscreen"/>
+                  </widget>
+                  <packing>
+                    <property name="x">100</property>
+                    <property name="y">100</property>
                   </packing>
                 </child>
               </widget>

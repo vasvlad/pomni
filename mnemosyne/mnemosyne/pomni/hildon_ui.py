@@ -433,21 +433,34 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self, signals=['change_import_format'])
-        self.w_tree = None
+        HildonBaseUi.__init__(self, signals=['save_changes', 'change_fullscreen'])
     
     def start(self, w_tree):
         """ Start config window """
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
+        self.load_configuration()
+        self.set_widgets()
+
+    def load_configuration(self):
+        """ Load current configuration parameters """
+        self.configuration = config()
+        self.configuration.load()
+
+    def set_widgets(self):
+        """ Set widgets state like in configuration """
+        self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
         self.switcher.set_current_page(self.config)
 
-    def change_import_format_cb(self, widget, event):
-        """ changes import format parameter """
-        cfg = config()
-        cfg.load()
-        cfg['import_format'] = "DWG"
-        cfg.save()
+    def save_changes_cb(self, widget, event):
+        """ Save all modified changes """
+        self.configuration.save()
+        self.button_save_changes.set_sensitive(False)
+
+    def change_fullscreen_cb(self, widget):
+        """ Change Fullscreen parameter """
+        self.configuration['fullscreen'] = self.checkbox_fullscreen_mode.get_active()
+        
 
 
 class EternalControllerReview(HildonUiControllerReview):

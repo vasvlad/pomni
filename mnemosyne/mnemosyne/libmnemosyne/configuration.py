@@ -111,6 +111,7 @@ class Configuration(dict):
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
              "scheduler": "SM2",
              "database": "sqlite",
+             "fullscreen": True,
              "active_plugins": set() # plugin class
             }.items():
             
