@@ -436,12 +436,12 @@ class HildonUiControllerConfig(HildonBaseUi):
     def __init__(self):
         """ Initialization items of config window """
         HildonBaseUi.__init__(self, signals=['save_changes', 'change_fullscreen'])
+        self.configuration = config()
     
     def start(self, w_tree):
         """ Start config window """
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
-        self.configuration = config()
         self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
         self.switcher.set_current_page(self.config)
 
