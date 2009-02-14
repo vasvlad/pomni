@@ -489,49 +489,29 @@ class EternalControllerReview(HildonUiControllerReview):
 class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
-    def __init__(self, extrasignals=None):
+    def __init__(self, controllers, extrasignals=None):
         """ Iniitialization """
 
         signals = ["review", "input", "configure"]
         if extrasignals:
             signals.extend(extrasignals)
 
+        self.controllers = controllers
+
         HildonBaseUi.__init__(self, signals)
 
     # Callbacks
     def review_cb(self, widget):
         """ Start Review """
-        ui_controller_review().start(self.w_tree)
-
+        self.controllers["review"]().start(self.w_tree)
 
     def input_cb(self, widget):
         """ Start Input """
-
-        # FIX ME This block must be moved to the factory.py
-        from pomni import hildon_ui
-        try:
-            theme = config()["theme_path"].split("/")[-1]
-        except KeyError:
-            theme = "eternal"
-
-        input_class = getattr(hildon_ui,
-            theme.capitalize() + 'ControllerInput')
-        input_class().start(self.w_tree)
-
+        self.controllers["input"]().start(self.w_tree)
 
     def configure_cb(self, widget):
         """ Start configure mode """
-        # FIX ME This block must be moved to the factory.py
-        from pomni import hildon_ui
-        try:
-            theme = config()["theme_path"].split("/")[-1]
-        except KeyError:
-            theme = "eternal"
-
-        config_class = getattr(hildon_ui,
-            theme.capitalize() + 'ControllerConfig')
-        config_class().start(self.w_tree)
-
+        self.controllers["config"]().start(self.w_tree)
 
     def edit_current_card(self):
         """ Not Implemented Yet """
@@ -568,11 +548,11 @@ class HildonUiControllerMain(HildonBaseUi):
 class EternalControllerMain(HildonUiControllerMain):
     """ Eternal UI Main Controller """
 
-    def __init__(self):
+    def __init__(self, controllers):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, ["size_allocate"])
+        self.base.__init__(self, controllers, ["size_allocate"])
         self.spliter_trigger = True
 
     def start(self, w_tree):
@@ -633,7 +613,7 @@ class SmileControllerInput(HildonUiControllerInput):
 class HildonUI():
     """ Hildon UI """
 
-    def __init__(self):
+    def __init__(self, controllers):
         """ Load theme's glade file """
 
         ui_controller_main().widget = self
@@ -645,19 +625,16 @@ class HildonUI():
         # Set unvisible tabs of switcher
         switcher = self.w_tree.get_widget("switcher")
         switcher.set_property('show_tabs', False)
+        self.controllers = controllers
 
     def start(self, mode):
         """ Start UI  """
-#        globals()["ui_controller_%s" % mode]().start(self.w_tree)
-        if not mode or mode == 'main' :
-            #FIX ME. It will be in factory.ui
-            try:
-                theme = config()["theme_path"].split("/")[-1]
-            except KeyError:
-                globals()[theme] = "eternal"
-            EternalControllerMain().start(self.w_tree)
+
+        if mode == "main":
+            controller = self.controllers[mode](self.controllers)
         else:
-            globals()["ui_controller_%s" % mode]().start(self.w_tree)
+            controller = self.controllers[mode]()
+        controller.start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):

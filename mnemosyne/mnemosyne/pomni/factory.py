@@ -53,17 +53,14 @@ def ui_factory(interface=None):
         from pomni import hildon_ui
         from hildon_ui import HildonUI
 
-        review_class = getattr(hildon_ui,
-            theme.capitalize() + 'ControllerReview')
-        #input_class = getattr(hildon_ui,
-        #    theme.capitalize() + 'ControllerInput')
-        main_class = getattr(hildon_ui,
-            theme.capitalize() + 'ControllerMain')
-
-
-        component_manager.register("ui_controller_review", review_class())
+        controllers = dict([(mode, getattr(hildon_ui, 
+            theme.capitalize() + controller)) for mode, controller in \
+            (("review", "ControllerReview"), ("main", "ControllerMain"), 
+            ("input", "ControllerInput"), ("config", "ControllerConfig"))])
+        
+        #component_manager.register("ui_controller_review", review_class())
         component_manager.register("renderer", HtmlHildon())
-        return HildonUI()
+        return HildonUI(controllers)
 
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)
