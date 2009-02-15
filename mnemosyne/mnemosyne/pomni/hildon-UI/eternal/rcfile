@@ -263,7 +263,7 @@ style "input-combobox-entry-entry" {
 	  function = SHADOW
 	  state    = INSENSITIVE
   	  file = "comboboxarea.png"
-	  border   = { 8, 8, 8, 8 }
+	  border   = { 10, 10, 15, 15 }
 	}
       image
         {
@@ -273,7 +273,7 @@ style "input-combobox-entry-entry" {
         {
 	  function = SHADOW
  	  file = "comboboxarea.png"
-	  border   = { 8, 8, 8, 8 }
+ 	  border   = { 10, 10, 15, 15 }
 	}
     }
 }
@@ -287,12 +287,12 @@ style "input-combobox-entry-button-down" {
 			function = BOX
 			file = "combobox_right_bottom.png"
 			state = INSENSITIVE
-			border = { 8, 8, 8, 8 }
+			border = { 10, 10, 15, 15 }
 		}
 		image {
 			function = BOX
 			file = "combobox_right_bottom.png"
-			border = { 8, 8, 8, 8 }
+			border = { 10, 10, 15, 15 }
 		}
 		image {
 			function = TAB
