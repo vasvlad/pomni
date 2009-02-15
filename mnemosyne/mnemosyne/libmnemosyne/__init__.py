@@ -16,7 +16,7 @@ import sys
 from mnemosyne.libmnemosyne.exceptions import PluginError, traceback_string
 from mnemosyne.libmnemosyne.component_manager import config, log
 from mnemosyne.libmnemosyne.component_manager import component_manager
-#from mnemosyne.libmnemosyne.plugins import getplugin
+
 
 def initialise(basedir):
     
@@ -29,6 +29,8 @@ def initialise(basedir):
     initialise_lockfile()
     initialise_new_empty_database()
     initialise_error_handling()
+    initialise_user_plugins()
+    activate_saved_plugins()
 
 
 def initialise_lockfile():
@@ -45,15 +47,14 @@ def initialise_new_empty_database():
 
 upload_thread = None
 def initialise_logging():
+    global upload_thread
+    from mnemosyne.libmnemosyne.log_uploader import LogUploader
+    log().archive_old_log()
+    log().start_logging()
+    log().program_started()
     if config()["upload_logs"]:
-        global upload_thread
-        from mnemosyne.libmnemosyne.log_uploader import LogUploader
-        log().archive_old_log()
-        log().start_logging()
-        log().program_started()
-        if config()["upload_logs"]:
-            upload_thread = LogUploader()
-            upload_thread.start()
+        upload_thread = LogUploader()
+        upload_thread.start()
 
 
 def initialise_error_handling():
@@ -81,17 +82,13 @@ def initialise_system_components():
     component_manager.register("log", TxtLogger())   
     
     # Database.
-    #from mnemosyne.libmnemosyne.databases.pickle import Pickle
-    #component_manager.register("database", Pickle())
-    from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
-    component_manager.register("database", Sqlite())
-
-    # Scheduler.
-    from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
-    component_manager.register("scheduler", SM2Gen())
+    from mnemosyne.libmnemosyne.databases.pickle import Pickle
+    component_manager.register("database", Pickle())
     
-    #for item in ("database", "scheduler"):
-    #    component_manager.register(item, getplugin(config()[item]))
+    # Scheduler.
+    from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne \
+                                                   import SM2Mnemosyne
+    component_manager.register("scheduler", SM2Mnemosyne())
     
     # Card types.
     from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
@@ -169,15 +166,23 @@ def initialise_user_plugins():
                 raise PluginError(stack_trace=True)
 
 
+def activate_saved_plugins():
+    for plugin in config()["active_plugins"]:
+        try:
+            p = plugin()
+            component_manager.register("plugin", p)
+            print plugins()
+            p.activate()
+        except:
+            raise PluginError(stack_trace=True)
+
+
 def finalise():
-    
-    if config()["upload_logs"]:
-        global upload_thread
-        if upload_thread:
-            print "Waiting for uploader thread to stop..."
-            upload_thread.join()
-            print "done!"
-            
+    global upload_thread
+    if upload_thread:
+        print "Waiting for uploader thread to stop..."
+        upload_thread.join()
+        print "done!"
     log().program_stopped()
     try:
         os.remove(os.path.join(config().basedir,"MNEMOSYNE_LOCK"))

@@ -45,7 +45,7 @@ class CardAppearanceDlg(QDialog, Ui_CardAppearanceDlg):
     def card_type_changed(self, new_card_type_name):
         if new_card_type_name == _("<all card types>"):
             self.affected_card_types = card_types()
-            self.key_names = ["Text"]
+            self.key_names = [_("Text")]
         else:
             new_card_type_name = unicode(new_card_type_name)
             new_card_type = self.card_type_by_name[new_card_type_name]
@@ -57,47 +57,69 @@ class CardAppearanceDlg(QDialog, Ui_CardAppearanceDlg):
             widget.close()
         self.dynamic_widgets = []
 
-        row = 2
+        row = 0
         self.font_buttons = QButtonGroup()
         self.colour_buttons = QButtonGroup()
         self.align_buttons = QButtonGroup()
+        self.align_buttons.setExclusive(False)
         for key_name in self.key_names:
             label = QLabel(key_name + ":", self)
             self.gridLayout.addWidget(label, row, 0, 1, 1)
             self.dynamic_widgets.append(label)
             
-            font = QPushButton(_("Font"), self)
-            self.font_buttons.addButton(font, row-2)
+            font = QPushButton(_("Set font"), self)
+            self.font_buttons.addButton(font, row)
             self.gridLayout.addWidget(font, row, 1, 1, 1)
             self.dynamic_widgets.append(font)
             
-            colour = QPushButton(_("Colour"),self)
-            self.colour_buttons.addButton(colour, row-2)
+            colour = QPushButton(_("Set colour"),self)
+            self.colour_buttons.addButton(colour, row)
             self.gridLayout.addWidget(colour, row, 2, 1, 1)
             self.dynamic_widgets.append(colour)
             
-            left_align = QCheckBox(_("Left align"), self)
-            self.align_buttons.addButton(left_align, row-2)
-            self.gridLayout.addWidget(left_align, row, 3, 1, 1)
-            self.dynamic_widgets.append(left_align)
-            
             row += 1
-            
+        self.gridLayout.setColumnStretch(1, 10)
+        self.gridLayout.setColumnStretch(2, 10)     
         self.connect(self.font_buttons, SIGNAL("buttonClicked(int)"),
                      self.update_font)
         self.connect(self.colour_buttons, SIGNAL("buttonClicked(int)"),
                      self.update_font_colour)
-        self.connect(self.align_buttons, SIGNAL("buttonClicked(int)"),
-                     self.update_align)
+
+        try:
+            current_alignment = config()["alignment"]\
+                                [self.affected_card_types[0].id]
+        except:
+            current_alignment = "center"
+        if current_alignment == "left":
+            self.alignment.setCurrentIndex(0)
+        elif current_alignment == "center":
+            self.alignment.setCurrentIndex(1)
+        elif current_alignment == "right":
+            self.alignment.setCurrentIndex(2)
+
+        # Make font light if different alignments are active.
+        self.alignment.setFont(self.font())
+        values = set()
+        for card_type in self.affected_card_types:
+            if not card_type.id in config()['alignment']:
+                values.add("center")
+            else:
+                values.add(config()['alignment'][card_type.id])
+        if len(values) > 1:
+            self.alignment.font().setWeight(25)
+        else:
+            self.alignment.font().setWeight(50)
+            
+        self.adjustSize()
 
     def update_background_colour(self):
         # Determine current colour.
         current_colour = Qt.black
-        if 1:
+        try:
             current_rgb = config()["background_colour"]\
                           [self.affected_card_types[0].id]
             current_colour = QColor(current_rgb)
-        else:
+        except:
             pass
         
         # Set new colour.
@@ -159,12 +181,21 @@ class CardAppearanceDlg(QDialog, Ui_CardAppearanceDlg):
         colour = QColorDialog.getColor(current_colour, self)
         if colour.isValid():
             for card_type in self.affected_card_types:
-                card_type.get_renderer().set_property('font_colour', colour.rgb(),
-                                                      card_type, affected_key)
+                card_type.get_renderer().set_property('font_colour',
+                                 colour.rgb(), card_type, affected_key)
             self.changed = True
         
-    def update_align(self, index):
-        print 'updated align', index
+    def update_alignment(self, index):
+        if index == 0:
+            new_alignment = "left"
+        elif index == 1:
+            new_alignment = "center"
+        elif index == 2:
+            new_alignment = "right"                
+        for card_type in self.affected_card_types:
+            card_type.get_renderer().set_property('alignment', new_alignment,
+                                                  card_type)
+        self.alignment.font().setWeight(50)
         self.changed = True
         
     def accept(self):
@@ -189,10 +220,12 @@ class CardAppearanceDlg(QDialog, Ui_CardAppearanceDlg):
         config()["background_colour"] = {}
         config()["font_colour"] = {}
         config()["alignment"] = {}
+        self.alignment.setCurrentIndex(1)
 
     def reject(self):
         if self.changed == True:
-            result = QMessageBox.question(None, _("Mnemosyne"), _("Abandon changes?"),
+            result = QMessageBox.question(None, _("Mnemosyne"),
+                                          _("Abandon changes?"),
                                           _("&Yes"), _("&No"), "", 0, -1)
             if result == 1:
                 return

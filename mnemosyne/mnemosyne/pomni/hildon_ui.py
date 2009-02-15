@@ -33,7 +33,7 @@ import gtkhtml2
 from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        ui_controller_review, config, ui_controller_main, card_types
+        config, ui_controller_main, card_types
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
 _ = gettext.gettext
@@ -45,25 +45,14 @@ class HildonUiControllerException(Exception):
     def __init__(self, w_tree, exception):
         """ Show Warning Window """
 
-        self.warning_window = w_tree.get_widget("warningwindow")
-        warning_label = w_tree.get_widget("label_warning")
-        self.signals = ["close"]
-        # connect signals to methods
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in self.signals]))
+        w_tree.signal_autoconnect({"close": self.close_cb})
+        
         # Show warning text
-        warning_label.set_text(exception)
+        w_tree.get_widget("label_warning").set_text(exception)
+        self.warning_window = w_tree.get_widget("warningwindow")
         self.warning_window.show()
 
         Exception.__init__(self)
-
-    def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
 
     def close_cb(self, widget, event):
         """ Close Warning Window """
@@ -74,7 +63,7 @@ class HildonBaseUi():
     """ Base Hildon UI functionality """
 
     # page's indexes in switcher
-    main_menu, review, input = range(3)
+    main_menu, review, input, config = range(4)
 
     def __init__(self, signals):
 
@@ -84,7 +73,7 @@ class HildonBaseUi():
             self.signals.extend(signals)
 
         self.w_tree = None
-        self.fullscreen = False
+        self.fullscreen = config()['fullscreen']
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -102,6 +91,9 @@ class HildonBaseUi():
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
+
+        if self.fullscreen:
+            self.window.fullscreen()
 
     # Callbacks
 
@@ -139,7 +131,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Initialization items of review window """
 
         HildonBaseUi.__init__(self, signals=["get_answer", "grade"])
-        UiControllerReview.__init__(self, name="Hildon UI Review Controller")
+        UiControllerReview.__init__(self)
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
@@ -411,9 +403,11 @@ class HildonUiControllerInput(HildonBaseUi):
             self.fields_container.destroy()
 
         #Prepare fields_container
-        parent_fields_container = self.w_tree.get_widget('fields_container_parent')
+        parent_fields_container = \
+            self.w_tree.get_widget('fields_container_parent')
         self.fields_container = self.create_entries()
-        parent_fields_container.pack_start(self.fields_container, True, True, 0)
+        parent_fields_container.pack_start(self.fields_container, 
+            True, True, 0)
 
 
     def to_main_menu_cb(self, widget, event):
@@ -425,6 +419,35 @@ class HildonUiControllerInput(HildonBaseUi):
         #Destroy categories entry
 #        if self.listsore:
 #            self.liststore.destroy()
+
+
+
+class HildonUiControllerConfig(HildonBaseUi):
+    """ Hildon Config controller """
+
+    def __init__(self):
+        """ Initialization items of config window """
+        HildonBaseUi.__init__(self, 
+            signals=['save_changes', 'change_fullscreen'])
+        self.configuration = config()
+    
+    def start(self, w_tree):
+        """ Start config window """
+        self.w_tree = w_tree
+        HildonBaseUi.start(self, w_tree)
+        self.checkbox_fullscreen_mode.set_active(\
+            self.configuration['fullscreen'])
+        self.switcher.set_current_page(self.config)
+
+    def save_changes_cb(self, widget, event):
+        """ Save all modified changes """
+        self.configuration.save()
+        self.button_save_changes.set_sensitive(False)
+
+    def change_fullscreen_cb(self, widget):
+        """ Change Fullscreen parameter """
+        self.configuration['fullscreen'] = \
+            self.checkbox_fullscreen_mode.get_active()        
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -451,45 +474,31 @@ class EternalControllerReview(HildonUiControllerReview):
         self.answer_box.set_property('visible', True)
 
 
+
 class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
-    def __init__(self, extrasignals=None):
+    def __init__(self, controllers, extrasignals=None):
         """ Iniitialization """
 
+        def gen_callback(mode):
+            """Generate callback for mode."""
+            def callback(widget):
+                self.controllers[mode]().start(self.w_tree)
+            return callback
+
         signals = ["review", "input", "configure"]
+
+        # Callbacks
+        for signal in signals:
+            setattr(self, signal + '_cb', gen_callback(signal))
+
         if extrasignals:
             signals.extend(extrasignals)
 
+        self.controllers = controllers
+
         HildonBaseUi.__init__(self, signals)
-
-
-    # Callbacks
-
-    def review_cb(self, widget):
-        """ Start Review """
-
-        ui_controller_review().start(self.w_tree)
-
-    def input_cb(self, widget):
-        """ Start Input """
-
-        # FIX ME This block must be moved to the factory.py
-        from pomni import hildon_ui
-        try:
-            theme = config()["theme_path"].split("/")[-1]
-        except KeyError:
-            theme = "eternal"
-
-        input_class = getattr(hildon_ui,
-            theme.capitalize() + 'ControllerInput')
-        input_class().start(self.w_tree)
-
-    @staticmethod
-    def configure_cb(widget):
-        """ Start configure mode """
-
-        raise NotImplemented(widget)
 
     def edit_current_card(self):
         """ Not Implemented Yet """
@@ -526,11 +535,11 @@ class HildonUiControllerMain(HildonBaseUi):
 class EternalControllerMain(HildonUiControllerMain):
     """ Eternal UI Main Controller """
 
-    def __init__(self):
+    def __init__(self, controllers):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, ["size_allocate"])
+        self.base.__init__(self, controllers, ["size_allocate"])
         self.spliter_trigger = True
 
     def start(self, w_tree):
@@ -548,6 +557,11 @@ class EternalControllerMain(HildonUiControllerMain):
                 self.spliter.set_property('position', pseudo_medium)
             else:
                 self.spliter_trigger = True
+
+
+class EternalControllerConfigure(HildonUiControllerConfig):
+    """ Eternal UI Controller Configure """
+    pass
 
 
 class SmileControllerMain(HildonUiControllerMain):
@@ -580,14 +594,13 @@ class EternalControllerInput(HildonUiControllerInput):
 
 class SmileControllerInput(HildonUiControllerInput):
     """ Smile UI Input Controller """
-
     pass
 
 
 class HildonUI():
     """ Hildon UI """
 
-    def __init__(self):
+    def __init__(self, controllers):
         """ Load theme's glade file """
 
         ui_controller_main().widget = self
@@ -599,19 +612,16 @@ class HildonUI():
         # Set unvisible tabs of switcher
         switcher = self.w_tree.get_widget("switcher")
         switcher.set_property('show_tabs', False)
+        self.controllers = controllers
 
     def start(self, mode):
         """ Start UI  """
-#        globals()["ui_controller_%s" % mode]().start(self.w_tree)
-        if not mode or mode == 'main' :
-            #FIX ME. It will be in factory.ui
-            try:
-                theme = config()["theme_path"].split("/")[-1]
-            except KeyError:
-                globals()[theme] = "eternal"
-            EternalControllerMain().start(self.w_tree)
+
+        if mode == "main":
+            controller = self.controllers[mode](self.controllers)
         else:
-            globals()["ui_controller_%s" % mode]().start(self.w_tree)
+            controller = self.controllers[mode]()
+        controller.start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
@@ -639,8 +649,9 @@ class HildonUI():
         """ Create Information message """
 
         #FIX ME Need glade window
-        message_window = gtk.MessageDialog(None, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO,
-        gtk.BUTTONS_OK, message)
+        message_window = gtk.MessageDialog(None, 
+            gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, 
+            gtk.BUTTONS_OK, message)
         message_window.run()
         message_window.destroy()
 

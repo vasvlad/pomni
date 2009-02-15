@@ -3,11 +3,10 @@
 #
 
 from mnemosyne.libmnemosyne.card import Card
-from mnemosyne.libmnemosyne.component import Component
 from mnemosyne.libmnemosyne.component_manager import database
 from mnemosyne.libmnemosyne.component_manager import component_manager
 
-class CardType(Component):
+class CardType(object):
 
     """A card type groups a number of fact views on a certain fact, thereby
     forming a set of related cards.
@@ -32,17 +31,18 @@ class CardType(Component):
     create the card type, because it is not sure that the renderer already
     exists at that stage.
 
-    The functions create_related_cards and update_related_cards and provide
-    an extra layer of abstraction and can be overridden by card types like
-    cloze deletion, which require a varying number of fact views with card
-    specific data.
+    The functions create_related_cards and update_related_cards and
+    after_review provide an extra layer of abstraction and can be overridden
+    by card types like cloze deletion, which require a varying number of fact
+    views with card specific data.
 
     """
 
+    #Class variable to allow extra way of determining inheritance hierarchy.
+
+    id = "-1"
+
     def __init__(self):
-        self.id = "-1"
-        self.name = ""
-        self.description = ""
         self.fields = []
         self.fact_views = []
         self.unique_fields = []
@@ -88,7 +88,7 @@ class CardType(Component):
                  self.renderer = component_manager.get_current("renderer")
             return self.renderer
 
-    # The following two functions allow for the fact that all the logic
+    # The following functions allow for the fact that all the logic
     # corresponding to specialty card types (like cloze deletion) can be
     # contained in a single derived class by reimplementing these functions.
 
@@ -113,3 +113,5 @@ class CardType(Component):
         new_cards, updated_cards = [], []
         return new_cards, updated_cards
 
+    def after_review(self, card):
+        return

@@ -24,7 +24,7 @@ class HtmlHildon(Renderer):
             self._css[card_type] = """
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
             <style type="text/css">
-            *{font-size:14px;}
+            *{font-size:30px;}
             table { margin-left: auto;
                     margin-right: auto; /* Centers table, but not its contents. */
                     height: 100%;

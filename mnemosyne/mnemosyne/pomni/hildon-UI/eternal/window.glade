@@ -904,6 +904,71 @@
                 <property name="tab_fill">False</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkFixed" id="fixed1">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkButton" id="button_back">
+                    <property name="width_request">800</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="label" translatable="yes">Back to main window</property>
+                    <property name="response_id">0</property>
+                    <signal name="button_press_event" handler="to_main_menu"/>
+                  </widget>
+                  <packing>
+                    <property name="y">480</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="button_save_changes">
+                    <property name="width_request">800</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="label" translatable="yes">Save changes</property>
+                    <property name="response_id">0</property>
+                    <signal name="button_press_event" handler="save_changes"/>
+                  </widget>
+                  <packing>
+                    <property name="y">400</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
+                    <property name="width_request">200</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Fullscreen mode</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="change_fullscreen"/>
+                  </widget>
+                  <packing>
+                    <property name="x">100</property>
+                    <property name="y">100</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="Config">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Config</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="position">3</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
           </widget>
         </child>
         <child>

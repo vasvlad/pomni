@@ -1,3 +1,10 @@
+pomni (0.0.6) unstable; urgency=low
+
+  * implemented working draft of configuration mode 
+  * refactored calling of controllers
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 14 Feb 2009 22:18:41 +0000
+
 pomni (0.0.5) unstable; urgency=low
 
   * fixed bug in postinst which prevented to install package

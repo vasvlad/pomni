@@ -194,7 +194,7 @@ class CmdUiControllerReview(UiControllerReview):
 
     def __init__(self):
 
-        UiControllerReview.__init__(self, name="Command line UI Controller")
+        UiControllerReview.__init__(self)
         self.title = _("Mnemosyne") + " - " + \
             os.path.basename(config()["path"])[:-4]
         self.grade = 0

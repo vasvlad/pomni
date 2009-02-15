@@ -5,14 +5,27 @@
 
 * Mnemosyne 2.0:
 
--card type hook to do stuff after grading?
+-GUI plugin manager
 
--formatting of cards, also in edit widget
+-replace plugin.active with a persistent thing in config to autoload
 
--option to read css from file
+-don't deactivate plugin which contains a card type that is in use
 
--GUI option to derive from three sided card type to create a new language
- specific card type. Test inheritance of card type convertors.
+-activate necessary card types plugins on import / load
+
+
+-GUI option to derive from existyng card types to create a new language
+ specific card type.
+
+-Test inheritance of card type convertors.
+
+-necessity of 'is_language' and if statements in constructor?
+
+
+
+
+
+-add version number to database format
 
 -detect wrong current date (last review in the future or way past)
 
@@ -20,18 +33,22 @@
 
 -improve sphinxdocs: autoclass='both', document module members
 
+-migrate 1.x hack to map card type
+
+-activate cards: respect card_type.fact_views_can_be_deactivated
+
 -run convert to html after adding/modifying card?
 
 -pregenerate q and a on mobile devices?
 
 -test uploading of logs
 
--remove grade 1 limit
-
 -show latex errors in GUI?
 
 -add new functions to SQL database, make sure rebuild queue is called when
  needed
+
+-adding a picture under Windows screws up / and \, and case
 
 -ghost out 3.4 and 5 for unlearned cards?
 
@@ -40,6 +57,8 @@
 -make sure searching for a single unicode character works
 
 -test sound
+
+-qsortfilter proxy
 
 -move 'card type by name' to different place?
 
@@ -54,10 +73,6 @@
  learning ahead
 
 -remove start date?
-
--respect card_type.fact_views_can_be_deactivated
-
--test map card type plugin
 
 -cramming scheduler
 
@@ -84,8 +99,6 @@
 -make file handling more robust, detect all errors (see mail by
  OldGrantonian)
 
--activate necessary card types on plugin
-
 -test Python 3.0 compliance
 
 -button to go to next card in the list
@@ -94,7 +107,7 @@
 
 -plugin for midi files
 
--'tooltips' during use: delete card, relative path when adding pictures or sound.
+-'tooltips' during use: relative path when adding pictures or sound.
 
 -comment/tip about not having to do all your scheduled revisions in
  one sitting
@@ -102,8 +115,6 @@
 -reenable datadir in setup.py
 
 -make filters more efficients by using regex instead of loops.
-
--rename edit_items, items, product tour at the source level
 
 -detect and mark inverses on import
 
@@ -120,11 +131,7 @@
 
 -bug in Qt? : spaces around images are not respected.
 
--does <p align="left"> work as advertised? Otherwise table tag.
-
 -cntrl enter in add and edit instead of clicking ok
-
--more advanced plugin mechanism, plugin manager
 
 -template for cards?
 
@@ -197,6 +204,8 @@ Status: initial code written, but clean up needed.
 
 * Miscellaneous:
 
+-sound recorder
+
 -smarter sorting. See suggestios by larryrenslow
 
 -natural sort order of categories which contain numbers (1 vs 01)
@@ -212,6 +221,8 @@ Status: initial code written, but clean up needed.
 -clean up interval when importing from txt
 
 -paste from clipboard
+
+-font and color comboboxes instead of dialogs in card appearance?
 
 -preselect all in some text fields, so that the users can start typing
  immediately

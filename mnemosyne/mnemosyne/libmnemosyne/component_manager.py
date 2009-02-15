@@ -100,6 +100,7 @@ class ComponentManager(object):
                             return self.components[key][type]
                         except:
                             return []
+                return []
             else:
                 for key in class_keys:
                     if issubclass(used_for, key):
@@ -107,8 +108,7 @@ class ComponentManager(object):
                             return self.components[key][type]
                         except:
                             return []
-                    return []
-            return []
+                return []
         
     def get_current(self, type, used_for=None):
         
@@ -118,7 +118,9 @@ class ComponentManager(object):
         """
 
         all = self.get_all(type, used_for)
-        if all:
+        if all == []:
+            return None
+        else:
             return all[-1]
 
         
@@ -148,9 +150,6 @@ def ui_controller_main():
 def ui_controller_review():
     return component_manager.get_current("ui_controller_review")
 
-def ui_controller_input():
-    return component_manager.get_current("ui_controller_input")
-
 def card_types():
     return component_manager.get_all("card_type")
 
@@ -160,3 +159,5 @@ def card_type_by_id(id): # TODO KW: use named components for this.
 def filters():
     return component_manager.get_all("filter")
 
+def plugins():
+    return component_manager.get_all("plugin")

@@ -16,7 +16,6 @@ try:
 except ImportError:
     from md5 import md5
 
-from mnemosyne.libmnemosyne.component import Component
 from mnemosyne.libmnemosyne.exceptions import ConfigError, SaveError
 
 config_py = \
@@ -64,7 +63,7 @@ scheduler = "SM2"
 database = "sqlite"
 """
 
-class Configuration(dict, Component):
+class Configuration(dict):
 
     def set_defaults(self):
         
@@ -89,7 +88,7 @@ class Configuration(dict, Component):
              "font": {}, # [card_type.id][fact_key]
              "background_colour": {}, # [card_type.id]             
              "font_colour": {}, # [card_type.id][fact_key]
-             "alignment": {}, # [card_type.id][fact_key] 
+             "alignment": {}, # [card_type.id]
              "list_font": None,
              "grade_0_items_at_once": 5,
              "randomise_new_cards": False,
@@ -111,7 +110,9 @@ class Configuration(dict, Component):
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
              "scheduler": "SM2",
-             "database": "sqlite"
+             "database": "sqlite",
+             "fullscreen": True,
+             "active_plugins": set() # plugin class
             }.items():
             
             self.setdefault(key, value)
@@ -124,7 +125,7 @@ class Configuration(dict, Component):
             self.set_defaults()
         except:
             raise ConfigError(stack_trace=True)
-
+        
     def save(self):
         try:
             config_file = file(os.path.join(self.basedir, "config"), 'wb')

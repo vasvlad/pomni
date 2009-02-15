@@ -2,13 +2,10 @@
 # database.py <Peter.Bienstman@UGent.be>
 #
 
-from component import Component
-
-
 #  TODO: load_failed mechanism, to prevent overwriting a database which
 #  failed to load.
 
-class Database(Component):
+class Database(object):
 
     """Interface class describing the functions to be implemented by the
     actual database classes.
@@ -90,7 +87,7 @@ class Database(Component):
     # Queries.
 
     def category_names(self):
-        raise NotImplementedError
+        raise NotImplementedError    
 
     def has_fact_with_data(self, fact_data):
         raise NotImplementedError
