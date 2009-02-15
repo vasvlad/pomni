@@ -113,14 +113,14 @@ style "getanswerarea-button" {
 
 
 style "question_answer_frame" {
-  xthickness = 8
-  ythickness = 8
+#  xthickness = 8
+#  ythickness = 8
   
   engine "sapwood" {
     image {
 	function = BOX
 	file     = "textarea.png"
-	border   = { 8, 8, 8, 8 }
+	border   = { 16, 16, 15, 15 }
     }
   }
 }
@@ -227,7 +227,7 @@ style "spliter-paned"  {
             overlay_file= "nothing.png"
             orientation = HORIZONTAL
             border      = {0,0,0,0}
-            overlay_stretch = FALSE
+            overlay_stretch = TRUE
         }
     }
 }
