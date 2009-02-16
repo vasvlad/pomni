@@ -505,6 +505,11 @@ class HildonUiControllerMain(HildonBaseUi):
 
         pass
 
+    def delete_current_card(self):
+        """ Not Implemented Yet """
+
+        pass
+
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
                              new_cat_names):
         """ Not Implemented """
