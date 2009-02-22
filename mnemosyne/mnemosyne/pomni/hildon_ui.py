@@ -124,13 +124,14 @@ class HildonBaseUi():
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
 
+
 class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     """ Hildon Review controller """
 
     def __init__(self):
         """ Initialization items of review window """
 
-        HildonBaseUi.__init__(self, signals=["get_answer", "grade"])
+        HildonBaseUi.__init__(self, signals=["get_answer", "grade", "delete_card"])
         UiControllerReview.__init__(self)
 
         self.title = _("Mnemosyne") + " - " + \
@@ -167,19 +168,20 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             raise HildonUiControllerException(self.w_tree, \
                 _("Database is empty"))
 
-        card = scheduler().get_new_question(learn_ahead)
+        self.card = scheduler().get_new_question(learn_ahead)
 
-        if card:
+        if self.card:
             document = getattr(self,'question_text').document
             view = getattr(self,'question_text')
             document.clear()
             document.open_stream('text/html')
             # Adapting for html
-            question_text = card.question()
+            question_text = self.card.question()
+
             #FIXME Need check for space before <html>
             if question_text.startswith('<html>'):
                 font_size = view.get_style().font_desc.get_size()/1024
-                question_text = question_text.replace('*{font-size:14px;}',
+                question_text = question_text.replace('*{font-size:30px;}',
                  '*{font-size:%spx;}' % font_size)
             else:
                 # FIXME
@@ -196,7 +198,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
         self.get_answer.set_sensitive(True)
-        self.card = card
+#        self.card = card
 
     def show_answer(self):
         """ Show answer in review window """
@@ -237,6 +239,13 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.show_answer()
 
+    def delete_card_cb(self, widget, event):
+        """ Hook for showing a right answer """
+
+        # Create new card
+        main = ui_controller_main()
+        main.delete_current_fact()
+
     def grade_cb(self, widget, event):
         """ Call grade of answer """
 
@@ -247,12 +256,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.card = None
 
-
 class HildonUiControllerInput(HildonBaseUi):
-    """ Hildon Review controller """
+    """ Hildon Input controller """
 
     def __init__(self):
-        """ Initialization items of review window """
+        """ Initialization items of input window """
 
         HildonBaseUi.__init__(self, signals=['add_card', 'add_card2'])
 
@@ -350,7 +358,6 @@ class HildonUiControllerInput(HildonBaseUi):
         categories.set_text_column(0)
         if category_names_by_id.values():
             categories.get_child().set_text(category_names_by_id.values()[0])
-
 
     def add_card_cb(self, widget):
         """ Add card to database """
@@ -483,9 +490,17 @@ class HildonUiControllerMain(HildonBaseUi):
 
         def gen_callback(mode):
             """Generate callback for mode."""
-            def callback(widget):
-                self.controllers[mode]().start(self.w_tree)
-            return callback
+
+            #Fix Me hack for Bartosh code
+            if mode == "review":
+                def callback (widget):
+                    from mnemosyne.libmnemosyne.component_manager import ui_controller_review
+                    ui_controller_review().start(self.w_tree)
+                return callback
+            else:
+                def callback(widget):
+                    self.controllers[mode]().start(self.w_tree)
+                return callback
 
         signals = ["review", "input", "configure"]
 
@@ -505,10 +520,9 @@ class HildonUiControllerMain(HildonBaseUi):
 
         pass
 
-    def delete_current_card(self):
-        """ Not Implemented Yet """
-
-        pass
+    def delete_current_fact(self):
+    
+        ui_controller_main().delete_current_fact()
 
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
                              new_cat_names):

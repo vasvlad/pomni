@@ -55,11 +55,14 @@ def ui_factory(interface=None):
 
         controllers = dict([(mode, getattr(hildon_ui, 
             theme.capitalize() + controller)) for mode, controller in \
-            (("review", "ControllerReview"), ("main", "ControllerMain"), 
+            (("review", "ControllerReview"), ("main", "ControllerMain"),
             ("input", "ControllerInput"), 
             ("configure", "ControllerConfigure"))])
-        
-        #component_manager.register("ui_controller_review", review_class())
+
+        #Fix Me 
+        from hildon_ui import EternalControllerReview
+
+        component_manager.register("ui_controller_review", controllers["review"]())
         component_manager.register("renderer", HtmlHildon())
         return HildonUI(controllers)
 

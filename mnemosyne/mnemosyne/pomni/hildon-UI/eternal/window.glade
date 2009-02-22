@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Feb 15 11:58:11 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Feb 22 10:33:56 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -489,9 +489,15 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image4">
+                          <widget class="GtkEventBox" id="delete_car">
                             <property name="visible">True</property>
-                            <property name="pixbuf">delete.png</property>
+                            <signal name="button_press_event" handler="delete_card"/>
+                            <child>
+                              <widget class="GtkImage" id="image4">
+                                <property name="visible">True</property>
+                                <property name="pixbuf">delete.png</property>
+                              </widget>
+                            </child>
                           </widget>
                           <packing>
                             <property name="position">2</property>
@@ -810,9 +816,15 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkImage" id="image16">
+                      <widget class="GtkEventBox" id="delete_card">
                         <property name="visible">True</property>
-                        <property name="pixbuf">delete.png</property>
+                        <signal name="button_press_event" handler="delete_card"/>
+                        <child>
+                          <widget class="GtkImage" id="image16">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">delete.png</property>
+                          </widget>
+                        </child>
                       </widget>
                       <packing>
                         <property name="position">2</property>
