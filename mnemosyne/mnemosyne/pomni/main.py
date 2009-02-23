@@ -109,6 +109,8 @@ def main(argv):
 
     cdatabase = database()
     db_name = os.path.join(basedir, config()['path'])
+    startup_with_review = config()['startup_with_review']
+    if startup_with_review: opts.mode = 'review'
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 

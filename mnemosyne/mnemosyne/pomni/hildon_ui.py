@@ -85,7 +85,7 @@ class HildonBaseUi():
 
         self.w_tree = None
         self.fullscreen = config()['fullscreen']
-
+        
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
 
@@ -104,6 +104,7 @@ class HildonBaseUi():
             for sig in self.signals]))
 
         if self.fullscreen: self.window.fullscreen()
+
 
     # Callbacks
 
@@ -439,7 +440,8 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self, signals=['change_fullscreen', 'change_font_size'])
+        HildonBaseUi.__init__(self, signals=['change_fullscreen', 'change_font_size',
+            'change_startup_with_review'])
         self.modified = False
         self.configuration = config()
     
@@ -448,6 +450,7 @@ class HildonUiControllerConfig(HildonBaseUi):
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
         self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
+        self.checkbox_start_in_review_mode.set_active(self.configuration['startup_with_review'])
         self.spinbutton_fontsize.set_value(self.configuration['font_size'])
         self.switcher.set_current_page(self.config)
 
@@ -459,8 +462,11 @@ class HildonUiControllerConfig(HildonBaseUi):
     def change_font_size_cb(self, widget):
         self.modified = True
         self.configuration['font_size'] = self.spinbutton_fontsize.get_value_as_int()
-        
     
+    def change_startup_with_review_cb(self, widget):
+        self.modified = True
+        self.configuration['startup_with_review'] = self.checkbox_start_in_review_mode.get_active()
+
     def to_main_menu_cb(self, widget, event):
         if self.modified:
             self.configuration.save()
@@ -658,21 +664,22 @@ class HildonUI():
     def start(self, mode):
         """ Start UI  """
 #        globals()["ui_controller_%s" % mode]().start(self.w_tree)
+
+        # need this call, because if not and mode!=main,
+        # don't woks any button in main-menu
+        EternalControllerMain().start(self.w_tree)
         if not mode or mode == 'main' :
             #FIX ME. It will be in factory.ui
             try:
                 theme = config()["theme_path"].split("/")[-1]
             except KeyError:
                 globals()[theme] = "eternal"
-            EternalControllerMain().start(self.w_tree)
         else:
             globals()["ui_controller_%s" % mode]().start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
-
         """ Hook for custom widgets """
-
         if glade and widget_name and  hasattr(self, function_name):
             handler = getattr(self, function_name)
             return handler(args)
@@ -680,8 +687,6 @@ class HildonUI():
     @staticmethod
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
-
-
         view = gtkhtml2.View()
         document = gtkhtml2.Document()
         view.set_document(document)
@@ -692,7 +697,6 @@ class HildonUI():
     @staticmethod
     def information_box(message, ok_string):
         """ Create Information message """
-
         #FIX ME Need glade window
         message_window = gtk.MessageDialog(None, gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO,
         gtk.BUTTONS_OK, message)
