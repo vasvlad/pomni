@@ -674,6 +674,18 @@ class HildonUI():
         message_window.run()
         message_window.destroy()
 
+    @staticmethod
+    def question_box(question, option0, option1, option2):
+        """ Create Question message """
+
+        print question, option0, option1, option2
+        #FIX ME Need glade window
+        question_window = gtk.MessageDialog(None, 
+            gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION, 
+            gtk.BUTTONS_YES_NO, question)
+        question_window.run()
+        question_window.destroy()
+
 
 
 def _test():
