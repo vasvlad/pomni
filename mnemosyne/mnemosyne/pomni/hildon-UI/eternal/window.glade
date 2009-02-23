@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Feb 14 21:20:55 2009 -->
+<!--Generated with glade3 3.4.5 on Mon Feb 23 02:41:20 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -929,8 +929,48 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkFixed" id="fixed1">
+              <widget class="GtkVBox" id="vbox6">
                 <property name="visible">True</property>
+                <property name="border_width">10</property>
+                <property name="spacing">2</property>
+                <property name="homogeneous">True</property>
+                <child>
+                  <widget class="GtkTable" id="table1">
+                    <property name="visible">True</property>
+                    <property name="n_rows">1</property>
+                    <property name="n_columns">4</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
+                        <property name="width_request">100</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">Start in fullscreen mode</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_fullscreen"/>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">3</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
                 <child>
                   <widget class="GtkButton" id="button_back">
                     <property name="width_request">800</property>
@@ -943,38 +983,7 @@
                     <signal name="button_press_event" handler="to_main_menu"/>
                   </widget>
                   <packing>
-                    <property name="y">480</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="button_save_changes">
-                    <property name="width_request">800</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">Save changes</property>
-                    <property name="response_id">0</property>
-                    <signal name="button_press_event" handler="save_changes"/>
-                  </widget>
-                  <packing>
-                    <property name="y">400</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
-                    <property name="width_request">200</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Fullscreen mode</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_fullscreen"/>
-                  </widget>
-                  <packing>
-                    <property name="x">100</property>
-                    <property name="y">100</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </widget>

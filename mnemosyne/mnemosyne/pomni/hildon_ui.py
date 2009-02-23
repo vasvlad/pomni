@@ -110,12 +110,10 @@ class HildonBaseUi():
     @staticmethod
     def exit_cb(widget):
         """ If pressed quit button then close the window """
-
         gtk.main_quit()
 
     def to_main_menu_cb(self, widget, event):
         """ Return to main menu """
-
         self.switcher.set_current_page(self.main_menu)
 
     def window_keypress_cb(self, widget, event, *args):
@@ -189,8 +187,10 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             #FIXME Need check for space before <html>
             if question_text.startswith('<html>'):
                 font_size = view.get_style().font_desc.get_size()/1024
-                question_text = question_text.replace('*{font-size:14px;}',
+                question_text = question_text.replace('*{font-size:30px;}',
                  '*{font-size:%spx;}' % font_size)
+                print font_size
+                print question_text
             else:
                 # FIXME
                 print "Not a html!!!!!!!!!"
@@ -435,7 +435,8 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self, signals=['save_changes', 'change_fullscreen'])
+        HildonBaseUi.__init__(self, signals=['change_fullscreen'])
+        self.modified = False
         self.configuration = config()
     
     def start(self, w_tree):
@@ -445,15 +446,16 @@ class HildonUiControllerConfig(HildonBaseUi):
         self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
         self.switcher.set_current_page(self.config)
 
-    def save_changes_cb(self, widget, event):
-        """ Save all modified changes """
-        self.configuration.save()
-        self.button_save_changes.set_sensitive(False)
-
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
+        self.modified = True
         self.configuration['fullscreen'] = self.checkbox_fullscreen_mode.get_active()
-        
+    
+    def to_main_menu_cb(self, widget, event):
+        if self.modified:
+            self.configuration.save()
+        self.switcher.set_current_page(self.main_menu)
+
 
 
 class EternalControllerReview(HildonUiControllerReview):
