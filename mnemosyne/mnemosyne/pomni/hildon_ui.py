@@ -186,11 +186,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             question_text = card.question()
             #FIXME Need check for space before <html>
             if question_text.startswith('<html>'):
+                #FIX ME
                 font_size = view.get_style().font_desc.get_size()/1024
+                font_size_from_config = config()['font_size']
                 question_text = question_text.replace('*{font-size:30px;}',
-                 '*{font-size:%spx;}' % font_size)
-                print font_size
-                print question_text
+                 '*{font-size:%spx;}' % font_size_from_config)
             else:
                 # FIXME
                 print "Not a html!!!!!!!!!"
@@ -223,9 +223,13 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         # Adapting for html
         #FIXME Need check for space before <html>
         if answer_text.startswith('<html>'):
+            #FIX ME
             font_size = view.get_style().font_desc.get_size()/1024
-            answer_text = answer_text.replace('<head>', 
-            '<head> <style>*{font-size:%spx;}</style>' % font_size)
+            font_size_from_config = config()['font_size']
+            answer_text = answer_text.replace('*{font-size:30px;}',
+                 '*{font-size:%spx;}' % font_size_from_config)
+            #answer_text = answer_text.replace('<head>', 
+            #'<head> <style>*{font-size:%spx;}</style>' % font_size)
         else:
             # FIXME
             print "Not a html!!!!!!!!!"
@@ -435,7 +439,7 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self, signals=['change_fullscreen'])
+        HildonBaseUi.__init__(self, signals=['change_fullscreen', 'change_font_size'])
         self.modified = False
         self.configuration = config()
     
@@ -444,12 +448,18 @@ class HildonUiControllerConfig(HildonBaseUi):
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
         self.checkbox_fullscreen_mode.set_active(self.configuration['fullscreen'])
+        self.spinbutton_fontsize.set_value(self.configuration['font_size'])
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
         self.modified = True
         self.configuration['fullscreen'] = self.checkbox_fullscreen_mode.get_active()
+
+    def change_font_size_cb(self, widget):
+        self.modified = True
+        self.configuration['font_size'] = self.spinbutton_fontsize.get_value_as_int()
+        
     
     def to_main_menu_cb(self, widget, event):
         if self.modified:

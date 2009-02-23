@@ -112,6 +112,7 @@ class Configuration(dict):
              "scheduler": "SM2",
              "database": "sqlite",
              "fullscreen": True,
+             "font_size": 40,
              "active_plugins": set() # plugin class
             }.items():
             
