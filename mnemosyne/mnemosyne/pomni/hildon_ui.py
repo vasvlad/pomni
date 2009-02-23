@@ -530,6 +530,7 @@ class HildonUiControllerMain(HildonBaseUi):
 
         pass
 
+
     def file_new(self):
         """ Not Implemented Yet """
 
@@ -686,6 +687,10 @@ class HildonUI():
         question_window.run()
         question_window.destroy()
 
+    def update_status_bar(self, message=None):
+        """ Not Implemented """
+
+        pass
 
 
 def _test():
