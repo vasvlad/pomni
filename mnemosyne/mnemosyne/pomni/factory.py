@@ -59,8 +59,7 @@ def ui_factory(interface=None):
             ("input", "ControllerInput"), 
             ("configure", "ControllerConfigure"))])
 
-        #Fix Me 
-        from hildon_ui import EternalControllerReview
+        controller_review = __import__("hildon_ui",globals(),locals(), ['EternalControllerReview'])
 
         component_manager.register("ui_controller_review", controllers["review"]())
         component_manager.register("renderer", HtmlHildon())
