@@ -256,6 +256,12 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.card = None
 
+    def update_dialog(self, redraw_all=False):
+        """ Unknown """
+
+        print "update_dialog"
+        self.new_question()
+
 class HildonUiControllerInput(HildonBaseUi):
     """ Hildon Input controller """
 
@@ -684,8 +690,13 @@ class HildonUI():
         question_window = gtk.MessageDialog(None, 
             gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION, 
             gtk.BUTTONS_YES_NO, question)
-        question_window.run()
+        response = question_window.run()
         question_window.destroy()
+
+        if response == gtk.RESPONSE_YES:
+            return False
+        else:
+            return True
 
     def update_status_bar(self, message=None):
         """ Not Implemented """
