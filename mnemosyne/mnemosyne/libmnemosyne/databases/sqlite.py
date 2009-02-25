@@ -400,6 +400,7 @@ class Sqlite(Database):
         # Delete record from facts table
         self.conn.execute("delete from facts where guid=?",
                     (fact.uid, ))
+        self.conn.commit()
 
     # Queries.
 
