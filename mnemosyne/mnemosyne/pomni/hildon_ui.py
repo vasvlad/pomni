@@ -103,7 +103,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     def __init__(self):
         """ Initialization items of review window """
 
-        HildonBaseUi.__init__(self, signals=["get_answer", "grade", "delete_card"])
+        HildonBaseUi.__init__(self, signals=["get_answer", \
+            "grade", "delete_card"])
         UiControllerReview.__init__(self)
 
         self.title = _("Mnemosyne") + " - " + \
@@ -129,9 +130,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     # UiControllerReview API
 
-    def update_dialog(self):
+
+    def update_dialog(self, redraw_all=False):
         """ This is part of UiControllerReview API """
-        pass
+
+        self.new_question()
 
     def new_question(self, learn_ahead=False):
         """ Create new question """
@@ -211,12 +214,14 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.show_answer()
 
-    def delete_card_cb(self, widget, event):
+    @staticmethod
+    def delete_card_cb(widget, event):
         """ Hook for showing a right answer """
 
         # Create new card
         main = ui_controller_main()
         main.delete_current_fact()
+        return True
 
     def grade_cb(self, widget, event):
         """ Call grade of answer """
@@ -228,10 +233,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.card = None
 
-    def update_dialog(self, redraw_all=False):
-        """ Unknown """
-
-        self.new_question()
 
 class HildonUiControllerInput(HildonBaseUi):
     """ Hildon Input controller """
@@ -414,7 +415,7 @@ class HildonUiControllerConfig(HildonBaseUi):
         HildonBaseUi.__init__(self, 
             signals=['save_changes', 'change_fullscreen'])
         self.configuration = config()
-    
+
     def start(self, w_tree):
         """ Start config window """
         self.w_tree = w_tree
@@ -431,7 +432,7 @@ class HildonUiControllerConfig(HildonBaseUi):
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
         self.configuration['fullscreen'] = \
-            self.checkbox_fullscreen_mode.get_active()        
+            self.checkbox_fullscreen_mode.get_active()
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -471,7 +472,8 @@ class HildonUiControllerMain(HildonBaseUi):
             #Fix Me hack for Bartosh code
             if mode == "review":
                 def callback (widget):
-                    from mnemosyne.libmnemosyne.component_manager import ui_controller_review
+                    from mnemosyne.libmnemosyne.component_manager \
+                        import ui_controller_review
                     ui_controller_review().start(self.w_tree)
                 return callback
             else:
@@ -496,10 +498,6 @@ class HildonUiControllerMain(HildonBaseUi):
         """ Not Implemented Yet """
 
         pass
-
-    def delete_current_fact(self):
-    
-        ui_controller_main().delete_current_fact()
 
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
                              new_cat_names):
@@ -612,10 +610,10 @@ class HildonUI():
         self.controllers = controllers
         self.window = self.w_tree.get_widget("window")
         if config()['fullscreen']:
-           self.window.fullscreen()
-           self.fullscreen = True
+            self.window.fullscreen()
+            self.fullscreen = True
         else:
-           self.fullscreen = False
+            self.fullscreen = False
 
         self.signals = ["exit", "window_state",
                         "window_keypress"]
@@ -688,8 +686,8 @@ class HildonUI():
         """ Create Information message """
 
         #FIX ME Need glade window
-        message_window = gtk.MessageDialog(None, 
-            gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO, 
+        message_window = gtk.MessageDialog(None,
+            gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_INFO,
             gtk.BUTTONS_OK, message)
         message_window.run()
         message_window.destroy()

@@ -59,9 +59,11 @@ def ui_factory(interface=None):
             ("input", "ControllerInput"), 
             ("configure", "ControllerConfigure"))])
 
-        controller_review = __import__("hildon_ui",globals(),locals(), [theme.capitalize()+'ControllerReview'])
+        __import__("hildon_ui", globals(), locals(), \
+            [theme.capitalize()+'ControllerReview'])
 
-        component_manager.register("ui_controller_review", controllers["review"]())
+        component_manager.register("ui_controller_review", \
+            controllers["review"]())
         component_manager.register("renderer", HtmlHildon())
         return HildonUI(controllers)
 
