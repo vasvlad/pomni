@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Feb 22 10:33:56 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Feb 26 11:00:36 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -491,6 +491,8 @@
                         <child>
                           <widget class="GtkEventBox" id="delete_car">
                             <property name="visible">True</property>
+                            <property name="visible_window">False</property>
+                            <property name="above_child">True</property>
                             <signal name="button_press_event" handler="delete_card"/>
                             <child>
                               <widget class="GtkImage" id="image4">
@@ -797,6 +799,8 @@
                     <child>
                       <widget class="GtkEventBox" id="add_card">
                         <property name="visible">True</property>
+                        <property name="visible_window">False</property>
+                        <property name="above_child">True</property>
                         <signal name="button_press_event" handler="add_card2"/>
                         <child>
                           <widget class="GtkImage" id="image14">
@@ -818,6 +822,8 @@
                     <child>
                       <widget class="GtkEventBox" id="delete_card">
                         <property name="visible">True</property>
+                        <property name="visible_window">False</property>
+                        <property name="above_child">True</property>
                         <signal name="button_press_event" handler="delete_card"/>
                         <child>
                           <widget class="GtkImage" id="image16">

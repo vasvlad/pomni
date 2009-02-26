@@ -67,13 +67,12 @@ class HildonBaseUi():
 
     def __init__(self, signals):
 
-        self.signals = ["exit", "to_main_menu", "window_state",
-                        "window_keypress"]
+        self.signals = ["to_main_menu"]
+
         if signals:
             self.signals.extend(signals)
 
         self.w_tree = None
-        self.fullscreen = config()['fullscreen']
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -92,37 +91,10 @@ class HildonBaseUi():
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-        if self.fullscreen:
-            self.window.fullscreen()
-
-    # Callbacks
-
-    @staticmethod
-    def exit_cb(widget):
-        """ If pressed quit button then close the window """
-
-        gtk.main_quit()
-
     def to_main_menu_cb(self, widget, event):
         """ Return to main menu """
 
         self.switcher.set_current_page(self.main_menu)
-
-    def window_keypress_cb(self, widget, event, *args):
-        """ Key pressed """
-        if event.keyval == gtk.keysyms.F6:
-            # The "Full screen" hardware key has been pressed
-            if self.fullscreen:
-                self.window.unfullscreen()
-            else:
-                self.window.fullscreen()
-
-    def window_state_cb(self, widget, event):
-        """ Checking window state """
-
-        self.fullscreen = bool(event.new_window_state & \
-            gtk.gdk.WINDOW_STATE_FULLSCREEN)
-
 
 
 class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
@@ -259,7 +231,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     def update_dialog(self, redraw_all=False):
         """ Unknown """
 
-        print "update_dialog"
         self.new_question()
 
 class HildonUiControllerInput(HildonBaseUi):
@@ -639,9 +610,23 @@ class HildonUI():
         switcher = self.w_tree.get_widget("switcher")
         switcher.set_property('show_tabs', False)
         self.controllers = controllers
+        self.window = self.w_tree.get_widget("window")
+        if config()['fullscreen']:
+           self.window.fullscreen()
+           self.fullscreen = True
+        else:
+           self.fullscreen = False
+
+        self.signals = ["exit", "window_state",
+                        "window_keypress"]
+
 
     def start(self, mode):
         """ Start UI  """
+
+        # connect signals to methods
+        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in self.signals]))
 
         if mode == "main":
             controller = self.controllers[mode](self.controllers)
@@ -657,6 +642,34 @@ class HildonUI():
         if glade and widget_name and  hasattr(self, function_name):
             handler = getattr(self, function_name)
             return handler(args)
+
+    # Callbacks
+
+    @staticmethod
+    def exit_cb(widget):
+        """ If pressed quit button then close the window """
+
+        gtk.main_quit()
+
+
+    def window_keypress_cb(self, widget, event, *args):
+        """ Key pressed """
+
+        if event.keyval == gtk.keysyms.F6:
+            # The "Full screen" hardware key has been pressed
+            if self.fullscreen:
+                self.window.unfullscreen()
+                self.fullscreen = False
+            else:
+                self.window.fullscreen()
+                self.fullscreen = True
+
+    def window_state_cb(self, widget, event):
+        """ Checking window state """
+
+        self.fullscreen = bool(event.new_window_state & \
+            gtk.gdk.WINDOW_STATE_FULLSCREEN)
+
 
     @staticmethod
     def create_gtkhtml(args):
