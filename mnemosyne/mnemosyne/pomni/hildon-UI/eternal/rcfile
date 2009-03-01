@@ -148,6 +148,8 @@ style "review-getanswer-label" {
 style "button-label" {
 	font_name = "Nokia Sans 20.0"
 	fg[NORMAL] = "#FFFFFF"
+	fg[PRELIGHT] = "#FFFFFF"
+	fg[SELECTED] = "#FFFFFF"
 }
 
 
