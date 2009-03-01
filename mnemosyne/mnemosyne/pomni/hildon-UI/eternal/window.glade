@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Feb 24 00:35:56 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Feb 26 13:54:30 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -489,49 +489,33 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image4">
+                          <widget class="GtkEventBox" id="delete_car">
                             <property name="visible">True</property>
-                            <property name="pixbuf">delete.png</property>
+                            <property name="visible_window">False</property>
+                            <property name="above_child">True</property>
+                            <signal name="button_release_event" handler="delete_card"/>
+                            <child>
+                              <widget class="GtkImage" id="image4">
+                                <property name="visible">True</property>
+                                <property name="pixbuf">delete.png</property>
+                              </widget>
+                            </child>
                           </widget>
                           <packing>
                             <property name="position">2</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkVSeparator" id="vseparator1">
-                            <property name="visible">True</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">3</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image5">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">manager.png</property>
-                          </widget>
-                          <packing>
-                            <property name="position">4</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image11">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">settings.png</property>
-                          </widget>
-                          <packing>
-                            <property name="position">5</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image12">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">info.png</property>
-                          </widget>
-                          <packing>
-                            <property name="position">6</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
                           <widget class="GtkVSeparator" id="vseparator2">
@@ -815,6 +799,8 @@
                     <child>
                       <widget class="GtkEventBox" id="add_card">
                         <property name="visible">True</property>
+                        <property name="visible_window">False</property>
+                        <property name="above_child">True</property>
                         <signal name="button_press_event" handler="add_card2"/>
                         <child>
                           <widget class="GtkImage" id="image14">
@@ -834,9 +820,17 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkImage" id="image16">
+                      <widget class="GtkEventBox" id="delete_card">
                         <property name="visible">True</property>
-                        <property name="pixbuf">delete.png</property>
+                        <property name="visible_window">False</property>
+                        <property name="above_child">True</property>
+                        <signal name="button_press_event" handler="delete_card"/>
+                        <child>
+                          <widget class="GtkImage" id="image16">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">delete.png</property>
+                          </widget>
+                        </child>
                       </widget>
                       <packing>
                         <property name="position">2</property>

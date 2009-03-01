@@ -398,8 +398,9 @@ class Sqlite(Database):
                 (fact.uid, ))
 
         # Delete record from facts table
-        self.conn.execute("delete from facts were guid=?",
+        self.conn.execute("delete from facts where guid=?",
                     (fact.uid, ))
+        self.conn.commit()
 
     # Queries.
 

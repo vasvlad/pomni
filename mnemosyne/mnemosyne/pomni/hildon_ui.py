@@ -73,7 +73,6 @@ class HildonBaseUi():
             self.signals.extend(signals)
 
         self.w_tree = None
-        self.fullscreen = config()['fullscreen']
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -91,7 +90,6 @@ class HildonBaseUi():
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
-
 
     def to_main_menu_cb(self, widget, event):
         """ Return to main menu """

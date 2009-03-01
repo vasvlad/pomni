@@ -1,3 +1,14 @@
+pomni (0.0.6) unstable; urgency=low
+
+  * Removed some icons from review mode and increased size 
+    of add,edit,exit icons  (Vlad)
+  * implemented card deleting (Vlad)
+  * removed binary config 
+  * implemented working draft of configuration mode (Max)
+  * refactored calling of controllers
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 01 Mar 2009 11:57:10 +0000
+
 pomni (0.0.5) unstable; urgency=low
 
   * fixed bug in postinst which prevented to install package

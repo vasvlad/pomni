@@ -273,6 +273,10 @@ class CmdUiControllerReview(UiControllerReview):
             print("\n")
             break
 
+    def clear(self):
+        """Redefinition of parent's abstract method."""
+        pass
+
 
 def _test():
     """ Run doctests

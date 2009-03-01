@@ -38,8 +38,7 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 
 from optparse import OptionParser
 
-from mnemosyne.libmnemosyne.component_manager import component_manager, \
-    database, config
+from mnemosyne.libmnemosyne.component_manager import database, config
 
 from pomni.factory import ui_factory
 

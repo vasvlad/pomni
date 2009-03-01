@@ -47,7 +47,7 @@ class Cloze(CardType, Plugin):
     # text to be deleted), all the data stays consistent, and storing all that
     # information could help making that possible.
         
-    def question(self, fact, fact_view)
+    def question(self, fact, fact_view):
         return fact.text.replace(fact_view.extra_data[0], "[...]",  1)
 
     def answer(self, fact, fact_view):
