@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Feb 26 13:54:30 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Mar  1 19:12:32 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -473,20 +473,23 @@
                     <child>
                       <widget class="GtkHBox" id="hbox3">
                         <property name="visible">True</property>
+                        <signal name="button_press_event" handler="input"/>
                         <child>
-                          <widget class="GtkImage" id="image1">
+                          <widget class="GtkEventBox" id="to_input">
                             <property name="visible">True</property>
-                            <property name="pixbuf">add.png</property>
+                            <property name="visible_window">False</property>
+                            <property name="above_child">True</property>
+                            <signal name="button_press_event" handler="input"/>
+                            <child>
+                              <widget class="GtkImage" id="image1">
+                                <property name="visible">True</property>
+                                <property name="pixbuf">add.png</property>
+                              </widget>
+                            </child>
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image3">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">edit.png</property>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
                           <widget class="GtkEventBox" id="delete_car">

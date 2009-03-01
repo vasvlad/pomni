@@ -221,7 +221,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         # Create new card
         main = ui_controller_main()
         main.delete_current_fact()
-        return True
 
     def grade_cb(self, widget, event):
         """ Call grade of answer """
@@ -471,14 +470,14 @@ class HildonUiControllerMain(HildonBaseUi):
 
             #Fix Me hack for Bartosh code
             if mode == "review":
-                def callback (widget):
+                def callback (widget, event = None):
                     """Callback for review mode."""
                     from mnemosyne.libmnemosyne.component_manager \
                         import ui_controller_review
                     ui_controller_review().start(self.w_tree)
                 return callback
             else:
-                def callback(widget):
+                def callback(widget, event = None):
                     """Callback for rest of modes."""
                     self.controllers[mode]().start(self.w_tree)
                 return callback
