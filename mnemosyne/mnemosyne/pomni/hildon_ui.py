@@ -463,37 +463,7 @@ class EternalControllerReview(HildonUiControllerReview):
 class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
-    def __init__(self, controllers, extrasignals=None):
-        """ Iniitialization """
-
-        def gen_callback(mode):
-            """Generate callback for mode."""
-
-            #Fix Me hack for Bartosh code
-            if mode == "review":
-                def callback (widget):
-                    """Callback for review mode."""
-                    from mnemosyne.libmnemosyne.component_manager \
-                        import ui_controller_review
-                    ui_controller_review().start(self.w_tree)
-                return callback
-            else:
-                def callback(widget):
-                    """Callback for rest of modes."""
-                    self.controllers[mode]().start(self.w_tree)
-                return callback
-
-        signals = ["review", "input", "configure"]
-
-        # Callbacks
-        for signal in signals:
-            setattr(self, signal + '_cb', gen_callback(signal))
-
-        if extrasignals:
-            signals.extend(extrasignals)
-
-        self.controllers = controllers
-
+    def __init__(self, signals=None):
         HildonBaseUi.__init__(self, signals)
 
     def edit_current_card(self):
@@ -532,11 +502,11 @@ class HildonUiControllerMain(HildonBaseUi):
 class EternalControllerMain(HildonUiControllerMain):
     """ Eternal UI Main Controller """
 
-    def __init__(self, controllers):
+    def __init__(self):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, controllers, ["size_allocate"])
+        self.base.__init__(self, ["size_allocate"])
         self.spliter_trigger = True
 
     def start(self, w_tree):
@@ -598,7 +568,13 @@ class HildonUI():
     """ Hildon UI """
 
     def __init__(self, controllers):
-        """ Load theme's glade file """
+
+        def gen_callback(mode):
+            """Generate callback for mode."""
+            def callback(widget):
+                """Callback function."""
+                self.controllers[mode].start(self.w_tree)
+            return callback
 
         ui_controller_main().widget = self
         theme_path = config()["theme_path"]
@@ -609,7 +585,6 @@ class HildonUI():
         # Set unvisible tabs of switcher
         switcher = self.w_tree.get_widget("switcher")
         switcher.set_property('show_tabs', False)
-        self.controllers = controllers
         self.window = self.w_tree.get_widget("window")
         self.window.connect('delete_event', gtk.main_quit)
 
@@ -620,22 +595,23 @@ class HildonUI():
         else:
             self.fullscreen = False
 
-        self.signals = ["exit", "window_state",
-                        "window_keypress"]
+        # Generate callbacks for modes
+        self.controllers = controllers
+        signals = ["review", "input", "configure"]
+        for signal in signals:
+            setattr(self, signal + '_cb', gen_callback(signal))
 
-
-    def start(self, mode):
-        """ Start UI  """
+        self.signals = ["exit", "window_state", "window_keypress"] + signals
 
         # connect signals to methods
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-        if mode == "main":
-            controller = self.controllers[mode](self.controllers)
-        else:
-            controller = self.controllers[mode]()
-        controller.start(self.w_tree)
+
+    def start(self, mode):
+        """ Start UI  """
+
+        self.controllers[mode].start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
