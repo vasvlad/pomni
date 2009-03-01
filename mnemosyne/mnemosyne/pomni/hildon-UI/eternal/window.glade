@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Feb 26 13:54:30 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Mar  1 21:26:18 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -480,13 +480,7 @@
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkImage" id="image3">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">edit.png</property>
-                          </widget>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                         <child>
                           <widget class="GtkEventBox" id="delete_car">
@@ -934,12 +928,6 @@
                     <property name="n_rows">3</property>
                     <property name="n_columns">1</property>
                     <child>
-                      <widget class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
-                    </child>
-                    <child>
                       <widget class="GtkSpinButton" id="spinbutton_fontsize">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -952,6 +940,12 @@
                         <property name="bottom_attach">3</property>
                         <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                       </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
                     </child>
                   </widget>
                 </child>
