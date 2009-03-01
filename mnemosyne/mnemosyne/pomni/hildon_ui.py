@@ -611,6 +611,9 @@ class HildonUI():
         switcher.set_property('show_tabs', False)
         self.controllers = controllers
         self.window = self.w_tree.get_widget("window")
+        self.window.connect('delete_event', gtk.main_quit)
+
+        # fullscreen mode
         if config()['fullscreen']:
             self.window.fullscreen()
             self.fullscreen = True
