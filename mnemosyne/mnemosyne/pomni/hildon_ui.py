@@ -131,7 +131,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     # UiControllerReview API
 
 
-    def update_dialog(self, redraw_all=False):
+    def update_dialog(self):
         """ This is part of UiControllerReview API """
 
         self.new_question()
@@ -472,12 +472,14 @@ class HildonUiControllerMain(HildonBaseUi):
             #Fix Me hack for Bartosh code
             if mode == "review":
                 def callback (widget):
+                    """Callback for review mode."""
                     from mnemosyne.libmnemosyne.component_manager \
                         import ui_controller_review
                     ui_controller_review().start(self.w_tree)
                 return callback
             else:
                 def callback(widget):
+                    """Callback for rest of modes."""
                     self.controllers[mode]().start(self.w_tree)
                 return callback
 
