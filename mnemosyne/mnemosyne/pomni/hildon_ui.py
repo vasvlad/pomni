@@ -156,8 +156,9 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             #FIXME Need check for space before <html>
             if question_text.startswith('<html>'):
                 font_size = view.get_style().font_desc.get_size()/1024
+                font_size_from_config = config()['font_size']
                 question_text = question_text.replace('*{font-size:30px;}',
-                 '*{font-size:%spx;}' % font_size)
+                 '*{font-size:%spx;}' % font_size_from_config)
             else:
                 # FIXME
                 print "Not a html!!!!!!!!!"
@@ -191,8 +192,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         #FIXME Need check for space before <html>
         if answer_text.startswith('<html>'):
             font_size = view.get_style().font_desc.get_size()/1024
-            answer_text = answer_text.replace('<head>', 
-            '<head> <style>*{font-size:%spx;}</style>' % font_size)
+            font_size_from_config = config()['font_size']
+            answer_text = answer_text.replace('*{font-size:30px;}',
+                             '*{font-size:%spx;}' % font_size_from_config)
+            #answer_text = answer_text.replace('<head>', 
+            #'<head> <style>*{font-size:%spx;}</style>' % font_size)
         else:
             # FIXME
             print "Not a html!!!!!!!!!"
@@ -411,27 +415,40 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self, 
-            signals=['save_changes', 'change_fullscreen'])
+        HildonBaseUi.__init__(self,  signals=
+            ['change_fullscreen', 'change_font_size','change_startup_with_review'])
+        self.modified = False
         self.configuration = config()
 
     def start(self, w_tree):
         """ Start config window """
         self.w_tree = w_tree
         HildonBaseUi.start(self, w_tree)
-        self.checkbox_fullscreen_mode.set_active(\
+        self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])
+        self.checkbox_start_in_review_mode.set_active(
+            self.configuration['startup_with_review'])
+        self.spinbutton_fontsize.set_value(self.configuration['font_size'])
         self.switcher.set_current_page(self.config)
-
-    def save_changes_cb(self, widget, event):
-        """ Save all modified changes """
-        self.configuration.save()
-        self.button_save_changes.set_sensitive(False)
 
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
-        self.configuration['fullscreen'] = \
-            self.checkbox_fullscreen_mode.get_active()
+        self.modified = True
+        self.configuration['fullscreen'] = self.checkbox_fullscreen_mode.get_active()
+
+    def change_font_size_cb(self, widget):
+        self.modified = True
+        self.configuration['font_size'] = self.spinbutton_fontsize.get_value_as_int()
+
+    def change_startup_with_review_cb(self, widget):
+        self.modified = True
+        self.configuration['startup_with_review'] = self.checkbox_start_in_review_mode.get_active()
+
+    def to_main_menu_cb(self, widget, event):
+        if self.modified:
+            self.configuration.save()
+        self.switcher.set_current_page(self.main_menu)
+
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -606,9 +623,14 @@ class HildonUI():
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-
     def start(self, mode):
         """ Start UI  """
+
+        self.controllers[mode].start(self.w_tree)
+        
+        # start in review mode
+        #if config()['startup_with_review']:
+        #    mode = "review"
 
         self.controllers[mode].start(self.w_tree)
         gtk.main()
