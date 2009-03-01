@@ -131,7 +131,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     # UiControllerReview API
 
 
-    def update_dialog(self):
+    def update_dialog(self, redraw_all):
         """ This is part of UiControllerReview API """
 
         self.new_question()
