@@ -221,7 +221,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         # Create new card
         main = ui_controller_main()
         main.delete_current_fact()
-        return True
 
     def grade_cb(self, widget, event):
         """ Call grade of answer """
