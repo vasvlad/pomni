@@ -627,12 +627,6 @@ class HildonUI():
         """ Start UI  """
 
         self.controllers[mode].start(self.w_tree)
-        
-        # start in review mode
-        #if config()['startup_with_review']:
-        #    mode = "review"
-
-        self.controllers[mode].start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
