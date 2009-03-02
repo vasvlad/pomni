@@ -53,17 +53,14 @@ def ui_factory(interface=None):
         from pomni import hildon_ui
         from hildon_ui import HildonUI
 
-        controllers = dict([(mode, getattr(hildon_ui, 
-            theme.capitalize() + controller)) for mode, controller in \
-            (("review", "ControllerReview"), ("main", "ControllerMain"),
-            ("input", "ControllerInput"), 
-            ("configure", "ControllerConfigure"))])
-
-        __import__("hildon_ui", globals(), locals(), \
-            [theme.capitalize()+'ControllerReview'])
-
+        controllers = {}
+        for mode in ("review", "input", "configure", "main"):
+            cname = theme.capitalize() + 'Controller' + mode.capitalize()
+            #__import__("hildon_ui", globals(), locals(), [cname])
+            controllers[mode] = getattr(hildon_ui, cname)()
+            
         component_manager.register("ui_controller_review", \
-            controllers["review"]())
+            controllers["review"])
         component_manager.register("renderer", HtmlHildon())
         return HildonUI(controllers)
 

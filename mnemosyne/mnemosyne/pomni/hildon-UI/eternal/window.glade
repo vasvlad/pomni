@@ -473,10 +473,19 @@
                     <child>
                       <widget class="GtkHBox" id="hbox3">
                         <property name="visible">True</property>
+                        <signal name="button_press_event" handler="input"/>
                         <child>
-                          <widget class="GtkImage" id="image1">
+                          <widget class="GtkEventBox" id="to_input">
                             <property name="visible">True</property>
-                            <property name="pixbuf">add.png</property>
+                            <property name="visible_window">False</property>
+                            <property name="above_child">True</property>
+                            <signal name="button_press_event" handler="input"/>
+                            <child>
+                              <widget class="GtkImage" id="image1">
+                                <property name="visible">True</property>
+                                <property name="pixbuf">add.png</property>
+                              </widget>
+                            </child>
                           </widget>
                         </child>
                         <child>
