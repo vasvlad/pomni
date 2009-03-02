@@ -102,7 +102,7 @@ style "getanswerarea-button" {
 
     image {
 	function = BOX
-	file     = "getanswerarea.png"
+	    file     = "getanswerarea.png"
   	border   = { 15, 15, 15, 15 }
   	
     }
@@ -125,6 +125,8 @@ style "question_answer_frame" {
   }
 }
 
+
+#------ fonts styles -------------
 style "review-title-label" {
 	font_name = "Nokia Sans 16.0"
 	fg[NORMAL] = "#c2c1bf"
@@ -150,6 +152,16 @@ style "button-label" {
 	fg[NORMAL] = "#FFFFFF"
 	fg[PRELIGHT] = "#FFFFFF"
 	fg[SELECTED] = "#FFFFFF"
+}
+
+style "info-window-label" {
+	font_name = "Nokia Sans 11.5"
+	fg[NORMAL] = "#000000"
+}
+
+style "question-window-label" {
+	font_name = "Nokia Sans 11.5"
+	fg[NORMAL] = "#000000"
 }
 
 
@@ -373,7 +385,11 @@ widget "window" style "mainwindow"
 widget "questionwindow" style "mainwindow"
 widget "*.questionwindow_button_yes" style "review-button"
 widget "*.questionwindow_button_no" style "review-button"
+widget "*.questionwindow_label" style "question-window-label"
 
+widget "infowindow" style "mainwindow"
+widget "*.infowindow_button_ok" style "review-button"
+widget "*.infowindow_label" style "info-window-label"
 
 
 
