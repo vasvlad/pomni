@@ -630,6 +630,7 @@ class HildonUI():
         self.window = self.w_tree.get_widget("window")
         self.window.connect('delete_event', gtk.main_quit)
 
+        self.question_flag = False
         # fullscreen mode
         if config()['fullscreen']:
             self.window.fullscreen()
@@ -638,7 +639,8 @@ class HildonUI():
             self.fullscreen = False
 
         self.signals = ["exit", "window_state",
-                        "window_keypress"]
+                        "window_keypress", "question_box_yes",
+                        "question_box_no"]
 
 
     def start(self, mode):
@@ -699,7 +701,6 @@ class HildonUI():
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
 
-
         view = gtkhtml2.View()
         document = gtkhtml2.Document()
         view.set_document(document)
@@ -718,22 +719,30 @@ class HildonUI():
         message_window.run()
         message_window.destroy()
 
-    @staticmethod
-    def question_box(question, option0, option1, option2):
+    def question_box(self, question, option0, option1, option2):
         """ Create Question message """
+        def filter(str):
+            index = str.find("&")
+            if not index == -1:
+                return str[:index] + str[index+1:]
+            return str
 
-        print question, option0, option1, option2
-        #FIX ME Need glade window
-        question_window = gtk.MessageDialog(None, 
-            gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION, 
-            gtk.BUTTONS_YES_NO, question)
+        question_window = self.w_tree.get_widget("questionwindow")
+        questionwindow_button_yes = self.w_tree.get_widget("questionwindow_button_yes")
+        questionwindow_button_yes.set_label( filter(option0) )
+        questionwindow_button_no = self.w_tree.get_widget("questionwindow_button_no")
+        questionwindow_button_no.set_label( filter(option1) )
+        questionwindow_label = self.w_tree.get_widget("questionwindow_label")
+        questionwindow_label.set_text('\n' + question + '\n')
         response = question_window.run()
-        question_window.destroy()
+        question_window.hide()
+        return self.question_flag
 
-        if response == gtk.RESPONSE_YES:
-            return False
-        else:
-            return True
+    def question_box_yes_cb(self, widget):
+        self.question_flag = False
+
+    def question_box_no_cb(self, widget):
+        self.question_flag = True
 
     def update_status_bar(self, message=None):
         """ Not Implemented """
