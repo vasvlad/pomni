@@ -370,6 +370,9 @@ widget "*.configure.GtkLabel" style "button-label"
 widget "*.exit.GtkLabel" style "button-label"
 widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
+widget "questionwindow" style "mainwindow"
+widget "*.questionwindow_button_yes" style "review-button"
+widget "*.questionwindow_button_no" style "review-button"
 
 
 
