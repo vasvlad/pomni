@@ -415,8 +415,8 @@ class HildonUiControllerConfig(HildonBaseUi):
 
     def __init__(self):
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self,  signals=
-            ['change_fullscreen', 'change_font_size','change_startup_with_review'])
+        HildonBaseUi.__init__(self,  signals = ['change_fullscreen', \
+                    'change_font_size','change_startup_with_review'])
         self.modified = False
         self.configuration = config()
 
@@ -434,17 +434,23 @@ class HildonUiControllerConfig(HildonBaseUi):
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
         self.modified = True
-        self.configuration['fullscreen'] = self.checkbox_fullscreen_mode.get_active()
+        self.configuration['fullscreen'] = \
+            self.checkbox_fullscreen_mode.get_active()
 
     def change_font_size_cb(self, widget):
+        """ Change Font size parameter """
         self.modified = True
-        self.configuration['font_size'] = self.spinbutton_fontsize.get_value_as_int()
+        self.configuration['font_size'] = \
+            self.spinbutton_fontsize.get_value_as_int()
 
     def change_startup_with_review_cb(self, widget):
+        """ Change 'Startup with Review' parameter """
         self.modified = True
-        self.configuration['startup_with_review'] = self.checkbox_start_in_review_mode.get_active()
+        self.configuration['startup_with_review'] = \
+            self.checkbox_start_in_review_mode.get_active()
 
     def to_main_menu_cb(self, widget, event):
+        """ Return to main menu """
         if self.modified:
             self.configuration.save()
         self.switcher.set_current_page(self.main_menu)
@@ -697,27 +703,32 @@ class HildonUI():
 
     def question_box(self, question, option0, option1, option2):
         """ Create Question message """
-        def filter(str):
-            index = str.find("&")
+        def clear_label(caption):
+            """ Remove &-symbol from caption if exists"""
+            index = caption.find("&")
             if not index == -1:
-                return str[:index] + str[index+1:]
+                return caption[:index] + caption[index+1:]
             return str
 
         question_window = self.w_tree.get_widget("questionwindow")
-        questionwindow_button_yes = self.w_tree.get_widget("questionwindow_button_yes")
-        questionwindow_button_yes.set_label( filter(option0) )
-        questionwindow_button_no = self.w_tree.get_widget("questionwindow_button_no")
-        questionwindow_button_no.set_label( filter(option1) )
+        questionwindow_button_yes = \
+            self.w_tree.get_widget("questionwindow_button_yes")
+        questionwindow_button_yes.set_label(clear_label(option0))
+        questionwindow_button_no = \
+            self.w_tree.get_widget("questionwindow_button_no")
+        questionwindow_button_no.set_label(clear_label(option1))
         questionwindow_label = self.w_tree.get_widget("questionwindow_label")
         questionwindow_label.set_text('\n' + question + '\n')
-        response = question_window.run()
+        question_window.run()
         question_window.hide()
         return self.question_flag
 
     def question_box_yes_cb(self, widget):
+        """ Set question result """
         self.question_flag = False
 
     def question_box_no_cb(self, widget):
+        """ Set question result """
         self.question_flag = True
 
     def update_status_bar(self, message=None):
