@@ -112,8 +112,11 @@ def main(argv):
     if os.path.exists(db_name):
         cdatabase.load(db_name)
 
-    if not opts.mode and config()['startup_with_review']: 
-        opts.mode = 'review'
+    if not opts.mode:
+        if config()['startup_with_review']: 
+            opts.mode = 'review'
+        else:
+            opts.mode = 'main'
 
     return ui_factory(opts.ui).start(opts.mode)
 
