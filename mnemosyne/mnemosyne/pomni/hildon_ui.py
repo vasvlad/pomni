@@ -396,9 +396,9 @@ class HildonUiControllerInput(HildonBaseUi):
 #        if self.listsore:
 #            self.liststore.destroy()
 
+EternalControllerInput = HildonUiControllerInput
 
-
-class HildonUiControllerConfig(HildonBaseUi):
+class HildonUiControllerConfigure(HildonBaseUi):
     """ Hildon Config controller """
 
     def __init__(self):
@@ -443,6 +443,7 @@ class HildonUiControllerConfig(HildonBaseUi):
             self.configuration.save()
         self.switcher.set_current_page(self.main_menu)
 
+EternalControllerConfigure = HildonUiControllerConfigure
 
 
 class EternalControllerReview(HildonUiControllerReview):
