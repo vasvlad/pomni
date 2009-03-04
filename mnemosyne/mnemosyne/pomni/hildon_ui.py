@@ -153,19 +153,14 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             # Adapting for html
             question_text = self.card.question()
 
-            #FIXME Need check for space before <html>
             if question_text.startswith('<html>'):
                 font_size = view.get_style().font_desc.get_size()/1024
                 font_size_from_config = config()['font_size']
                 question_text = question_text.replace('*{font-size:30px;}',
                  '*{font-size:%spx;}' % font_size_from_config)
-            else:
-                # FIXME
-                print "Not a html!!!!!!!!!"
+            
             document.write_stream(question_text)
             document.close_stream()
-
-
         else:
             # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
             self.new_question(True)
@@ -174,7 +169,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
         self.get_answer.set_sensitive(True)
-#        self.card = card
 
     def show_answer(self):
         """ Show answer in review window """
@@ -188,18 +182,12 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         document = getattr(self,'answer_text').document
         document.clear()
         document.open_stream('text/html')
-        # Adapting for html
-        #FIXME Need check for space before <html>
+        
         if answer_text.startswith('<html>'):
             font_size = view.get_style().font_desc.get_size()/1024
             font_size_from_config = config()['font_size']
             answer_text = answer_text.replace('*{font-size:30px;}',
                              '*{font-size:%spx;}' % font_size_from_config)
-            #answer_text = answer_text.replace('<head>', 
-            #'<head> <style>*{font-size:%spx;}</style>' % font_size)
-        else:
-            # FIXME
-            print "Not a html!!!!!!!!!"
 
         document.write_stream(answer_text)
         document.close_stream()
