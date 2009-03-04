@@ -179,6 +179,20 @@ style "mainwindow"
      }
 }
 
+
+style "dialogwindow"
+{
+    engine "sapwood"    
+    {
+        image
+        {
+            function = FLAT_BOX
+            file = "dialogbkg.png"
+            detail = "base"
+        }
+    }
+}
+
 style "nothing"
 {
   GtkNotebook::inner_left_border = 0
@@ -382,12 +396,13 @@ widget "*.configure.GtkLabel" style "button-label"
 widget "*.exit.GtkLabel" style "button-label"
 widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
-widget "questionwindow" style "mainwindow"
+
+widget "questionwindow" style "dialogwindow"
 widget "*.questionwindow_button_yes" style "review-button"
 widget "*.questionwindow_button_no" style "review-button"
 widget "*.questionwindow_label" style "question-window-label"
 
-widget "infowindow" style "mainwindow"
+widget "infowindow" style "dialogwindow"
 widget "*.infowindow_button_ok" style "review-button"
 widget "*.infowindow_label" style "info-window-label"
 
