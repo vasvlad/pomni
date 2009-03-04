@@ -536,44 +536,6 @@ class EternalControllerMain(HildonUiControllerMain):
                 self.spliter_trigger = True
 
 
-class EternalControllerConfigure(HildonUiControllerConfig):
-    """ Eternal UI Controller Configure """
-    pass
-
-
-class SmileControllerMain(HildonUiControllerMain):
-    """ Smile UI Main Controller """
-
-    pass
-
-
-class SmileControllerReview(HildonUiControllerReview):
-    """ Smile UI Review Controller """
-
-    pass
-
-
-class DraftControllerMain(HildonUiControllerMain):
-    """ Draft UI Main Controller """
-
-    pass
-
-
-class DraftControllerReview(HildonUiControllerReview):
-    """ Draft UI Review Controller """
-
-    pass
-
-class EternalControllerInput(HildonUiControllerInput):
-    """ Eteranl UI Input Controller """
-
-    pass
-
-class SmileControllerInput(HildonUiControllerInput):
-    """ Smile UI Input Controller """
-    pass
-
-
 class HildonUI():
     """ Hildon UI """
 
