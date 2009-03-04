@@ -7,8 +7,9 @@ pomni (0.0.6) unstable; urgency=low
   * implemented working draft of configuration mode (Max)
   * refactored calling of controllers
   * removed smile and draft themes from the package
+  * splitted hildon_ui.py
 
- -- Ed Bartosh <bartosh@gmail.com>  Wed, 04 Mar 2009 20:36:04 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 04 Mar 2009 22:04:24 +0000
 
 pomni (0.0.5) unstable; urgency=low
 
