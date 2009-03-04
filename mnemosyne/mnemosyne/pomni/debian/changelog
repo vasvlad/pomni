@@ -6,8 +6,9 @@ pomni (0.0.6) unstable; urgency=low
   * removed binary config 
   * implemented working draft of configuration mode (Max)
   * refactored calling of controllers
+  * removed smile and draft themes from the package
 
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 01 Mar 2009 11:57:10 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 04 Mar 2009 20:36:04 +0000
 
 pomni (0.0.5) unstable; urgency=low
 
