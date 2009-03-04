@@ -20,7 +20,7 @@ install-system:
 test:
 	./bin/nosetests
 
-cover:
+coverage:
 	./bin/nosetests --with-coverage --cover-package=mnemosyne.libmnemosyne
 
 windows:
