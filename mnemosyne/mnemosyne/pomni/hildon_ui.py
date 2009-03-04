@@ -593,6 +593,7 @@ class HildonUI():
 
         def gen_callback(mode):
             """Generate callback for mode."""
+
             def callback(widget, event = None):
                 """Callback function."""
                 self.controllers[mode].start(self.w_tree)
