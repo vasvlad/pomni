@@ -1,8 +1,11 @@
 pomni (0.0.7) unstable; urgency=low
 
-  * started 0.0.7
+  * remove button Conf in Input mode, resize icons (Max)
+  * fixed #84 (crashing after some time) by removing 
+    osso-service name from .desktop
+  * implemented 'Learn ahead of schedule' (Vlad)
 
- -- Ed Bartosh <bartosh@gmail.com>  Thu, 05 Mar 2009 08:00:26 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 05 Mar 2009 21:53:38 +0000
 
 pomni (0.0.6) unstable; urgency=low
 
