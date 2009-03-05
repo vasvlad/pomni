@@ -97,6 +97,7 @@ class HildonBaseUi():
         self.switcher.set_current_page(self.main_menu)
 
 
+<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_ui.py
 class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     """ Hildon Review controller """
 

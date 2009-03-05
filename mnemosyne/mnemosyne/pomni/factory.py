@@ -56,9 +56,9 @@ def ui_factory(interface=None):
         controllers = {}
         for mode in ("review", "input", "configure", "main"):
             cname = theme.capitalize() + 'Controller' + mode.capitalize()
-            #__import__("hildon_ui", globals(), locals(), [cname])
-            controllers[mode] = getattr(hildon_ui, cname)()
-            
+            module = __import__("pomni.hildon_%s" % mode, globals(), locals(), [cname])
+            controllers[mode] = getattr(module, cname)()
+
         component_manager.register("ui_controller_review", \
             controllers["review"])
         component_manager.register("renderer", HtmlHildon())
