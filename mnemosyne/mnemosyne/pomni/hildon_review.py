@@ -102,9 +102,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             document.write_stream(question_text)
             document.close_stream()
         else:
-            # FIXME value = raw_input(_("Learn ahead of schedule" + "? (y/N)"))
-            self.new_question(True)
-            #self.question.set_text(card.question())
+            if ui_controller_main().widget.question_box(
+                  _("Learn ahead of schedule"), _("No"), _("Yes"), ""):
+               self.new_question(True)
+            else:
+               raise HildonUiControllerException(self.w_tree, _("Finished"))
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
@@ -122,7 +124,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         document = getattr(self,'answer_text').document
         document.clear()
         document.open_stream('text/html')
-        
+
         if answer_text.startswith('<html>'):
             font_size = view.get_style().font_desc.get_size()/1024
             font_size_from_config = config()['font_size']

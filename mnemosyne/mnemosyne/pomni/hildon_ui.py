@@ -97,6 +97,7 @@ class HildonBaseUi():
         self.switcher.set_current_page(self.main_menu)
 
 
+
 class HildonUI():
     """ Hildon UI """
 
