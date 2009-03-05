@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Wed Mar  4 14:54:29 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Mar  5 12:03:20 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -482,7 +482,7 @@
                             <child>
                               <widget class="GtkImage" id="image1">
                                 <property name="visible">True</property>
-                                <property name="pixbuf">add.png</property>
+                                <property name="pixbuf">add_big.png</property>
                               </widget>
                             </child>
                           </widget>
@@ -499,7 +499,7 @@
                             <child>
                               <widget class="GtkImage" id="image4">
                                 <property name="visible">True</property>
-                                <property name="pixbuf">delete.png</property>
+                                <property name="pixbuf">delete_big.png</property>
                               </widget>
                             </child>
                           </widget>
@@ -538,7 +538,7 @@
                             <child>
                               <widget class="GtkImage" id="image13">
                                 <property name="visible">True</property>
-                                <property name="pixbuf">exit.png</property>
+                                <property name="pixbuf">exit_big.png</property>
                               </widget>
                             </child>
                           </widget>
@@ -787,7 +787,7 @@
                         <child>
                           <widget class="GtkImage" id="image16">
                             <property name="visible">True</property>
-                            <property name="pixbuf">delete.png</property>
+                            <property name="pixbuf">delete_big.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -796,25 +796,13 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVSeparator" id="vseparator3">
-                        <property name="visible">True</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">3</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>
                     </child>
                     <child>
-                      <widget class="GtkImage" id="image18">
-                        <property name="visible">True</property>
-                        <property name="pixbuf">settings.png</property>
-                      </widget>
-                      <packing>
-                        <property name="position">5</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>
@@ -838,7 +826,7 @@
                         <child>
                           <widget class="GtkImage" id="image20">
                             <property name="visible">True</property>
-                            <property name="pixbuf">exit.png</property>
+                            <property name="pixbuf">exit_big.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -881,12 +869,6 @@
                     <property name="n_rows">3</property>
                     <property name="n_columns">1</property>
                     <child>
-                      <widget class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
-                    </child>
-                    <child>
                       <widget class="GtkSpinButton" id="spinbutton_fontsize">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -899,6 +881,12 @@
                         <property name="bottom_attach">3</property>
                         <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                       </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
                     </child>
                   </widget>
                 </child>
