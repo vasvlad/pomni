@@ -406,6 +406,9 @@ widget "infowindow" style "dialogwindow"
 widget "*.infowindow_button_ok" style "review-button"
 widget "*.infowindow_label" style "info-window-label"
 
+widget "*.button_back" style "theme-button"
+widget "*.label_back" style "button-label"
+
 
 
 style "input-combobox-entry-arrow"
