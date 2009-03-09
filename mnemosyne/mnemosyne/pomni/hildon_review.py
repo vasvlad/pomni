@@ -104,9 +104,9 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         else:
             if ui_controller_main().widget.question_box(
                   _("Learn ahead of schedule"), _("No"), _("Yes"), ""):
-               self.new_question(True)
+                self.new_question(True)
             else:
-               raise HildonUiControllerException(self.w_tree, _("Finished"))
+                raise HildonUiControllerException(self.w_tree, _("Finished"))
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
