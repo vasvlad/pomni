@@ -473,7 +473,6 @@
                     <child>
                       <widget class="GtkHBox" id="hbox3">
                         <property name="visible">True</property>
-                        <signal name="button_press_event" handler="input"/>
                         <child>
                           <widget class="GtkEventBox" id="to_input">
                             <property name="visible">True</property>

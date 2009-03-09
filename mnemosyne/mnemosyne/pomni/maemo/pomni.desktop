@@ -3,13 +3,6 @@ Encoding=UTF-8
 Version=0.0.1
 Name=Pomni
 Exec=/usr/bin/pomni
-StartupNotify=true
-Terminal=false
 Type=Application
 Icon=pomni
-X-Window-Icon=pomni
-X-Window-Icon-Dimmed=pomni
-X-Osso-Service=com.nokia.pomni
-X-HildonDesk-ShowInToolbar=true
-X-Osso-Type=application/x-executable
 

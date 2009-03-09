@@ -15,6 +15,7 @@ import review_wdgt
 from ui_main_window import Ui_MainWindow
 from add_cards_dlg import AddCardsDlg
 from edit_fact_dlg import EditFactDlg
+from cloned_card_types_list_dlg import ClonedCardTypesListDlg
 from card_appearance_dlg import CardAppearanceDlg
 from activate_plugins_dlg import ActivatePluginsDlg
 #from import_dlg import *
@@ -31,6 +32,7 @@ from activate_plugins_dlg import ActivatePluginsDlg
 from mnemosyne.libmnemosyne.stopwatch import stopwatch
 from mnemosyne.libmnemosyne import initialise_user_plugins
 from mnemosyne.libmnemosyne.exceptions import MnemosyneError
+from mnemosyne.libmnemosyne.exceptions import LoadErrorCreateTmp
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.component_manager import database, config
 from mnemosyne.libmnemosyne.component_manager import ui_controller_main
@@ -62,7 +64,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             database().load(filename)
         except MnemosyneError, e:
-            self.error_box(e)            
+            self.error_box(e)
+            self.error_box(LoadErrorCreateTmp())
             filename = os.path.join(os.path.split(filename)[0],"___TMP___.mem")
             database().new(filename)
         ui_controller_main().widget = self
@@ -76,11 +79,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         return QMessageBox.question(None, _("Mnemosyne"),
                                     question, option0, option1, option2, 0, -1)
 
-    def error_box(self, event):
-        if event.info:
-            event.msg += "\n" + event.info        
-            QMessageBox.critical(None, _("Mnemosyne"), event.msg,
-                                 _("&OK"), "", "", 0, -1)
+    def error_box(self, exception):
+        if exception.info:
+            exception.msg += "\n" + exception.info        
+        QMessageBox.critical(None, _("Mnemosyne"), exception.msg,
+                             _("&OK"), "", "", 0, -1)
 
     def save_file_dialog(self, path, filter, caption=""):
         return unicode(QFileDialog.getSaveFileName(self,caption,path,filter))
@@ -117,7 +120,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
     def file_save_as(self):
         ui_controller_main().file_save_as()
-
+        
+    def manage_card_types(self):
+        ui_controller_main().manage_card_types()
+        
     def card_appearance(self):
         ui_controller_main().card_appearance()
         
@@ -131,7 +137,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
         dlg = EditFactDlg(fact, allow_cancel, self)
         dlg.exec_()
-
+        
+    def run_manage_card_types_dialog(self):
+        dlg = ClonedCardTypesListDlg(self)
+        dlg.exec_()
+        
     def run_card_appearance_dialog(self):
         dlg = CardAppearanceDlg(self)
         dlg.exec_()

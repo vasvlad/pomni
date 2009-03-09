@@ -42,7 +42,8 @@ class DefaultMainController(UiControllerMain):
         review_controller.update_dialog(redraw_all=True)
         stopwatch.unpause()
 
-    def create_new_cards(self, fact_data, card_type, grade, cat_names):
+    def create_new_cards(self, fact_data, card_type, grade, cat_names,
+                         warn=True):
 
         """Create a new set of related cards."""
 
@@ -53,7 +54,8 @@ class DefaultMainController(UiControllerMain):
         
         db = database()
         if db.has_fact_with_data(fact_data):
-            self.widget.information_box(\
+            if warn:
+                self.widget.information_box(\
               _("Card is already in database.\nDuplicate not added."), _("OK"))
             return
         fact = Fact(fact_data, card_type)
@@ -85,24 +87,32 @@ class DefaultMainController(UiControllerMain):
             db.add_card(card)
 
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
-                             new_cat_names, correspondence):
+                             new_cat_names, correspondence, warn=True):
         # Allow this function to be overridden by a function hook.
         f = component_manager.get_current("function_hook", "update_related_cards")
         if f:
             return f.run()
-
+        
         # Change card type.
         db = database()
-        old_card_type = fact.card_type
+        old_card_type = fact.card_type       
         if old_card_type != new_card_type:
+            old_card_type_id_uncloned = old_card_type.id.split("_CLONED", 1)[0]
+            new_card_type_id_uncloned = new_card_type.id.split("_CLONED", 1)[0] 
             converter = component_manager.get_current\
                   ("card_type_converter", used_for=(old_card_type.__class__,
                                                     new_card_type.__class__))
-            if not converter:
-                answer = self.widget.question_box(\
+            if old_card_type_id_uncloned == new_card_type_id_uncloned:
+                fact.card_type = new_card_type
+                updated_cards = db.cards_from_fact(fact)      
+            elif not converter:
+                if warn:
+                    answer = self.widget.question_box(\
           _("Can't preserve history when converting between these card types.")\
                   + " " + _("The learning history of the cards will be reset."),
                   _("&OK"), _("&Cancel"), "")
+                else:
+                    answer = 0
                 if answer == 1: # Cancel.
                     return -1
                 else:
@@ -115,11 +125,14 @@ class DefaultMainController(UiControllerMain):
                    converter.convert(db.cards_from_fact(fact), old_card_type,
                                      new_card_type, correspondence)
                 if len(deleted_cards) != 0:
-                    answer = self.widget.question_box(\
+                    if warn:
+                        answer = self.widget.question_box(\
           _("This will delete cards and their history.") + " " +\
           _("Are you sure you want to do this,") + " " +\
           _("and not just deactivate cards in the 'Activate cards' dialog?"),
                       _("&Proceed and delete"), _("&Cancel"), "")
+                    else:
+                        answer = 0
                     if answer == 1: # Cancel.
                         return -1   
                 fact.card_type = new_card_type
@@ -255,4 +268,9 @@ class DefaultMainController(UiControllerMain):
         stopwatch.pause()
         self.widget.run_activate_plugins_dialog()
         ui_controller_review().update_dialog(redraw_all=True)
+        stopwatch.unpause()
+
+    def manage_card_types(self):
+        stopwatch.pause()
+        self.widget.run_manage_card_types_dialog()
         stopwatch.unpause()

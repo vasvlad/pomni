@@ -4,6 +4,7 @@
 
 from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.component_manager import database
+from mnemosyne.libmnemosyne.component_manager import card_types
 from mnemosyne.libmnemosyne.component_manager import component_manager
 
 class CardType(object):
@@ -14,6 +15,12 @@ class CardType(object):
     A card type needs an id as well as a name, because the name can change
     for different translations. The description is used when card types are
     plugins, in order to give more information.
+
+    Inherited card types should have ids where dots separate the different
+    levels of the hierarchy, e.g. parent_id.child_id. For card types which
+    don't have code of their own, but are only a clone of an existing card
+    type, the parent id should be followed by _CLONED, e.g.
+    3_CLONED.Japanese
 
     The keys from the fact are also given more verbose names here.
     This is not done in fact.py, on one hand to save space in the database,
@@ -38,15 +45,17 @@ class CardType(object):
 
     """
 
-    #Class variable to allow extra way of determining inheritance hierarchy.
+    # Id is a class variable to allow extra way of determining inheritance
+    # hierarchy.
 
     id = "-1"
+    name = ""
+    is_clone = False
 
     def __init__(self):
         self.fields = []
         self.fact_views = []
         self.unique_fields = []
-        self.is_language = False
         self.widget = None
         self.renderer = None
         self.fact_views_can_be_deactivated = True
@@ -87,6 +96,19 @@ class CardType(object):
             if not self.renderer:
                  self.renderer = component_manager.get_current("renderer")
             return self.renderer
+
+    def clone(self, clone_name):
+        clone_id = self.id + "_CLONED." + clone_name
+        if clone_id in [card_type.id for card_type in card_types()]:
+            raise NameError
+        # Create a safe version of the name to be used as class name.
+        # TODO: not fool proof yet, but captures the most obvious cases.   
+        clone_name_safe = clone_name.encode('utf8').replace(" ", "_")  
+        C = type(clone_name_safe, (self.__class__, ),
+                 {"name": clone_name,
+                  "is_clone": True,
+                  "id": clone_id})
+        component_manager.register("card_type", C())
 
     # The following functions allow for the fact that all the logic
     # corresponding to specialty card types (like cloze deletion) can be

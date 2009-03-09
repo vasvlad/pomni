@@ -1,3 +1,12 @@
+pomni (0.0.7) unstable; urgency=low
+
+  * remove button Conf in Input mode, resize icons (Max)
+  * fixed #84 (crashing after some time) by removing 
+    osso-service name from .desktop
+  * implemented 'Learn ahead of schedule' (Vlad)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 05 Mar 2009 21:53:38 +0000
+
 pomni (0.0.6) unstable; urgency=low
 
   * Removed some icons from review mode and increased size 
@@ -6,8 +15,10 @@ pomni (0.0.6) unstable; urgency=low
   * removed binary config 
   * implemented working draft of configuration mode (Max)
   * refactored calling of controllers
+  * removed smile and draft themes from the package
+  * splitted hildon_ui.py
 
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 01 Mar 2009 11:57:10 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 04 Mar 2009 22:04:24 +0000
 
 pomni (0.0.5) unstable; urgency=low
 
