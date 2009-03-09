@@ -6,7 +6,7 @@ Standards-Version: 3.8.0
 
 Package: pomni
 Architecture: all
-Depends: python2.5, python2.5-gtk2, python-libmnemosyne (>= 2.0.0-6)
+Depends: python2.5, python2.5-gtk2, python-libmnemosyne (>= 2.0.0-7)
 Description: Learning tool based on spaced repetition technique
  This is mobile version of Mnemosyne software
  It resembles a traditional flash-card program to help you
