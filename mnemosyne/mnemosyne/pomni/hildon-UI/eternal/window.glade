@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Mar  9 18:44:23 2009 -->
+<!--Generated with glade3 3.4.5 on Mon Mar  9 18:54:10 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -869,16 +869,9 @@
                     <property name="n_rows">3</property>
                     <property name="n_columns">1</property>
                     <child>
-                      <widget class="GtkLabel" id="label2">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
-                    </child>
-                    <child>
                       <widget class="GtkSpinButton" id="spinbutton_fontsize">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="editable">False</property>
                         <property name="adjustment">30 25 80 1 10 10</property>
                         <signal name="value_changed" handler="change_font_size"/>
                       </widget>
@@ -887,6 +880,12 @@
                         <property name="bottom_attach">3</property>
                         <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                       </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
                     </child>
                   </widget>
                 </child>
