@@ -155,12 +155,12 @@ style "button-label" {
 }
 
 style "info-window-label" {
-	font_name = "Nokia Sans 11.5"
+	font_name = "Nokia Sans 17.0"
 	fg[NORMAL] = "#000000"
 }
 
 style "question-window-label" {
-	font_name = "Nokia Sans 11.5"
+	font_name = "Nokia Sans 17.0"
 	fg[NORMAL] = "#000000"
 }
 
