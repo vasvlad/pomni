@@ -34,7 +34,7 @@ class HildonUiControllerConfigure(HildonBaseUi):
     def __init__(self):
         """ Initialization items of config window """
         HildonBaseUi.__init__(self,  signals = ['change_fullscreen', \
-                    'change_font_size','change_startup_with_review'])
+                    'change_font_size', 'change_startup_with_review'])
         self.modified = False
         self.configuration = config()
 
@@ -46,7 +46,9 @@ class HildonUiControllerConfigure(HildonBaseUi):
             self.configuration['fullscreen'])
         self.checkbox_start_in_review_mode.set_active(
             self.configuration['startup_with_review'])
-        self.spinbutton_fontsize.set_value(self.configuration['font_size'])
+        self.font_size_slider.set_value(self.configuration['font_size'])
+        self.label_text_size.set_text("Font size: " + \
+            self.font_size_slider.get_value().__int__().__str__())
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
@@ -55,11 +57,13 @@ class HildonUiControllerConfigure(HildonBaseUi):
         self.configuration['fullscreen'] = \
             self.checkbox_fullscreen_mode.get_active()
 
-    def change_font_size_cb(self, widget):
+    def change_font_size_cb(self, widget, param1, param2):
         """ Change Font size parameter """
         self.modified = True
-        self.configuration['font_size'] = \
-            self.spinbutton_fontsize.get_value_as_int()
+        value = self.font_size_slider.get_value()
+        self.configuration['font_size'] = value
+        self.label_text_size.set_text("Font size: " + \
+            value.__int__().__str__())
 
     def change_startup_with_review_cb(self, widget):
         """ Change 'Startup with Review' parameter """
