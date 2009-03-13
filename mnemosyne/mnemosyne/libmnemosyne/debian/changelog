@@ -1,3 +1,9 @@
+python-libmnemosyne (2.0.0-7) unstable; urgency=low
+
+  * updated from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 05 Mar 2009 08:01:04 +0000
+
 python-libmnemosyne (2.0.0-6) unstable; urgency=low
 
   * updates from upstream

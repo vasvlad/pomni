@@ -16,9 +16,12 @@ from mnemosyne.libmnemosyne.utils import expand_path, contract_path
 from mnemosyne.libmnemosyne.exceptions import traceback_string
 from mnemosyne.libmnemosyne.exceptions import InvalidFormatError
 from mnemosyne.libmnemosyne.exceptions import SaveError, LoadError
+from mnemosyne.libmnemosyne.exceptions import PluginError, MissingPluginError
 from mnemosyne.libmnemosyne.component_manager import component_manager, config
 from mnemosyne.libmnemosyne.component_manager import ui_controller_review
-from mnemosyne.libmnemosyne.component_manager import log, scheduler
+from mnemosyne.libmnemosyne.component_manager import ui_controller_main
+from mnemosyne.libmnemosyne.component_manager import log, scheduler, plugins
+from mnemosyne.libmnemosyne.component_manager import card_types, database
 from mnemosyne.libmnemosyne.component_manager import card_type_by_id
 
 
@@ -54,6 +57,7 @@ class Pickle(Database):
         self.load_failed = False
 
     def new(self, path):
+        path = expand_path(path, config().basedir)
         if self.is_loaded():
             self.unload()
         self.load_failed = False
@@ -82,9 +86,49 @@ class Pickle(Database):
         except:
             self.load_failed = True
             raise InvalidFormatError(stack_trace=True)
+        
+        # Deal with clones and plugins, also plugins for parent classe.
+        # Because of the sip bugs, card types here are actually still card
+        # type ids.
+        plugin_needed = set()
+        clone_needed = []
+        active_id = set(card_type.id for card_type in card_types())
+        for id in set(card.fact.card_type for card in self.cards):
+            while "." in id: # Move up one level of the hierarchy.
+                id, child_name = id.rsplit(".", 1)          
+                if id.endswith("_CLONED"):
+                    id = id.replace("_CLONED", "")
+                    clone_needed.append((id, child_name))
+                if id not in active_id:
+                    plugin_needed.add(id)
+            if id not in active_id:
+                plugin_needed.add(id)
+        
+        # Activate necessary plugins.
+        for card_type_id in plugin_needed:
+            try:
+                for plugin in plugins():
+                    if plugin.provides == "card_type" and \
+                       plugin.id == card_type_id:
+                        plugin.activate()
+                        break
+                else:
+                    self.__init__()
+                    self.load_failed = True
+                    raise MissingPluginError(info='id')
+            except:
+                self.__init__()
+                self.load_failed = True
+                raise PluginError(stack_trace=True)
+            
+        # Create necessary clones.
+        for parent_type_id, clone_name in clone_needed:
+            parent_instance = card_type_by_id(parent_type_id)
+            parent_instance.clone(clone_name)
+            
         # Work around a sip bug: don't store card types, but their ids.
         for f in self.facts:
-            f.card_type = card_type_by_id(f.card_type)
+            f.card_type = card_type_by_id(f.card_type)    
         # TODO: This was to remove database inconsistencies. Still needed?
         #for c in self.categories:
         #    self.remove_category_if_unused(c)
@@ -112,13 +156,15 @@ class Pickle(Database):
             shutil.move(path + "~", path) # Should be atomic.
         except:
             print traceback_string()
-            raise SaveError()
+            raise SaveError
         config()["path"] = contract_path(path, config().basedir)
         # Work around sip bug again.
         for f in self.facts:
             f.card_type = card_type_by_id(f.card_type)
 
     def unload(self):
+        if len(self.facts) == 0:
+            return True
         self.save(config()["path"])
         log().saved_database()
         self.start_date = None
@@ -272,7 +318,10 @@ class Pickle(Database):
 
     def category_names(self):
         return (c.name for c in self.categories)
-
+    
+    def fact_count(self):
+        return len(self.facts)
+    
     def card_count(self):
         return len(self.cards)
 
@@ -301,6 +350,9 @@ class Pickle(Database):
             return 2.5
         else:
             return sum(c.easiness for c in self.cards) / len(self.cards)
+
+    def card_types_in_use(self):
+        return set(card.fact.card_type for card in self.cards)
 
     def set_filter(self, filter):
         print "SQL filtering not implemented in pickle database."

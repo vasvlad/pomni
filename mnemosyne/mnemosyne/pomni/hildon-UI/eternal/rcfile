@@ -155,12 +155,12 @@ style "button-label" {
 }
 
 style "info-window-label" {
-	font_name = "Nokia Sans 11.5"
+	font_name = "Nokia Sans 17.0"
 	fg[NORMAL] = "#000000"
 }
 
 style "question-window-label" {
-	font_name = "Nokia Sans 11.5"
+	font_name = "Nokia Sans 17.0"
 	fg[NORMAL] = "#000000"
 }
 
@@ -405,6 +405,9 @@ widget "*.questionwindow_label" style "question-window-label"
 widget "infowindow" style "dialogwindow"
 widget "*.infowindow_button_ok" style "review-button"
 widget "*.infowindow_label" style "info-window-label"
+
+widget "*.button_back" style "theme-button"
+widget "*.label_back" style "button-label"
 
 
 

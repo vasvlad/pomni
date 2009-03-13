@@ -1,3 +1,17 @@
+pomni (0.0.7) unstable; urgency=low
+
+  * remove button Conf in Input mode, resize icons (Max)
+  * fixed #84 (crashing after some time) by removing 
+    osso-service name from .desktop
+  * implemented 'Learn ahead of schedule' (Vlad)
+  * enabled editable property of FontSize field in Configuration mode (Max)
+  * first design of Configuration mode (Max) 
+  * changed color of button 'Get answer' (Max)
+  * changed font size in dialog windows (Max)
+  * improved geometry and layout widgets in dialog windows (Max)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Mon, 09 Mar 2009 19:50:14 +0000
+
 pomni (0.0.6) unstable; urgency=low
 
   * Removed some icons from review mode and increased size 

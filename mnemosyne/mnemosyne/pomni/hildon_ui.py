@@ -30,11 +30,7 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
-from os.path import splitext, basename
-
-from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        config, ui_controller_main, card_types
-from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
 
 _ = gettext.gettext
 
@@ -197,7 +193,8 @@ class HildonUI():
         view.show()
         return view
 
-    def clear_label(self, caption):
+    @staticmethod
+    def clear_label(caption):
         """ Remove &-symbol from caption if exists"""
         index = caption.find("&")
         if not index == -1:
