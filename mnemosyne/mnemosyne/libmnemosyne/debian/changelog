@@ -1,8 +1,9 @@
 python-libmnemosyne (2.0.0-8) unstable; urgency=low
 
   * updated from upstream 
+  * added .pyo files to the package 
 
- -- Ed Bartosh <bartosh@gmail.com>  Sat, 21 Mar 2009 18:26:46 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 21 Mar 2009 19:01:54 +0000
 
 python-libmnemosyne (2.0.0-7) unstable; urgency=low
 
