@@ -75,8 +75,8 @@ def initialise(basedir):
     component_manager.register("database", Sqlite())
 
     # Scheduler.
-    from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
-    component_manager.register("scheduler", SM2Gen())
+    from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne import SM2Mnemosyne
+    component_manager.register("scheduler", SM2Mnemosyne())
     
     # Card types.
     from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack

@@ -3,8 +3,9 @@ pomni (0.0.8) unstable; urgency=low
   * added icons (Andrew Zhilin)
   * more finger-friendly desing of configuration mode (Max)
   * added pyo files to the package 
+  * used fixed SM2Mnemosyne scheduler 
 
- -- Ed Bartosh <bartosh@gmail.com>  Sat, 21 Mar 2009 18:55:35 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 21 Mar 2009 19:23:17 +0000
 
 pomni (0.0.7) unstable; urgency=low
 
