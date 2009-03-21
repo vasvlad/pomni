@@ -87,17 +87,16 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         if self.card:
             document = getattr(self,'question_text').document
-            view = getattr(self,'question_text')
+            #view = getattr(self,'question_text')
             document.clear()
             document.open_stream('text/html')
             # Adapting for html
             question_text = self.card.question()
 
             if question_text.startswith('<html>'):
-                font_size = view.get_style().font_desc.get_size()/1024
-                font_size_from_config = config()['font_size']
+                font_size = config()['font_size']
                 question_text = question_text.replace('*{font-size:30px;}',
-                 '*{font-size:%spx;}' % font_size_from_config)
+                 '*{font-size:%spx;}' % font_size)
             
             document.write_stream(question_text)
             document.close_stream()
@@ -119,17 +118,16 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             widget.set_sensitive(True)
         self.get_answer.set_sensitive(False)
 
-        view = getattr(self,'answer_text')
+        #view = getattr(self,'answer_text')
         answer_text = self.card.answer()
         document = getattr(self,'answer_text').document
         document.clear()
         document.open_stream('text/html')
 
         if answer_text.startswith('<html>'):
-            font_size = view.get_style().font_desc.get_size()/1024
-            font_size_from_config = config()['font_size']
+            font_size = config()['font_size']
             answer_text = answer_text.replace('*{font-size:30px;}',
-                             '*{font-size:%spx;}' % font_size_from_config)
+                             '*{font-size:%spx;}' % font_size)
 
         document.write_stream(answer_text)
         document.close_stream()
