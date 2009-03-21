@@ -1,3 +1,10 @@
+pomni (0.0.8) unstable; urgency=low
+
+  * added icons (Andrew Zhilin)
+  * more finger-friendly desing of configuration mode (Max)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 21 Mar 2009 17:35:52 +0000
+
 pomni (0.0.7) unstable; urgency=low
 
   * remove button Conf in Input mode, resize icons (Max)
