@@ -6,7 +6,7 @@
 PACKAGE := $(shell head -1 $(CURDIR)/debian/changelog | sed 's/^\([^ ]\+\) .*/\1/')
 PKGVER := ${shell head -1 $(CURDIR)/debian/changelog | sed 's/^[^ ]\+ (\([^)]\+\)) .*/\1/'}
 PREFIX := $(CURDIR)/debian/$(PACKAGE)
-PYTHON := python2.5
+PYTHON := PYTHONOPTIMIZE=2 python
 
 build: build-stamp
 
@@ -31,8 +31,8 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 	$(PYTHON) setup.py install --root=$(PREFIX)
-	touch $(CURDIR)/debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/mnemosyne/__init__.py
-	echo "version = '$(PKGVER)'" > $(CURDIR)/debian/$(PACKAGE)/usr/lib/$(PYTHON)/site-packages/mnemosyne/version.py
+	touch $(CURDIR)/debian/$(PACKAGE)/usr/lib/python2.5/site-packages/mnemosyne/__init__.py
+	echo "version = '$(PKGVER)'" > $(CURDIR)/debian/$(PACKAGE)/usr/lib/python2.5/site-packages/mnemosyne/version.py
 
 binary-indep: build install
 	dh_testdir
