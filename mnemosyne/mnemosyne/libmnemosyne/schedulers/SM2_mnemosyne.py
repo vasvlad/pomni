@@ -15,7 +15,7 @@ from mnemosyne.libmnemosyne.component_manager import database, config, log
 
 class SM2Mnemosyne(Scheduler):
     
-    name="SM2 Mnemosyne"
+    name = "SM2 Mnemosyne"
     
     def __init__(self):
         self.queue = []
@@ -63,7 +63,7 @@ class SM2Mnemosyne(Scheduler):
         # cards in left in the queue, append more new cards to keep some
         # spread between these last cards.
         limit = config()["grade_0_items_at_once"]
-        grade_0 = db.cards_due_for_final_review(grade=0)
+        grade_0 = db.cards_due_for_final_review(grade=0, sort_key="random")
         grade_0_selected = []
         if limit != 0:
             for i in grade_0:
@@ -75,14 +75,15 @@ class SM2Mnemosyne(Scheduler):
                     grade_0_selected.append(i)
                 if len(grade_0_selected) == limit:
                     break
-        grade_1 = list(db.cards_due_for_final_review(grade=1))
+        grade_1 = list(db.cards_due_for_final_review(grade=1,
+                                                     sort_key="random"))
         self.queue += 2*grade_0_selected + grade_1
         random.shuffle(self.queue)
         if len(grade_0_selected) == limit:
             return
         # Now do the cards which have never been committed to long-term
         # memory, but which we have seen before.
-        grade_0 = db.cards_new_memorising(grade=0)
+        grade_0 = db.cards_new_memorising(grade=0, sort_key="random")
         grade_0_in_queue = len(grade_0_selected)
         grade_0_selected = []
         if limit != 0:
@@ -94,13 +95,17 @@ class SM2Mnemosyne(Scheduler):
                     grade_0_selected.append(i)
                 if len(grade_0_selected) + grade_0_in_queue == limit:
                     break
-        grade_1 = list(db.cards_new_memorising(grade=1))
+        grade_1 = list(db.cards_new_memorising(grade=1, sort_key="random"))
         self.queue += 2*grade_0_selected + grade_1
         random.shuffle(self.queue)
         if len(grade_0_selected) + grade_0_in_queue == limit:
             return
         # Now add some unseen cards.
-        unseen = db.cards_unseen(randomise=config()["randomise_new_cards"])
+        if config()["randomise_new_cards"]:
+            sort_key = "random"
+        else:
+            sort_key = ""
+        unseen = db.cards_unseen(sort_key=sort_key)
         grade_0_in_queue = sum(1 for i in self.queue if i.grade == 0)/2
         grade_0_selected = []
         try:
