@@ -415,9 +415,16 @@ style "checkbox_config"
     GtkCheckButton::indicator-size = 25
     GtkCheckButton::indicator-spacing = 7 
 }
-
 widget "*.checkbox_fullscreen_mode" style "checkbox_config"
 widget "*.checkbox_start_in_review_mode" style "checkbox_config"
+
+
+style "scales"
+{
+    GtkScale::slider-length = 55
+    GtkScale::slider-width = 35
+}
+class "Gtk*Scale" style "scales"
 
 style "input-combobox-entry-arrow"
 {
