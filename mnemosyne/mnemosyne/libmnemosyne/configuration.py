@@ -104,7 +104,6 @@ class Configuration(dict):
              "latex_postamble": "\\end{document}", 
              "latex": "latex -interaction=nonstopmode",
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/configuration.py
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
              "scheduler": "SM2",
              "database": "sqlite",
@@ -112,10 +111,7 @@ class Configuration(dict):
              "font_size": 30.0,
              "startup_with_review": True,
              "active_plugins": set() # plugin class
-=======
-             "active_plugins": set(), # plugin class
              "times_loaded": 0
->>>>>>> 82ea582... Merge SQL backend.:mnemosyne/mnemosyne/libmnemosyne/configuration.py
             }.items():
             
             self.setdefault(key, value)
