@@ -70,6 +70,7 @@ class Cloze(CardType, Plugin):
         answer = eval(card.extra_data)[0]
         return self.get_renderer().render_text(answer, "text",
                                                card.fact.card_type)
+
     def create_related_cards(self, fact, grade=0):
         cards = []
         for match in cloze_re.finditer(fact["text"]):

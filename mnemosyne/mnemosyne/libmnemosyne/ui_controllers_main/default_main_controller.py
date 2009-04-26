@@ -193,8 +193,7 @@ class DefaultMainController(UiControllerMain):
         db = database()
         review_controller = ui_controller_review()
         fact = review_controller.card.fact
-#       no_of_cards = len(db.cards_from_fact(fact))
-        no_of_cards = len(list(db.cards_from_fact(fact)))
+        no_of_cards = len(db.cards_from_fact(fact))
         if no_of_cards == 1:
             question = _("Delete this card?")
         elif no_of_cards == 2:
