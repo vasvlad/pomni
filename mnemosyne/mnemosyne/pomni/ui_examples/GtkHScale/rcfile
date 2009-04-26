@@ -1,6 +1,6 @@
 #example rcfile for GtkHScrollbar and GtkHScale
 
-style "MyScrollbar" 
+style "MyScrollbar"
 {
     GtkScrollbar::has-backward-stepper = 0
     GtkScrollbar::has-forward-stepper = 0
