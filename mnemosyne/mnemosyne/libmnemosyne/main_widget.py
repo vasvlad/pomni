@@ -16,7 +16,7 @@ class MainWidget(object):
     def question_box(self, question, option0, option1, option2):
         raise NotImplementedError
     
-    def error_box(self, event)
+    def error_box(self, event):
         raise NotImplementedError
     
     def save_file_dialog(self, path, filter, caption=""):
