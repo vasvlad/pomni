@@ -1,0 +1,12 @@
+#example rcfile for GtkHScale
+
+style "MyScrollbar"
+{
+    GtkScrollbar::has-backward-stepper = 0
+    GtkScrollbar::has-forward-stepper = 0
+    GtkRange::slider-width = 40
+    GtkRange::trough-border = 4
+    GtkRange::trough-side-details = 1
+}
+
+widget "*.hscrollbar" style "MyScrollbar"
