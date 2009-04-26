@@ -110,7 +110,7 @@ class Configuration(dict):
              "fullscreen": True,
              "font_size": 30.0,
              "startup_with_review": True,
-             "active_plugins": set() # plugin class
+             "active_plugins": set(), # plugin class
              "times_loaded": 0
             }.items():
             
