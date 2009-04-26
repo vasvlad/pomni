@@ -161,7 +161,7 @@ class HildonUI():
     # Callbacks
 
     @staticmethod
-    def exit_cb(widget):
+    def exit_cb(widget, event):
         """ If pressed quit button then close the window """
 
         gtk.main_quit()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Apr 26 08:52:47 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Apr 26 09:08:04 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -27,10 +27,17 @@
                   <widget class="GtkVBox" id="hbuttonbox_vbox0">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImage" id="menu_image_review">
+                      <widget class="GtkEventBox" id="menu_eventbox_review">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-help</property>
-                        <property name="icon_size">6</property>
+                        <property name="visible_window">False</property>
+                        <signal name="button_press_event" handler="review"/>
+                        <child>
+                          <widget class="GtkImage" id="menu_image_review">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-help</property>
+                            <property name="icon_size">6</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -49,10 +56,17 @@ Rewiew</property>
                   <widget class="GtkVBox" id="hbuttonbox_vbox1">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImage" id="menu_image_input">
+                      <widget class="GtkEventBox" id="menu_eventbox_input">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-index</property>
-                        <property name="icon_size">6</property>
+                        <property name="visible_window">False</property>
+                        <signal name="button_press_event" handler="input"/>
+                        <child>
+                          <widget class="GtkImage" id="menu_image_input">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-index</property>
+                            <property name="icon_size">6</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -74,10 +88,16 @@ Input</property>
                   <widget class="GtkVBox" id="hbuttonbox_vbox2">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImage" id="menu_image_synh">
+                      <widget class="GtkEventBox" id="menu_eventbox_synh">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-refresh</property>
-                        <property name="icon_size">6</property>
+                        <property name="visible_window">False</property>
+                        <child>
+                          <widget class="GtkImage" id="menu_image_synh">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-refresh</property>
+                            <property name="icon_size">6</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -99,10 +119,17 @@ Sinhronize</property>
                   <widget class="GtkVBox" id="hbuttonbox_vbox3">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImage" id="menu_image_configure">
+                      <widget class="GtkEventBox" id="menu_eventbox_configure">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-preferences</property>
-                        <property name="icon_size">6</property>
+                        <property name="visible_window">False</property>
+                        <signal name="button_press_event" handler="configure"/>
+                        <child>
+                          <widget class="GtkImage" id="menu_image_configure">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-preferences</property>
+                            <property name="icon_size">6</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -124,10 +151,17 @@ Configure</property>
                   <widget class="GtkVBox" id="hbuttonbox_vbox4">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkImage" id="menu_image_exit">
+                      <widget class="GtkEventBox" id="menu_eventbox_exit">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-redo</property>
-                        <property name="icon_size">6</property>
+                        <property name="visible_window">False</property>
+                        <signal name="button_press_event" handler="exit"/>
+                        <child>
+                          <widget class="GtkImage" id="menu_image_exit">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-redo</property>
+                            <property name="icon_size">6</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
