@@ -109,7 +109,7 @@ class Configuration(dict):
              "database": "sqlite",
              "fullscreen": True,
              "font_size": 30.0,
-             "startup_with_review": True,
+             "startup_with_review": False,
              "active_plugins": set(), # plugin class
              "times_loaded": 0
             }.items():
