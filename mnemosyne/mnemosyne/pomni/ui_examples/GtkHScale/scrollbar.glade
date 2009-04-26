@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Sun Apr 26 13:34:30 2009 -->
+<glade-interface>
+  <widget class="GtkWindow" id="window">
+    <property name="width_request">800</property>
+    <property name="height_request">480</property>
+    <child>
+      <widget class="GtkVBox" id="vbox1">
+        <property name="visible">True</property>
+        <property name="homogeneous">True</property>
+        <child>
+          <widget class="GtkHScrollbar" id="hscrollbar0">
+            <property name="visible">True</property>
+            <property name="adjustment">0 0 100 1 10 10</property>
+          </widget>
+        </child>
+        <child>
+          <widget class="GtkHScrollbar" id="hscrollbar1">
+            <property name="visible">True</property>
+            <property name="adjustment">0 0 100 1 10 10</property>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHSeparator" id="hseparator1">
+            <property name="visible">True</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHScale" id="hscale0">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="adjustment">0 0 100 1 10 10</property>
+            <property name="draw_value">False</property>
+          </widget>
+          <packing>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHScale" id="hscale1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="adjustment">0 0 100 1 10 10</property>
+            <property name="draw_value">False</property>
+          </widget>
+          <packing>
+            <property name="position">4</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>
