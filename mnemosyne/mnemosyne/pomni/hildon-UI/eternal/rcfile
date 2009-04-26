@@ -40,8 +40,8 @@ pixmap_path "/usr/include/X11R6/pixmaps:./"
 # it is assigned to the actual widgets at the bottom of the file.
 
 
-style "review-button" {
-
+style "button"
+{
   GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
   GtkWidget::focus-width = 0
   GtkButton::default_border = { 0, 0, 0, 0 }
@@ -51,65 +51,51 @@ style "review-button" {
   GtkButton::child_spacing = 0
   xthickness = 7
   ythickness = 0
+}
 
-  engine "sapwood" {
 
+style "review-button" = "button"
+{
+  engine "sapwood" 
+  {
     image {
-        function = FOCUS
-	state    = ACTIVE
+      function = FOCUS
+	  state    = ACTIVE
     }
-
     image {
-        function = FOCUS
-	file     = "textarea.png"
-	border   = { 16, 16, 15, 15 }
+      function = FOCUS
+	  file     = "textarea.png"
+	  border   = { 16, 16, 15, 15 }
     }
-
     image {
-	function = BOX
-	file     = "textarea.png"
-  	border   = { 16, 16, 15, 15 }
+	  function = BOX
+	  file     = "textarea.png"
+  	  border   = { 16, 16, 15, 15 }
     }
-
   }
 }
 
-style "getanswerarea-button" {
 
-  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
-  GtkWidget::focus-width = 0
-  GtkButton::default_border = { 0, 0, 0, 0 }
-  GtkButton::child-displacement-x = 0
-  GtkButton::child-displacement-y = 0
-  GtkButton::interior_focus = 0
-  GtkButton::child_spacing = 0
-  xthickness = 7
-  ythickness = 0
-
-  engine "sapwood" {
-
+style "getanswerarea-button" = "button"
+{
+  engine "sapwood" 
+  {
     image {
-        function = FOCUS
-	state    = ACTIVE
+      function = FOCUS
+	  state    = ACTIVE
     }
-
     image {
-        function = FOCUS
-	file     = "getanswerarea.png"
-	border   = { 15, 15, 15, 15 }
-	
+      function = FOCUS
+	  file     = "getanswerarea.png"
+	  border   = { 15, 15, 15, 15 }
     }
-
     image {
-	function = BOX
-	    file     = "getanswerarea.png"
-  	border   = { 15, 15, 15, 15 }
-  	
+	  function = BOX
+	  file     = "getanswerarea.png"
+  	  border   = { 15, 15, 15, 15 }	
     }
-
   }
 }
-
 
 
 style "question_answer_frame" {
@@ -147,11 +133,22 @@ style "review-getanswer-label" {
 	fg[NORMAL] = "#FFFFFF"
 }
 
+
+style "menu-label"
+{
+  font_name = "Nokia Sans Bold Italic 11.0"
+}
+
+
 style "button-label" {
-	font_name = "Nokia Sans 20.0"
-	fg[NORMAL] = "#FFFFFF"
-	fg[PRELIGHT] = "#FFFFFF"
-	fg[SELECTED] = "#FFFFFF"
+	font_name = "Nokia Sans Bold Italic 20.0"
+	#fg[NORMAL] = "#FFFFFF"
+	#fg[PRELIGHT] = "#FFFFFF"
+	#fg[SELECTED] = "#FFFFFF"
+	#font_name = "Nokia Sans 20.0"
+	#fg[NORMAL] = "#FFFFFF"
+	#fg[PRELIGHT] = "#FFFFFF"
+	#fg[SELECTED] = "#FFFFFF"
 }
 
 style "info-window-label" {
@@ -457,4 +454,11 @@ style "input-combobox-entry-arrow"
 widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
 
 
+
+#-------new changes-------
+widget "*.menu_label_review" style "menu-label"
+widget "*.menu_label_input" style "menu-label"
+widget "*.menu_label_synh" style "menu-label"
+widget "*.menu_label_configure" style "menu-label"
+widget "*.menu_label_exit" style "menu-label"
 

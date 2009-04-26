@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Mar 13 15:01:02 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Apr 26 08:52:47 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -20,67 +20,49 @@
             <property name="tab_hborder">0</property>
             <property name="tab_vborder">1</property>
             <child>
-              <widget class="GtkHBox" id="hbox4">
+              <widget class="GtkHButtonBox" id="hbuttonbox">
                 <property name="visible">True</property>
+                <property name="layout_style">GTK_BUTTONBOX_SPREAD</property>
                 <child>
-                  <widget class="GtkAlignment" id="alignment5">
-                    <property name="width_request">20</property>
+                  <widget class="GtkVBox" id="hbuttonbox_vbox0">
                     <property name="visible">True</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkVBox" id="vbox2">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkButton" id="review">
+                      <widget class="GtkImage" id="menu_image_review">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Review</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="review"/>
+                        <property name="stock">gtk-help</property>
+                        <property name="icon_size">6</property>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="input">
+                      <widget class="GtkLabel" id="menu_label_review">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Input</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="input"/>
+                        <property name="label" translatable="yes">
+Rewiew</property>
                       </widget>
                       <packing>
                         <property name="position">1</property>
                       </packing>
                     </child>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkVBox" id="hbuttonbox_vbox1">
+                    <property name="visible">True</property>
                     <child>
-                      <widget class="GtkButton" id="configure">
+                      <widget class="GtkImage" id="menu_image_input">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Configure</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="configure"/>
+                        <property name="stock">gtk-index</property>
+                        <property name="icon_size">6</property>
                       </widget>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="exit">
+                      <widget class="GtkLabel" id="menu_label_input">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Exit</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="exit"/>
+                        <property name="label" translatable="yes">
+Input</property>
                       </widget>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </widget>
@@ -89,15 +71,78 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkAlignment" id="alignment11">
-                    <property name="width_request">20</property>
+                  <widget class="GtkVBox" id="hbuttonbox_vbox2">
                     <property name="visible">True</property>
                     <child>
-                      <placeholder/>
+                      <widget class="GtkImage" id="menu_image_synh">
+                        <property name="visible">True</property>
+                        <property name="stock">gtk-refresh</property>
+                        <property name="icon_size">6</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_synh">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">
+Sinhronize</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
                     <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkVBox" id="hbuttonbox_vbox3">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImage" id="menu_image_configure">
+                        <property name="visible">True</property>
+                        <property name="stock">gtk-preferences</property>
+                        <property name="icon_size">6</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_configure">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">
+Configure</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkVBox" id="hbuttonbox_vbox4">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImage" id="menu_image_exit">
+                        <property name="visible">True</property>
+                        <property name="stock">gtk-redo</property>
+                        <property name="icon_size">6</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_exit">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">
+Exit</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">4</property>
                   </packing>
                 </child>
               </widget>
@@ -867,7 +912,15 @@
                   <widget class="GtkTable" id="table1">
                     <property name="visible">True</property>
                     <property name="n_rows">3</property>
-                    <property name="n_columns">1</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_text_size">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
+                    </child>
                     <child>
                       <widget class="GtkHScale" id="font_size_slider">
                         <property name="visible">True</property>
@@ -881,15 +934,6 @@
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_text_size">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
                     </child>
                   </widget>
                 </child>
