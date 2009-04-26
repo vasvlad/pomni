@@ -1,3 +1,9 @@
+pomni (0.0.9) unstable; urgency=low
+
+  * Used SQLite backend from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 26 Apr 2009 15:27:49 +0000
+
 pomni (0.0.8) unstable; urgency=low
 
   * added icons (Andrew Zhilin)

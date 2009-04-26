@@ -71,8 +71,8 @@ def initialise(basedir):
     component_manager.register("log", TxtLogger())   
     
     # Database.
-    from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
-    component_manager.register("database", Sqlite())
+    from mnemosyne.libmnemosyne.databases.SQLite import SQLite
+    component_manager.register("database", SQLite())
 
     # Scheduler.
     from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne import SM2Mnemosyne
