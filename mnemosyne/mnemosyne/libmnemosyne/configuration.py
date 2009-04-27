@@ -59,6 +59,12 @@ database = "sqlite"
 
 class Configuration(dict):
 
+    def __init__(self):
+
+        """Set by the frontend, not saved to disk."""
+        
+        self.resource_limited = False
+
     def set_defaults(self):
         
         """Fill the config with default values.  Is called after every load,
