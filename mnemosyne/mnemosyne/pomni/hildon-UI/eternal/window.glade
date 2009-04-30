@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Apr 26 09:08:04 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Apr 30 00:34:15 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -20,22 +20,21 @@
             <property name="tab_hborder">0</property>
             <property name="tab_vborder">1</property>
             <child>
-              <widget class="GtkHButtonBox" id="hbuttonbox">
+              <widget class="GtkHButtonBox" id="menu_hbbox">
                 <property name="visible">True</property>
                 <property name="layout_style">GTK_BUTTONBOX_SPREAD</property>
                 <child>
-                  <widget class="GtkVBox" id="hbuttonbox_vbox0">
+                  <widget class="GtkVBox" id="menu_hbbox_vbox0">
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkEventBox" id="menu_eventbox_review">
                         <property name="visible">True</property>
                         <property name="visible_window">False</property>
-                        <signal name="button_press_event" handler="review"/>
+                        <signal name="button_release_event" handler="review"/>
                         <child>
                           <widget class="GtkImage" id="menu_image_review">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-help</property>
-                            <property name="icon_size">6</property>
+                            <property name="pixbuf">review.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -53,18 +52,17 @@ Rewiew</property>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkVBox" id="hbuttonbox_vbox1">
+                  <widget class="GtkVBox" id="menu_hbbox_vbox1">
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkEventBox" id="menu_eventbox_input">
                         <property name="visible">True</property>
                         <property name="visible_window">False</property>
-                        <signal name="button_press_event" handler="input"/>
+                        <signal name="button_release_event" handler="input"/>
                         <child>
                           <widget class="GtkImage" id="menu_image_input">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-index</property>
-                            <property name="icon_size">6</property>
+                            <property name="pixbuf">input.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -85,7 +83,7 @@ Input</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkVBox" id="hbuttonbox_vbox2">
+                  <widget class="GtkVBox" id="menu_hbbox_vbox2">
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkEventBox" id="menu_eventbox_synh">
@@ -94,8 +92,7 @@ Input</property>
                         <child>
                           <widget class="GtkImage" id="menu_image_synh">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-refresh</property>
-                            <property name="icon_size">6</property>
+                            <property name="pixbuf">synh.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -116,18 +113,17 @@ Sinhronize</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkVBox" id="hbuttonbox_vbox3">
+                  <widget class="GtkVBox" id="menu_hbbox_vbox3">
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkEventBox" id="menu_eventbox_configure">
                         <property name="visible">True</property>
                         <property name="visible_window">False</property>
-                        <signal name="button_press_event" handler="configure"/>
+                        <signal name="button_release_event" handler="configure"/>
                         <child>
                           <widget class="GtkImage" id="menu_image_configure">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-preferences</property>
-                            <property name="icon_size">6</property>
+                            <property name="pixbuf">conf.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -148,18 +144,17 @@ Configure</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkVBox" id="hbuttonbox_vbox4">
+                  <widget class="GtkVBox" id="menu_hbbox_vbox4">
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkEventBox" id="menu_eventbox_exit">
                         <property name="visible">True</property>
                         <property name="visible_window">False</property>
-                        <signal name="button_press_event" handler="exit"/>
+                        <signal name="button_release_event" handler="exit"/>
                         <child>
                           <widget class="GtkImage" id="menu_image_exit">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-redo</property>
-                            <property name="icon_size">6</property>
+                            <property name="pixbuf">exit.png</property>
                           </widget>
                         </child>
                       </widget>
@@ -550,36 +545,46 @@ Exit</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkHBox" id="hbox3">
+                      <widget class="GtkHButtonBox" id="hbuttonbox1">
                         <property name="visible">True</property>
+                        <property name="homogeneous">True</property>
                         <child>
                           <widget class="GtkEventBox" id="to_input">
                             <property name="visible">True</property>
                             <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="button_press_event" handler="input"/>
+                            <signal name="button_release_event" handler="input"/>
                             <child>
-                              <widget class="GtkImage" id="image1">
+                              <widget class="GtkImage" id="image4">
                                 <property name="visible">True</property>
-                                <property name="pixbuf">add_big.png</property>
+                                <property name="stock">gtk-add</property>
+                                <property name="icon_size">6</property>
                               </widget>
                             </child>
                           </widget>
                         </child>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
                           <widget class="GtkEventBox" id="delete_car">
                             <property name="visible">True</property>
                             <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
                             <signal name="button_release_event" handler="delete_card"/>
                             <child>
-                              <widget class="GtkImage" id="image4">
+                              <widget class="GtkImage" id="image11">
                                 <property name="visible">True</property>
-                                <property name="pixbuf">delete_big.png</property>
+                                <property name="stock">gtk-remove</property>
+                                <property name="icon_size">6</property>
                               </widget>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkEventBox" id="eventbox2">
+                            <property name="visible">True</property>
+                            <property name="visible_window">False</property>
+                            <child>
+                              <placeholder/>
                             </child>
                           </widget>
                           <packing>
@@ -587,47 +592,49 @@ Exit</property>
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <widget class="GtkVSeparator" id="vseparator2">
+                          <widget class="GtkEventBox" id="eventbox3">
                             <property name="visible">True</property>
+                            <property name="visible_window">False</property>
+                            <child>
+                              <placeholder/>
+                            </child>
                           </widget>
                           <packing>
-                            <property name="expand">False</property>
-                            <property name="position">7</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkEventBox" id="eventbox4">
+                            <property name="visible">True</property>
+                            <property name="visible_window">False</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">4</property>
                           </packing>
                         </child>
                         <child>
                           <widget class="GtkEventBox" id="to_main_menu">
                             <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                             <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="button_press_event" handler="to_main_menu"/>
+                            <signal name="button_release_event" handler="to_main_menu"/>
                             <child>
-                              <widget class="GtkImage" id="image13">
+                              <widget class="GtkImage" id="image1">
                                 <property name="visible">True</property>
-                                <property name="pixbuf">exit_big.png</property>
+                                <property name="pixbuf">back.png</property>
                               </widget>
                             </child>
                           </widget>
                           <packing>
-                            <property name="position">8</property>
+                            <property name="padding">20</property>
+                            <property name="position">5</property>
                           </packing>
                         </child>
                       </widget>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="pack_type">GTK_PACK_END</property>
                         <property name="position">4</property>
                       </packing>
                     </child>
@@ -937,87 +944,92 @@ Exit</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox6">
+              <widget class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
-                <property name="border_width">10</property>
-                <property name="spacing">2</property>
-                <property name="homogeneous">True</property>
                 <child>
-                  <widget class="GtkTable" id="table1">
+                  <widget class="GtkVBox" id="vbox6">
                     <property name="visible">True</property>
-                    <property name="n_rows">3</property>
+                    <property name="border_width">10</property>
+                    <property name="spacing">2</property>
+                    <property name="homogeneous">True</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_text_size">
+                      <widget class="GtkVBox" id="vbox6">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
+                        <child>
+                          <widget class="GtkLabel" id="label_text_size">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Text size: </property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkHScale" id="font_size_slider">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="adjustment">0 0 100 1 10 10</property>
+                            <property name="draw_value">False</property>
+                            <signal name="change_value" handler="change_font_size"/>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkHScale" id="font_size_slider">
+                      <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="adjustment">30 10 80 1 10 10</property>
-                        <property name="digits">0</property>
-                        <property name="draw_value">False</property>
-                        <signal name="change_value" handler="change_font_size"/>
+                        <property name="label" translatable="yes">Start in Fullscreen mode</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_fullscreen"/>
                       </widget>
                       <packing>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkbox_start_in_review_mode">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">Open Review mode at startup</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_startup_with_review"/>
+                      </widget>
+                      <packing>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
+                  <widget class="GtkHButtonBox" id="config_hbbox">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Start in fullscreen mode</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_fullscreen"/>
-                  </widget>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkCheckButton" id="checkbox_start_in_review_mode">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Open 'Review' mode at startup</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_startup_with_review"/>
-                  </widget>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="button_back">
-                    <property name="width_request">800</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_default">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="button_press_event" handler="to_main_menu"/>
+                    <property name="layout_style">GTK_BUTTONBOX_END</property>
                     <child>
-                      <widget class="GtkLabel" id="label_back">
+                      <widget class="GtkEventBox" id="button_back">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Back to main menu</property>
+                        <property name="visible_window">False</property>
+                        <signal name="button_press_event" handler="to_main_menu"/>
+                        <child>
+                          <widget class="GtkImage" id="config_image_back">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">back.png</property>
+                          </widget>
+                        </child>
                       </widget>
+                      <packing>
+                        <property name="fill">False</property>
+                        <property name="padding">20</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
-                    <property name="position">3</property>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">14</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </widget>

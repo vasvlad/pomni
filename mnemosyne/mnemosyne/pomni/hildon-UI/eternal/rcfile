@@ -134,11 +134,6 @@ style "review-getanswer-label" {
 }
 
 
-style "menu-label"
-{
-  font_name = "Nokia Sans Bold Italic 11.0"
-}
-
 
 style "button-label" {
 	font_name = "Nokia Sans Bold Italic 20.0"
@@ -161,20 +156,6 @@ style "question-window-label" {
 	fg[NORMAL] = "#000000"
 }
 
-
-style "mainwindow"
-{
-   engine "sapwood"
-    {
-        image
-         {
-          function = FLAT_BOX
-          file = "background.png"
-          border = {359, 359, 215, 215}
-          detail = "base"
-          }
-     }
-}
 
 
 style "dialogwindow"
@@ -391,8 +372,6 @@ widget "*.review.GtkLabel" style "button-label"
 widget "*.input.GtkLabel" style "button-label"
 widget "*.configure.GtkLabel" style "button-label"
 widget "*.exit.GtkLabel" style "button-label"
-widget "warningwindow" style "mainwindow"
-widget "window" style "mainwindow"
 
 widget "questionwindow" style "dialogwindow"
 widget "*.questionwindow_button_yes" style "review-button"
@@ -403,25 +382,7 @@ widget "infowindow" style "dialogwindow"
 widget "*.infowindow_button_ok" style "review-button"
 widget "*.infowindow_label" style "info-window-label"
 
-widget "*.button_back" style "theme-button"
-widget "*.label_back" style "button-label"
 
-
-style "checkbox_config"
-{
-    GtkCheckButton::indicator-size = 25
-    GtkCheckButton::indicator-spacing = 7 
-}
-widget "*.checkbox_fullscreen_mode" style "checkbox_config"
-widget "*.checkbox_start_in_review_mode" style "checkbox_config"
-
-
-style "scales"
-{
-    GtkScale::slider-length = 55
-    GtkScale::slider-width = 35
-}
-class "Gtk*Scale" style "scales"
 
 style "input-combobox-entry-arrow"
 {
@@ -455,10 +416,123 @@ widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combob
 
 
 
-#-------new changes-------
+
+
+
+
+#----------------------------- Main Menu ------------------
+style "menu-label"
+{
+    font_name = "Nokia Sans Bold Italic 11.0"
+}
 widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
 widget "*.menu_label_synh" style "menu-label"
 widget "*.menu_label_configure" style "menu-label"
 widget "*.menu_label_exit" style "menu-label"
+#----------------------------- Main Menu ------------------
 
+
+
+#----------------------------- Review mode ------------------
+#----------------------------- Review mode ------------------
+
+
+
+#----------------------------- Input mode ------------------
+#----------------------------- Input mode ------------------
+
+
+
+#----------------------------- Config mode ------------------
+style "config-textsize-label"
+{
+    font_name = "Nokia Sans Bold Italic 11.0"
+}
+widget "*.label_text_size" style "config-textsize-label"
+
+style "config-scales"
+{
+    GtkScale::slider-length = 50
+    GtkScale::slider-width = 50
+    engine "sapwood" {}
+}
+widget "*.font_size_slider" style "config-scales"
+
+style "config-checkboxes"
+{
+    font_name = "Nokia Sans Italic 11"
+    GtkCheckButton::indicator-size = 50
+    GtkCheckButton::indicator-spacing = 5
+    engine "pixmap"
+    {
+        image
+        {
+            function = CHECK
+            state = NORMAL
+            shadow = IN
+            file = "./images/checked.png"
+        }
+        image
+        {
+            function = CHECK
+            state = NORMAL
+            shadow = OUT
+            file = "./images/unchecked.png"
+        }
+        image
+        {
+            function = CHECK
+            state = ACTIVE
+            shadow = IN
+            file = "./images/checked.png"
+        }
+        image
+        {
+            function = CHECK
+            state = ACTIVE
+            shadow = OUT
+            file = "./images/unchecked.png"
+        }
+        image
+        {
+            function = CHECK
+            state = PRELIGHT
+            shadow = IN
+            file = "./images/checked.png"
+        }
+        image
+        {
+            function = CHECK
+            state = PRELIGHT
+            shadow = OUT
+            file = "./images/unchecked.png"
+        }
+    }
+}
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+
+style "config-checkboxes-label"
+{
+    font_name = "Nokia Sans Italic 11"
+}
+widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
+#----------------------------- Config mode ------------------
+
+
+
+# Style for Main window
+style "main-window"
+{
+    engine "pixmap"
+    {
+        image
+        {
+            function = FLAT_BOX
+            file = "./images/background.png"
+        }
+    }
+}
+class "GtkWindow" style "main-window"

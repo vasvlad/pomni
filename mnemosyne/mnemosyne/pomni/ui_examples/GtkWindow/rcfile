@@ -1,0 +1,15 @@
+#example rcfile for GtkWindow
+
+style "MyWindow"
+{
+    engine "pixmap" 
+    {
+        image 
+        {
+            function = FLAT_BOX
+            file = "back.png"
+        }
+    }
+}
+
+class "GtkWindow" style "MyWindow"
