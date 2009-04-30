@@ -1,0 +1,33 @@
+#example for GtkButton
+
+style "Button-with-image"
+{
+    GtkButton::image-spacing = 0
+    GtkButton::focus-line-width = 0
+    engine "pixmap"
+    {
+        image
+        {
+            function = BOX
+            state = NORMAL
+            file = "small.png"
+            stretch = TRUE
+        }
+        image
+        {
+            function = BOX
+            state = PRELIGHT
+            file = "big.png"
+            stretch = TRUE
+        }
+        image
+        {
+            function = BOX
+            state = ACTIVE
+            file = "big.png"
+            stretch = TRUE
+        }
+    }
+
+}
+class "GtkButton" style "Button-with-image"
