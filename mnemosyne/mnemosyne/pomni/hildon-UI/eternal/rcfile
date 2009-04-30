@@ -423,13 +423,134 @@ widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combob
 #----------------------------- Main Menu ------------------
 style "menu-label"
 {
-    font_name = "Nokia Sans Bold Italic 11.0"
+    font_name = "Nokia Sans Bold Italic 12.0"
 }
 widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
 widget "*.menu_label_synh" style "menu-label"
-widget "*.menu_label_configure" style "menu-label"
+widget "*.menu_label_conf" style "menu-label"
 widget "*.menu_label_exit" style "menu-label"
+
+style "menu-button"
+{
+    GtkButton::image-spacing = 0
+    GtkButton::focus-line-width = 0
+}
+
+# Style for Review menu button. Have 3 states.
+style "menu-button-review" = "menu-button"
+{
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/review_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/review_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/review_big.png"
+        }
+    }
+}
+widget "*.menu_button_review" style "menu-button-review"
+
+# Style for Input menu button. Have 3 states.
+style "menu-button-input" = "menu-button"
+{
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/input_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/input_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/input_big.png"
+        }
+    }
+}
+widget "*.menu_button_input" style "menu-button-input"
+
+# Style for Synh menu button. Have 3 states.
+style "menu-button-synh" = "menu-button"
+{
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/synh_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/synh_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/synh_big.png"
+        }
+    }
+}
+widget "*.menu_button_synh" style "menu-button-synh"
+
+# Style for Conf menu button. Have 3 states.
+style "menu-button-conf" = "menu-button"
+{
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/conf_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/conf_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/conf_big.png"
+        }
+    }
+}
+widget "*.menu_button_conf" style "menu-button-conf"
+
+# Style for Exit menu button. Have 3 states.
+style "menu-button-exit" = "menu-button"
+{
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/exit_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/exit_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/exit_big.png"
+        }
+    }
+}
+widget "*.menu_button_exit" style "menu-button-exit"
 #----------------------------- Main Menu ------------------
 
 
