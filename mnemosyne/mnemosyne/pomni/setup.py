@@ -24,7 +24,7 @@ setup(name=PKG,
 #        ('share/%s/hildon-UI/smile' % PKG, glob.glob('hildon-UI/smile/*')),
         ('share/dbus-1/services', ['maemo/%s.service' % PKG]),
         ('share/applications/hildon', ['maemo/%s.desktop' % PKG]),
-        ('share/%s/demo' % PKG, [".%s/default.mem" % PKG]),
+        ('share/%s/demo' % PKG, [".%s/default.db" % PKG]),
         ('share/icons/hicolor/26x26/apps/', ['./maemo/icons/26x26/pomni.png']),
         ('share/icons/hicolor/64x64/apps/', ['./maemo/icons/64x64/pomni.png'])],
     classifiers=[
