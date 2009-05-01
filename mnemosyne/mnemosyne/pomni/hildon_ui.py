@@ -30,7 +30,7 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
-from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
+from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main, database
 
 _ = gettext.gettext
 
@@ -117,7 +117,7 @@ class HildonUI():
         switcher = self.w_tree.get_widget("switcher")
         switcher.set_property('show_tabs', False)
         self.window = self.w_tree.get_widget("window")
-        self.window.connect('delete_event', gtk.main_quit)
+        self.window.connect('delete_event', self.exit_cb)
 
         self.question_flag = False
         # fullscreen mode
@@ -157,9 +157,10 @@ class HildonUI():
     # Callbacks
 
     @staticmethod
-    def exit_cb(widget):
+    def exit_cb(widget=None):
         """ If pressed quit button then close the window """
 
+        database().unload()
         gtk.main_quit()
 
 
