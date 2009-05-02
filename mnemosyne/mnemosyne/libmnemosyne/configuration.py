@@ -59,6 +59,8 @@ database = "sqlite"
 
 class Configuration(dict):
 
+    component_type = "config"
+
     def __init__(self):
 
         """Set by the frontend, not saved to disk."""
