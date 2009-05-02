@@ -60,6 +60,7 @@ database = "sqlite"
 class Configuration(dict):
 
     component_type = "config"
+    used_for = None
 
     def __init__(self):
 
