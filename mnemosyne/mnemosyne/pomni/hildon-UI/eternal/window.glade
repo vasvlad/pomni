@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri May  1 00:13:13 2009 -->
+<!--Generated with glade3 3.4.5 on Fri May  1 16:35:01 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -28,6 +28,16 @@
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
                     <child>
+                      <widget class="GtkLabel" id="menu_label_review">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Review</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
                       <widget class="GtkButton" id="menu_button_review">
                         <property name="width_request">72</property>
                         <property name="height_request">72</property>
@@ -46,22 +56,22 @@
                         <property name="y_padding">10</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkLabel" id="menu_label_review">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Review</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                      </packing>
-                    </child>
                   </widget>
                 </child>
                 <child>
                   <widget class="GtkTable" id="menu_table_input">
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_input">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Input</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
                     <child>
                       <widget class="GtkButton" id="menu_button_input">
                         <property name="width_request">72</property>
@@ -81,16 +91,6 @@
                         <property name="y_padding">10</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkLabel" id="menu_label_input">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Input</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                      </packing>
-                    </child>
                   </widget>
                   <packing>
                     <property name="position">1</property>
@@ -100,6 +100,16 @@
                   <widget class="GtkTable" id="menu_table_synh">
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_synh">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Synh</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
                     <child>
                       <widget class="GtkButton" id="menu_button_synh">
                         <property name="width_request">72</property>
@@ -118,16 +128,6 @@
                         <property name="y_padding">10</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkLabel" id="menu_label_synh">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Synh</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                      </packing>
-                    </child>
                   </widget>
                   <packing>
                     <property name="position">2</property>
@@ -137,6 +137,16 @@
                   <widget class="GtkTable" id="menu_table_conf">
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_conf">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Conf</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
                     <child>
                       <widget class="GtkButton" id="menu_button_conf">
                         <property name="width_request">72</property>
@@ -156,16 +166,6 @@
                         <property name="y_padding">10</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkLabel" id="menu_label_conf">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Conf</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                      </packing>
-                    </child>
                   </widget>
                   <packing>
                     <property name="position">3</property>
@@ -175,6 +175,16 @@
                   <widget class="GtkTable" id="menu_table_exit">
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
+                    <child>
+                      <widget class="GtkLabel" id="menu_label_exit">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Exit</property>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
                     <child>
                       <widget class="GtkButton" id="menu_button_exit">
                         <property name="width_request">72</property>
@@ -192,16 +202,6 @@
                         <property name="x_options"></property>
                         <property name="y_options"></property>
                         <property name="y_padding">10</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="menu_label_exit">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Exit</property>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
                       </packing>
                     </child>
                   </widget>
@@ -891,73 +891,34 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="hbox7">
+                  <widget class="GtkHButtonBox" id="hbuttonbox2">
                     <property name="visible">True</property>
+                    <property name="layout_style">GTK_BUTTONBOX_SPREAD</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkEventBox" id="delete_card">
+                      <widget class="GtkButton" id="delete_card">
                         <property name="visible">True</property>
-                        <property name="visible_window">False</property>
-                        <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="delete_card"/>
-                        <child>
-                          <widget class="GtkImage" id="image16">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">delete_big.png</property>
-                          </widget>
-                        </child>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="label" translatable="yes">delete</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="delete_card"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="to_main_menu_input">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="label" translatable="yes">to main menu</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="to_main_menu"/>
                       </widget>
                       <packing>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkVSeparator" id="vseparator4">
-                        <property name="visible">True</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">7</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkEventBox" id="to_main_menu_input">
-                        <property name="visible">True</property>
-                        <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                        <property name="visible_window">False</property>
-                        <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="to_main_menu"/>
-                        <child>
-                          <widget class="GtkImage" id="image20">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">exit_big.png</property>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="position">8</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
                     <property name="position">9</property>
                   </packing>
                 </child>

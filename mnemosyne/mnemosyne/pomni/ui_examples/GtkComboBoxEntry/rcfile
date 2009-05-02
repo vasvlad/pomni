@@ -1,0 +1,93 @@
+# style for GtkComboBoxEntry
+
+style "Entry" {
+    # толщина курсора
+    GtkEntry::focus-line-width = 0
+    GtkEntry::cursor-aspect-ratio = 0
+    #отступы текста от наружной рамки
+    GtkEntry::inner-border = {15,15,15,15}
+
+    text[NORMAL] = "#FFFFFF"
+    text[PRELIGHT] = "#FFFFFF"
+    font_name = "Tahoma 18"
+    engine "pixmap" {
+        image {
+            function = FLAT_BOX
+            state = NORMAL
+            file = "back_for_entry2.png"
+        }
+    }
+}
+class "GtkEntry" style "Entry"
+
+
+# как выглядит раскрывающийся список
+style "Combo" {
+    # 0 - as list
+    # 1 - as menu
+    GtkComboBoxEntry::appears-as-list = 1
+}
+widget "*.comboboxentry1" style "Combo"
+
+
+#стиль для стрелки внутри кнопки
+style "MyArrow" {
+    GtkArrow:: arrow-scaling = 1
+}
+widget "*.comboboxentry1.GtkToggleButton.GtkArrow" style "MyArrow"
+
+
+# стиль для списка с элементами
+style "MyList" {
+    GtkTreeView::vertical-separator = 20
+    GtkTreeView::focus-line-width = 0
+    GtkTreeView::row-ending-details = 1
+    text[NORMAL] = "#00FF00"
+    text[SELECTED] = "#FF0000"
+    font_name = "Tahoma 16"
+    engine "pixmap" {
+        image {
+            function = FLAT_BOX
+            state = SELECTED
+            file = "frame.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+        image {
+            function = FLAT_BOX
+            state = NORMAL
+            file = "back_for_row.png"
+            stretch = TRUE
+        }
+    }
+}
+#class "GtkTreeView" style "MyList"
+widget "*.GtkScrolledWindow.GtkTreeView" style "MyList"
+
+
+style "MyToggle" {
+    GtkToggleButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "frame.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.comboboxentry1.GtkToggleButton" style "MyToggle"
+
+
+style "MyWindow"
+{
+    engine "pixmap" {
+        image {
+            function = FLAT_BOX
+            file = "background.png"
+        }
+    }
+}
+class "GtkWindow" style "MyWindow"
+
+
