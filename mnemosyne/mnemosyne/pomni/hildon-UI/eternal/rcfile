@@ -411,8 +411,12 @@ widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combob
 
 
 #----------------------------- Main Menu ------------------
-style "menu-label"
-{
+style "program-name-label" {
+    font_name = "Nokia Sans Italic 10"
+}
+widget "*.program_name_label" style "program-name-label"
+
+style "menu-label" {
     font_name = "Nokia Sans Bold Italic 12.0"
 }
 widget "*.menu_label_review" style "menu-label"
@@ -421,15 +425,13 @@ widget "*.menu_label_synh" style "menu-label"
 widget "*.menu_label_conf" style "menu-label"
 widget "*.menu_label_exit" style "menu-label"
 
-style "menu-button"
-{
+style "menu-button" {
     GtkButton::image-spacing = 0
     GtkButton::focus-line-width = 0
 }
 
 # Style for Review menu button. Have 3 states.
-style "menu-button-review" = "menu-button"
-{
+style "menu-button-review" = "menu-button" {
     engine "pixmap" {
         image {
             function = BOX
@@ -451,8 +453,7 @@ style "menu-button-review" = "menu-button"
 widget "*.menu_button_review" style "menu-button-review"
 
 # Style for Input menu button. Have 3 states.
-style "menu-button-input" = "menu-button"
-{
+style "menu-button-input" = "menu-button" {
     engine "pixmap" {
         image {
             function = BOX
@@ -474,8 +475,7 @@ style "menu-button-input" = "menu-button"
 widget "*.menu_button_input" style "menu-button-input"
 
 # Style for Synh menu button. Have 3 states.
-style "menu-button-synh" = "menu-button"
-{
+style "menu-button-synh" = "menu-button" {
     engine "pixmap" {
         image {
             function = BOX
@@ -497,8 +497,7 @@ style "menu-button-synh" = "menu-button"
 widget "*.menu_button_synh" style "menu-button-synh"
 
 # Style for Conf menu button. Have 3 states.
-style "menu-button-conf" = "menu-button"
-{
+style "menu-button-conf" = "menu-button" {
     engine "pixmap" {
         image {
             function = BOX
@@ -520,8 +519,7 @@ style "menu-button-conf" = "menu-button"
 widget "*.menu_button_conf" style "menu-button-conf"
 
 # Style for Exit menu button. Have 3 states.
-style "menu-button-exit" = "menu-button"
-{
+style "menu-button-exit" = "menu-button" {
     engine "pixmap" {
         image {
             function = BOX
