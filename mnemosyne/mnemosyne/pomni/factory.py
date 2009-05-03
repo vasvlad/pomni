@@ -50,13 +50,13 @@ def ui_factory(interface=None):
         except KeyError:
             globals()[theme] = "eternal"
 
-        from pomni import hildon_ui
-        from hildon_ui import HildonUI
+        from pomni.hildon_ui import HildonUI
 
         controllers = {}
         for mode in ("review", "input", "configure", "main"):
             cname = theme.capitalize() + 'Controller' + mode.capitalize()
-            module = __import__("pomni.hildon_%s" % mode, globals(), locals(), [cname])
+            module = __import__("pomni.hildon_%s" % mode, 
+                    globals(), locals(), [cname])
             controllers[mode] = getattr(module, cname)()
 
         component_manager.register("ui_controller_review", \
@@ -77,9 +77,6 @@ def backend_factory(name=None):
 
     if not name or name == 'sqlite':
         from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
-        # register scheduller. Temporary
-        from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
-        component_manager.register("scheduler", SM2Gen())
         return Sqlite()
 
     raise ValueError("No idea how to create %s backend" % name)

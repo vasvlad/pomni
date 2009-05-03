@@ -30,11 +30,7 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
-from os.path import splitext, basename
-
-from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        config, ui_controller_main, card_types
-from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main, database
 
 _ = gettext.gettext
 
@@ -121,7 +117,7 @@ class HildonUI():
         switcher = self.w_tree.get_widget("switcher")
         switcher.set_property('show_tabs', False)
         self.window = self.w_tree.get_widget("window")
-        self.window.connect('delete_event', gtk.main_quit)
+        self.window.connect('delete_event', self.exit_cb)
 
         self.question_flag = False
         # fullscreen mode
@@ -161,9 +157,10 @@ class HildonUI():
     # Callbacks
 
     @staticmethod
-    def exit_cb(widget, event):
+    def exit_cb(widget=None):
         """ If pressed quit button then close the window """
 
+        database().unload()
         gtk.main_quit()
 
 
@@ -197,7 +194,8 @@ class HildonUI():
         view.show()
         return view
 
-    def clear_label(self, caption):
+    @staticmethod
+    def clear_label(caption):
         """ Remove &-symbol from caption if exists"""
         index = caption.find("&")
         if not index == -1:
