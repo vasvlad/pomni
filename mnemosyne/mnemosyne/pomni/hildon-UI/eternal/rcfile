@@ -554,64 +554,67 @@ widget "*.menu_button_exit" style "menu-button-exit"
 
 
 #----------------------------- Config mode ------------------
-style "config-textsize-label"
-{
+style "config-textsize-label" {
     font_name = "Nokia Sans Bold Italic 11.0"
 }
 widget "*.label_text_size" style "config-textsize-label"
 
-style "config-scales"
-{
-    GtkScale::slider-length = 50
-    GtkScale::slider-width = 50
-    engine "sapwood" {}
+style "config-scales" {
+    GtkScale::slider-length = 64
+    GtkScale::slider-width = 64
+    GtkScale::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = SLIDER
+            file = "./images/target.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            file = "./images/back_for_scroll.png"
+            stretch = TRUE
+        }
+    }
 }
 widget "*.font_size_slider" style "config-scales"
 
-style "config-checkboxes"
-{
+style "config-checkboxes" {
     font_name = "Nokia Sans Italic 11"
     GtkCheckButton::indicator-size = 50
     GtkCheckButton::indicator-spacing = 5
-    engine "pixmap"
-    {
-        image
-        {
+    GtkCheckButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
             function = CHECK
             state = NORMAL
             shadow = IN
             file = "./images/checked.png"
         }
-        image
-        {
+        image {
             function = CHECK
             state = NORMAL
             shadow = OUT
             file = "./images/unchecked.png"
         }
-        image
-        {
+        image {
             function = CHECK
             state = ACTIVE
             shadow = IN
             file = "./images/checked.png"
         }
-        image
-        {
+        image {
             function = CHECK
             state = ACTIVE
             shadow = OUT
             file = "./images/unchecked.png"
         }
-        image
-        {
+        image {
             function = CHECK
             state = PRELIGHT
             shadow = IN
             file = "./images/checked.png"
         }
-        image
-        {
+        image {
             function = CHECK
             state = PRELIGHT
             shadow = OUT
@@ -622,8 +625,7 @@ style "config-checkboxes"
 widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
 
-style "config-checkboxes-label"
-{
+style "config-checkboxes-label" {
     font_name = "Nokia Sans Italic 11"
 }
 widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
