@@ -97,7 +97,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
                 font_size = config()['font_size']
                 question_text = question_text.replace('*{font-size:30px;}',
                  '*{font-size:%spx;}' % font_size)
-            
+
             document.write_stream(question_text)
             document.close_stream()
         else:

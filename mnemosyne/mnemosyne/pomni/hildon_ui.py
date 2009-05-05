@@ -42,12 +42,11 @@ class HildonUiControllerException(Exception):
         """ Show Warning Window """
 
         w_tree.signal_autoconnect({"close": self.close_cb})
-        
+
         # Show warning text
         w_tree.get_widget("label_warning").set_text(exception)
         self.warning_window = w_tree.get_widget("warningwindow")
         self.warning_window.show()
-
         Exception.__init__(self)
 
     def close_cb(self, widget, event):
@@ -143,7 +142,12 @@ class HildonUI():
     def start(self, mode):
         """ Start UI  """
 
-        self.controllers[mode].start(self.w_tree)
+        # Check nil database
+        if database().card_count() and mode == "review":
+            self.controllers[mode].start(self.w_tree)
+        else:
+            self.controllers['main'].start(self.w_tree)
+
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
