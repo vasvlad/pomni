@@ -5,7 +5,7 @@
 
 PACKAGE := $(shell head -1 $(CURDIR)/debian/changelog | sed 's/^\([^ ]\+\) .*/\1/')
 PREFIX := $(CURDIR)/debian/$(PACKAGE)
-PYTHON := python2.5
+PYTHON := PYTHONOPTIMIZE=2 python
 
 build: build-stamp
 
@@ -21,7 +21,7 @@ clean:
 	$(PYTHON) setup.py clean
 	rm -rf ./build
 	rm -rf ./*.egg-info
-	rm -f *.pyc
+	rm -f *.py[co]
 	dh_clean 
 
 install: build
@@ -30,8 +30,8 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 	$(PYTHON) setup.py install --root=$(PREFIX)
-	mv $(PREFIX)/usr/lib/python2.5/site-packages/pomni/main.py $(PREFIX)/usr/bin/pomni
-	chmod +x $(PREFIX)/usr/bin/pomni
+	cp $(PREFIX)/usr/lib/python2.5/site-packages/pomni/main.py $(PREFIX)/usr/bin/pomni
+	#rm $(PREFIX)/usr/lib/python2.5/site-packages/pomni/*.py
 
 binary-indep: build install
 	dh_testdir
@@ -39,7 +39,7 @@ binary-indep: build install
 	dh_installchangelogs
 	dh_installdocs
 	dh_installmenu
-	dh_python
+	#dh_python
 	dh_compress
 	dh_fixperms
 	dh_installdeb

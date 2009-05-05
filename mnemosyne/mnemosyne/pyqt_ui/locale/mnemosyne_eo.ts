@@ -1,167 +1,159 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="ja_JP">
-<defaultcodec></defaultcodec>
+<!DOCTYPE TS><TS>
 <context>
     <name></name>
     <message>
         <source>Error in config.py:</source>
-        <translation>config.pyのエラー:</translation>
+        <translation>Eraro en config.py:</translation>
     </message>
     <message>
         <source>Error when running plugin:</source>
-        <translation>pluginのエラー:</translation>
+        <translation>Eraro en la kromprograma lanĉo:</translation>
     </message>
     <message>
         <source>Unable to load file.</source>
-        <translation>ファイルをロードできません。</translation>
+        <translation>La dosiero ne povas ŝarĝiĝi.</translation>
     </message>
     <message>
         <source>Invalid file format.</source>
-        <translation>ファイルの種類は認めらてりません。</translation>
+        <translation>Tiu dosierformo estas nevalida.</translation>
     </message>
     <message>
         <source>Unable to save file.</source>
-        <translation>ファイルを保存できません。</translation>
+        <translation>La dosiero ne povas konserviĝi.</translation>
     </message>
     <message>
         <source>Unable to parse XML:</source>
-        <translation>XMLは読み込みできません:</translation>
+        <translation>La XML ne povas sintakse analiziĝi.</translation>
     </message>
     <message>
         <source>Unrecognised encoding.</source>
-        <translation>文字エンコーディングが不明です。</translation>
+        <translation>Tiu kodoprezento estas nerekonita.</translation>
     </message>
     <message>
         <source>Missing answer on line:</source>
-        <translation>この行目に答えが行方不明:</translation>
+        <translation>Respondo estas manka ĉe la linio:</translation>
     </message>
     <message>
         <source>Unable to load database.
 Creating tmp file.</source>
-        <translation>データベースをロードすることができません。
-TMPファイルを作成しています。</translation>
+        <translation>La datumbazo ne povas ŝarĝebliĝi.
+Mnemozino nun kreas tmp-dosieron.</translation>
     </message>
     <message>
         <source>Mnemosyne</source>
-        <translation>覚エテチョウ</translation>
+        <translation>Mnemozino</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>File exists:</source>
-        <translation>既に同じ名前のファイルが存在している:</translation>
+        <translation>La dosiero ekzistas:</translation>
     </message>
     <message>
         <source>&amp;Overwrite</source>
-        <translation>&amp;上書きする</translation>
+        <translation>&amp;Anstataŭigi</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
+        <translation>&amp;Rezigni</translation>
     </message>
     <message>
         <source>Removed duplicates: </source>
-        <translation>同じカードを削除しました: </translation>
+        <translation>Duobloj forviŝiĝis: </translation>
     </message>
     <message>
         <source>There are cards with different answers for question:
 
 </source>
-        <translation>この質問は二つ以上答えがあります:
+        <translation>Ekzistas kartoj kun malsamaj respondoj al jena demando:
+
 </translation>
     </message>
     <message>
         <source>&amp;Merge and edit</source>
-        <translation>&amp;結合して編集する</translation>
+        <translation>&amp;Kunfandi kaj redakti</translation>
     </message>
     <message>
         <source>&amp;Don&apos;t merge</source>
-        <translation>&amp;結合しない</translation>
+        <translation>&amp;Ne kunfandi</translation>
     </message>
     <message>
         <source>Done!</source>
-        <translation>終わりました!</translation>
+        <translation>Farita!</translation>
     </message>
     <message>
         <source>You don&apos;t remember this card yet.</source>
-        <translation>このカードはまだ覚えっていません。</translation>
+        <translation>Vi ne jam scias la respondon al ĉi tiu karto.</translation>
     </message>
     <message>
         <source>Like &apos;0&apos;, but it&apos;s getting more familiar.</source>
-        <translation>「０」に似ているが、どんどんと慣れ親しんでいきます。</translation>
+        <translation>Simila al 0, sed vi plikonadas ĝin.</translation>
     </message>
     <message>
         <source> Show it less often.</source>
-        <translation> 今からあまり見せないようにします。</translation>
+        <translation>Montru ĝin pli malofte.</translation>
     </message>
     <message>
         <source>You&apos;ve memorised this card now,</source>
-        <translation>今このカードのことを記憶しましたから</translation>
+        <translation>Nun vi scias tiun karton,</translation>
     </message>
     <message>
         <source> and will probably remember it for a few days.</source>
-        <translation>おそらく数日は覚えているでしょう。</translation>
+        <translation>kaj probable vi memoros ĝin dum kelkaj tagoj.</translation>
     </message>
     <message>
         <source>You have forgotten this card completely.</source>
-        <translation>このカードのことを完全に忘れてしまいました。</translation>
+        <translation>Vi tute forgesis ĉi tiun karton.</translation>
     </message>
     <message>
         <source>Barely correct answer. The interval was way too long.</source>
-        <translation>かろうじて、正解。休止期間はあまりにも長すぎます。</translation>
+        <translation>Via apenaŭ memoris la respondon; la intertempo estis multe tro longa.</translation>
     </message>
     <message>
         <source>Correct answer, but with much effort.</source>
-        <translation>かなりの努力をして正解。</translation>
+        <translation>Vi memoris la ĝustan respondon, sed per multa peno.</translation>
     </message>
     <message>
         <source> The interval was probably too long.</source>
-        <translation>休止期間はおそらく長すぎます。</translation>
+        <translation>La intertempo probable estis tro longa.</translation>
     </message>
     <message>
         <source>Correct answer, with some effort.</source>
-        <translation>いくつかの努力をしての正解。</translation>
+        <translation>Vi memoris la ĝustan respondo per iom da peno.</translation>
     </message>
     <message>
         <source> The interval was probably just right.</source>
-        <translation>休止期間はおそらく正しい。</translation>
+        <translation>La intertempo probable estis ĝusta.</translation>
     </message>
     <message>
         <source>Correct answer, but without any</source>
-        <translation>何の困難も無く正解。この休止期間は</translation>
+        <translation>Vi sciis la ĝustan respondon, sed sen ia</translation>
     </message>
     <message>
         <source> difficulties. The interval was probably too short.</source>
-        <translation>おそらく短すぎます。</translation>
+        <translation> malfacilo. La intertempo probable estis tro mallonga.</translation>
     </message>
 </context>
 <context>
     <name>AboutDlg</name>
     <message>
         <source>Mnemosyne</source>
-        <translation>覚エテチョウ (Mnemosyne)</translation>
+        <translation>Mnemozino</translation>
     </message>
     <message>
         <source>Main author: Peter Bienstman
 
 </source>
-        <translation>著者: Peter Bienstman
+        <translation>Ĉefa aŭtoro: Peter BIENSTMAN
 
-</translation>
-    </message>
-    <message>
-        <source>More info: http://mnemosyne-proj.sourceforge.net
-</source>
-        <translation type="obsolete">サイト: http://mnemosyne-proj.sourceforge.net
 </translation>
     </message>
     <message>
         <source>More info: http://mnemosyne-proj.org
 </source>
-        <translation>ウェブサイト：　http://mnemosyne-proj.org
-日本語：http://www.ushigaeru.com/oboetechou
+        <translation>Pli da informaĵo ekzistas ĉe http://mnemosyne-proj.org.
 </translation>
     </message>
 </context>
@@ -169,30 +161,30 @@ TMPファイルを作成しています。</translation>
     <name>AboutFrm</name>
     <message>
         <source>About</source>
-        <translation>覚エテチョウについて</translation>
+        <translation>Pri</translation>
     </message>
 </context>
 <context>
     <name>ActivateCategoriesFrm</name>
     <message>
         <source>Activate categories</source>
-        <translation>カテゴリーを選択する</translation>
+        <translation>Aktivigi kategoriojn</translation>
     </message>
     <message>
         <source>Select the categories to activate:</source>
-        <translation>カテゴリーを選択してください:</translation>
+        <translation>Elektu la kategoriojn, kiujn vi volas aktivigi:</translation>
     </message>
     <message>
         <source>Activate none</source>
-        <translation>どれも選択しない</translation>
+        <translation>Aktivigi neniujn</translation>
     </message>
     <message>
         <source>Activate all</source>
-        <translation>すべてを選択</translation>
+        <translation>Aktivigi ĉiujn</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Alt+O</source>
@@ -200,109 +192,111 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
+        <translation>&amp;Rezigni</translation>
     </message>
 </context>
 <context>
     <name>AddItemsDlg</name>
     <message>
         <source>&lt;default&gt;</source>
-        <translation>&lt;デフォルト&gt;</translation>
+        <translation>Defaŭlto</translation>
     </message>
     <message>
         <source>Mnemosyne</source>
-        <translation>覚エテチョウ</translation>
+        <translation>Mnemozino</translation>
     </message>
     <message>
         <source>Abandon current card?</source>
-        <translation>このカードを消してもよろしいですか?</translation>
+        <translation>Ĉu vi ja volas forigi tiun karton?</translation>
     </message>
     <message>
         <source>&amp;Yes</source>
-        <translation>&amp;はい</translation>
+        <translation>&amp;Jes</translation>
     </message>
     <message>
         <source>&amp;No</source>
-        <translation>&amp;いいえ</translation>
+        <translation>&amp;Ne</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
     <message>
         <source>Answer:</source>
-        <translation>答え:</translation>
+        <translation>Respondo:</translation>
     </message>
     <message>
         <source>Written form:</source>
-        <translation>スペル:</translation>
+        <translation>Skribata formo:</translation>
     </message>
     <message>
         <source>Translation:</source>
-        <translation>意味:</translation>
+        <translation>Traduko:</translation>
     </message>
     <message>
         <source>Card is already in database.
 </source>
-        <translation>このカードは既にデータベースに記録しています。</translation>
+        <translation>Tiu karto jam estas en la datumbazo.
+</translation>
     </message>
     <message>
         <source>Duplicate not added.</source>
-        <translation>同じカードを追加しませんでした。</translation>
+        <translation>La duoblo ne aldoniĝis.</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>There are different answers for</source>
-        <translation>この質問は</translation>
+        <translation>Ekzistas malsamaj respondoj por</translation>
     </message>
     <message>
         <source> this question:
 
 </source>
-        <translation>二つ以上答えがあります:
+        <translation> jena demando:
+
 </translation>
     </message>
     <message>
         <source>&amp;Merge and edit</source>
-        <translation>&amp;結合して編集する</translation>
+        <translation>&amp;Kunfandi kaj redakti</translation>
     </message>
     <message>
         <source>&amp;Add as is</source>
-        <translation>&amp;このままで追加する</translation>
+        <translation>&amp;Aldoni, kiel jam estas</translation>
     </message>
     <message>
         <source>&amp;Do not add</source>
-        <translation>&amp;追加しない</translation>
+        <translation>&amp;Ne aldoni</translation>
     </message>
 </context>
 <context>
     <name>AddItemsFrm</name>
     <message>
         <source>Add cards</source>
-        <translation>カードを追加する</translation>
+        <translation>Aldoni kartojn</translation>
     </message>
     <message>
         <source>Category:</source>
-        <translation>カテゴリー:</translation>
+        <translation>Kategorio:</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
     <message>
         <source>Pronunciation:</source>
-        <translation>発音:</translation>
+        <translation>Elparolo:</translation>
     </message>
     <message>
         <source>Answer:</source>
-        <translation>答え:</translation>
+        <translation>Respondo:</translation>
     </message>
     <message>
         <source>Add &amp;vice versa too</source>
-        <translation>&amp;逆カード（答え・質問順番）も追加する</translation>
+        <translation>Ankaŭ &amp;malon aldoni</translation>
     </message>
     <message>
         <source>Alt+V</source>
@@ -310,7 +304,7 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Select initial grade:</source>
-        <translation>最初のグレード:</translation>
+        <translation>Elektu komencan rangon:</translation>
     </message>
     <message>
         <source>&amp;0</source>
@@ -318,11 +312,11 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Ctrl+0</source>
-        <translation>Ctrl+0</translation>
+        <translation>Stir+0</translation>
     </message>
     <message>
         <source>You don&apos;t remember this item yet or forgot it.</source>
-        <translation>まだ覚えっていません。あるいは、忘れました.</translation>
+        <translation>Aŭ vi ne jam scias ĉi tiun karton, aŭ vi forgesis ĝin.</translation>
     </message>
     <message>
         <source>&amp;1</source>
@@ -330,11 +324,11 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Ctrl+1</source>
-        <translation>Ctrl+1</translation>
+        <translation>Stir+1</translation>
     </message>
     <message>
         <source>Like &apos;0&apos;, but the item is getting more familiar.</source>
-        <translation>「０」に似ているが、どんどんと慣れ親しんでいきます。</translation>
+        <translation>Simila al 0, sed vi plikonadas ĝin.</translation>
     </message>
     <message>
         <source>&amp;2</source>
@@ -342,11 +336,11 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Ctrl+2</source>
-        <translation>Ctrl+2</translation>
+        <translation>Stir+2</translation>
     </message>
     <message>
         <source>You&apos;ve memorised this item now, and will probably remember it for a few days.</source>
-        <translation>今このカードのことを記憶しましたから、おそらく数日は覚えているでしょう。</translation>
+        <translation>Nun vi scias tiun karton, kaj probable vi memoros ĝin dum kelkaj tagoj.</translation>
     </message>
     <message>
         <source>&amp;3</source>
@@ -354,11 +348,11 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Ctrl+3</source>
-        <translation>Ctrl+3</translation>
+        <translation>Stir+3</translation>
     </message>
     <message>
         <source>Correct answer, but with much effort. The interval was probably too long</source>
-        <translation>かなりの努力をかけて正解。休止期間はおそらく長すぎます</translation>
+        <translation>Vi memoris la ĝustan respondon, sed kun multa peno. La intertempo probable estis tro longa.</translation>
     </message>
     <message>
         <source>&amp;4</source>
@@ -366,11 +360,11 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Ctrl+4</source>
-        <translation>Ctrl+4</translation>
+        <translation>Stir+4</translation>
     </message>
     <message>
         <source>Correct answer, with some effort. The interval was probably just right.</source>
-        <translation>適当な努力をかけての正解。休止期間はおそらく正しい。</translation>
+        <translation>Vi memoris la ĝustan respondo per iom da peno. La intertempo probable estis ĝusta.</translation>
     </message>
     <message>
         <source>&amp;5</source>
@@ -378,50 +372,46 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>Ctrl+5</source>
-        <translation>Ctrl+5</translation>
+        <translation>Stir+5</translation>
     </message>
     <message>
         <source>Correct answer, but without any difficulties. The interval was probably too short.</source>
-        <translation>何の困難も無く正解。休止期間はおそらく短すぎます。</translation>
+        <translation>Vi sciis la ĝustan respondon, sed sen ia malfacilo. La intertempo probable estis tro mallonga.</translation>
     </message>
     <message>
         <source>Type question and answer, then pick initial grade.</source>
-        <translation>質問と答えを記入し、最初のグレードを選択する.</translation>
+        <translation>Tajpu la demandon kaj la respondon, kaj poste elektu komencan rangon.</translation>
     </message>
     <message>
-        <source>&amp;Preview</source>
-        <translation type="obsolete">&amp;プレービュー</translation>
+        <source>Preview</source>
+        <translation>Antaŭmontri</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation>Ctrl+P</translation>
+        <translation>Stir+P</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>&amp;閉じる</translation>
+        <translation>&amp;Fini</translation>
     </message>
     <message>
         <source>Alt+X</source>
         <translation>Alt+X</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>プレービュー</translation>
     </message>
 </context>
 <context>
     <name>ChangeCategoryFrm</name>
     <message>
         <source>Change category</source>
-        <translation>カテゴリーを選択する</translation>
+        <translation>Ŝanĝi kategorion</translation>
     </message>
     <message>
         <source>Category:</source>
-        <translation>カテゴリー:</translation>
+        <translation>Kategorio:</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Alt+O</source>
@@ -429,7 +419,7 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
+        <translation>&amp;Rezigni</translation>
     </message>
     <message>
         <source>Alt+C</source>
@@ -440,122 +430,118 @@ TMPファイルを作成しています。</translation>
     <name>ConfigurationFrm</name>
     <message>
         <source>Mnemosyne configuration</source>
-        <translation>覚エテチョウの設定</translation>
+        <translation>Mnemozina agordo</translation>
     </message>
     <message>
         <source>Hover with the mouse over the buttons to get extra information.</source>
-        <translation>マウスをボタンの上にとどめると、もっと詳しい説明が表示されます。</translation>
+        <translation>Ŝvebu per la muso super la butonoj por legi pli da informaĵo.</translation>
     </message>
     <message>
         <source>Appearance</source>
-        <translation>表示設定</translation>
+        <translation>Apero</translation>
     </message>
     <message>
         <source>Set Q/A font</source>
-        <translation>質問・答えのフォントを選ぶ</translation>
+        <translation>Elekti la demandan kaj respondan tiparon</translation>
     </message>
     <message>
         <source>Set the font used when showing single questions and answers</source>
-        <translation>質問と解答を表示するには使用フォントを選ぶ</translation>
+        <translation>Elekti la tiparon por unuopaj demandoj kaj respondoj</translation>
     </message>
     <message>
         <source>Set list font</source>
-        <translation>リストフォントを選ぶ</translation>
+        <translation>Elekti la listan tiparon</translation>
     </message>
     <message>
         <source>Set the font used when showing the list of all the cards in the deck</source>
-        <translation>カードデータベースに入っているカードの一覧を表示するには使用フォントを選ぶ</translation>
+        <translation>Elekti la tiparon por la listo de ĉioj en la kartaro</translation>
     </message>
     <message>
         <source>Increase size of non-latin characters by</source>
-        <translation>ラテン系言語ではない文字の容量を</translation>
+        <translation>Pligrandigi mallatinajn signojn po</translation>
     </message>
     <message>
         <source>Sometimes complex glyphs are hard to read at the default latin font size</source>
-        <translation>時々ラテン系言語以外の言葉は読みにくいので、ここでラテン系言語以外の文字を調整するのができる</translation>
+        <translation>Kelkfoje malsimplaj signoj estas apenaŭ legeblaj, kiam ili estas tro malgrandaj.</translation>
     </message>
     <message>
         <source>point(s)</source>
-        <translation>X点によって増やす</translation>
+        <translation>gradoj</translation>
     </message>
     <message>
         <source>Log uploading</source>
-        <translation>匿名ログ設定</translation>
+        <translation>Protokola alŝutado</translation>
     </message>
     <message>
         <source>Upload anonymous logs</source>
-        <translation>匿名データをアップロード</translation>
+        <translation>Alŝuti anonimajn protokolojn</translation>
     </message>
     <message>
         <source>Share anonymous statistics to contribute to memory research</source>
-        <translation>暗記研究のために匿名データをアップロードする</translation>
+        <translation>Disdoni anonimajn statistikojn por kontribui al la esplorado pri la memoro</translation>
     </message>
     <message>
         <source>Duplicate handling</source>
-        <translation>まったく同じカードの対応設定</translation>
+        <translation>Trakto pri duoblojn</translation>
     </message>
     <message>
         <source>Check for duplicates when adding new cards</source>
-        <translation>新しいカードを記入する時、まったく同じカードがあるかどうかチェックする</translation>
+        <translation>Serĉi duoblojn dum aldoni novajn kartojn</translation>
     </message>
     <message>
         <source>Allow duplicates in different categories</source>
-        <translation>違うカテゴリーにまったく同じカードを認める</translation>
+        <translation>Permesi duoblojn en malsamaj kategorioj</translation>
     </message>
     <message>
         <source>Repetition process</source>
-        <translation>カードの復讐設定</translation>
-    </message>
-    <message>
-        <source>Number of grade 0 cards to learn at once:</source>
-        <translation type="obsolete">グレード０カードの枚数の同時習得:</translation>
-    </message>
-    <message>
-        <source>Note: this is NOT the number of grade 0 cards you want to memorise *per day*</source>
-        <translation>注意：ただしい、これはグレード０カードの一日中の復讐できる枚数ではない。*</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
-    </message>
-    <message>
-        <source>Defaults</source>
-        <translation>デフォルト</translation>
-    </message>
-    <message>
-        <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
-    </message>
-    <message>
-        <source>Learn new cards in random order</source>
-        <translation>新しいカードを無作為順番で習う</translation>
+        <translation>Ripetada procedo</translation>
     </message>
     <message>
         <source>Number of grade 0 cards to hold in your hand:</source>
-        <translation>グレード０カードの同時習得枚数:</translation>
+        <translation>Nombro da 0-rangaj kartoj por teni en la mano:</translation>
+    </message>
+    <message>
+        <source>Note: this is NOT the number of grade 0 cards you want to memorise *per day*</source>
+        <translation>(Jen né estas la nombro da 0-rangaj kartoj, kiun vi volas ekmemori en unu tago.)</translation>
+    </message>
+    <message>
+        <source>Learn new cards in random order</source>
+        <translation>Lerni novajn kartojn en hazarda ordo.</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;Akcepti</translation>
+    </message>
+    <message>
+        <source>Defaults</source>
+        <translation>Defaŭltoj</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Rezigni</translation>
     </message>
 </context>
 <context>
     <name>EditItemFrm</name>
     <message>
         <source>Edit card</source>
-        <translation>カードを編集する</translation>
+        <translation>Redakti la karton</translation>
     </message>
     <message>
         <source>Category:</source>
-        <translation>カテゴリー:</translation>
+        <translation>Kategorio:</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
     <message>
         <source>Answer:</source>
-        <translation>答え:</translation>
+        <translation>Respondo:</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Alt+O</source>
@@ -563,15 +549,15 @@ TMPファイルを作成しています。</translation>
     </message>
     <message>
         <source>&amp;Preview</source>
-        <translation>&amp;プレービュー</translation>
+        <translation>&amp;Antaŭmontri</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation>Ctrl+P</translation>
+        <translation>Stir+P</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
+        <translation>&amp;Rezigni</translation>
     </message>
     <message>
         <source>Alt+C</source>
@@ -582,128 +568,129 @@ TMPファイルを作成しています。</translation>
     <name>EditItemsDlg</name>
     <message>
         <source>Please wait...</source>
-        <translation>少々お待ちください…</translation>
+        <translation>Bonvolu atendi . . .</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;編集</translation>
+        <translation>&amp;Redakti</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation>Stir+E</translation>
     </message>
     <message>
         <source>&amp;Preview</source>
-        <translation>&amp;プレービュー</translation>
+        <translation>&amp;Antaŭmontri</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation>Ctrl+P</translation>
+        <translation>Stir+P</translation>
     </message>
     <message>
         <source>&amp;Add vice versa</source>
-        <translation>&amp;逆カードも追加する</translation>
+        <translation>&amp;Aldoni malojn</translation>
     </message>
     <message>
         <source>S&amp;tatistics</source>
-        <translation>統&amp;計</translation>
+        <translation>Vidi s&amp;tatistikojn</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation>Stir+T</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;消す</translation>
+        <translation>&amp;Forviŝi</translation>
     </message>
     <message>
         <source>&amp;Change category</source>
-        <translation>&amp;カテゴリーを変える</translation>
+        <translation>&amp;Ŝanĝi kategorion</translation>
     </message>
     <message>
         <source>Add &amp;vice versa</source>
-        <translation>&amp;逆カードも追加する</translation>
+        <translation>&amp;Aldoni malojn</translation>
     </message>
     <message>
         <source>Add vice versa of these cards?</source>
-        <translation>これらのカードの逆カードも追加してもよろしいですか?</translation>
+        <translation>Ĉu vi volas aldoni la malojn de tiuj kartoj?</translation>
     </message>
     <message>
         <source>Add vice versa of this card?</source>
-        <translation>このカードの逆カードも追加してもよろしいですか?</translation>
+        <translation>Ĉu vi volas aldoni la malo de tiu karto?</translation>
     </message>
     <message>
         <source>Mnemosyne</source>
-        <translation>覚エテチョウ</translation>
+        <translation>Mnemozino</translation>
     </message>
     <message>
         <source>
 
 This could create duplicates if the vice </source>
         <translation>
-逆カードが既に存在している場合には、</translation>
+
+La proceso kreos duoblojn, se la maloj </translation>
     </message>
     <message>
         <source>versas are already present, 
 so you might want to run </source>
-        <translation>同じカードを作成することがあるので、
-</translation>
+        <translation>jam ekzistas; 
+vi devus forigi duoblojn</translation>
     </message>
     <message>
         <source>clean duplicates&apos; afterwards.</source>
-        <translation>直後に「まったく同じカードを削除する」 を実行するのを勧めします。</translation>
+        <translation>poste.</translation>
     </message>
     <message>
         <source>&amp;Yes</source>
-        <translation>&amp;はい</translation>
+        <translation>&amp;Jes</translation>
     </message>
     <message>
         <source>&amp;No</source>
-        <translation>&amp;いいえ</translation>
+        <translation>&amp;Ne</translation>
     </message>
     <message>
         <source>Grade:</source>
-        <translation>グレード:</translation>
+        <translation>Rango:</translation>
     </message>
     <message>
         <source>Easiness:</source>
-        <translation>難易度:</translation>
+        <translation>Facileco:</translation>
     </message>
     <message>
         <source>Repetitions:</source>
-        <translation>復習した回数:</translation>
+        <translation>Ripetoj:</translation>
     </message>
     <message>
         <source>Lapses:</source>
-        <translation>忘れた回数:</translation>
+        <translation>Eraroj:</translation>
     </message>
     <message>
         <source>Days since last repetition:</source>
-        <translation>復習した日から日数:</translation>
+        <translation>Tagoj post lasta ripeto:</translation>
     </message>
     <message>
         <source>Days until next repetition:</source>
-        <translation>もう一度復習する日まで日数:</translation>
+        <translation>Tagoj antaŭ sekva ripeto:</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Delete these cards?</source>
-        <translation>このカードを消してもよろしいですか?</translation>
+        <translation>Ĉu vi volas forviŝi tiujn kartojn?</translation>
     </message>
     <message>
         <source>Delete this card?</source>
-        <translation>このカードを消してもよろしいですか?</translation>
+        <translation>Ĉu vi volas forviŝi tiun karton?</translation>
     </message>
     <message>
         <source>The text you entered was not found.</source>
-        <translation>入力されたテキストは見つかりませんでした。</translation>
+        <translation>La tekston, kiun vi tajpis, ne ekzistas.</translation>
     </message>
     <message>
         <source>&amp;Find again</source>
-        <translation>&amp;再検索</translation>
+        <translation>&amp;Retrovi</translation>
     </message>
     <message>
         <source>F</source>
@@ -711,92 +698,92 @@ so you might want to run </source>
     </message>
     <message>
         <source>&amp;Find</source>
-        <translation>&amp;検索</translation>
+        <translation>&amp;Trovi</translation>
     </message>
 </context>
 <context>
     <name>EditItemsFrm</name>
     <message>
         <source>Question</source>
-        <translation>質問</translation>
+        <translation>Demando</translation>
     </message>
     <message>
         <source>Answer</source>
-        <translation>答え</translation>
+        <translation>Respondo</translation>
     </message>
     <message>
         <source>Category</source>
-        <translation>カテゴリー</translation>
+        <translation>Kategorio</translation>
     </message>
     <message>
         <source>Edit deck</source>
-        <translation>カードのデータベース</translation>
+        <translation>Redakti la kartaron</translation>
     </message>
     <message>
         <source>&amp;Find</source>
-        <translation>&amp;検索</translation>
-    </message>
-    <message>
-        <source>To edit a card, right-click on it.</source>
-        <translation>カードを編集するには、右クリックしてください。</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>&amp;閉じる</translation>
-    </message>
-    <message>
-        <source>Alt+X</source>
-        <translation>Alt+X</translation>
+        <translation>&amp;Trovi</translation>
     </message>
     <message>
         <source>Alt+F</source>
         <translation>Alt+F</translation>
+    </message>
+    <message>
+        <source>To edit a card, right-click on it.</source>
+        <translation>Por redakti la karton dekstre alklaku ĝin.</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>&amp;Fini</translation>
+    </message>
+    <message>
+        <source>Alt+X</source>
+        <translation>Alt+X</translation>
     </message>
 </context>
 <context>
     <name>ExportDlg</name>
     <message>
         <source>All Files (*);;</source>
-        <translation>全ファイル　(*);;</translation>
+        <translation>Ĉiujn dosierojn (*);;</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation>エクスポート</translation>
+        <translation>Elporti</translation>
     </message>
 </context>
 <context>
     <name>ExportFrm</name>
     <message>
         <source>Export to file</source>
-        <translation>ファイルにエクスポート</translation>
+        <translation>Elporti al dosiero</translation>
     </message>
     <message>
         <source>File format:</source>
-        <translation>ファイルの種類:</translation>
+        <translation>Dosierformo:</translation>
     </message>
     <message>
         <source>File to export to:</source>
-        <translation>エクスポート先のファイル:</translation>
+        <translation>Elportu ĉi tien:</translation>
     </message>
     <message>
         <source>&amp;Browse</source>
-        <translation>&amp;選ぶ</translation>
+        <translation>&amp;Foliumi</translation>
     </message>
     <message>
         <source>Categories to export:</source>
-        <translation>エクスポートするカテゴリー:</translation>
+        <translation>Elportu ĉi tiujn kategoriojn:</translation>
     </message>
     <message>
         <source>&amp;Select all</source>
-        <translation>&amp;すべてを選択</translation>
+        <translation>&amp;Elekti ĉiujn</translation>
     </message>
     <message>
         <source>Reset learning data on export</source>
-        <translation>復習データをリセットする</translation>
+        <translation>Forigi la lernajn datumojn en la elportita dosiero</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Alt+O</source>
@@ -804,57 +791,57 @@ so you might want to run </source>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
+        <translation>&amp;Rezigni</translation>
     </message>
 </context>
 <context>
     <name>ImportDlg</name>
     <message>
         <source>&lt;default&gt;</source>
-        <translation>&lt;デフォルト&gt;</translation>
+        <translation>Defaŭlto</translation>
     </message>
     <message>
         <source>All Files (*);;</source>
-        <translation>全ファイル　(*);;</translation>
+        <translation>Ĉiujn dosierojn (*);;</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation>インポート</translation>
+        <translation>Enporti</translation>
     </message>
 </context>
 <context>
     <name>ImportFrm</name>
     <message>
         <source>Import from file</source>
-        <translation>ファイルからインポート</translation>
+        <translation>Enporti el dosiero</translation>
     </message>
     <message>
         <source>File format:</source>
-        <translation>ファイルの種類:</translation>
+        <translation>Dosierformo:</translation>
     </message>
     <message>
         <source>File to import from:</source>
-        <translation>インポート元のファイル:</translation>
+        <translation>Enportu el ĉi tiu dosiero:</translation>
     </message>
     <message>
         <source>&amp;Browse</source>
-        <translation>&amp;選ぶ</translation>
+        <translation>&amp;Foliumi</translation>
     </message>
     <message>
         <source>Put cards without category into this category:</source>
-        <translation>カテゴリーが設定されていないカードをこのカテゴリーに入れる:</translation>
+        <translation>Metu senkategoriajn kartojn en ĉi tiun kategorion:</translation>
     </message>
     <message>
         <source>Note: all cards will be added to the current database.</source>
-        <translation>注： 全カードが現在使用中のデータベースに書き込まれます。</translation>
+        <translation>(Ĉiuj kartoj aldoniĝos en la nunan datumbazon.)</translation>
     </message>
     <message>
         <source>Reset learning data on import</source>
-        <translation>復習データをリセットする</translation>
+        <translation>Forigi la lernajn datumojn en la enportita dosiero</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Alt+O</source>
@@ -862,125 +849,121 @@ so you might want to run </source>
     </message>
     <message>
         <source>&amp;Cancel</source>
-        <translation>&amp;キャンセル</translation>
+        <translation>Rezigni</translation>
     </message>
 </context>
 <context>
     <name>MainDlg</name>
     <message>
         <source>Mnemosyne databases (*.mem)</source>
-        <translation>覚エテチョウデータベース(*.mem)</translation>
+        <translation>Mnemozinaj datumbazoj (*.mem)</translation>
     </message>
     <message>
         <source>New</source>
-        <translation>新しいデータベース</translation>
+        <translation>Novan</translation>
     </message>
     <message>
         <source>Please wait...</source>
-        <translation>少々お待ちください…</translation>
+        <translation>Bonvolu atendi . . .</translation>
     </message>
     <message>
         <source>Mnemosyne</source>
-        <translation>覚エテチョウ</translation>
+        <translation>Mnemozino</translation>
     </message>
     <message>
         <source>Delete current card?</source>
-        <translation>このカードを消してもよろしいですか?</translation>
+        <translation>Ĉu vi volas forviŝi tiun karton?</translation>
     </message>
     <message>
         <source>&amp;Yes</source>
-        <translation>&amp;はい</translation>
+        <translation>&amp;Jes</translation>
     </message>
     <message>
         <source>&amp;No</source>
-        <translation>&amp;いいえ</translation>
+        <translation>&amp;Ne</translation>
     </message>
     <message>
         <source>Returns in </source>
-        <translation>次は　</translation>
+        <translation>Ĉi tiu karto reaperos post </translation>
     </message>
     <message>
         <source> day(s).</source>
-        <translation>日の後。 </translation>
+        <translation> tagoj.</translation>
     </message>
     <message>
         <source>Next repetition: today.</source>
-        <translation>次：今日。</translation>
+        <translation>Sekva ripeto: hodiaŭ</translation>
     </message>
     <message>
         <source>Next repetition: tomorrow.</source>
-        <translation>次：明日。</translation>
+        <translation>Sekva ripeto: morgau</translation>
     </message>
     <message>
         <source>Next repetition in </source>
-        <translation>次は後</translation>
+        <translation>Sekva ripetado post </translation>
     </message>
     <message>
         <source> days.</source>
-        <translation>　日。</translation>
+        <translation> tagoj</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
     <message>
         <source>&lt;default&gt;</source>
-        <translation>&lt;デフォルト&gt;</translation>
-    </message>
-    <message>
-        <source>Show &amp;answer</source>
-        <translation type="obsolete">&amp;答えを表示する</translation>
-    </message>
-    <message>
-        <source>Learn ahead of schedule</source>
-        <translation>カードをスケジュールより早く復習する（おすすめではない）</translation>
-    </message>
-    <message>
-        <source>Pick days until next repetition:</source>
-        <translation>次の復習のため何日間を選びなさい:</translation>
-    </message>
-    <message>
-        <source>Grade your answer:</source>
-        <translation>グレード:</translation>
-    </message>
-    <message>
-        <source>Scheduled: </source>
-        <translation>今日のカード: </translation>
-    </message>
-    <message>
-        <source>Not memorised: </source>
-        <translation>まだ覚えっていないカード: </translation>
-    </message>
-    <message>
-        <source>All: </source>
-        <translation>合計:</translation>
+        <translation>Defaŭlto</translation>
     </message>
     <message>
         <source>Show answer</source>
-        <translation>答え表示</translation>
+        <translation>Vidi respondon</translation>
+    </message>
+    <message>
+        <source>Learn ahead of schedule</source>
+        <translation>Antaŭlerni</translation>
+    </message>
+    <message>
+        <source>Pick days until next repetition:</source>
+        <translation>Elekti tagojn antaŭ la sekva ripeto:</translation>
+    </message>
+    <message>
+        <source>Grade your answer:</source>
+        <translation>Rangigi vian respondon:</translation>
+    </message>
+    <message>
+        <source>Scheduled: </source>
+        <translation>Planataj: </translation>
+    </message>
+    <message>
+        <source>Not memorised: </source>
+        <translation>Nekonataj: </translation>
+    </message>
+    <message>
+        <source>All: </source>
+        <translation>Ĉiuj: </translation>
     </message>
 </context>
 <context>
     <name>MainFrm</name>
     <message>
         <source>Mnemosyne</source>
-        <translation>覚エテチョウ</translation>
+        <translation>Mnemozino</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
     <message>
         <source>Answer:</source>
-        <translation>答え:</translation>
+        <translation>Respondo:</translation>
     </message>
     <message>
         <source>Show answer</source>
-        <translation>答えを表示</translation>
+        <translation>Vidi respondon</translation>
     </message>
     <message>
         <source>Grade your answer:</source>
-        <translation>グレード:</translation>
+        <translation>Rangigi vian respondon:</translation>
     </message>
     <message>
         <source>&amp;0</source>
@@ -1032,7 +1015,7 @@ so you might want to run </source>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;新しいデータベース</translation>
+        <translation>&amp;Nova</translation>
     </message>
     <message>
         <source>.</source>
@@ -1040,213 +1023,213 @@ so you might want to run </source>
     </message>
     <message>
         <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
+        <translation>Stir+N</translation>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation>&amp;データベースを開く...</translation>
+        <translation>&amp;Malfermi . . .</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
+        <translation>Stir+O</translation>
     </message>
     <message>
         <source>&amp;Save</source>
-        <translation>&amp;保存</translation>
+        <translation>&amp;Konservi</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation>Stir+S</translation>
     </message>
     <message>
         <source>Save &amp;As...</source>
-        <translation>&amp;別名で保存する...</translation>
+        <translation>Konservi &amp;kiel . . .</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>&amp;閉じる</translation>
+        <translation>&amp;Fini</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>覚エテチョウについて</translation>
+        <translation>Pri</translation>
     </message>
     <message>
         <source>&amp;About</source>
-        <translation>&amp;覚エテチョウについて</translation>
+        <translation>&amp;Pri</translation>
     </message>
     <message>
         <source>Add cards</source>
-        <translation>カードを追加する</translation>
+        <translation>Aldoni kartojn</translation>
     </message>
     <message>
         <source>&amp;Add cards</source>
-        <translation>&amp;カードを追加する</translation>
+        <translation>&amp;Aldoni kartojn</translation>
     </message>
     <message>
         <source>Ctrl+A</source>
-        <translation>Ctrl+A</translation>
+        <translation>Stir+A</translation>
     </message>
     <message>
         <source>Activate cate&amp;gories</source>
-        <translation>&amp;カテゴリーを選択する</translation>
+        <translation>Aktivigi kate&amp;goriojn</translation>
     </message>
     <message>
         <source>Ctrl+G</source>
-        <translation>Ctrl+G</translation>
+        <translation>Stir+G</translation>
     </message>
     <message>
         <source>Edit deck</source>
-        <translation>カードリストを表示する</translation>
+        <translation>Redakti la kartaron</translation>
     </message>
     <message>
         <source>Edit &amp;deck</source>
-        <translation>&amp;カードリストを表示する</translation>
+        <translation>Redakti la &amp;kartaron</translation>
     </message>
     <message>
         <source>Ctrl+D</source>
-        <translation>Ctrl+D</translation>
+        <translation>Stir+D</translation>
     </message>
     <message>
         <source>&amp;Import</source>
-        <translation>&amp;インポート</translation>
+        <translation>&amp;Enporti</translation>
     </message>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;エクスポート</translation>
+        <translation>E&amp;lporti</translation>
     </message>
     <message>
         <source>Show &amp;toolbar</source>
-        <translation>&amp;ツールバーを表示する</translation>
+        <translation>Vidi &amp;ilobreton</translation>
     </message>
     <message>
         <source>Edit current card</source>
-        <translation>このカードを編集する</translation>
+        <translation>Redakti nunan karton</translation>
     </message>
     <message>
         <source>&amp;Edit current card</source>
-        <translation>&amp;このカードを編集する</translation>
+        <translation>&amp;Redakti nunan karton</translation>
     </message>
     <message>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation>Stir+E</translation>
     </message>
     <message>
         <source>Delete current card</source>
-        <translation>このカードを消す</translation>
+        <translation>Forviŝi nunan karton</translation>
     </message>
     <message>
         <source>&amp;Delete current card</source>
-        <translation>&amp;このカードを消す</translation>
+        <translation>&amp;Forviŝi nunan karton</translation>
     </message>
     <message>
         <source>Del</source>
-        <translation>Del</translation>
+        <translation>For</translation>
     </message>
     <message>
         <source>&amp;Clean duplicates</source>
-        <translation>&amp;まったく同じカードを削除する</translation>
+        <translation>Forigi &amp;duoblojn</translation>
     </message>
     <message>
         <source>&amp;Configure Mnemosyne</source>
-        <translation>&amp;覚エテチョウの設定</translation>
+        <translation>&amp;Agordi Mnemozinon</translation>
     </message>
     <message>
         <source>Getting started</source>
-        <translation>初めに</translation>
+        <translation>Kiel ekuzi</translation>
     </message>
     <message>
         <source>&amp;Getting started</source>
-        <translation>&amp;初めに</translation>
+        <translation>&amp;Kiel ekuzi</translation>
     </message>
     <message>
         <source>Down, Down</source>
-        <translation>Down, Down</translation>
+        <translation>Malsupren</translation>
     </message>
     <message>
         <source>Enter</source>
-        <translation>Enter</translation>
+        <translation>Enigklavo</translation>
     </message>
     <message>
         <source>Return</source>
-        <translation>Return</translation>
+        <translation>Enenklavo</translation>
     </message>
     <message>
         <source>Space</source>
-        <translation>Space</translation>
+        <translation>Spacetklavo</translation>
     </message>
     <message>
         <source>Ctrl+R</source>
-        <translation>Ctrl+R</translation>
+        <translation>Stir+R</translation>
     </message>
     <message>
         <source>Show statistics</source>
-        <translation>統計を表示する</translation>
+        <translation>Vidi statistikojn</translation>
     </message>
     <message>
         <source>Show s&amp;tatistics</source>
-        <translation>&amp;統計を表示する</translation>
+        <translation>Vidi s&amp;tatistikojn</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation>Stir+T</translation>
     </message>
     <message>
         <source>Tip of the day</source>
-        <translation>今日のヒント</translation>
+        <translation>Konsileto de la tago</translation>
     </message>
     <message>
         <source>&amp;Tip of the day</source>
-        <translation>&amp;今日のヒント</translation>
+        <translation>&amp;Konsileto de la tago</translation>
     </message>
     <message>
         <source>Main toolbar (Mnemosyne)</source>
-        <translation>メーンツールバー(覚エテチョウ)</translation>
+        <translation>Ĉefa ilobreto (Mnemozino)</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;ファイル</translation>
+        <translation>&amp;Dosiero</translation>
     </message>
     <message>
         <source>&amp;Deck</source>
-        <translation>&amp;カードのデータベース</translation>
+        <translation>&amp;Kartaro</translation>
     </message>
     <message>
         <source>&amp;Settings</source>
-        <translation>&amp;設定</translation>
+        <translation>&amp;Agordoj</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;ヘルプ</translation>
+        <translation>&amp;Helpo</translation>
     </message>
 </context>
 <context>
     <name>PreviewItemDlg</name>
     <message>
         <source>&lt;default&gt;</source>
-        <translation>&lt;デフォルト&gt;</translation>
+        <translation>Defaŭlto</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
 </context>
 <context>
     <name>PreviewItemFrm</name>
     <message>
         <source>Preview card</source>
-        <translation>カードをプレービューする</translation>
+        <translation>Antaŭmontri karton</translation>
     </message>
     <message>
         <source>Question:</source>
-        <translation>質問:</translation>
+        <translation>Demando:</translation>
     </message>
     <message>
         <source>Answer:</source>
-        <translation>答え:</translation>
+        <translation>Respondo:</translation>
     </message>
     <message>
         <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>&amp;Akcepti</translation>
     </message>
     <message>
         <source>Alt+O</source>
@@ -1257,7 +1240,7 @@ so you might want to run </source>
     <name>ProductTourFrm</name>
     <message>
         <source>Getting started</source>
-        <translation>初めに</translation>
+        <translation>&amp;Kiel ekuzi</translation>
     </message>
     <message>
         <source>Greetings!
@@ -1269,17 +1252,19 @@ I can make it more efficient for you to memorise and remember answers to questio
 For that, I&apos;ll decide when to ask you the questions, and you&apos;ll need to rate how well you remember the answers.
 
 Let&apos;s look at the meaning of these ratings now.</source>
-        <translation>あたしの名前はムネモシュネ、記憶の女神よ。
+        <translation>Saluton!
 
-あなたの暗記を一生懸命お手伝いします！よろしくね。
+Mi estas Mnemozinospeco de papilio, kiu havas la saman nomon, kiel la greka diino de memoro.
 
-あなたがいろんな事を簡単に覚えて、すぐに思い出せるようにしてあげる。
+Mi povas helpi vin koni kaj memori la respondojn al demandoj ŝpare: kun mi vi pripensos la kartoj, pri kiuj vi forgesemas. Vi ne malŝpari vian tempon pri tio, kion vi scias bone.
 
-よく知っているカードには時間をかけず、苦手なカードに集中できるように、あたしが質問を選びます。あなたは、どれだけ答えを覚えていたか、グレードを答えてね。 </translation>
+Do mi decidos, kiam mi devus montri al vi la demandojn; kaj vi devos rangigi vian respondojn al la demandoj.
+
+Nuntempe rigardu ni la signifojn de tiuj rangoj.</translation>
     </message>
     <message>
         <source>Introduction</source>
-        <translation>グレードの紹介</translation>
+        <translation>Enkonduko</translation>
     </message>
     <message>
         <source>Grades range from 0 to 5.
@@ -1289,18 +1274,17 @@ Grades 0 and 1 are used if you don&apos;t know the answer yet, or if you have fo
 I will keep on asking you these questions until you give them a grade 2 or higher (the exact grade doesn&apos;t matter). Grade 2 basically means that you think you&apos;ll be able to remember the card for at least one or two days. It signals the transition between short and long term memory.
 
 I will schedule this card at some future date, when I think you&apos;ll still be able to remember it with some effort, without having forgotten it completely. This is the most efficient for the learning process.</source>
-        <translation>グレードは0～5まであります。グレードが上がるにつれ出題頻度が下がります。
+        <translation>Rangoj estas el 0 ĝis 5.
 
-0…完全に忘れていた
-1…ほとんど忘れていた
-2…数日なら覚えていられそう
-3…なんとか覚えた
-4…ほぼ完璧
-5…簡単すぎた</translation>
+Oni uzas rangojn 0 kaj 1, se oni ne jam scias la respondon, aŭ se oni forgesis ĝin. Karton kun grado 1 oni pli ekkonadas ol karton kun grado 0, kaj mi ripetos ĝin pli malofte.
+
+Mi demandados ĉi tiujn demandojn, ĝis ke vi asignos al ilin rangon 2 aŭ pli altan rangon (la ĝusta rango ne gravas). Rango 2 signifas, ke vi pensas, ke vi povos memori la karton dum almenaŭ unu aŭ du tagoj. La dua rango estas la transiro inter longtempa memoro kaj mallongtempa memoro.
+
+Mi planos ĉi tiun karton por la tempo, kiam mi pensos, ke vi povas memori la respondon per iu peno, sed ne post vi tute forgesos ĝin. Ĉi tiu estas la plej ŝpara metodo de lerno.</translation>
     </message>
     <message>
         <source>Grades 0-2</source>
-        <translation>グレードについて</translation>
+        <translation>Rangoj 0-2</translation>
     </message>
     <message>
         <source>If in the future I ask you the question too soon, and you&apos;re able to remember it without any effort, you rate the card a 5. I&apos;ll take this into account by waiting a lot longer before asking you this question again.
@@ -1310,20 +1294,17 @@ If I get it just right, so that you remember it, albeit with some effort, you us
 If on the other hand it takes you significant effort to remember the answer, and you think I&apos;ve waited too long to ask you this question, then rate the card 3.
 
 If you fail to remember it altogether, rate it either 0 or 1, and I&apos;ll keep on asking you this question until you think you&apos;ll be able to remember it again for a few days.</source>
-        <translation>グレード0、1は、あなたがグレード2を付けるまで何回も復習します。紙の単語カードと同じです。
-グレード2以上は「覚えているから今日はおしまい」ということになり、翌日以降の適切な時に、あたしが出題します。
+        <translation>Se mi tro baldaŭ demandi, kaj vi povas memori la respondon tute senpene, rangigu la karton 5. Tiam mi atendos pli longtempe, antaŭ mi remontri al vi ĉi tiun demandon.
 
-グレード3は2よりも間隔を開けて出題します。
+Se mi montros la karton ĉe la ĝusta tempo, por ke vi memoras la respondon kun iom da peno, uzu la rangon 4.
 
-グレード４は努力の結果覚えられたということ。あたしのお手伝いが良かったとも言えるわね。
+Se anstataŭe vi memoros la respondon tro pene, kaj vi pensos, ke mi atendis tro longtempe, antaŭ mi demandis la karton, uzu la rangon 3.
 
-グレード5はあなたには簡単すぎるから、ごくたまに出題するわ。
-
-科学者の研究によると、これが一番効率的なやり方なんですって!</translation>
+Se vi tute ne memoros la respondon, rangigu ĝin aŭ 0 aŭ 1; mi demandados la karton, ĝis ke vi pensos, ke vi povas memori ĝin dum kelkaj tagoj.</translation>
     </message>
     <message>
         <source>Grades 3-5</source>
-        <translation>グレードのリスト</translation>
+        <translation>Rangoj 3-5</translation>
     </message>
     <message>
         <source>If you&apos;re into statistics, I can keep detailed logs of your revisions.
@@ -1331,25 +1312,23 @@ If you fail to remember it altogether, rate it either 0 or 1, and I&apos;ll keep
 Not only that, but if you want, I can upload transparently a completely anonymous version of these logs to a central site for analysis, so that you can help making me better. In this way, you also contribute to scientific research on long-term memory.
 
 Uncheck the following box if you do not want to do this.</source>
-        <translation>あなたの復習についての統計は詳細に記録しています。
+        <translation>Se vi estas statistikema, mi povas konservi detalajn protokolojn de viaj pliboniĝado.
 
-お望みなら、その記録を、匿名で、ホスト側にアップロードして、分析していかがでしょうか。
+Ne tion solan mi povas fari: se vi volas, mi alŝutados senpercepte tute anoniman version de tiuj protokoloj al centra retejo por analizo; tiel mi plibonigos min. Vi ankaŭ tiel kontribuos al scienca esploro pri longtempa memoro.
 
-そうしますと、あなたの復習データが、長期記憶に関する科学的研究に資することにもなります。
-
-もしあなたの復習データを匿名でアップロードすることをお望みでないなら、下記のボックスのチェックマークをオフにしてください。</translation>
+Malŝaltu jenan markobutonon, se vi ne volas, ke mi faros tion.</translation>
     </message>
     <message>
         <source>Upload anonymous logs</source>
-        <translation>匿名データをアップロードする</translation>
+        <translation>Alŝuti anonimajn protokolojn</translation>
     </message>
     <message>
         <source>(You can always change this setting later using the &apos;Configure Mnemosyne&apos; menu option.)</source>
-        <translation>(いつでも「覚エテチョウの設定」で変えることができます.)</translation>
+        <translation>(Vi ĉiam povas ŝanĝi ĉi tiun agordon per la “Agordi Mnemozinon” menuopcio.)</translation>
     </message>
     <message>
         <source>Statistics</source>
-        <translation>統計</translation>
+        <translation>Statistikoj</translation>
     </message>
     <message>
         <source>Now you&apos;re ready to start!
@@ -1363,285 +1342,272 @@ For best results, I suggest you do your revisions every day, although I&apos;ll 
 For more documentation, see http://www.mnemosyne-proj.sourceforge.net.
 &lt;p&gt;
 Happy learning!</source>
-        <translation>では、始めましょう！
+        <translation>Nun vi povas ekuzi min!
 &lt;p&gt;
-新しいカードを追加するには、左上にある「+」ボタンをクリックしてください。
+Aldonu novajn kartojn per la “plus” bildsimbolo ĉe la supromaldekstro de la fenestro.
 &lt;p&gt;
-保存する心配はありません。あたしが自動的にします。
+Memoru: vi ne povas konservi vian laboron. Mi mem faros tion.
 &lt;p&gt;
-良い結果のために、毎日復習することをお勧めいたします。
+Se vi volas havi la plej bonajn rezultojn, uzu min ĉiutage. Mi penos tamen fari bone, eĉ se vi prokrastos aŭ antaŭlernos.
 &lt;p&gt;
-ウェブサイトもご覧ください！
-英語：http://www.mnemosyne-proj.org
-日本語：http://www.ushigaeru.com/oboetechou
+Se vi volas vidi pli da dokumentado, iru al http://www.mnemosyne-proj.sourceforge.net.
 &lt;p&gt;
-勉強楽しんでくださいね!</translation>
+Feliĉan lernadon!</translation>
     </message>
     <message>
         <source>Ready to start</source>
-        <translation>準備OK</translation>
+        <translation>Ek!</translation>
     </message>
 </context>
 <context>
     <name>QTextEdit2</name>
     <message>
         <source>Insert &amp;image</source>
-        <translation>&amp;イメージを挿入する</translation>
+        <translation>Enmeti &amp;bildon</translation>
     </message>
     <message>
         <source>Ctrl+I</source>
-        <translation>Ctrl+I</translation>
+        <translation>Stir+I</translation>
     </message>
     <message>
         <source>Insert &amp;sound</source>
-        <translation>&amp;音声ファイルを挿入する</translation>
+        <translation>Enmeti &amp;sonon</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation>Stir+S</translation>
     </message>
     <message>
         <source>&amp;3-sided input</source>
-        <translation>&amp;3面インプット</translation>
+        <translation>Aldoni &amp;tri-flankajn kartojn</translation>
     </message>
     <message>
         <source>Image files</source>
-        <translation>写真ファイル</translation>
+        <translation>Bildaj dosieroj</translation>
     </message>
     <message>
         <source>Insert image</source>
-        <translation>イメージを挿入する</translation>
+        <translation>Enmeti bildon</translation>
     </message>
     <message>
         <source>Sound files</source>
-        <translation>音声ファイル</translation>
+        <translation>Sonaj dosieroj</translation>
     </message>
     <message>
         <source>Insert sound</source>
-        <translation>音声ファイルを挿入する</translation>
+        <translation>Enmeti sonon</translation>
     </message>
 </context>
 <context>
     <name>StatisticsDlg</name>
     <message>
-        <source>Scheduled cards for the next days:
-
-</source>
-        <translation type="obsolete">今度復習する予定のカード:
-</translation>
+        <source>Scheduled cards for next week: </source>
+        <translation type="obsolete">Planataj kartoj por la sekva semajno: </translation>
     </message>
     <message>
         <source>In</source>
-        <translation>今日から</translation>
+        <translation>Post</translation>
     </message>
     <message>
         <source>day(s) :</source>
-        <translation>日後:</translation>
+        <translation>tagoj:</translation>
     </message>
     <message>
-        <source>Number of cards with the following grades:
-
-</source>
-        <translation>グレード順でカードの枚数: 
-
-</translation>
+        <source>Number of cards with the following grades: </source>
+        <translation type="obsolete">Nombro da kartoj kun tiujn rangojn: </translation>
     </message>
     <message>
         <source>Grade</source>
-        <translation>グレード</translation>
+        <translation>Rango</translation>
     </message>
     <message>
         <source>No current card.</source>
-        <translation>カードが選択されていない。</translation>
+        <translation>Neniu nuna karto.</translation>
     </message>
     <message>
         <source>Grade:</source>
-        <translation>グレード:</translation>
+        <translation>Rango:</translation>
     </message>
     <message>
         <source>Easiness:</source>
-        <translation>難易度:</translation>
+        <translation>Facileco:</translation>
     </message>
     <message>
         <source>Repetitions:</source>
-        <translation>復習した回数:</translation>
+        <translation>Ripetoj:</translation>
     </message>
     <message>
         <source>Lapses:</source>
-        <translation>忘れた回数:</translation>
+        <translation>Eraroj:</translation>
     </message>
     <message>
         <source>Days since last repetition:</source>
-        <translation>最後に復習した日からの日数:</translation>
+        <translation>Tagoj post la lasta ripeto:</translation>
     </message>
     <message>
         <source>Days until next repetition:</source>
-        <translation>もう一度復習する日までの日数:
-</translation>
+        <translation>Tagoj antaŭ la sekva ripeto:</translation>
     </message>
     <message>
         <source>Scheduled cards for next week:
 
 </source>
-        <translation>今度復習する予定のカード:
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of cards with the following grades:
 
-</translation>
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>StatisticsFrm</name>
     <message>
         <source>Category</source>
-        <translation>カテゴリー</translation>
+        <translation>Kategorio</translation>
     </message>
     <message>
         <source>Cards</source>
-        <translation>カード</translation>
+        <translation>Kartoj</translation>
     </message>
     <message>
         <source>Statistics</source>
-        <translation>統計</translation>
+        <translation>Statistikoj</translation>
     </message>
     <message>
         <source>Schedule</source>
-        <translation>スケジュール</translation>
+        <translation>Plano</translation>
     </message>
     <message>
         <source>Grades</source>
-        <translation>グレード</translation>
+        <translation>Rangoj</translation>
     </message>
     <message>
         <source>Categories</source>
-        <translation>カテゴリー</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation>&amp;OK</translation>
+        <translation>Kategorioj</translation>
     </message>
     <message>
         <source>Current card</source>
-        <translation>選択されたカード</translation>
+        <translation>Nuna karto</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;Akcept</translation>
     </message>
 </context>
 <context>
     <name>TipDlg</name>
     <message>
         <source>For optimal results, it&apos;s best to do your repetitions every day.</source>
-        <translation>毎日カードの復習をしたほうがお勧めです.</translation>
+        <translation>Se vi volas havi la plej bonajn rezultojn, ripetadu ĉiutage.</translation>
     </message>
     <message>
         <source>If you&apos;ve been away for a few days, don&apos;t worry about your backlog. Do as many cards as you feel like to catch up, the rest will be automatically rescheduled to the future.</source>
-        <translation>もし、二三日復習しなかったら、無理しないでください。できるだけカードを復習して、その後自動的に覚エテチョウが残っているカードを延期するので、ご安心してください。</translation>
+        <translation>Se vi forestis dum kelkaj tagoj, ne zorgas. Laboru tiom, kiom vi volas; la kartoj, kiun vi ne volas respondi, replaniĝos aŭtomate.</translation>
     </message>
     <message>
         <source>The &apos;number of grade 0 cards to learn at once&apos; setting determines how many new cards you are trying to learn at the same time. It does &lt;b&gt;not&lt;/b&gt; tell you how many new cards you need to learn per day. You are the judge of that: you can learn more cards or less cards, depending on how you feel.</source>
-        <translation>毎日何枚カードを記憶するのは自分自身で決めることです。</translation>
+        <translation>La “Nombro da 0-rangaj kartoj por teni en la mano” agordo decidas kiom da novaj kartoj vi penos lerni samtempe. Ĝi &lt;b&gt;ne&lt;/b&gt; decidas kiom da kartoj vi devus lerni en unu tago. Ví devas juĝi tion: vi povas lerni pli kartojn aŭ malpli kartojn, dependante je via stato.</translation>
     </message>
     <message>
         <source>In summary, try to do your repetitions every day, but don&apos;t worry too much about getting the &apos;scheduled&apos; counter to zero, and certainly not about getting the &apos;Not memorised&apos; counter to zero.</source>
-        <translation>毎日復習ができるように頑張ってください。しかし、それができなかったら、心配しないでください。</translation>
+        <translation>Mallonge, penu ripetadi ĉiutage; sed ne tro zorgu pri malpligrandigadi la “Planataj” nombrilon ĝis nul, kaj certe ne pri malpligrandigadi la “Nekonataj” nombrilon ĝis nul.</translation>
     </message>
     <message>
         <source>Grade 1 cards are different from grade 0 cards in the sense that they show up less often and are not subject to the &apos;number of grade 0 cards to learn at once&apos; setting.</source>
-        <translation>グレード１のカードはグレード０のカードとは異なります。現れる頻度がグレード０のものより少ないのです。
-また、グレード１のカードには、「グレード０のカードの同時習得枚数」設定用外です。</translation>
+        <translation>Kartoj 1-rangaj estas malsamaj, kiel 0-rangaj: ili aperas pli malofte, kaj ili ne influas la “Nombro da 0-rangaj kartoj por teni en la mano” agordon.</translation>
     </message>
     <message>
         <source>You can use keyboard shortcuts to do your repetitions. Enter, Return or Space stand for the default action (&apos;Show answer&apos; or &apos;grade 4&apos;). The number keys can be used for grading.</source>
-        <translation>キーボードのショートカットを使って復習ができます。
-Enter、Return, Spaceはデフォルト動作（答えを示す または グレード４）を示しています。
-数字キーは成績をつけることに使用できます。</translation>
+        <translation>Vi ankaŭ povas uzi la klavaron. La eniga klavo kaj la spaceta klavo efektivigi la defaŭltan faron (“Vidi respondon” aŭ la rango 4). Numerkavojn oni ankaŭ povas uzi.</translation>
     </message>
     <message>
         <source>You can select the categories you wish to study in the &apos;Activate categories&apos; menu option.</source>
-        <translation>「カードのデータベース」の「カテゴリーを選択する」で、復習したいカテゴリーを選ぶことができます。</translation>
+        <translation>Vi povas elekti la kategoriojn, kiujn vi volas studi, per la “Aktivigi kategoriojn” menuagordo.</translation>
     </message>
     <message>
         <source>It is recommended to put all your cards in a single database and use categories to organise them. Using &apos;Activate categories&apos; is much more convenient than have to load and unload several databases.</source>
-        <translation>全カードをひとつのデータベースに入れ、カテゴリーで分けることをお勧めいたします。</translation>
+        <translation>Estas rekomendate, ke vi metas ĉiujn viajn kartojn en unu datumbazo kaj uzas kategoriojn por organizi ilin. Uzi “Aktivigi kategoriojn” estas ege pli oportune ol ŝalti kaj malŝalti multajn diversajn datumbazojn.</translation>
     </message>
     <message>
         <source>You can import cards in a wide variety of formats: tab delimited txt files, Supermemo files, ... .</source>
-        <translation>いろんなファイルの種類からカードをインポートすることができます。
-タブ区切りのテキストファイル（.txt)や、スーパーメモファイルなど、その他いろいろインポートすることができます。</translation>
+        <translation>Vi povas enporti kartojn el multaj dosierformoj: XML dosieroj, tab-limigitaj TXT dosieroj ktp.</translation>
     </message>
     <message>
         <source>If you have cards in Word or Excel, export them to tab delimited txt files with UTF-8 unicode encoding to be able to import them into Mnemosyne.</source>
-        <translation>お持ちのワード又はエクセルのファイルの種類のカードを覚エテチョウにインポートしたい場合は、いったん、ユニコード(UTF-8)文字エンコーディングでカンマ区切りのテキストファイルにエクスポートするのがお勧めです。</translation>
+        <translation>Se vi havas kartojn en Word aŭ Excel, elportu ilin al tab-limigitaj TXT dosieroj kun la UTF-8 kodoprezento; tiam vi povos porti ilin en Mnemozinon.</translation>
     </message>
     <message>
         <source>If you want to print out your cards, export them to a txt file which you can then print from your favourite Word processor.</source>
-        <translation>カードを印刷する場合には、txt ファイルにエキスポートしてください。txtファイルは、好きなワープロで印刷することができます。</translation>
+        <translation>Se vi volas presi viajn kartojn, elportu ilin al TXT dosiero; tion vi povos presi per via plej ŝatata verkilo.</translation>
     </message>
     <message>
         <source>You can share your cards with someone else by exporting them to XML and choosing the &apos;Reset learning data&apos; option on export.</source>
-        <translation>自分のカードを他の人に共有するためには、XMLにエクスポートし、オプションで「復習データをリセットする」を選んでください。</translation>
+        <translation>Vi povas havigi iun alian viajn kartojn per elporti ilin al XML post elekti la “Forigi la lernajn datumojn en la elportita dosiero” agordon.</translation>
     </message>
     <message>
         <source>If you study a foreign language with a different script, the default font size is sometimes a bit small. If you want to increase the size of these characters but keep the size of English text, use the &apos;increase size of non-latin characters by X points&apos; option.</source>
-        <translation>「ラテン系言語ではない文字」の設定で英語と日本語の文字を違う大きさで表示することができます。</translation>
+        <translation>Se vi studas alilandan ligvon, kiu uzas skribmetodon, kiun vi ne bone scias, la defaŭlta tipara grando estas kelkfoje tro malgranda. Se vi volas pligrandigi tiujn signojn sed ne anglan tekston, uzu la “Pligrandigi mallatinajn signojn po . . . gradoj” agordon.</translation>
     </message>
     <message>
         <source>You can add images and sounds to your cards. Right-click on the question or answer field when editing a card to bring up a pop-up menu to do so.</source>
-        <translation>カードにイメージや音声ファイルを入れることができます。 カード編集画面の質問・答え上で右クリックするとメニューが出ますのでご利用下さい。</translation>
+        <translation>Vi ja povas aldoni bildojn kaj sonojn en viajn kartojn! Dekstre alklaku la demandan aŭ respondan tajpujon, kiam vi redaktas karton; poste elektas la ĝustan butonon el la menuo, kiu aperas.</translation>
     </message>
     <message>
         <source>It is recommended to keep your sound and image files inside your .mnemosyne directory. That way, it&apos;s easier to transfer your data between different computers.</source>
-        <translation>音声、映像ファイルを覚エテチョウの媒体ディレクトリに保存されることをお勧めいたします。そうすれば、データを他のコンピュータで移送することが容易になります。</translation>
+        <translation>Estas rekomendate, ke vi konservas viajn sonajn kaj bildajn dosierojn en vian “.mnemosyne” dosierujon. Tiel estas pli facile transigi viajn datumojn inter diversajn komputilojn.</translation>
     </message>
     <message>
         <source>When adding a three-sided card, two regular cards will be created. One with as question the written form and as answer the pronunciation and the translation, and one with as question the translation and as answer the written form and the pronunciation.</source>
-        <translation>3面カード（単語または熟語のつづり、発音、意味をワンセットにしたカード）を追加すると、2つの通常カードが生成されます。
-ひとつは問題として（単語または熟語の）つづりを、解答として発音と意味を収録したもの、もうひとつは問題として意味を、解答としてつづりと発音を収録したものです。</translation>
+        <translation>Kiam vi aldonas tri-flankajn kartojn, du normalajn kartojn estas kreitaj. Unu havas la skribatan formon, kiel la demandon, kaj la elparolon kaj tradukon, kiel la respondon; la alia havas la tradukon, kiel la demandon, kaj la skribatan formon kaj elparolon, kiel la respondon.</translation>
     </message>
     <message>
         <source>You can use basic HTML tags in your cards to control their appearance.</source>
-        <translation>簡単なHTMLタグを使って好みのカード表示に変えることができます。</translation>
+        <translation>Vi ja povas uzi bazajn etikedojn de HTML en viaj kartoj por kontroli ilian aspekton.</translation>
     </message>
     <message>
         <source>Mnemosyne can use LaTeX to render mathematical formulas, e.g. &lt;$&gt;x^2+y^2=z^2&lt;/$&gt;. (For this, you need LaTeX and dvipng installed.)</source>
-        <translation>覚エテチョウならば、LaTeXを使って，&lt;$&gt;x^2+y^2=z^2&lt;/$&gt;のような数学公式をレンダリングできます。(これには，LaTeXとdvipngをインストールしておく必要があります)</translation>
+        <translation>Mnemozino povas uzi LaTeX por vidigi matematikajn formulojn, ekz. &lt;$&gt;x^2+y^2=z^2&lt;/$&gt;. (Por tion LaTeX kaj dvipng devas esti instalitaj.)</translation>
     </message>
     <message>
         <source>The best way to backup your data is to copy your .mnemosyne directory (if you follow the recommended procedure to keep all your files there) and move it to a different drive. Mnemosyne keeps automatic XML-based backups in .mnemosyne/backups, but that won&apos;t help you if that drive dies... </source>
-        <translation>データのバックアップを取るお勧めの方法は、.mnemosyneディレクトリをコピーして、それを異なるドライブの方へ動かすことです。...</translation>
+        <translation>La plej bona metodo por enarkivigi viajn datumojn estas kopii vian “.mnemosyne” dosierujon (se vi metas ĉiujn viajn dosierojn tie, kiel estas rekomendate) kaj movi ĝin en alian diskingon. Mnemozino ja aŭtomate konservas enarkivigojn uzante XML en “.mnemosyne/backups”—sed tio ne helpus ĝin, se via durdisko rompiĝus!</translation>
     </message>
     <message>
         <source>You can run Mnemosyne from a USB key. Copy C:\Program Files\Mnemosyne to your USB key, and then copy the .mnemosyne directory from your home directory to inside the Mnemosyne directory on the USB key.</source>
-        <translation>USBキーから覚エテチョウを実行することができます。
-USBキーに「C:\Program Files\Mnemosyne」をコピーしてください。
-次に、ホームディレクトリから.mnemosyneディレクトリーをUSBキーの中のmnemosyneディレクトリーにコピーしてください。</translation>
+        <translation>Vi povas uzi Mnemozinon sole per poŝmemorilo. Kopiu “C:\Program Files\Mnemosyne” al via poŝmemorilo, kaj poste kopiu la “.mnemosyne” dosierujon el via hejmdosierujo en la “Mnemosyne” dosierujon de la poŝmemorilo.</translation>
     </message>
     <message>
         <source>If you use Mnemosyne on multiple computers, there is a handy tool called Unison to help you synchronise your data. See the Mnemosyne website for more information.</source>
-        <translation>複数のコンピューターから覚エテチョウを利用される方には、Unisonという、個人データをシンクロさせる便利なツールがあります。 詳しくは覚エテチョウのウェブサイトをご覧ください。</translation>
+        <translation>Se vi volas uzi Mnemozinon ĉe diversajn komputilojn, ekzistas oportuna ilo nomata Unison por helpi vin sinkronigi viajn datumojn. Iru al la Mnemozina retpaĝaro por plua informaĵo.</translation>
     </message>
     <message>
         <source>You can sort the cards in the &apos;Edit Deck&apos; dialog by answer or by category by clicking on the corresponding column title. Clicking again changes the sort order.</source>
-        <translation> 「カードリストを表示する」で、欄の名前をクリックしてカテゴリーを出すことで、カードを並び替えることができます。２回クリックすると、並び替える順番を逆にすることができます。</translation>
+        <translation>Vi povas ordigi la kartojn en la “Redakti la karton” dialogujo laŭ respondo aŭ laŭ kategorio per alklaki la ĝustan kolumnan titolon. Reklakado ŝanĝas la ordon (kreske aŭ malkreske).</translation>
     </message>
     <message>
         <source>If you want more fine-grained control over LaTeX&apos;s behaviour, see the explanation of the &lt;$$&gt;...&lt;/$$&gt; and &lt;latex&gt;...&lt;/latex&gt; tags on Mnemosyne&apos;s website.</source>
-        <translation>LaTeXを上手に使うため、覚エテチョウのウェブサイトにある&lt;$$&gt;...&lt;/$$&gt;タグと&lt;latex&gt;...&lt;/latex&gt;タグの説明をご覧ください。</translation>
+        <translation>Se vi volas pli precizan kontrolon pri la konduto de LaTeX, vidu la klarigon de la &lt;$$&gt;...&lt;/$$&gt; and &lt;latex&gt;...&lt;/latex&gt; etikedoj ĉe la Mnemozina retpaĝaro.</translation>
     </message>
     <message>
         <source>Advanced users can customise more of Mnemosyne by editing the config.py file in their .mnemosyne directory. They can also install plugins to customise Mnemosyne even further.</source>
-        <translation>config.pyファイルで覚エテチョウ設定よりカスタマイズすることができます。そして、pluginで他の機能を追加することができます。</translation>
+        <translation>Progresemaj uzantoj povas plu akomodi Mnemozinon per redakti la “config.py” dosieron en la “.mnemosyne” dosierujo. Oni ankaŭ povas instali kromprogramojn por tajlori Mnemozinon eĉ plu.</translation>
     </message>
 </context>
 <context>
     <name>TipFrm</name>
     <message>
         <source>Tip of the day</source>
-        <translation>今日のヒント</translation>
+        <translation>Konsileto de la tago</translation>
     </message>
     <message>
         <source>&lt;b&gt;Did you know...?&lt;/b&gt;</source>
-        <translation>&lt;b&gt;ご存知ですか...?&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Ĉu vi sciis...?&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&amp;Show tips on startup</source>
-        <translation>&amp;始めに「今日のヒント」を表示する</translation>
+        <translation>&amp;Vidi konsiletojn dum lanĉo</translation>
     </message>
     <message>
         <source>Alt+S</source>
@@ -1649,7 +1615,7 @@ USBキーに「C:\Program Files\Mnemosyne」をコピーしてください。
     </message>
     <message>
         <source>&amp;Previous</source>
-        <translation>&amp;前のヒント</translation>
+        <translation>&amp;Laste</translation>
     </message>
     <message>
         <source>Alt+P</source>
@@ -1657,7 +1623,7 @@ USBキーに「C:\Program Files\Mnemosyne」をコピーしてください。
     </message>
     <message>
         <source>&amp;Next</source>
-        <translation>&amp;次のヒント</translation>
+        <translation>&amp;Sekve</translation>
     </message>
     <message>
         <source>Alt+N</source>
@@ -1665,7 +1631,7 @@ USBキーに「C:\Program Files\Mnemosyne」をコピーしてください。
     </message>
     <message>
         <source>&amp;Close</source>
-        <translation>&amp;閉じる</translation>
+        <translation>&amp;Fermu</translation>
     </message>
     <message>
         <source>Alt+C</source>

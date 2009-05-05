@@ -77,9 +77,6 @@ def backend_factory(name=None):
 
     if not name or name == 'sqlite':
         from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
-        # register scheduller. Temporary
-        from mnemosyne.libmnemosyne.schedulers.SM2Gen import SM2Gen
-        component_manager.register("scheduler", SM2Gen())
         return Sqlite()
 
     raise ValueError("No idea how to create %s backend" % name)

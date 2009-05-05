@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 PKG="pomni"
-FNAME="default.mem"
+FNAME="default.db"
 USER="user"
 GROUP="users"
 
@@ -14,4 +14,7 @@ if [ "$1" = "configure" -a -r $SRC -a -d $DOC_DIR ]; then
     [ -d $DESTDIR ] || mkdir $DESTDIR
     [ -f $DEST ] || (cp $SRC $DEST && chown -R $USER:$GROUP $DESTDIR)
 fi
+
+[ -z "$2" ] && gtk-update-icon-cache -f /usr/share/icons/hicolor
+exit 0
 

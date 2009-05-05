@@ -31,9 +31,6 @@ import csv
 
 from optparse import OptionParser
 
-sys.path.insert(0, "../../")
-sys.path.insert(0, "../")
-
 from mnemosyne import libmnemosyne
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.component_manager import database, config
@@ -85,7 +82,7 @@ class MnemosyneOut(object):
         data = {"q": row[0], "a": row[1]}
 
         self.controller.create_new_cards(data, self.card_type, 0, 
-                                            [self.category])
+                                            self.category)
 
     def savedb(self):
         """Save the database if not saved yet."""
@@ -149,7 +146,5 @@ def main(argv):
     return 0
 
 if __name__ == "__main__":
-    sys.path.insert(0, "../../../")
-    sys.path.insert(0, "../../")
     sys.exit(main(sys.argv))
 
