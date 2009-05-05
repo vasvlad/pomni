@@ -199,8 +199,8 @@ class HildonUiControllerInput(HildonBaseUi):
             True, True, 0)
 
 
-    def to_main_menu_cb(self, widget, event):
-        """ Return to main menu """
+    def to_main_menu_cb(self, widget):
+        #""" Return to main menu """
 
         #Destroy fields_container
         if self.fields_container:

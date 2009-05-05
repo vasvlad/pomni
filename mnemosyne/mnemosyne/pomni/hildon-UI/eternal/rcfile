@@ -633,17 +633,90 @@ widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 #----------------------------- Config mode ------------------
 
 
-
+#----------------------------- General ------------------
 # Style for Main window
-style "main-window"
-{
-    engine "pixmap"
-    {
-        image
-        {
+style "main-window" {
+    engine "pixmap"{
+        image {
             function = FLAT_BOX
             file = "./images/background.png"
         }
     }
 }
 class "GtkWindow" style "main-window"
+
+# Style for "Add card" button
+style "add-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/add_card_small.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/add_card_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/add_card_big.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.*add_card_button" style "add-card-button"
+
+# Style for "Delete card" button
+style "delete-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/delete_card_small.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/delete_card_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/delete_card_big.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.*delete_card_button" style "delete-card-button"
+
+# Style for "To Main Menu" button
+style "main-menu-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "./images/back_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "./images/back_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "./images/back_big.png"
+        }
+    }
+}
+widget "*.*main_menu_button" style "main-menu-button"
+#----------------------------- General ------------------
