@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue May  5 17:43:27 2009 -->
+<!--Generated with glade3 3.4.5 on Thu May  7 00:47:07 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
+    <property name="width_request">800</property>
+    <property name="height_request">480</property>
     <property name="visible">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="default_width">800</property>
@@ -36,193 +38,214 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHButtonBox" id="menu_hbuttonbox">
+                  <widget class="GtkTable" id="table1">
                     <property name="visible">True</property>
-                    <property name="layout_style">GTK_BUTTONBOX_SPREAD</property>
+                    <property name="border_width">11</property>
+                    <property name="n_rows">4</property>
+                    <property name="n_columns">9</property>
+                    <property name="column_spacing">10</property>
+                    <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkTable" id="menu_table_review">
-                        <property name="visible">True</property>
-                        <property name="n_rows">2</property>
-                        <child>
-                          <widget class="GtkButton" id="menu_button_review">
-                            <property name="width_request">88</property>
-                            <property name="height_request">88</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="review"/>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                            <property name="y_padding">10</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="menu_label_review">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Review</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                          </packing>
-                        </child>
-                      </widget>
+                      <placeholder/>
                     </child>
                     <child>
-                      <widget class="GtkTable" id="menu_table_input">
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="menu_button_review">
+                        <property name="width_request">88</property>
+                        <property name="height_request">88</property>
                         <property name="visible">True</property>
-                        <property name="n_rows">2</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="review"/>
                         <child>
-                          <widget class="GtkButton" id="menu_button_input">
-                            <property name="width_request">88</property>
-                            <property name="height_request">88</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="input"/>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                            <property name="y_padding">10</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="menu_label_input">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Input</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">1</property>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options"></property>
+                        <property name="y_options"></property>
+                        <property name="x_padding">2</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkTable" id="menu_table_synh">
+                      <widget class="GtkButton" id="menu_button_input">
+                        <property name="width_request">88</property>
+                        <property name="height_request">88</property>
                         <property name="visible">True</property>
-                        <property name="n_rows">2</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="input"/>
                         <child>
-                          <widget class="GtkButton" id="menu_button_synh">
-                            <property name="width_request">88</property>
-                            <property name="height_request">88</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                            <property name="y_padding">10</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="menu_label_synh">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Synh</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="left_attach">3</property>
+                        <property name="right_attach">4</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkTable" id="menu_table_conf">
+                      <widget class="GtkButton" id="menu_button_exit">
+                        <property name="width_request">88</property>
+                        <property name="height_request">88</property>
                         <property name="visible">True</property>
-                        <property name="n_rows">2</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="exit"/>
                         <child>
-                          <widget class="GtkButton" id="menu_button_conf">
-                            <property name="width_request">88</property>
-                            <property name="height_request">88</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="configure"/>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                            <property name="y_padding">10</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="menu_label_conf">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Conf</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="left_attach">6</property>
+                        <property name="right_attach">7</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkTable" id="menu_table_exit">
+                      <widget class="GtkButton" id="menu_button_conf">
+                        <property name="width_request">88</property>
+                        <property name="height_request">88</property>
                         <property name="visible">True</property>
-                        <property name="n_rows">2</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="configure"/>
                         <child>
-                          <widget class="GtkButton" id="menu_button_exit">
-                            <property name="width_request">88</property>
-                            <property name="height_request">88</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="response_id">0</property>
-                            <signal name="clicked" handler="exit"/>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="x_options"></property>
-                            <property name="y_options"></property>
-                            <property name="y_padding">10</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkLabel" id="menu_label_exit">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Exit</property>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                          </packing>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">4</property>
+                        <property name="left_attach">5</property>
+                        <property name="right_attach">6</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="menu_button_synh">
+                        <property name="width_request">88</property>
+                        <property name="height_request">88</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">4</property>
+                        <property name="right_attach">5</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                   </widget>
