@@ -2,8 +2,9 @@ pomni (0.0.9) unstable; urgency=low
 
   * Used SQLite backend from upstream 
   * fixed saving review results
+  * Fixed bug #90 'application crashed after starting in  review mode' (Vlad) 
 
- -- Ed Bartosh <bartosh@gmail.com>  Fri, 01 May 2009 20:19:20 +0000
+ -- Ed Bartosh <bartosh@gmail.com>  Tue, 05 May 2009 17:52:34 +0300
 
 pomni (0.0.8) unstable; urgency=low
 
