@@ -147,7 +147,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.show_answer()
 
     @staticmethod
-    def delete_card_cb(widget, event):
+    def delete_card_cb(widget):
         """ Hook for showing a right answer """
 
         # Create new card

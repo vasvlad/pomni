@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Mar 13 15:01:02 2009 -->
+<!--Generated with glade3 3.4.5 on Thu May  7 16:19:11 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
+    <property name="width_request">800</property>
+    <property name="height_request">480</property>
     <property name="visible">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="default_width">800</property>
@@ -20,84 +22,344 @@
             <property name="tab_hborder">0</property>
             <property name="tab_vborder">1</property>
             <child>
-              <widget class="GtkHBox" id="hbox4">
+              <widget class="GtkVBox" id="main_menu_vbox">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkAlignment" id="alignment5">
-                    <property name="width_request">20</property>
+                  <widget class="GtkLabel" id="program_name_label">
                     <property name="visible">True</property>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">Pomni v.0.0.8   </property>
+                    <property name="justify">GTK_JUSTIFY_RIGHT</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkTable" id="table1">
+                    <property name="visible">True</property>
+                    <property name="border_width">11</property>
+                    <property name="n_rows">4</property>
+                    <property name="n_columns">9</property>
+                    <property name="column_spacing">10</property>
+                    <property name="homogeneous">True</property>
                     <child>
                       <placeholder/>
                     </child>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkVBox" id="vbox2">
-                    <property name="visible">True</property>
                     <child>
-                      <widget class="GtkButton" id="review">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Review</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="review"/>
-                      </widget>
+                      <placeholder/>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="input">
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <widget class="GtkTable" id="table3">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Input</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="input"/>
+                        <property name="n_rows">2</property>
+                        <property name="row_spacing">4</property>
+                        <child>
+                          <widget class="GtkButton" id="menu_button_input">
+                            <property name="width_request">88</property>
+                            <property name="height_request">88</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="input"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options">GTK_EXPAND</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="menu_label_input">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Input</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options"></property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
-                        <property name="position">1</property>
+                        <property name="left_attach">3</property>
+                        <property name="right_attach">4</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="configure">
+                      <widget class="GtkTable" id="table4">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Configure</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="configure"/>
+                        <property name="n_rows">2</property>
+                        <property name="row_spacing">4</property>
+                        <child>
+                          <widget class="GtkButton" id="menu_button_synh">
+                            <property name="width_request">88</property>
+                            <property name="height_request">88</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options">GTK_EXPAND</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="menu_label_synh">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Synh</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options"></property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="left_attach">4</property>
+                        <property name="right_attach">5</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="exit">
+                      <widget class="GtkTable" id="table5">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Exit</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="exit"/>
+                        <property name="n_rows">2</property>
+                        <property name="row_spacing">4</property>
+                        <child>
+                          <widget class="GtkButton" id="menu_button_conf">
+                            <property name="width_request">88</property>
+                            <property name="height_request">88</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="configure"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options">GTK_EXPAND</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="menu_label_conf">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Conf</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options"></property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
                       </widget>
                       <packing>
-                        <property name="position">3</property>
+                        <property name="left_attach">5</property>
+                        <property name="right_attach">6</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkTable" id="table6">
+                        <property name="visible">True</property>
+                        <property name="n_rows">2</property>
+                        <property name="row_spacing">4</property>
+                        <child>
+                          <widget class="GtkButton" id="menu_button_exit">
+                            <property name="width_request">88</property>
+                            <property name="height_request">88</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="exit"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options">GTK_EXPAND</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="menu_label_exit">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Exit</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options"></property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">6</property>
+                        <property name="right_attach">7</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkTable" id="table2">
+                        <property name="visible">True</property>
+                        <property name="n_rows">2</property>
+                        <property name="row_spacing">4</property>
+                        <child>
+                          <widget class="GtkLabel" id="menu_label_review">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Review</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                            <property name="x_options"></property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="menu_button_review">
+                            <property name="width_request">88</property>
+                            <property name="height_request">88</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="review"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options">GTK_EXPAND</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="right_attach">3</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                   </widget>
                   <packing>
                     <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkAlignment" id="alignment11">
-                    <property name="width_request">20</property>
-                    <property name="visible">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="position">2</property>
                   </packing>
                 </child>
               </widget>
@@ -471,36 +733,63 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkHBox" id="hbox3">
+                      <widget class="GtkHButtonBox" id="review_toolbar">
                         <property name="visible">True</property>
+                        <property name="homogeneous">True</property>
                         <child>
-                          <widget class="GtkEventBox" id="to_input">
+                          <widget class="GtkTable" id="review_toolbar_add_card_table">
                             <property name="visible">True</property>
-                            <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="button_press_event" handler="input"/>
                             <child>
-                              <widget class="GtkImage" id="image1">
+                              <widget class="GtkButton" id="review_toolbar_add_card_button">
+                                <property name="width_request">56</property>
+                                <property name="height_request">56</property>
                                 <property name="visible">True</property>
-                                <property name="pixbuf">add_big.png</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="response_id">0</property>
+                                <signal name="clicked" handler="input"/>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </widget>
+                              <packing>
+                                <property name="x_options">GTK_EXPAND</property>
+                                <property name="y_options"></property>
+                              </packing>
                             </child>
                           </widget>
                         </child>
                         <child>
-                          <placeholder/>
+                          <widget class="GtkTable" id="review_toolbar_delete_card_table">
+                            <property name="visible">True</property>
+                            <child>
+                              <widget class="GtkButton" id="review_toolbar_delete_card_button">
+                                <property name="width_request">56</property>
+                                <property name="height_request">56</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="response_id">0</property>
+                                <signal name="clicked" handler="delete_card"/>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="x_options">GTK_EXPAND</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                         <child>
-                          <widget class="GtkEventBox" id="delete_car">
+                          <widget class="GtkTable" id="review_toolbar_table0">
                             <property name="visible">True</property>
-                            <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="button_release_event" handler="delete_card"/>
                             <child>
-                              <widget class="GtkImage" id="image4">
-                                <property name="visible">True</property>
-                                <property name="pixbuf">delete_big.png</property>
-                              </widget>
+                              <placeholder/>
                             </child>
                           </widget>
                           <packing>
@@ -508,54 +797,52 @@
                           </packing>
                         </child>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <widget class="GtkVSeparator" id="vseparator2">
+                          <widget class="GtkTable" id="review_toolbar_table1">
                             <property name="visible">True</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">7</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkEventBox" id="to_main_menu">
-                            <property name="visible">True</property>
-                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                            <property name="visible_window">False</property>
-                            <property name="above_child">True</property>
-                            <signal name="button_press_event" handler="to_main_menu"/>
                             <child>
-                              <widget class="GtkImage" id="image13">
-                                <property name="visible">True</property>
-                                <property name="pixbuf">exit_big.png</property>
-                              </widget>
+                              <placeholder/>
                             </child>
                           </widget>
                           <packing>
-                            <property name="position">8</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkTable" id="review_toolbar_main_menu_table">
+                            <property name="visible">True</property>
+                            <child>
+                              <widget class="GtkButton" id="review_toolbar_main_menu_button">
+                                <property name="width_request">56</property>
+                                <property name="height_request">56</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="response_id">0</property>
+                                <signal name="clicked" handler="to_main_menu"/>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="x_options">GTK_EXPAND</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">4</property>
                           </packing>
                         </child>
                       </widget>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="pack_type">GTK_PACK_END</property>
                         <property name="position">4</property>
                       </packing>
                     </child>
                   </widget>
                   <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">True</property>
+                    <property name="resize">False</property>
+                    <property name="shrink">False</property>
                   </packing>
                 </child>
               </widget>
@@ -619,7 +906,7 @@
                     </child>
                     <child>
                       <widget class="GtkComboBoxEntry" id="categories">
-                        <property name="height_request">26</property>
+                        <property name="height_request">40</property>
                         <property name="visible">True</property>
                         <child internal-child="entry">
                           <widget class="GtkEntry" id="categories-entry">
@@ -712,26 +999,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="addcard">
-                        <property name="height_request">50</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="add_card"/>
-                        <child>
-                          <widget class="GtkLabel" id="addcardlabel">
-                            <property name="visible">True</property>
-                            <property name="xpad">20</property>
-                            <property name="label" translatable="yes">Add card</property>
-                            <property name="single_line_mode">True</property>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="fill">False</property>
-                        <property name="position">1</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>
@@ -770,25 +1038,64 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="hbox7">
+                  <widget class="GtkHButtonBox" id="input_toolbar">
                     <property name="visible">True</property>
+                    <property name="border_width">3</property>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkEventBox" id="delete_card">
+                      <widget class="GtkTable" id="input_toolbar_add_card_table">
                         <property name="visible">True</property>
-                        <property name="visible_window">False</property>
-                        <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="delete_card"/>
                         <child>
-                          <widget class="GtkImage" id="image16">
+                          <widget class="GtkButton" id="input_toolbar_add_card_button">
+                            <property name="width_request">56</property>
+                            <property name="height_request">56</property>
                             <property name="visible">True</property>
-                            <property name="pixbuf">delete_big.png</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="add_card"/>
+                            <child>
+                              <placeholder/>
+                            </child>
                           </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkTable" id="input_toolbar_delete_card_table">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkButton" id="input_toolbar_delete_card_button">
+                            <property name="width_request">56</property>
+                            <property name="height_request">56</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="delete_card"/>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkTable" id="input_toolbar_table0">
+                        <property name="visible">True</property>
+                        <child>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
@@ -796,47 +1103,47 @@
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkVSeparator" id="vseparator4">
+                      <widget class="GtkTable" id="input_toolbar_table1">
                         <property name="visible">True</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">7</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkEventBox" id="to_main_menu_input">
-                        <property name="visible">True</property>
-                        <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
-                        <property name="visible_window">False</property>
-                        <property name="above_child">True</property>
-                        <signal name="button_press_event" handler="to_main_menu"/>
                         <child>
-                          <widget class="GtkImage" id="image20">
-                            <property name="visible">True</property>
-                            <property name="pixbuf">exit_big.png</property>
-                          </widget>
+                          <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="position">8</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkTable" id="input_toolbar_main_menu_table">
+                        <property name="width_request">48</property>
+                        <property name="height_request">48</property>
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkButton" id="input_toolbar_main_menu_button">
+                            <property name="width_request">56</property>
+                            <property name="height_request">56</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="to_main_menu"/>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                            <property name="y_options"></property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">9</property>
                   </packing>
                 </child>
@@ -858,93 +1165,107 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox6">
+              <widget class="GtkVBox" id="config_mode_vbox">
                 <property name="visible">True</property>
-                <property name="border_width">10</property>
-                <property name="spacing">2</property>
-                <property name="homogeneous">True</property>
                 <child>
-                  <widget class="GtkTable" id="table1">
+                  <widget class="GtkVBox" id="config_options_vbox">
                     <property name="visible">True</property>
-                    <property name="n_rows">3</property>
-                    <property name="n_columns">1</property>
+                    <property name="border_width">10</property>
+                    <property name="spacing">2</property>
+                    <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkHScale" id="font_size_slider">
+                      <widget class="GtkVBox" id="vbox6">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="adjustment">30 10 80 1 10 10</property>
-                        <property name="digits">0</property>
-                        <property name="draw_value">False</property>
-                        <signal name="change_value" handler="change_font_size"/>
+                        <child>
+                          <widget class="GtkLabel" id="label_text_size">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Text size: </property>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkHScale" id="font_size_slider">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="adjustment">0 0 100 1 10 10</property>
+                            <property name="draw_value">False</property>
+                            <signal name="change_value" handler="change_font_size"/>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Start in Fullscreen mode</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_fullscreen"/>
                       </widget>
                       <packing>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_text_size">
+                      <widget class="GtkCheckButton" id="checkbox_start_in_review_mode">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
+                        <property name="label" translatable="yes">Open Review mode at startup</property>
+                        <property name="focus_on_click">False</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_startup_with_review"/>
                       </widget>
+                      <packing>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
+                  <widget class="GtkHButtonBox" id="config_toolbar">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Start in fullscreen mode</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_fullscreen"/>
+                    <property name="homogeneous">True</property>
+                    <property name="layout_style">GTK_BUTTONBOX_END</property>
+                    <child>
+                      <widget class="GtkTable" id="config_toolbar_main_manu_table">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkButton" id="config_toolbar_main_menu_button">
+                            <property name="width_request">56</property>
+                            <property name="height_request">56</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="to_main_menu"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="x_options">GTK_EXPAND</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">16</property>
                     <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkCheckButton" id="checkbox_start_in_review_mode">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Open 'Review' mode at startup</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_startup_with_review"/>
-                  </widget>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="button_back">
-                    <property name="width_request">800</property>
-                    <property name="height_request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_default">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="button_press_event" handler="to_main_menu"/>
-                    <child>
-                      <widget class="GtkLabel" id="label_back">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Back to main menu</property>
-                      </widget>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="position">3</property>
                   </packing>
                 </child>
               </widget>
               <packing>
                 <property name="position">3</property>
+                <property name="tab_fill">False</property>
               </packing>
             </child>
             <child>

@@ -86,7 +86,7 @@ class HildonBaseUi():
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-    def to_main_menu_cb(self, widget, event):
+    def to_main_menu_cb(self, widget):
         """ Return to main menu """
 
         self.switcher.set_current_page(self.main_menu)

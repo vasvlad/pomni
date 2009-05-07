@@ -1,0 +1,12 @@
+#example rcfile for GtkCheckButton
+
+style "MyCheckButton"
+{
+    font_name = "Tahoma Bold Italic 11"
+    GtkCheckButton::indicator-size = 25
+    GtkCheckButton::indicator-spacing = 10 
+    GtkCheckButton::focus-line-width = 0
+}
+
+widget"*.checkbutton2" style "MyCheckButton"
+widget "*.checkbutton2.GtkLabel" style "MyCheckButton"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Fri Apr 24 00:14:46 2009 -->
+<glade-interface>
+  <widget class="GtkWindow" id="window">
+    <property name="width_request">800</property>
+    <property name="height_request">480</property>
+    <property name="title" translatable="yes">Test checkbox</property>
+    <child>
+      <widget class="GtkVBox" id="vbox1">
+        <property name="visible">True</property>
+        <property name="homogeneous">True</property>
+        <child>
+          <widget class="GtkCheckButton" id="checkbutton1">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Standard checkbutton</property>
+            <property name="response_id">0</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+        </child>
+        <child>
+          <widget class="GtkCheckButton" id="checkbutton2">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">Style checkbutton</property>
+            <property name="response_id">0</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>
