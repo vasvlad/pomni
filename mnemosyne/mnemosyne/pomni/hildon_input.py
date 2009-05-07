@@ -89,7 +89,7 @@ class HildonUiControllerInput(HildonBaseUi):
             surface.set_property('show_tabs', False)
             surface.set_name('question_frame')
             entry_field = gtk.TextView()
-            entry_field.set_property("height-request", 50)
+            entry_field.set_property("height-request", 120)
             entry_field.set_name(fact_key_name)
             entry_field.show()
             self.edit_boxes[entry_field] = fact_key
