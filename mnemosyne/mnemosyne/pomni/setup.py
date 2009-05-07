@@ -2,7 +2,7 @@
 
 """ Setup """
 
-import glob
+import os
 try:
     from setuptools import setup
 except ImportError:
@@ -18,11 +18,10 @@ setup(name=PKG,
     license='GPL 2',
     packages=["pomni"],
     package_dir={'pomni': ''},
-    data_files=[\
-#        ('share/%s/hildon-UI/draft' % PKG, glob.glob('hildon-UI/draft/*')),
-        ('share/%s/hildon-UI/eternal' % PKG, glob.glob('hildon-UI/eternal/*')),
-#        ('share/%s/hildon-UI/smile' % PKG, glob.glob('hildon-UI/smile/*')),
-        ('share/dbus-1/services', ['maemo/%s.service' % PKG]),
+    data_files = [(os.path.join('share/%s/' % PKG, path), \
+        [os.path.join(path, fname) for fname in files]) \
+        for path, dirs, files in os.walk('hildon-UI/eternal')] + \
+       [('share/dbus-1/services', ['maemo/%s.service' % PKG]),
         ('share/applications/hildon', ['maemo/%s.desktop' % PKG]),
         ('share/%s/demo' % PKG, [".%s/default.db" % PKG]),
         ('share/icons/hicolor/26x26/apps/', ['./maemo/icons/26x26/pomni.png']),
