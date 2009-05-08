@@ -569,32 +569,13 @@ style "answer-viewport" {
 }
 widget "*.answer_viewport" style "answer-viewport"
 
-style "get-answer-button" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "getanswerarea.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.get_answer_button" style "get-answer-button"
-
-style "get-answer-label" {
-    font_name = "Nokia Sans 20"
-    fg[NORMAL] = "#FFFFFF"
-    fg[ACTIVE] = "#FFFFFF"
-    fg[PRELIGHT] = "#FFFFFF"
-}
-widget "*.get_answer_button.GtkLabel" style "get-answer-label"
-
 style "grade-button" {
     GtkButton::focus-line-width = 0
-    bg[NORMAL] = "#CCCCCC"
+    font_name = "Nokia Sans Bold 12"
+    bg[NORMAL] = "#AAAAAA"
 }
 widget "*.grade*" style "grade-button"
+widget "*.grade*.GtkLabel" style "grade-button"
 #----------------------------- Review mode ------------------
 
 

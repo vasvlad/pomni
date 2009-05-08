@@ -71,11 +71,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     # UiControllerReview API
 
 
-    def update_dialog(self, redraw_all):
-        """ This is part of UiControllerReview API """
-
-        self.new_question()
-
     def new_question(self, learn_ahead=False):
         """ Create new question """
 
@@ -83,6 +78,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             raise HildonUiControllerException(self.w_tree, \
                 _("Database is empty"))
 
+        self.show_answer("<html><p align=center style='margin-top:35px; \
+            font-size:16;'>Press to get answer</p></html>")
         self.card = scheduler().get_new_question(learn_ahead)
 
         if self.card:
@@ -92,7 +89,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             document.open_stream('text/html')
             # Adapting for html
             question_text = self.card.question()
-
             if question_text.startswith('<html>'):
                 font_size = config()['font_size']
                 question_text = question_text.replace('*{font-size:30px;}',
@@ -101,30 +97,25 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             document.write_stream(question_text)
             document.close_stream()
         else:
-            grades_and_answer_table = self.w_tree.get_widget("grades_and_answer_table")
-            get_answer_table = self.w_tree.get_widget("get_answer_table")
-            grades_and_answer_table.hide()
-            get_answer_table.show()
             if ui_controller_main().widget.question_box(
                   _("Learn ahead of schedule"), _("No"), _("Yes"), ""):
                 self.new_question(True)
             else:
                 raise HildonUiControllerException(self.w_tree, _("Finished"))
 
-        grades_and_answer_table = self.w_tree.get_widget("grades_and_answer_table")
-        grades_and_answer_table.hide()
-        get_answer_table = self.w_tree.get_widget("get_answer_table")
-        get_answer_table.show()
+        grades_table = self.w_tree.get_widget("grades_table")
+        grades_table.set_sensitive(False)
 
-    def show_answer(self):
+    def show_answer(self, text=None):
         """ Show answer in review window """
-        get_answer_table = self.w_tree.get_widget("get_answer_table")
-        grades_and_answer_table = self.w_tree.get_widget("grades_and_answer_table")
-        get_answer_table.hide()
-        grades_and_answer_table.show()
 
-        #view = getattr(self,'answer_text')
-        answer_text = self.card.answer()
+        grades_table = self.w_tree.get_widget("grades_table")
+        grades_table.set_sensitive(True)
+
+        if not text:
+            answer_text = self.card.answer()
+        else:
+            answer_text = text
         document = getattr(self,'answer_text').document
         document.clear()
         document.open_stream('text/html')
@@ -183,10 +174,6 @@ class EternalControllerReview(HildonUiControllerReview):
 
         self.base.new_question(self, learn_ahead)
 
-    def show_answer(self):
-        """ Show answer. Make grades and answer_box visible """
-
-        self.base.show_answer(self)
 
 
 def _test():
