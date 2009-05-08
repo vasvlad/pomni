@@ -101,22 +101,27 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             document.write_stream(question_text)
             document.close_stream()
         else:
+            grades_and_answer_table = self.w_tree.get_widget("grades_and_answer_table")
+            get_answer_table = self.w_tree.get_widget("get_answer_table")
+            grades_and_answer_table.hide()
+            get_answer_table.show()
             if ui_controller_main().widget.question_box(
                   _("Learn ahead of schedule"), _("No"), _("Yes"), ""):
                 self.new_question(True)
             else:
                 raise HildonUiControllerException(self.w_tree, _("Finished"))
 
-        for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
-            widget.set_sensitive(False)
-        self.get_answer.set_sensitive(True)
+        grades_and_answer_table = self.w_tree.get_widget("grades_and_answer_table")
+        grades_and_answer_table.hide()
+        get_answer_table = self.w_tree.get_widget("get_answer_table")
+        get_answer_table.show()
 
     def show_answer(self):
         """ Show answer in review window """
-
-        for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
-            widget.set_sensitive(True)
-        self.get_answer.set_sensitive(False)
+        get_answer_table = self.w_tree.get_widget("get_answer_table")
+        grades_and_answer_table = self.w_tree.get_widget("grades_and_answer_table")
+        get_answer_table.hide()
+        grades_and_answer_table.show()
 
         #view = getattr(self,'answer_text')
         answer_text = self.card.answer()
@@ -141,7 +146,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     # Glade callbacks
 
-    def get_answer_cb(self, widget, event):
+    def get_answer_cb(self, widget):
         """ Hook for showing a right answer """
 
         self.show_answer()
@@ -154,7 +159,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         main = ui_controller_main()
         main.delete_current_fact()
 
-    def grade_cb(self, widget, event):
+    def grade_cb(self, widget):
         """ Call grade of answer """
 
         self.grade_answer(int(widget.name[-1]))
@@ -177,17 +182,11 @@ class EternalControllerReview(HildonUiControllerReview):
         """ Show new question. Make get_answer_box visible """
 
         self.base.new_question(self, learn_ahead)
-        self.get_answer_box.set_property('visible', True)
-        self.grades.set_property('visible', False)
-        self.answer_box.set_property('visible', False)
 
     def show_answer(self):
         """ Show answer. Make grades and answer_box visible """
 
         self.base.show_answer(self)
-        self.get_answer_box.set_property('visible', False)
-        self.grades.set_property('visible', True)
-        self.answer_box.set_property('visible', True)
 
 
 def _test():
