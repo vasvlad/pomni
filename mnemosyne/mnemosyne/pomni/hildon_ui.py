@@ -246,6 +246,11 @@ class HildonUI():
 
         pass
 
+    def run_edit_fact_dialog(self, fact, allow_cancel=True):
+        """ Start Edit/Update window """
+
+        self.controllers['input'].start(self.w_tree,fact)
+
 
 def _test():
     """ Run doctests

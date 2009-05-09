@@ -44,7 +44,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Initialization items of review window """
 
         HildonBaseUi.__init__(self, signals=["get_answer", \
-            "grade", "delete_card"])
+            "grade", "delete_card", "edit_card"])
         UiControllerReview.__init__(self)
 
         self.title = _("Mnemosyne") + " - " + \
@@ -148,11 +148,19 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     @staticmethod
     def delete_card_cb(widget):
-        """ Hook for showing a right answer """
+        """ Hook for delete card """
 
         # Create new card
         main = ui_controller_main()
         main.delete_current_fact()
+
+    @staticmethod
+    def edit_card_cb(widget):
+        """ Hook for edit card """
+
+        # Create new card
+        main = ui_controller_main()
+        main.edit_current_card()
 
     def grade_cb(self, widget, event):
         """ Call grade of answer """

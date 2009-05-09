@@ -54,7 +54,8 @@ class HildonUiControllerInput(HildonBaseUi):
         self.w_tree = None
         self.edit_boxes = {}
 
-    def create_entries (self):
+    def create_entries (self,fact = None):
+
         ''' Create widget inclusive varios entries '''
 
         fields_container = gtk.VBox()
@@ -89,6 +90,10 @@ class HildonUiControllerInput(HildonBaseUi):
             surface.set_property('show_tabs', False)
             surface.set_name('question_frame')
             entry_field = gtk.TextView()
+            #Fill entry
+            if fact:
+                 textbuffer = entry_field.get_buffer()
+                 textbuffer.set_text(fact.data[fact_key])
             entry_field.set_property("height-request", 120)
             entry_field.set_name(fact_key_name)
             entry_field.show()
@@ -107,10 +112,18 @@ class HildonUiControllerInput(HildonBaseUi):
 
         return fields_container
 
-    def start(self, w_tree):
+    def start(self, w_tree,fact = None):
         """ Start input window """
         
         self.w_tree = w_tree
+
+        if fact:
+             self.fact = fact
+             self.update = True
+        else:
+             self.update = False
+             self.fact = None
+
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
 
@@ -120,7 +133,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
         #Prepare fields_container
         parent_fields_container = w_tree.get_widget('fields_container_parent')
-        self.fields_container = self.create_entries()
+        self.fields_container = self.create_entries(self.fact)
         parent_fields_container.pack_start(self.fields_container, True, True, 0)
 
         category_names_by_id = dict([(i, name) for (i, name) in \
@@ -149,10 +162,16 @@ class HildonUiControllerInput(HildonBaseUi):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        # Create new card
         main = ui_controller_main()
-        main.create_new_cards(fact_data, self.card_type, 5,
-            [self.categories.get_child().get_text()])
+
+        if self.update:
+            # Update card
+            status = main.update_related_cards(self.fact, fact_data,
+                                self.card_type, [self.categories.get_child().get_text()], None)
+        else:
+            # Create new card
+            main.create_new_cards(fact_data, self.card_type, 5,
+                [self.categories.get_child().get_text()])
 
         database().save(config()['path'])
 
