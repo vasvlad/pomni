@@ -168,6 +168,13 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.card = None
 
+    # UiControllerReview API
+
+    def update_dialog(self, redraw_all= None):
+        """ This is part of UiControllerReview API. Don't remove this hook"""
+
+        pass
+
 
 
 class EternalControllerReview(HildonUiControllerReview):

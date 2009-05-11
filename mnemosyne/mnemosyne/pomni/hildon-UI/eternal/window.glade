@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
 <!--Generated with glade3 3.4.5 on Sat May  9 16:02:24 2009 -->
-=======
-<!--Generated with glade3 3.4.5 on Fri May  8 22:30:16 2009 -->
->>>>>>> coreteam:mnemosyne/mnemosyne/pomni/hildon-UI/eternal/window.glade
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>

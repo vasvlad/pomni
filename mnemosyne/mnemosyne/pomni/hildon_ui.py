@@ -90,6 +90,7 @@ class HildonBaseUi():
                 for sig in self.signals]))
             self.starting = True
 
+
     def to_main_menu_cb(self, widget):
         """ Return to main menu """
 
