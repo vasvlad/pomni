@@ -131,6 +131,10 @@ class HildonUiControllerInput(HildonBaseUi):
         #Now default card type 1 (Front-to-back only) 
         self.card_type = card_type_by_id.get('1')
 
+        #Destroy container if it was created early
+        if self.fields_container:
+            self.fields_container.destroy()
+
         #Prepare fields_container
         parent_fields_container = w_tree.get_widget('fields_container_parent')
         self.fields_container = self.create_entries(self.fact)
@@ -178,6 +182,8 @@ class HildonUiControllerInput(HildonBaseUi):
         #FIX ME need checking for success for previous operations
         self.clear_data_widgets()
 
+        if self.update:
+            self.switcher.set_current_page(self.review)
 
     def add_card2_cb(self, widget, event):
         """ Hook for add_card for eventboxes """

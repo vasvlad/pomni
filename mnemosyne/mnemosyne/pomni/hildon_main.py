@@ -31,6 +31,7 @@ class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
     def __init__(self, signals=None):
+
         HildonBaseUi.__init__(self, signals)
 
     def edit_current_card(self):

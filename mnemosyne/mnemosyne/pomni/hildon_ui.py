@@ -68,6 +68,7 @@ class HildonBaseUi():
             self.signals.extend(signals)
 
         self.w_tree = None
+        self.starting = False
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -80,11 +81,14 @@ class HildonBaseUi():
     def start(self, w_tree):
         """ Init w_tree, connect callbacks to signals """
 
-        self.w_tree = w_tree
+        if self.starting == False:
 
-        # connect signals to methods
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in self.signals]))
+            self.w_tree = w_tree
+
+            # connect signals to methods
+            w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+                for sig in self.signals]))
+            self.starting = True
 
     def to_main_menu_cb(self, widget):
         """ Return to main menu """

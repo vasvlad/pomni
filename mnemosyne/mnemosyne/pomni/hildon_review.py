@@ -158,7 +158,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     def edit_card_cb(widget):
         """ Hook for edit card """
 
-        # Create new card
+        # Edit card
         main = ui_controller_main()
         main.edit_current_card()
 
