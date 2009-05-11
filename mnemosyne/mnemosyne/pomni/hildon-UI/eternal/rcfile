@@ -342,15 +342,15 @@ style "theme-button" {
 }
 
 
-widget "*.button_answer" style "review-button"
-widget "*.button_getanswer" style "getanswerarea-button"
+#widget "*.button_answer" style "review-button"
+#widget "*.button_getanswer" style "getanswerarea-button"
 widget "*.title_label" style "review-title-label"
-widget "*.answer" style "nothingviewport"
-widget "*.answer_text" style "review-answer-label"
-widget "*.question" style "nothingviewport"
-widget "*.question_text" style "review-question-label"
-widget "*.getanswer" style "review-getanswer-label"
-widget "*.button_question" style "review-button"
+#widget "*.answer" style "nothingviewport"
+#widget "*.answer_text" style "review-answer-label"
+#widget "*.question_viewport" style "nothingviewport"
+#widget "*.question_text" style "review-answer-label"
+#widget "*.getanswer" style "review-getanswer-label"
+widget "*.question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
 widget "*.answer_frame" style "question_answer_frame"
@@ -542,10 +542,41 @@ widget "*.menu_button_exit" style "menu-button-exit"
 #----------------------------- Main Menu ------------------
 
 
-
 #----------------------------- Review mode ------------------
-#----------------------------- Review mode ------------------
+style "question-area" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "textarea.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.question_container" style "question-area"
 
+style "answer-viewport" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "textarea.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.answer_viewport" style "answer-viewport"
+
+style "grade-button" {
+    GtkButton::focus-line-width = 0
+    font_name = "Nokia Sans Bold 12"
+    bg[NORMAL] = "#AAAAAA"
+}
+widget "*.grade*" style "grade-button"
+widget "*.grade*.GtkLabel" style "grade-button"
+#----------------------------- Review mode ------------------
 
 
 #----------------------------- Input mode ------------------
