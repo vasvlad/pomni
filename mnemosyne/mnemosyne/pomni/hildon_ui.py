@@ -207,15 +207,11 @@ class HildonUI():
     
     def information_box(self, message, ok_string):
         """ Create Information message """
-        info_window = self.w_tree.get_widget("infowindow")
-        info_window_button_ok = \
-            self.w_tree.get_widget("infowindow_button_ok")
-        info_window_button_ok.set_label(self.clear_label(ok_string))
-        info_window_label = \
-            self.w_tree.get_widget("infowindow_label")
-        info_window_label.set_text('\n' + message + '\n')
-        info_window.run()
-        info_window.hide()
+        dialog = self.w_tree.get_widget("information_dialog")
+        dialog_label = self.w_tree.get_widget("information_dialog_label")
+        dialog_label.set_text('\n' + " " + message + " " + '\n')
+        dialog.run()
+        dialog.hide()
 
     def question_box(self, question, option0, option1, option2):
         """ Create Question message """

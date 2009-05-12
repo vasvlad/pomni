@@ -630,7 +630,7 @@ widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 
 
 #----------------------------- Dialogs ------------------
-style "question-dialog" {
+style "dialog" {
     engine "pixmap" {
         image {
             function = FLAT_BOX
@@ -640,7 +640,13 @@ style "question-dialog" {
         }
     }
 }
-class "GtkDialog" style "question-dialog"
+class "GtkDialog" style "dialog"
+
+style "dialog-label" {
+    font_name = "Nokia Sans Bold 14"
+}
+widget "*.question_dialog_label" style "dialog-label"
+widget "*.information_dialog_label" style "dialog-label"
 
 style "question-dialog-button-yes" {
     engine "pixmap" {
@@ -651,6 +657,7 @@ style "question-dialog-button-yes" {
     }
 }
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
+widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
     engine "pixmap" {
@@ -661,11 +668,6 @@ style "question-dialog-button-no" {
     }
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
-
-style "question-dialog-label" {
-    font_name = "Nokia Sans Bold 14"
-}
-widget "*.question_dialog_label" style "question-dialog-label"
 #----------------------------- Dialogs ------------------
 
 
