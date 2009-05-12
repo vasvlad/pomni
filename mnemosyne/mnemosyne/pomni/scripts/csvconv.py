@@ -82,7 +82,7 @@ class MnemosyneOut(object):
         data = {"q": row[0], "a": row[1]}
 
         self.controller.create_new_cards(data, self.card_type, 0, 
-                                            self.category)
+                                            [self.category])
 
     def savedb(self):
         """Save the database if not saved yet."""

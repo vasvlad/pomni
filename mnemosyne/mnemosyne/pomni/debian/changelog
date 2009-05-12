@@ -1,3 +1,13 @@
+pomni (0.1.0) unstable; urgency=low
+
+  * New look of main menu (Max)
+  * Animated toolbars (Max)
+  * New look of configuration mode (Max)
+  * Increased input field in input mode (Fixes: #80) (Max)
+  * Changed review mode look&feel (Max) 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 10 May 2009 21:54:52 +0300
+
 pomni (0.0.9) unstable; urgency=low
 
   * Used SQLite backend from upstream 
