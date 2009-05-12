@@ -1,6 +1,6 @@
 # pixmap_path "<dir 1>:<dir 2>:<dir 3>:..."
 #
-pixmap_path "/usr/include/X11R6/pixmaps:./"
+#pixmap_path "/usr/include/X11R6/pixmaps:./"
 #
 # style <name> [= <name>]
 # {
@@ -137,13 +137,6 @@ style "review-getanswer-label" {
 
 style "button-label" {
 	font_name = "Nokia Sans Bold Italic 20.0"
-	#fg[NORMAL] = "#FFFFFF"
-	#fg[PRELIGHT] = "#FFFFFF"
-	#fg[SELECTED] = "#FFFFFF"
-	#font_name = "Nokia Sans 20.0"
-	#fg[NORMAL] = "#FFFFFF"
-	#fg[PRELIGHT] = "#FFFFFF"
-	#fg[SELECTED] = "#FFFFFF"
 }
 
 style "info-window-label" {
@@ -151,25 +144,8 @@ style "info-window-label" {
 	fg[NORMAL] = "#000000"
 }
 
-style "question-window-label" {
-	font_name = "Nokia Sans 17.0"
-	fg[NORMAL] = "#000000"
-}
 
 
-
-style "dialogwindow"
-{
-    engine "sapwood"    
-    {
-        image
-        {
-            function = FLAT_BOX
-            file = "dialogbkg.png"
-            detail = "base"
-        }
-    }
-}
 
 style "nothing"
 {
@@ -194,7 +170,6 @@ style "nothing"
 
 style "nothingviewport"
 {
-
     xthickness = 0
     ythickness = 0
     GtkScrolledWindow ::scrollbars-within-bevel = 0
@@ -363,16 +338,6 @@ widget "*.label_warning" style "review-question-label"
 widget "*.label_ok" style "review-question-label"
 widget "*.notebook_wwindows" style "nothing"
 
-widget "questionwindow" style "dialogwindow"
-widget "*.questionwindow_button_yes" style "review-button"
-widget "*.questionwindow_button_no" style "review-button"
-widget "*.questionwindow_label" style "question-window-label"
-
-widget "infowindow" style "dialogwindow"
-widget "*.infowindow_button_ok" style "review-button"
-widget "*.infowindow_label" style "info-window-label"
-
-
 
 style "input-combobox-entry-arrow"
 {
@@ -417,7 +382,7 @@ style "program-name-label" {
 widget "*.program_name_label" style "program-name-label"
 
 style "menu-label" {
-    font_name = "Nokia Sans Bold Italic 12.0"
+    font_name = "Nokia Sans Bold 12.0"
 }
 widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
@@ -664,6 +629,46 @@ widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 #----------------------------- Config mode ------------------
 
 
+#----------------------------- Dialogs ------------------
+style "question-dialog" {
+    engine "pixmap" {
+        image {
+            function = FLAT_BOX
+            file = "dialogbkg.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
+}
+class "GtkDialog" style "question-dialog"
+
+style "question-dialog-button-yes" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "./images/dialog_yes.png"
+        }
+    }
+}
+widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
+
+style "question-dialog-button-no" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "./images/dialog_no.png"
+        }
+    }
+}
+widget "*.question_dialog_button_no" style "question-dialog-button-no"
+
+style "question-dialog-label" {
+    font_name = "Nokia Sans Bold 14"
+}
+widget "*.question_dialog_label" style "question-dialog-label"
+#----------------------------- Dialogs ------------------
+
+
 #----------------------------- General ------------------
 # Style for Main window
 style "main-window" {
@@ -674,7 +679,8 @@ style "main-window" {
         }
     }
 }
-class "GtkWindow" style "main-window"
+#class "GtkWindow" style "main-window"
+widget "window" style "main-window"
 
 # Style for "Add card" button
 style "add-card-button" {

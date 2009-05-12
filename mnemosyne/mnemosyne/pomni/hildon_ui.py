@@ -132,8 +132,7 @@ class HildonUI():
         for signal in signals:
             setattr(self, signal + '_cb', gen_callback(signal))
 
-        self.signals = ["exit", "window_state", "window_keypress",
-            "question_box_yes", "question_box_no"] + signals
+        self.signals = ["exit", "window_state", "window_keypress"] + signals
 
         # connect signals to methods
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
@@ -220,26 +219,16 @@ class HildonUI():
 
     def question_box(self, question, option0, option1, option2):
         """ Create Question message """
-        question_window = self.w_tree.get_widget("questionwindow")
-        questionwindow_button_yes = \
-            self.w_tree.get_widget("questionwindow_button_yes")
-        questionwindow_button_yes.set_label(self.clear_label(option0))
-        questionwindow_button_no = \
-            self.w_tree.get_widget("questionwindow_button_no")
-        questionwindow_button_no.set_label(self.clear_label(option1))
-        questionwindow_label = self.w_tree.get_widget("questionwindow_label")
-        questionwindow_label.set_text('\n' + question + '\n')
-        question_window.run()
-        question_window.hide()
-        return self.question_flag
+        dialog = self.w_tree.get_widget("question_dialog")
+        dialog_label = self.w_tree.get_widget("question_dialog_label")
+        dialog_label.set_text('\n' + question + '\n')
+        result = True
+        response = dialog.run()
+        if response == -8:
+            result = False
+        dialog.hide()
+        return result
 
-    def question_box_yes_cb(self, widget):
-        """ Set question result """
-        self.question_flag = False
-
-    def question_box_no_cb(self, widget):
-        """ Set question result """
-        self.question_flag = True
 
     def update_status_bar(self, message=None):
         """ Not Implemented """
