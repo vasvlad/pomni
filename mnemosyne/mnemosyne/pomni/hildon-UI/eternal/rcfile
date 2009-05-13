@@ -647,6 +647,7 @@ style "dialog-label" {
 }
 widget "*.question_dialog_label" style "dialog-label"
 widget "*.information_dialog_label" style "dialog-label"
+widget "*.warning_dialog_label" style "dialog-label"
 
 style "question-dialog-button-yes" {
     bg[NORMAL] = "#CCCCCC"
@@ -655,6 +656,9 @@ style "question-dialog-button-yes" {
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
 widget "*.question_dialog_button_yes.GtkLabel" style "question-dialog-button-yes"
 widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.information_dialog_button_ok.GtkLabel" style "question-dialog-button-yes"
+widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.warning_dialog_button_ok.GtkLabel" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
     bg[NORMAL] = "#CCCCCC"

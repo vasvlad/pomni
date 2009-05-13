@@ -76,7 +76,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         if not database().card_count():
             raise HildonUiControllerException(self.w_tree, \
-                _("Database is empty"))
+                _("Database is empty!"))
 
         self.show_answer("<html><p align=center style='margin-top:35px; \
             font-size:16;'>Press to get answer</p></html>")
@@ -98,10 +98,10 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             document.close_stream()
         else:
             if ui_controller_main().widget.question_box(
-                  _("Learn ahead of schedule"), _("No"), _("Yes"), ""):
+                  _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
                 self.new_question(True)
             else:
-                raise HildonUiControllerException(self.w_tree, _("Finished"))
+                raise HildonUiControllerException(self.w_tree, _("Finished!"))
 
         grades_table = self.w_tree.get_widget("grades_table")
         grades_table.set_sensitive(False)
