@@ -634,7 +634,7 @@ style "dialog" {
     engine "pixmap" {
         image {
             function = FLAT_BOX
-            file = "dialogbkg.png"
+            file = "./images/dialogbkg.png"
             border = {12,12,12,12}
             stretch = TRUE
         }
@@ -649,25 +649,19 @@ widget "*.question_dialog_label" style "dialog-label"
 widget "*.information_dialog_label" style "dialog-label"
 
 style "question-dialog-button-yes" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "./images/dialog_yes.png"
-        }
-    }
+    bg[NORMAL] = "#CCCCCC"
+    font_name = "Nokia Sans Bold 11"
 }
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
+widget "*.question_dialog_button_yes.GtkLabel" style "question-dialog-button-yes"
 widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "./images/dialog_no.png"
-        }
-    }
+    bg[NORMAL] = "#CCCCCC"
+    font_name = "Nokia Sans Bold 11"
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
+widget "*.question_dialog_button_no.GtkLabel" style "question-dialog-button-no"
 #----------------------------- Dialogs ------------------
 
 
