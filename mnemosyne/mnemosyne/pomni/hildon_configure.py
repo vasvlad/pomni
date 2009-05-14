@@ -71,7 +71,7 @@ class HildonUiControllerConfigure(HildonBaseUi):
         self.configuration['startup_with_review'] = \
             self.checkbox_start_in_review_mode.get_active()
 
-    def to_main_menu_cb(self, widget):
+    def to_main_menu_cb(self, widget, event):
         """ Return to main menu """
         if self.modified:
             self.configuration.save()
