@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Sun Apr 26 13:28:26 2009 -->
+<glade-interface>
+  <widget class="GtkWindow" id="main_window">
+    <property name="width_request">800</property>
+    <property name="height_request">480</property>
+    <child>
+      <placeholder/>
+    </child>
+  </widget>
+</glade-interface>
