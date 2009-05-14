@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu May 14 10:11:40 2009 -->
+<!--Generated with glade3 3.4.5 on Thu May 14 11:17:15 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -845,6 +845,12 @@
                       <placeholder/>
                     </child>
                     <child>
+                      <widget class="GtkLabel" id="label_text_size">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkHScale" id="font_size_slider">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -857,12 +863,6 @@
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
                       </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_text_size">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
                     </child>
                   </widget>
                 </child>
@@ -942,7 +942,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="warningwindow">
+  <widget class="GtkDialog" id="warning_dialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Warning</property>
     <property name="resizable">False</property>
@@ -983,7 +983,7 @@
                           </widget>
                         </child>
                         <child>
-                          <widget class="GtkLabel" id="label_warning">
+                          <widget class="GtkLabel" id="warning_dialog_label">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">label</property>
                             <property name="wrap">True</property>
@@ -1109,7 +1109,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="questionwindow">
+  <widget class="GtkDialog" id="question_dialog">
     <property name="border_width">5</property>
     <property name="type">GTK_WINDOW_POPUP</property>
     <property name="title" translatable="yes">Question</property>
@@ -1159,7 +1159,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="questionwindow_label">
+              <widget class="GtkLabel" id="question_dialog_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">label</property>
                 <property name="justify">GTK_JUSTIFY_FILL</property>
@@ -1199,8 +1199,7 @@
                 <property name="receives_default">True</property>
                 <property name="label" translatable="yes">yes</property>
                 <property name="use_underline">True</property>
-                <property name="response_id">0</property>
-                <signal name="pressed" handler="question_box_yes"/>
+                <property name="response_id">-8</property>
               </widget>
             </child>
             <child>
@@ -1211,8 +1210,7 @@
                 <property name="receives_default">True</property>
                 <property name="label" translatable="yes">no</property>
                 <property name="use_underline">True</property>
-                <property name="response_id">0</property>
-                <signal name="pressed" handler="question_box_no"/>
+                <property name="response_id">-9</property>
               </widget>
               <packing>
                 <property name="position">1</property>
@@ -1229,7 +1227,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="infowindow">
+  <widget class="GtkDialog" id="information_dialog">
     <property name="border_width">5</property>
     <property name="type">GTK_WINDOW_POPUP</property>
     <property name="title" translatable="yes">Information</property>
@@ -1282,7 +1280,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="infowindow_label">
+              <widget class="GtkLabel" id="information_dialog_label">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">label</property>
                 <property name="wrap">True</property>
