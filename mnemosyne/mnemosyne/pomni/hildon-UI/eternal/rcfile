@@ -351,13 +351,13 @@ style "theme-button" {
     image {
         function = FOCUS
 	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0}
+	border   = { 20, 20, 20, 20}
     }
 
     image {
 	function = BOX
 	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0 }
+	border   = { 20, 20, 20, 20 }
     }
 
   }
@@ -442,4 +442,26 @@ style "input-combobox-entry-arrow"
 widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
 
 
+style "config-checkboxes" {
+    engine "sapwood" {}
+    font_name = "Nokia Sans 13"
+    GtkCheckButton::indicator-size = 45
+    GtkCheckButton::indicator-spacing = 8
+}
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 
+style "config-scales" {
+    engine "sapwood" {}
+    GtkScale::slider-length = 60
+    GtkScale::slider-width = 40
+    GtkScale::focus-line-width = 0
+}
+widget "*.font_size_slider" style "config-scales"
+
+style "config-textsize-label" {
+    font_name = "Nokia Sans Bold 12"
+}
+widget "*.label_text_size" style "config-textsize-label"
