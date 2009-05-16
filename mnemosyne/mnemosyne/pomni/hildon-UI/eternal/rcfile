@@ -380,7 +380,6 @@ widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
 widget "*.answer_frame" style "question_answer_frame"
 widget "*.question_frame" style "question_answer_frame"
-widget "*.addcard" style "theme-button"
 widget "*.additional" style "theme-button"
 widget "*.additionallabel" style "button-label"
 widget "*.addcardlabel" style "button-label"
@@ -448,7 +447,7 @@ widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combob
 
 
 style "config-checkboxes" {
-    engine "sapwood" {}
+    engine "pixmap" {}
     font_name = "Nokia Sans 13"
     GtkCheckButton::indicator-size = 45
     GtkCheckButton::indicator-spacing = 8
@@ -459,7 +458,7 @@ widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 
 style "config-scales" {
-    engine "sapwood" {}
+    engine "pixmap" {}
     GtkScale::slider-length = 60
     GtkScale::slider-width = 40
     GtkScale::focus-line-width = 0
@@ -473,7 +472,7 @@ widget "*.label_text_size" style "config-textsize-label"
 
 style "button-back" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "exit_big.png"
@@ -487,7 +486,7 @@ widget "*.to_main_menu" style "button-back"
 
 style "delete-card" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "delete_big.png"
@@ -501,7 +500,7 @@ widget "*.delete_car" style "delete-card"
 
 style "add-card" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "add_big.png"
@@ -516,7 +515,7 @@ widget "*.to_input" style "add-card"
 
 style "grade0" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "button_0.png"
@@ -529,7 +528,7 @@ widget "*.grade0" style "grade0"
 
 style "grade1" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "button_1.png"
@@ -542,7 +541,7 @@ widget "*.grade1" style "grade1"
 
 style "grade2" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "button_2.png"
@@ -555,7 +554,7 @@ widget "*.grade2" style "grade2"
 
 style "grade3" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "button_3.png"
@@ -568,7 +567,7 @@ widget "*.grade3" style "grade3"
 
 style "grade4" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "button_4.png"
@@ -581,7 +580,7 @@ widget "*.grade4" style "grade4"
 
 style "grade5" {
     GtkButton::focus-line-width = 0
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "button_5.png"
