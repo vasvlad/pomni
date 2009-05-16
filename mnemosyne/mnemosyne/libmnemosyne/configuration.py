@@ -57,6 +57,9 @@ scheduler = "SM2"
 
 # default database
 database = "sqlite"
+
+# default theme
+theme = "rainbow"
 """
 
 class Configuration(dict):
@@ -112,6 +115,7 @@ class Configuration(dict):
              "startup_with_review": False,
              "active_plugins": set(), # plugin class
              "times_loaded": 0
+             "theme": "rainbow"
             }.items():
             
             self.setdefault(key, value)
