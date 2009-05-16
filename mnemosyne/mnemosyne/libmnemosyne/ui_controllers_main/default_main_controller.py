@@ -213,7 +213,7 @@ class DefaultMainController(UiControllerMain):
         db.save()
         review_controller.new_question()
         self.widget.update_status_bar()
-        #review_controller.update_dialog()
+        review_controller.update_dialog()
         stopwatch.unpause()
 
     def file_new(self):
