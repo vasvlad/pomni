@@ -77,12 +77,16 @@ class HildonUiControllerConfigure(HildonBaseUi):
             self.configuration.save()
         self.switcher.set_current_page(self.main_menu)
 
+
+
 class EternalControllerConfigure(HildonUiControllerConfigure):
-    """Eternal Configure controller. Nothing special."""
+    """ Eternal Configure controller """
     pass
 
+
+
 class RainbowControllerConfigure(HildonUiControllerConfigure):
-    """Eternal Configure controller. Nothing special."""
+    """ Rainbow Configure controller """
     pass
 
 

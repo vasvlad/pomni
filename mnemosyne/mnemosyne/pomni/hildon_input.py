@@ -209,12 +209,17 @@ class HildonUiControllerInput(HildonBaseUi):
 #        if self.listsore:
 #            self.liststore.destroy()
 
+
+
 class EternalControllerInput(HildonUiControllerInput):
-    """ Eternal Input mode controller - nothing special."""
+    """ Eternal Input mode controller """
     
 
+
 class RainbowControllerInput(HildonUiControllerInput):
-    """ Rainbow Input mode controller - nothing special."""
+    """ Rainbow Input mode controller """
+
+
 
 def _test():
     """ Run doctests

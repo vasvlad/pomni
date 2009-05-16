@@ -201,11 +201,13 @@ class HildonUI():
             return caption[:index] + caption[index+1:]
         return caption
     
-    def information_box(self, message, ok_string):
+    def information_box(self, message, button_caption):
         """ Create Information message """
         dialog = self.w_tree.get_widget("information_dialog")
-        dialog_label = self.w_tree.get_widget("information_dialog_label")
-        dialog_label.set_text('\n' + " " + message + " " + '\n')
+        self.w_tree.get_widget("information_dialog_label").set_text(\
+            '\n' + " " + message + " " + '\n')
+        self.w_tree.get_widget("information_dialog_button_ok").set_label(\
+            button_caption)
         dialog.run()
         dialog.hide()
 
