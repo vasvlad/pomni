@@ -81,7 +81,7 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         if not database().card_count():
             raise HildonUiControllerException(self.w_tree, \
-                _("Database is empty"))
+                _("Database is empty!"))
 
         self.card = scheduler().get_new_question(learn_ahead)
 
@@ -102,21 +102,21 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             document.close_stream()
         else:
             if ui_controller_main().widget.question_box(
-                  _("Learn ahead of schedule"), _("No"), _("Yes"), ""):
+                  _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
                 self.new_question(True)
             else:
-                raise HildonUiControllerException(self.w_tree, _("Finished"))
+                raise HildonUiControllerException(self.w_tree, _("Finished!"))
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
-        self.get_answer.set_sensitive(True)
+        self.button_getanswer.set_sensitive(True)
 
     def show_answer(self):
         """ Show answer in review window """
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(True)
-        self.get_answer.set_sensitive(False)
+        self.button_getanswer.set_sensitive(False)
 
         #view = getattr(self,'answer_text')
         answer_text = self.card.answer()
@@ -141,20 +141,20 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     # Glade callbacks
 
-    def get_answer_cb(self, widget, event):
+    def get_answer_cb(self, widget):
         """ Hook for showing a right answer """
 
         self.show_answer()
 
     @staticmethod
-    def delete_card_cb(widget, event):
+    def delete_card_cb(widget):
         """ Hook for showing a right answer """
 
         # Create new card
         main = ui_controller_main()
         main.delete_current_fact()
 
-    def grade_cb(self, widget, event):
+    def grade_cb(self, widget):
         """ Call grade of answer """
 
         self.grade_answer(int(widget.name[-1]))
@@ -188,6 +188,72 @@ class EternalControllerReview(HildonUiControllerReview):
         self.get_answer_box.set_property('visible', False)
         self.grades.set_property('visible', True)
         self.answer_box.set_property('visible', True)
+
+
+class RainbowControllerReview(HildonUiControllerReview):
+    """ Eternal UI review controller """
+
+    def __init__(self):
+        self.base = HildonUiControllerReview
+        self.base.__init__(self)
+
+    def new_question(self, learn_ahead=False):
+        """ Show new question. Make get_answer_box visible """
+
+        if not database().card_count():
+            raise HildonUiControllerException(self.w_tree, \
+                _("Database is empty!"))
+
+        self.show_answer("<html><p align=center style='margin-top:35px; \
+            font-size:16;'>Press to get answer</p></html>")
+        self.card = scheduler().get_new_question(learn_ahead)
+
+        if self.card:
+            document = getattr(self,'question_text').document
+            #view = getattr(self,'question_text')
+            document.clear()
+            document.open_stream('text/html')
+            # Adapting for html
+            question_text = self.card.question()
+            if question_text.startswith('<html>'):
+                font_size = config()['font_size']
+                question_text = question_text.replace('*{font-size:30px;}',
+                 '*{font-size:%spx;}' % font_size)
+
+            document.write_stream(question_text)
+            document.close_stream()
+        else:
+            if ui_controller_main().widget.question_box(
+                  _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
+                self.new_question(True)
+            else:
+                raise HildonUiControllerException(self.w_tree, _("Finished!"))
+
+        grades_table = self.w_tree.get_widget("grades_table")
+        grades_table.set_sensitive(False)
+
+
+    def show_answer(self, text=None):
+        """ Show answer. Make grades and answer_box visible """
+
+        grades_table = self.w_tree.get_widget("grades_table")
+        grades_table.set_sensitive(True)
+
+        if not text:
+            answer_text = self.card.answer()
+        else:
+            answer_text = text
+        document = getattr(self,'answer_text').document
+        document.clear()
+        document.open_stream('text/html')
+
+        if answer_text.startswith('<html>'):
+            font_size = config()['font_size']
+            answer_text = answer_text.replace('*{font-size:30px;}',
+                             '*{font-size:%spx;}' % font_size)
+
+        document.write_stream(answer_text)
+        document.close_stream()
 
 
 def _test():

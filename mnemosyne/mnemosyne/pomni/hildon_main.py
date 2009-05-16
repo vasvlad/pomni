@@ -92,6 +92,19 @@ class EternalControllerMain(HildonUiControllerMain):
             else:
                 self.spliter_trigger = True
 
+class RainbowControllerMain(HildonUiControllerMain):
+    """ Eternal UI Main Controller """
+
+    def __init__(self):
+        """ Added spliter widget to class """
+
+        self.base = HildonUiControllerMain
+        self.base.__init__(self, [])
+        self.spliter_trigger = True
+
+    def start(self, w_tree):
+        """ Start base class """
+        HildonBaseUi.start(self, w_tree)
 
 def _test():
     """ Run doctests

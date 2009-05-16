@@ -44,13 +44,14 @@ class HildonUiControllerException(Exception):
         w_tree.signal_autoconnect({"close": self.close_cb})
         
         # Show warning text
-        w_tree.get_widget("warning_dialog_label").set_text(exception)
+        w_tree.get_widget("warning_dialog_label").set_text(\
+            '\n' + " " + exception + " " + '\n')
         self.warning_window = w_tree.get_widget("warning_dialog")
         self.warning_window.show()
 
         Exception.__init__(self)
 
-    def close_cb(self, widget, event):
+    def close_cb(self, widget):
         """ Close Warning Window """
         self.warning_window.hide()
 
@@ -87,7 +88,7 @@ class HildonBaseUi():
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
-    def to_main_menu_cb(self, widget, event):
+    def to_main_menu_cb(self, widget):
         """ Return to main menu """
 
         self.switcher.set_current_page(self.main_menu)

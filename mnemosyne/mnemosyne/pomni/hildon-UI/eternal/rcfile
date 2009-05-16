@@ -145,6 +145,8 @@ style "review-question-label" {
 style "review-getanswer-label" {
 	font_name = "Nokia Sans 40.0"
 	fg[NORMAL] = "#FFFFFF"
+	fg[ACTIVE] = "#FFFFFF"
+	fg[PRELIGHT] = "#FFFFFF"
 }
 
 style "button-label" {
@@ -188,7 +190,8 @@ style "dialogwindow"
         {
             function = FLAT_BOX
             file = "dialogbkg.png"
-            detail = "base"
+            border = {0,0,0,0}
+            stretch = TRUE
         }
     }
 }
@@ -371,7 +374,7 @@ widget "*.answer" style "nothingviewport"
 widget "*.answer_text" style "review-answer-label"
 widget "*.question" style "nothingviewport"
 widget "*.question_text" style "review-question-label"
-widget "*.getanswer" style "review-getanswer-label"
+widget "*.button_getanswer.GtkLabel" style "review-getanswer-label"
 widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
@@ -397,7 +400,9 @@ widget "*.exit.GtkLabel" style "button-label"
 widget "warningwindow" style "mainwindow"
 widget "window" style "mainwindow"
 
-widget "questionwindow" style "dialogwindow"
+widget "question_dialog" style "dialogwindow"
+widget "warning_dialog" style "dialogwindow"
+widget "information_dialog" style "dialogwindow"
 widget "*.questionwindow_button_yes" style "review-button"
 widget "*.questionwindow_button_no" style "review-button"
 widget "*.questionwindow_label" style "question-window-label"
@@ -407,7 +412,7 @@ widget "*.infowindow_button_ok" style "review-button"
 widget "*.infowindow_label" style "info-window-label"
 
 widget "*.button_back" style "theme-button"
-widget "*.label_back" style "button-label"
+widget "*.button_back.GtkLabel" style "button-label"
 
 
 
@@ -465,3 +470,124 @@ style "config-textsize-label" {
     font_name = "Nokia Sans Bold 12"
 }
 widget "*.label_text_size" style "config-textsize-label"
+
+style "button-back" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "exit_big.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.to_main_menu_input" style "button-back"
+widget "*.to_main_menu" style "button-back"
+
+style "delete-card" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "delete_big.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.delete_card" style "delete-card"
+widget "*.delete_car" style "delete-card"
+
+style "add-card" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "add_big.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.addcard" style "add-card"
+widget "*.to_input" style "add-card"
+
+
+style "grade0" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "button_0.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "button_1.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "button_2.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "button_3.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "button_4.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "button_5.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade5" style "grade5"

@@ -89,7 +89,7 @@ class HildonUiControllerInput(HildonBaseUi):
             surface.set_property('show_tabs', False)
             surface.set_name('question_frame')
             entry_field = gtk.TextView()
-            entry_field.set_property("height-request", 50)
+            entry_field.set_property("height-request", 120)
             entry_field.set_name(fact_key_name)
             entry_field.show()
             self.edit_boxes[entry_field] = fact_key
@@ -199,7 +199,7 @@ class HildonUiControllerInput(HildonBaseUi):
             True, True, 0)
 
 
-    def to_main_menu_cb(self, widget, event):
+    def to_main_menu_cb(self, widget):
         """ Return to main menu """
 
         #Destroy fields_container
@@ -210,8 +210,11 @@ class HildonUiControllerInput(HildonBaseUi):
 #            self.liststore.destroy()
 
 class EternalControllerInput(HildonUiControllerInput):
-    """Eternal Input mode controller - nothing special."""
+    """ Eternal Input mode controller - nothing special."""
+    
 
+class RainbowControllerInput(HildonUiControllerInput):
+    """ Rainbow Input mode controller - nothing special."""
 
 def _test():
     """ Run doctests

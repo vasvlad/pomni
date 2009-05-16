@@ -401,17 +401,17 @@ style "menu-button-review" = "menu-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/review_small.png"
+            file = "review_small.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/review_big.png"
+            file = "review_big.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/review_big.png"
+            file = "review_big.png"
         }
     }
 }
@@ -423,17 +423,17 @@ style "menu-button-input" = "menu-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/input_small.png"
+            file = "input_small.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/input_big.png"
+            file = "input_big.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/input_big.png"
+            file = "input_big.png"
         }
     }
 }
@@ -445,17 +445,17 @@ style "menu-button-synh" = "menu-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/synh_small.png"
+            file = "synh_small.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/synh_big.png"
+            file = "synh_big.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/synh_big.png"
+            file = "synh_big.png"
         }
     }
 }
@@ -467,17 +467,17 @@ style "menu-button-conf" = "menu-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/conf_small.png"
+            file = "conf_small.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/conf_big.png"
+            file = "conf_big.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/conf_big.png"
+            file = "conf_big.png"
         }
     }
 }
@@ -489,17 +489,17 @@ style "menu-button-exit" = "menu-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/exit_small.png"
+            file = "exit_small.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/exit_big.png"
+            file = "exit_big.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/exit_big.png"
+            file = "exit_big.png"
         }
     }
 }
@@ -562,12 +562,12 @@ style "config-scales" {
     engine "pixmap" {
         image {
             function = SLIDER
-            file = "./images/target.png"
+            file = "target.png"
             stretch = TRUE
         }
         image {
             function = BOX
-            file = "./images/back_for_scroll.png"
+            file = "back_for_scroll.png"
             stretch = TRUE
         }
     }
@@ -584,37 +584,37 @@ style "config-checkboxes" {
             function = CHECK
             state = NORMAL
             shadow = IN
-            file = "./images/checked.png"
+            file = "checked.png"
         }
         image {
             function = CHECK
             state = NORMAL
             shadow = OUT
-            file = "./images/unchecked.png"
+            file = "unchecked.png"
         }
         image {
             function = CHECK
             state = ACTIVE
             shadow = IN
-            file = "./images/checked.png"
+            file = "checked.png"
         }
         image {
             function = CHECK
             state = ACTIVE
             shadow = OUT
-            file = "./images/unchecked.png"
+            file = "unchecked.png"
         }
         image {
             function = CHECK
             state = PRELIGHT
             shadow = IN
-            file = "./images/checked.png"
+            file = "checked.png"
         }
         image {
             function = CHECK
             state = PRELIGHT
             shadow = OUT
-            file = "./images/unchecked.png"
+            file = "unchecked.png"
         }
     }
 }
@@ -634,7 +634,7 @@ style "dialog" {
     engine "pixmap" {
         image {
             function = FLAT_BOX
-            file = "./images/dialogbkg.png"
+            file = "dialogbkg.png"
             border = {12,12,12,12}
             stretch = TRUE
         }
@@ -675,7 +675,7 @@ style "main-window" {
     engine "pixmap"{
         image {
             function = FLAT_BOX
-            file = "./images/background.png"
+            file = "background.png"
         }
     }
 }
@@ -689,19 +689,19 @@ style "add-card-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/add_card_small.png"
+            file = "add_card_small.png"
             stretch = TRUE
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/add_card_big.png"
+            file = "add_card_big.png"
             stretch = TRUE
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/add_card_big.png"
+            file = "add_card_big.png"
             stretch = TRUE
         }
     }
@@ -715,19 +715,19 @@ style "delete-card-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/delete_card_small.png"
+            file = "delete_card_small.png"
             stretch = TRUE
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/delete_card_big.png"
+            file = "delete_card_big.png"
             stretch = TRUE
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/delete_card_big.png"
+            file = "delete_card_big.png"
             stretch = TRUE
         }
     }
@@ -741,17 +741,17 @@ style "main-menu-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "./images/back_small.png"
+            file = "back_small.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "./images/back_big.png"
+            file = "back_big.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "./images/back_big.png"
+            file = "back_big.png"
         }
     }
 }
