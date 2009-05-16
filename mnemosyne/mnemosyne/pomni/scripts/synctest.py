@@ -237,7 +237,7 @@ class SyncServer(SyncEntity):
         self.server.serve_forever()
 
     def applyPayload(self, payload):
-        print 'Got pack of %d items', len(payload) 
+        print 'Got pack of %d items' % len(payload) 
 
 class SyncClient(SyncEntity):
     def __init__(self, protocol, server_url, decks, total, packsize, compression):
