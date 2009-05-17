@@ -76,7 +76,6 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
             self.checkbox_start_in_review_mode.get_active()
 
     def change_theme_cb(self, widget):
-        self.modified = True
         path_list = self.configuration["theme_path"].split("/")[:-1]
         if self.theme  == 'rainbow':
             self.theme = 'eternal'
@@ -84,6 +83,9 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
             self.theme = 'rainbow'
         path_list.append(self.theme)
         self.configuration["theme_path"] = "/".join(path_list)
+        self.config_mode_label_theme.set_text(\
+            "New theme: " + self.theme.capitalize())
+        self.configuration.save()
         self.information_box("Restart the program to take effect!", "OK")
 
     def to_main_menu_cb(self, widget):
