@@ -458,10 +458,25 @@ widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 
 style "config-scales" {
-    engine "pixmap" {}
     GtkScale::slider-length = 60
     GtkScale::slider-width = 40
     GtkScale::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            orientation = HORIZONTAL
+            file = "textarea.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+        image {
+            function = SLIDER
+            orientation = HORIZONTAL
+            file = "textarea.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
 }
 widget "*.font_size_slider" style "config-scales"
 
