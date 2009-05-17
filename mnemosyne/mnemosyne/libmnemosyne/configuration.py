@@ -103,6 +103,7 @@ class Configuration(dict):
              "latex": "latex -interaction=nonstopmode",
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
+             "themes": ['eternal', 'rainbow'],
              "scheduler": "SM2",
              "database": "sqlite",
              "fullscreen": True,
