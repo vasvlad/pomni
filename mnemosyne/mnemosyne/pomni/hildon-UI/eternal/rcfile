@@ -184,7 +184,7 @@ style "mainwindow"
 
 style "dialogwindow"
 {
-    engine "sapwood"    
+    engine "pixmap"    
     {
         image
         {
