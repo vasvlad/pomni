@@ -49,17 +49,12 @@ latex = "latex -interaction=nonstopmode"
 # Latex dvipng command.
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
 
-# path to default theme
-theme_path = "/usr/share/pomni/hildon-UI/eternal"
-
 # default scheduler
 scheduler = "SM2"
 
 # default database
 database = "sqlite"
 
-# default theme
-theme = "rainbow"
 """
 
 class Configuration(dict):
@@ -114,8 +109,7 @@ class Configuration(dict):
              "font_size": 30.0,
              "startup_with_review": False,
              "active_plugins": set(), # plugin class
-             "times_loaded": 0,
-             "theme": "rainbow"
+             "times_loaded": 0
             }.items():
             
             self.setdefault(key, value)

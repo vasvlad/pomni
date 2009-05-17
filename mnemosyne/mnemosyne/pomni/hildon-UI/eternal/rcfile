@@ -448,14 +448,18 @@ widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combob
 
 style "config-checkboxes" {
     engine "pixmap" {}
-    font_name = "Nokia Sans 13"
     GtkCheckButton::indicator-size = 45
     GtkCheckButton::indicator-spacing = 8
 }
+
+style "config-checkbox-label" {
+    font_name = "Nokia Sans 13"
+}
 widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
-widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
-widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
+widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkbox-label"
+widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkbox-label"
+widget "*.config_mode_label_theme" style "config-checkbox-label"
 
 style "config-scales" {
     GtkScale::slider-length = 60
@@ -498,6 +502,21 @@ style "button-back" {
 }
 widget "*.to_main_menu_input" style "button-back"
 widget "*.to_main_menu" style "button-back"
+
+style "config-button-theme" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+        function = BOX
+        file = "theme_button.png"
+        border = {0,0,0,0}
+        stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_button_theme" style "config-button-theme"
+
+
 
 style "delete-card" {
     GtkButton::focus-line-width = 0
