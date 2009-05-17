@@ -178,11 +178,10 @@ def randstr(length):
         for i in xrange(length)])
 
 class SyncEntity(list):
-    def __init__(self, decks, total, packsize, compression):
+    def __init__(self, decks, total, packsize):
         list.__init__(self)
         self.extend(decks)
         self.packsize = int(packsize)
-        self.compression = int(compression)
         self.total = int(total)
 
     def genChunks(self):
@@ -214,8 +213,8 @@ class SyncEntity(list):
             yield pack
 
 class SyncServer(SyncEntity):
-    def __init__(self, protocol, address, port, decks, total, packsize, compression):
-        SyncEntity.__init__(self, decks, total, packsize, compression)
+    def __init__(self, protocol, address, port, decks, total, packsize):
+        SyncEntity.__init__(self, decks, total, packsize)
         self.address = address
         self.port = port
         self.protocol = protocol
@@ -240,8 +239,8 @@ class SyncServer(SyncEntity):
         print 'Got pack of %d items' % len(payload) 
 
 class SyncClient(SyncEntity):
-    def __init__(self, protocol, server_url, decks, total, packsize, compression):
-        SyncEntity.__init__(self, decks, total, packsize, compression)
+    def __init__(self, protocol, server_url, decks, total, packsize):
+        SyncEntity.__init__(self, decks, total, packsize)
         self.server_url = server_url
         self._connection = None
         self.protocol = protocol
@@ -259,13 +258,13 @@ class SyncClient(SyncEntity):
 
         return self._connection
 
-def server(proto, host, port, deck, total, packsize, compression):
-    server = SyncServer(proto, host, int(port), [deck], total, packsize, compression)
+def server(proto, host, port, deck, total, packsize):
+    server = SyncServer(proto, host, int(port), [deck], total, packsize)
     server.serve()
 
-def client(proto, server_url, deck, total, packsize, compression):
+def client(proto, server_url, deck, total, packsize):
     
-    client = SyncClient(proto, server_url, [deck], total, packsize, compression)
+    client = SyncClient(proto, server_url, [deck], total, packsize)
     server = client.connection
 
     # create deck on server if needed
