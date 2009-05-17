@@ -37,6 +37,7 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
                     'change_font_size', 'change_startup_with_review',\
                     'change_theme'])
         self.modified = False
+        self.theme_modified = False
         self.configuration = config()
 
     def start(self, w_tree):
@@ -50,9 +51,9 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
         self.font_size_slider.set_value(self.configuration['font_size'])
         self.label_text_size.set_text("Font size: " + \
             self.font_size_slider.get_value().__int__().__str__())
-        self.theme = self.configuration['theme_path'].split("/")[-1]
+        theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
-            self.theme.capitalize())
+            theme.capitalize())
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
@@ -76,22 +77,28 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
             self.checkbox_start_in_review_mode.get_active()
 
     def change_theme_cb(self, widget):
-        path_list = self.configuration["theme_path"].split("/")[:-1]
-        if self.theme  == 'rainbow':
-            self.theme = 'eternal'
-        else:
-            self.theme = 'rainbow'
-        path_list.append(self.theme)
+        """ Change current theme """
+        self.theme_modified = True
+        path_list = self.configuration["theme_path"].split("/")
+        current_theme = path_list.pop()
+        themes = self.configuration["themes"]
+        theme_index = themes.index(current_theme)
+        try:
+            new_theme = themes[theme_index + 1]
+        except IndexError:
+            new_theme = themes[0]
+        path_list.append(new_theme)
         self.configuration["theme_path"] = "/".join(path_list)
         self.config_mode_label_theme.set_text(\
-            "New theme: " + self.theme.capitalize())
+            "New theme: " + new_theme.capitalize())
         self.configuration.save()
-        self.information_box("Restart the program to take effect!", "OK")
-
+        
     def to_main_menu_cb(self, widget):
         """ Return to main menu """
         if self.modified:
             self.configuration.save()
+        if self.theme_modified:
+            self.information_box("Restart the program to take effect!", "OK")
         self.switcher.set_current_page(self.main_menu)
 
 
