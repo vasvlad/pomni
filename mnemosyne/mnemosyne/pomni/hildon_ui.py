@@ -205,7 +205,7 @@ class HildonUI():
         """ Create Information message """
         dialog = self.w_tree.get_widget("information_dialog")
         self.w_tree.get_widget("information_dialog_label").set_text(\
-            '\n' + " " + message + " " + '\n')
+            '\n' + "  " + message + "  " + '\n')
         self.w_tree.get_widget("information_dialog_button_ok").set_label(\
             button_caption)
         dialog.run()
@@ -215,7 +215,7 @@ class HildonUI():
         """ Create Question message """
         dialog = self.w_tree.get_widget("question_dialog")
         dialog_label = self.w_tree.get_widget("question_dialog_label")
-        dialog_label.set_text('\n' + question + '\n')
+        dialog_label.set_text('\n' + "  " + question + "  " + '\n')
         result = True
         response = dialog.run()
         if response == -8:

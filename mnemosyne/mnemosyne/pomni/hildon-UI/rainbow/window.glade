@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat May 16 20:57:31 2009 -->
+<!--Generated with glade3 3.4.5 on Sun May 17 13:03:52 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -1127,6 +1127,7 @@
     <child internal-child="vbox">
       <widget class="GtkVBox" id="warning_dialog_vbox">
         <property name="visible">True</property>
+        <property name="spacing">5</property>
         <property name="homogeneous">True</property>
         <child>
           <widget class="GtkLabel" id="warning_dialog_label">
@@ -1145,14 +1146,18 @@
             <property name="layout_style">GTK_BUTTONBOX_CENTER</property>
             <child>
               <widget class="GtkButton" id="warning_dialog_button_ok">
-                <property name="height_request">40</property>
+                <property name="width_request">120</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Ok</property>
+                <property name="label" translatable="yes">OK</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="close"/>
               </widget>
+              <packing>
+                <property name="padding">40</property>
+              </packing>
             </child>
           </widget>
           <packing>
@@ -1184,11 +1189,12 @@
         <child>
           <widget class="GtkLabel" id="question_dialog_label">
             <property name="visible">True</property>
+            <property name="ypad">10</property>
             <property name="label" translatable="yes">label</property>
             <property name="justify">GTK_JUSTIFY_CENTER</property>
             <property name="wrap">True</property>
             <property name="width_chars">20</property>
-            <property name="max_width_chars">20</property>
+            <property name="max_width_chars">16</property>
           </widget>
           <packing>
             <property name="position">1</property>
@@ -1200,25 +1206,33 @@
             <property name="layout_style">GTK_BUTTONBOX_SPREAD</property>
             <child>
               <widget class="GtkButton" id="question_dialog_button_yes">
-                <property name="height_request">40</property>
+                <property name="width_request">120</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Yes</property>
+                <property name="label" translatable="yes">YES</property>
                 <property name="response_id">-8</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="question_dialog_button_no">
-                <property name="height_request">40</property>
+                <property name="width_request">120</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">No</property>
+                <property name="label" translatable="yes">NO</property>
                 <property name="response_id">-9</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -1248,6 +1262,7 @@
     <child internal-child="vbox">
       <widget class="GtkVBox" id="information_dialog_vbox">
         <property name="visible">True</property>
+        <property name="spacing">5</property>
         <child>
           <widget class="GtkLabel" id="information_dialog_label">
             <property name="visible">True</property>
@@ -1266,16 +1281,18 @@
             <property name="layout_style">GTK_BUTTONBOX_CENTER</property>
             <child>
               <widget class="GtkButton" id="information_dialog_button_ok">
-                <property name="height_request">40</property>
+                <property name="width_request">120</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">Ok</property>
+                <property name="label" translatable="yes">OK</property>
                 <property name="response_id">0</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="padding">20</property>
               </packing>
             </child>
           </widget>

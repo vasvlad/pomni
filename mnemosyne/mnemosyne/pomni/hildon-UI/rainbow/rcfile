@@ -643,15 +643,22 @@ style "dialog" {
 class "GtkDialog" style "dialog"
 
 style "dialog-label" {
-    font_name = "Nokia Sans Bold 14"
+    font_name = "Nokia Sans Bold 16"
 }
 widget "*.question_dialog_label" style "dialog-label"
 widget "*.information_dialog_label" style "dialog-label"
 widget "*.warning_dialog_label" style "dialog-label"
 
 style "question-dialog-button-yes" {
-    bg[NORMAL] = "#CCCCCC"
-    font_name = "Nokia Sans Bold 11"
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+            stretch = TRUE
+        }
+    }
+    font_name = "Nokia Sans Bold 13"
 }
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
 widget "*.question_dialog_button_yes.GtkLabel" style "question-dialog-button-yes"
@@ -661,8 +668,15 @@ widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
 widget "*.warning_dialog_button_ok.GtkLabel" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
-    bg[NORMAL] = "#CCCCCC"
-    font_name = "Nokia Sans Bold 11"
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+            stretch = TRUE
+        }
+    }
+    font_name = "Nokia Sans Bold 13"
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
 widget "*.question_dialog_button_no.GtkLabel" style "question-dialog-button-no"
