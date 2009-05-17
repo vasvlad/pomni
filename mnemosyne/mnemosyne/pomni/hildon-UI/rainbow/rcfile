@@ -663,37 +663,72 @@ widget "*.question_dialog_label" style "dialog-label"
 widget "*.information_dialog_label" style "dialog-label"
 widget "*.warning_dialog_label" style "dialog-label"
 
+style "dialog-button-label" {
+    fg[NORMAL] = "#000000"
+    fg[ACTIVE] = "#000000"
+    fg[PRELIGHT] = "#000000"
+    font_name = "Nokia Sans Bold 15"
+}
+widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
+widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
+widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
+
 style "question-dialog-button-yes" {
     engine "pixmap" {
         image {
             function = BOX
+            state = NORMAL
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
             file = "dialog_button.png"
             border = {10,10,10,10}
             stretch = TRUE
         }
     }
-    font_name = "Nokia Sans Bold 13"
 }
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
-widget "*.question_dialog_button_yes.GtkLabel" style "question-dialog-button-yes"
 widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
-widget "*.information_dialog_button_ok.GtkLabel" style "question-dialog-button-yes"
 widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
-widget "*.warning_dialog_button_ok.GtkLabel" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
     engine "pixmap" {
         image {
             function = BOX
+            state = NORMAL
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
             file = "dialog_button.png"
             border = {10,10,10,10}
             stretch = TRUE
         }
     }
-    font_name = "Nokia Sans Bold 13"
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
-widget "*.question_dialog_button_no.GtkLabel" style "question-dialog-button-no"
 #----------------------------- Dialogs ------------------
 
 
