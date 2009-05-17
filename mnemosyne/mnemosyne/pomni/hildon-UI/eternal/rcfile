@@ -40,8 +40,8 @@ pixmap_path "/usr/include/X11R6/pixmaps:./"
 # it is assigned to the actual widgets at the bottom of the file.
 
 
-style "button"
-{
+style "review-button" {
+
   GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
   GtkWidget::focus-width = 0
   GtkButton::default_border = { 0, 0, 0, 0 }
@@ -51,51 +51,65 @@ style "button"
   GtkButton::child_spacing = 0
   xthickness = 7
   ythickness = 0
-}
 
+  engine "sapwood" {
 
-style "review-button" = "button"
-{
-  engine "sapwood" 
-  {
     image {
-      function = FOCUS
-	  state    = ACTIVE
+        function = FOCUS
+	state    = ACTIVE
     }
+
     image {
-      function = FOCUS
-	  file     = "textarea.png"
-	  border   = { 16, 16, 15, 15 }
+        function = FOCUS
+	file     = "textarea.png"
+	border   = { 16, 16, 15, 15 }
     }
+
     image {
-	  function = BOX
-	  file     = "textarea.png"
-  	  border   = { 16, 16, 15, 15 }
+	function = BOX
+	file     = "textarea.png"
+  	border   = { 16, 16, 15, 15 }
     }
+
   }
 }
 
+style "getanswerarea-button" {
 
-style "getanswerarea-button" = "button"
-{
-  engine "sapwood" 
-  {
+  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
+  GtkWidget::focus-width = 0
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::child-displacement-x = 0
+  GtkButton::child-displacement-y = 0
+  GtkButton::interior_focus = 0
+  GtkButton::child_spacing = 0
+  xthickness = 7
+  ythickness = 0
+
+  engine "sapwood" {
+
     image {
-      function = FOCUS
-	  state    = ACTIVE
+        function = FOCUS
+	state    = ACTIVE
     }
+
     image {
-      function = FOCUS
-	  file     = "getanswerarea.png"
-	  border   = { 15, 15, 15, 15 }
+        function = FOCUS
+	file     = "getanswerarea.png"
+	border   = { 15, 15, 15, 15 }
+	
     }
+
     image {
-	  function = BOX
-	  file     = "getanswerarea.png"
-  	  border   = { 15, 15, 15, 15 }	
+	function = BOX
+	    file     = "getanswerarea.png"
+  	border   = { 15, 15, 15, 15 }
+  	
     }
+
   }
 }
+
 
 
 style "question_answer_frame" {
@@ -131,19 +145,15 @@ style "review-question-label" {
 style "review-getanswer-label" {
 	font_name = "Nokia Sans 40.0"
 	fg[NORMAL] = "#FFFFFF"
+	fg[ACTIVE] = "#FFFFFF"
+	fg[PRELIGHT] = "#FFFFFF"
 }
 
-
-
 style "button-label" {
-	font_name = "Nokia Sans Bold Italic 20.0"
-	#fg[NORMAL] = "#FFFFFF"
-	#fg[PRELIGHT] = "#FFFFFF"
-	#fg[SELECTED] = "#FFFFFF"
-	#font_name = "Nokia Sans 20.0"
-	#fg[NORMAL] = "#FFFFFF"
-	#fg[PRELIGHT] = "#FFFFFF"
-	#fg[SELECTED] = "#FFFFFF"
+	font_name = "Nokia Sans 20.0"
+	fg[NORMAL] = "#FFFFFF"
+	fg[PRELIGHT] = "#FFFFFF"
+	fg[SELECTED] = "#FFFFFF"
 }
 
 style "info-window-label" {
@@ -157,16 +167,31 @@ style "question-window-label" {
 }
 
 
+style "mainwindow"
+{
+   engine "sapwood"
+    {
+        image
+         {
+          function = FLAT_BOX
+          file = "background.png"
+          border = {359, 359, 215, 215}
+          detail = "base"
+          }
+     }
+}
+
 
 style "dialogwindow"
 {
-    engine "sapwood"    
+    engine "pixmap"    
     {
         image
         {
             function = FLAT_BOX
             file = "dialogbkg.png"
-            detail = "base"
+            border = {0,0,0,0}
+            stretch = TRUE
         }
     }
 }
@@ -329,41 +354,54 @@ style "theme-button" {
     image {
         function = FOCUS
 	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0}
+	border   = { 20, 20, 20, 20}
     }
 
     image {
 	function = BOX
 	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0 }
+	border   = { 20, 20, 20, 20 }
     }
 
   }
 }
 
 
-#widget "*.button_answer" style "review-button"
-#widget "*.button_getanswer" style "getanswerarea-button"
+widget "*.button_answer" style "review-button"
+widget "*.button_getanswer" style "getanswerarea-button"
 widget "*.title_label" style "review-title-label"
-#widget "*.answer" style "nothingviewport"
-#widget "*.answer_text" style "review-answer-label"
-#widget "*.question_viewport" style "nothingviewport"
-#widget "*.question_text" style "review-answer-label"
-#widget "*.getanswer" style "review-getanswer-label"
-widget "*.question" style "review-button"
+widget "*.answer" style "nothingviewport"
+widget "*.answer_text" style "review-answer-label"
+widget "*.question" style "nothingviewport"
+widget "*.question_text" style "review-question-label"
+widget "*.button_getanswer.GtkLabel" style "review-getanswer-label"
+widget "*.button_question" style "review-button"
 widget "*.switcher" style "nothing"
 widget "*.spliter" style "spliter-paned"
 widget "*.answer_frame" style "question_answer_frame"
 widget "*.question_frame" style "question_answer_frame"
 widget "*.additional" style "theme-button"
 widget "*.additionallabel" style "button-label"
+widget "*.addcardlabel" style "button-label"
 widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
 widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
 widget "*.label_warning" style "review-question-label"
 widget "*.label_ok" style "review-question-label"
 widget "*.notebook_wwindows" style "nothing"
+widget "*.review" style "theme-button"
+widget "*.input" style "theme-button"
+widget "*.configure" style "theme-button"
+widget "*.exit" style "theme-button"
+widget "*.review.GtkLabel" style "button-label"
+widget "*.input.GtkLabel" style "button-label"
+widget "*.configure.GtkLabel" style "button-label"
+widget "*.exit.GtkLabel" style "button-label"
+widget "warningwindow" style "mainwindow"
+widget "window" style "mainwindow"
 
-widget "questionwindow" style "dialogwindow"
+widget "question_dialog" style "dialogwindow"
+widget "warning_dialog" style "dialogwindow"
+widget "information_dialog" style "dialogwindow"
 widget "*.questionwindow_button_yes" style "review-button"
 widget "*.questionwindow_button_no" style "review-button"
 widget "*.questionwindow_label" style "question-window-label"
@@ -371,6 +409,9 @@ widget "*.questionwindow_label" style "question-window-label"
 widget "infowindow" style "dialogwindow"
 widget "*.infowindow_button_ok" style "review-button"
 widget "*.infowindow_label" style "info-window-label"
+
+widget "*.button_back" style "theme-button"
+widget "*.button_back.GtkLabel" style "button-label"
 
 
 
@@ -405,349 +446,181 @@ style "input-combobox-entry-arrow"
 widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
 
 
-
-
-
-
-
-#----------------------------- Main Menu ------------------
-style "program-name-label" {
-    font_name = "Nokia Sans Italic 10"
-}
-widget "*.program_name_label" style "program-name-label"
-
-style "menu-label" {
-    font_name = "Nokia Sans Bold Italic 12.0"
-}
-widget "*.menu_label_review" style "menu-label"
-widget "*.menu_label_input" style "menu-label"
-widget "*.menu_label_synh" style "menu-label"
-widget "*.menu_label_conf" style "menu-label"
-widget "*.menu_label_exit" style "menu-label"
-
-style "menu-button" {
-    GtkButton::image-spacing = 0
-    GtkButton::focus-line-width = 0
+style "config-checkboxes" {
+    engine "pixmap" {}
+    GtkCheckButton::indicator-size = 45
+    GtkCheckButton::indicator-spacing = 8
 }
 
-# Style for Review menu button. Have 3 states.
-style "menu-button-review" = "menu-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "./images/review_small.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/review_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/review_big.png"
-        }
-    }
+style "config-checkbox-label" {
+    font_name = "Nokia Sans 13"
 }
-widget "*.menu_button_review" style "menu-button-review"
-
-# Style for Input menu button. Have 3 states.
-style "menu-button-input" = "menu-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "./images/input_small.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/input_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/input_big.png"
-        }
-    }
-}
-widget "*.menu_button_input" style "menu-button-input"
-
-# Style for Synh menu button. Have 3 states.
-style "menu-button-synh" = "menu-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "./images/synh_small.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/synh_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/synh_big.png"
-        }
-    }
-}
-widget "*.menu_button_synh" style "menu-button-synh"
-
-# Style for Conf menu button. Have 3 states.
-style "menu-button-conf" = "menu-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "./images/conf_small.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/conf_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/conf_big.png"
-        }
-    }
-}
-widget "*.menu_button_conf" style "menu-button-conf"
-
-# Style for Exit menu button. Have 3 states.
-style "menu-button-exit" = "menu-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "./images/exit_small.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/exit_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/exit_big.png"
-        }
-    }
-}
-widget "*.menu_button_exit" style "menu-button-exit"
-#----------------------------- Main Menu ------------------
-
-
-#----------------------------- Review mode ------------------
-style "question-area" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "textarea.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.question_container" style "question-area"
-
-style "answer-viewport" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "textarea.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.answer_viewport" style "answer-viewport"
-
-style "grade-button" {
-    GtkButton::focus-line-width = 0
-    font_name = "Nokia Sans Bold 12"
-    bg[NORMAL] = "#AAAAAA"
-}
-widget "*.grade*" style "grade-button"
-widget "*.grade*.GtkLabel" style "grade-button"
-#----------------------------- Review mode ------------------
-
-
-#----------------------------- Input mode ------------------
-#----------------------------- Input mode ------------------
-
-
-
-#----------------------------- Config mode ------------------
-style "config-textsize-label" {
-    font_name = "Nokia Sans Bold Italic 11.0"
-}
-widget "*.label_text_size" style "config-textsize-label"
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkbox-label"
+widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkbox-label"
+widget "*.config_mode_label_theme" style "config-checkbox-label"
 
 style "config-scales" {
-    GtkScale::slider-length = 64
-    GtkScale::slider-width = 64
+    GtkScale::slider-length = 60
+    GtkScale::slider-width = 40
     GtkScale::focus-line-width = 0
     engine "pixmap" {
         image {
-            function = SLIDER
-            file = "./images/target.png"
+            function = BOX
+            orientation = HORIZONTAL
+            file = "textarea.png"
+            border = {12,12,12,12}
             stretch = TRUE
         }
         image {
-            function = BOX
-            file = "./images/back_for_scroll.png"
+            function = SLIDER
+            orientation = HORIZONTAL
+            file = "textarea.png"
+            border = {12,12,12,12}
             stretch = TRUE
         }
     }
 }
 widget "*.font_size_slider" style "config-scales"
 
-style "config-checkboxes" {
-    font_name = "Nokia Sans Italic 11"
-    GtkCheckButton::indicator-size = 50
-    GtkCheckButton::indicator-spacing = 5
-    GtkCheckButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = CHECK
-            state = NORMAL
-            shadow = IN
-            file = "./images/checked.png"
-        }
-        image {
-            function = CHECK
-            state = NORMAL
-            shadow = OUT
-            file = "./images/unchecked.png"
-        }
-        image {
-            function = CHECK
-            state = ACTIVE
-            shadow = IN
-            file = "./images/checked.png"
-        }
-        image {
-            function = CHECK
-            state = ACTIVE
-            shadow = OUT
-            file = "./images/unchecked.png"
-        }
-        image {
-            function = CHECK
-            state = PRELIGHT
-            shadow = IN
-            file = "./images/checked.png"
-        }
-        image {
-            function = CHECK
-            state = PRELIGHT
-            shadow = OUT
-            file = "./images/unchecked.png"
-        }
-    }
+style "config-textsize-label" {
+    font_name = "Nokia Sans Bold 12"
 }
-widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
-widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+widget "*.label_text_size" style "config-textsize-label"
 
-style "config-checkboxes-label" {
-    font_name = "Nokia Sans Italic 11"
-}
-widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
-widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
-#----------------------------- Config mode ------------------
-
-
-#----------------------------- General ------------------
-# Style for Main window
-style "main-window" {
-    engine "pixmap"{
-        image {
-            function = FLAT_BOX
-            file = "./images/background.png"
-        }
-    }
-}
-class "GtkWindow" style "main-window"
-
-# Style for "Add card" button
-style "add-card-button" {
+style "button-back" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "./images/add_card_small.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/add_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/add_card_big.png"
+            file = "exit_big.png"
+            border = {0,0,0,0}
             stretch = TRUE
         }
     }
 }
-widget "*.*add_card_button" style "add-card-button"
+widget "*.to_main_menu_input" style "button-back"
+widget "*.to_main_menu" style "button-back"
 
-# Style for "Delete card" button
-style "delete-card-button" {
+style "config-button-theme" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+        function = BOX
+        file = "theme_button.png"
+        border = {0,0,0,0}
+        stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_button_theme" style "config-button-theme"
+
+
+
+style "delete-card" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "./images/delete_card_small.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/delete_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/delete_card_big.png"
+            file = "delete_big.png"
+            border = {0,0,0,0}
             stretch = TRUE
         }
     }
 }
-widget "*.*delete_card_button" style "delete-card-button"
+widget "*.delete_card" style "delete-card"
+widget "*.delete_car" style "delete-card"
 
-# Style for "To Main Menu" button
-style "main-menu-button" {
+style "add-card" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "./images/back_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "./images/back_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "./images/back_big.png"
+            file = "add_big.png"
+            border = {0,0,0,0}
+            stretch = TRUE
         }
     }
 }
-widget "*.*main_menu_button" style "main-menu-button"
-#----------------------------- General ------------------
+widget "*.addcard" style "add-card"
+widget "*.to_input" style "add-card"
+
+
+style "grade0" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_0.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_1.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_2.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_3.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_4.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_5.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.grade5" style "grade5"

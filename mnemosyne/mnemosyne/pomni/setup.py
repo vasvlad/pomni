@@ -21,6 +21,9 @@ setup(name=PKG,
     data_files = [(os.path.join('share/%s/' % PKG, path), \
         [os.path.join(path, fname) for fname in files]) \
         for path, dirs, files in os.walk('hildon-UI/eternal')] + \
+        [(os.path.join('share/%s/' % PKG, path), \
+        [os.path.join(path, fname) for fname in files]) \
+        for path, dirs, files in os.walk('hildon-UI/rainbow')] + \
        [('share/dbus-1/services', ['maemo/%s.service' % PKG]),
         ('share/applications/hildon', ['maemo/%s.desktop' % PKG]),
         ('share/%s/demo' % PKG, [".%s/default.db" % PKG]),

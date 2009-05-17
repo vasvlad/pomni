@@ -66,6 +66,7 @@ class HildonUiControllerMain(HildonBaseUi):
         pass
 
 
+
 class EternalControllerMain(HildonUiControllerMain):
     """ Eternal UI Main Controller """
 
@@ -73,11 +74,41 @@ class EternalControllerMain(HildonUiControllerMain):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, [])
+        self.base.__init__(self, ["size_allocate"])
+        self.spliter_trigger = True
 
     def start(self, w_tree):
         """ Start base class """
         HildonBaseUi.start(self, w_tree)
+
+    def size_allocate_cb(self, widget, user_data):
+        """ Checking window size """
+
+        if (self.switcher.get_current_page() == self.review):
+            if (self.spliter_trigger):
+                # Set Spliter (GtkVpan) to pseudo medium
+                self.spliter_trigger = False
+                pseudo_medium = (widget.allocation.height - 70)/2 - 20
+                self.spliter.set_property('position', pseudo_medium)
+            else:
+                self.spliter_trigger = True
+
+
+
+class RainbowControllerMain(HildonUiControllerMain):
+    """ Rainbow UI Main Controller """
+
+    def __init__(self):
+        """ Added spliter widget to class """
+
+        self.base = HildonUiControllerMain
+        self.base.__init__(self, [])
+        self.spliter_trigger = True
+
+    def start(self, w_tree):
+        """ Start base class """
+        HildonBaseUi.start(self, w_tree)
+
 
 
 def _test():
