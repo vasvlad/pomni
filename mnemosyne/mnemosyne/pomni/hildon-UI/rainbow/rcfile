@@ -664,6 +664,9 @@ widget "*.information_dialog_label" style "dialog-label"
 widget "*.warning_dialog_label" style "dialog-label"
 
 style "dialog-button-label" {
+    fg[NORMAL] = "#000000"
+    fg[ACTIVE] = "#000000"
+    fg[PRELIGHT] = "#000000"
     font_name = "Nokia Sans Bold 15"
 }
 widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
