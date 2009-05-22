@@ -25,17 +25,19 @@ Hildon UI
 """
 
 from mnemosyne.libmnemosyne.component_manager import config
-from pomni.hildon_ui import HildonBaseUi
+from pomni.hildon_ui import HildonBaseUi, HildonUI
 
 
-class HildonUiControllerConfigure(HildonBaseUi):
+class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
     """ Hildon Config controller """
 
     def __init__(self):
         """ Initialization items of config window """
         HildonBaseUi.__init__(self,  signals = ['change_fullscreen', \
-                    'change_font_size', 'change_startup_with_review'])
+                    'change_font_size', 'change_startup_with_review',\
+                    'change_theme'])
         self.modified = False
+        self.theme_modified = False
         self.configuration = config()
 
     def start(self, w_tree):
@@ -49,6 +51,9 @@ class HildonUiControllerConfigure(HildonBaseUi):
         self.font_size_slider.set_value(self.configuration['font_size'])
         self.label_text_size.set_text("Font size: " + \
             self.font_size_slider.get_value().__int__().__str__())
+        theme = self.configuration['theme_path'].split("/")[-1]
+        self.config_mode_label_theme.set_text("Current theme: " + \
+            theme.capitalize())
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
@@ -71,14 +76,41 @@ class HildonUiControllerConfigure(HildonBaseUi):
         self.configuration['startup_with_review'] = \
             self.checkbox_start_in_review_mode.get_active()
 
+    def change_theme_cb(self, widget):
+        """ Change current theme """
+        self.theme_modified = True
+        path_list = self.configuration["theme_path"].split("/")
+        current_theme = path_list.pop()
+        themes = self.configuration["themes"]
+        theme_index = themes.index(current_theme)
+        try:
+            new_theme = themes[theme_index + 1]
+        except IndexError:
+            new_theme = themes[0]
+        path_list.append(new_theme)
+        self.configuration["theme_path"] = "/".join(path_list)
+        self.config_mode_label_theme.set_text(\
+            "New theme: " + new_theme.capitalize())
+        self.configuration.save()
+        
     def to_main_menu_cb(self, widget):
         """ Return to main menu """
         if self.modified:
             self.configuration.save()
+        if self.theme_modified:
+            self.information_box("Restart the program to take effect!", "OK")
         self.switcher.set_current_page(self.main_menu)
 
+
+
 class EternalControllerConfigure(HildonUiControllerConfigure):
-    """Eternal Configure controller. Nothing special."""
+    """ Eternal Configure controller """
+    pass
+
+
+
+class RainbowControllerConfigure(HildonUiControllerConfigure):
+    """ Rainbow Configure controller """
     pass
 
 

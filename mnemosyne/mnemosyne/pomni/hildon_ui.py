@@ -30,7 +30,8 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
-from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main, database
+from mnemosyne.libmnemosyne.component_manager import config, \
+    ui_controller_main, database
 
 _ = gettext.gettext
 
@@ -41,17 +42,14 @@ class HildonUiControllerException(Exception):
     def __init__(self, w_tree, exception):
         """ Show Warning Window """
 
-        w_tree.signal_autoconnect({"close": self.close_cb})
-
-        # Show warning text
-        w_tree.get_widget("label_warning").set_text(exception)
-        self.warning_window = w_tree.get_widget("warningwindow")
-        self.warning_window.show()
+        dialog = w_tree.get_widget("information_dialog")
+        w_tree.get_widget("information_dialog_label").set_text(\
+            '\n' + "  " + exception + "  " + '\n')
+        dialog.run()
+        dialog.hide()
+        
         Exception.__init__(self)
 
-    def close_cb(self, widget, event):
-        """ Close Warning Window """
-        self.warning_window.hide()
 
 
 class HildonBaseUi():
@@ -137,8 +135,7 @@ class HildonUI():
         for signal in signals:
             setattr(self, signal + '_cb', gen_callback(signal))
 
-        self.signals = ["exit", "window_state", "window_keypress",
-            "question_box_yes", "question_box_no"] + signals
+        self.signals = ["exit", "window_state", "window_keypress"] + signals
 
         # connect signals to methods
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
@@ -147,12 +144,7 @@ class HildonUI():
     def start(self, mode):
         """ Start UI  """
 
-        # Check nil database
-        if database().card_count() and mode == "review":
-            self.controllers[mode].start(self.w_tree)
-        else:
-            self.controllers['main'].start(self.w_tree)
-
+        self.controllers[mode].start(self.w_tree)
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
@@ -211,40 +203,27 @@ class HildonUI():
             return caption[:index] + caption[index+1:]
         return caption
     
-    def information_box(self, message, ok_string):
+    def information_box(self, message, button_caption):
         """ Create Information message """
-        info_window = self.w_tree.get_widget("infowindow")
-        info_window_button_ok = \
-            self.w_tree.get_widget("infowindow_button_ok")
-        info_window_button_ok.set_label(self.clear_label(ok_string))
-        info_window_label = \
-            self.w_tree.get_widget("infowindow_label")
-        info_window_label.set_text('\n' + message + '\n')
-        info_window.run()
-        info_window.hide()
+        dialog = self.w_tree.get_widget("information_dialog")
+        self.w_tree.get_widget("information_dialog_label").set_text(\
+            '\n' + "  " + message + "  " + '\n')
+        self.w_tree.get_widget("information_dialog_button_ok").set_label(\
+            button_caption)
+        dialog.run()
+        dialog.hide()
 
     def question_box(self, question, option0, option1, option2):
         """ Create Question message """
-        question_window = self.w_tree.get_widget("questionwindow")
-        questionwindow_button_yes = \
-            self.w_tree.get_widget("questionwindow_button_yes")
-        questionwindow_button_yes.set_label(self.clear_label(option0))
-        questionwindow_button_no = \
-            self.w_tree.get_widget("questionwindow_button_no")
-        questionwindow_button_no.set_label(self.clear_label(option1))
-        questionwindow_label = self.w_tree.get_widget("questionwindow_label")
-        questionwindow_label.set_text('\n' + question + '\n')
-        question_window.run()
-        question_window.hide()
-        return self.question_flag
-
-    def question_box_yes_cb(self, widget):
-        """ Set question result """
-        self.question_flag = False
-
-    def question_box_no_cb(self, widget):
-        """ Set question result """
-        self.question_flag = True
+        dialog = self.w_tree.get_widget("question_dialog")
+        dialog_label = self.w_tree.get_widget("question_dialog_label")
+        dialog_label.set_text('\n' + "  " + question + "  " + '\n')
+        result = True
+        response = dialog.run()
+        if response == -8:
+            result = False
+        dialog.hide()
+        return result
 
     def update_status_bar(self, message=None):
         """ Not Implemented """
