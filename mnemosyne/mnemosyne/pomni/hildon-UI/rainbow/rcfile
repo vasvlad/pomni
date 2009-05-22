@@ -319,24 +319,24 @@ style "theme-button" {
 
 #widget "*.button_answer" style "review-button"
 #widget "*.button_getanswer" style "getanswerarea-button"
-widget "*.title_label" style "review-title-label"
+#widget "*.title_label" style "review-title-label"
 #widget "*.answer" style "nothingviewport"
 #widget "*.answer_text" style "review-answer-label"
 #widget "*.question_viewport" style "nothingviewport"
 #widget "*.question_text" style "review-answer-label"
 #widget "*.getanswer" style "review-getanswer-label"
-widget "*.question" style "review-button"
+#widget "*.question" style "review-button"
 widget "*.switcher" style "nothing"
-widget "*.spliter" style "spliter-paned"
-widget "*.answer_frame" style "question_answer_frame"
-widget "*.question_frame" style "question_answer_frame"
-widget "*.additional" style "theme-button"
-widget "*.additionallabel" style "button-label"
-widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
-widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
-widget "*.label_warning" style "review-question-label"
-widget "*.label_ok" style "review-question-label"
-widget "*.notebook_wwindows" style "nothing"
+#widget "*.spliter" style "spliter-paned"
+#widget "*.answer_frame" style "question_answer_frame"
+#widget "*.question_frame" style "question_answer_frame"
+#widget "*.additional" style "theme-button"
+#widget "*.additionallabel" style "button-label"
+#widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
+#widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
+#widget "*.label_warning" style "review-question-label"
+#widget "*.label_ok" style "review-question-label"
+#widget "*.notebook_wwindows" style "nothing"
 
 
 style "input-combobox-entry-arrow"
@@ -367,7 +367,7 @@ style "input-combobox-entry-arrow"
     }
 }
 
-widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
+#widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
 
 
 
