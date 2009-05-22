@@ -44,7 +44,7 @@ class HildonUiControllerInput(HildonBaseUi):
     def __init__(self):
         """ Initialization items of input window """
 
-        HildonBaseUi.__init__(self, signals=['add_card', 'add_card2'])
+        HildonBaseUi.__init__(self, signals=['add_card', 'add_card2', 'change_card_type'])
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
@@ -54,96 +54,69 @@ class HildonUiControllerInput(HildonBaseUi):
         self.w_tree = None
         self.edit_boxes = {}
 
-    def create_entries (self):
-        ''' Create widget inclusive varios entries '''
 
-        fields_container = gtk.VBox()
-        fields_container.set_name('fields_container')
-        fields_container.show()
-        for fact_key, fact_key_name in self.card_type.fields:
-            # Top Alignment
-            aligment = gtk.Alignment()
-            aligment.set_property("height-request", 100)
-            fields_container.pack_start(aligment, True, True, 0)
-            # Label of field
-            labelbox = gtk.HBox()
-            left_aligment_of_label = gtk.Alignment()
-            left_aligment_of_label.set_property("width-request", 10)
-            left_aligment_of_label.show()
-            name_field = gtk.Label(fact_key_name)
-            labelbox.pack_start(left_aligment_of_label, False, False, 0)
-            labelbox.pack_start(name_field, False, False, 0)
-            labelbox.pack_start(gtk.Alignment(), True, True, 0)
-            name_field.show()
-            labelbox.show()
-            fields_container.pack_start(labelbox, True, True, 0)
-            # Entry
-            framebox = gtk.HBox()
-            #Left Alignment
-            left_aligment_of_frame = gtk.Alignment()
-            left_aligment_of_frame.set_property("width-request", 10)
-            left_aligment_of_frame.show()
-            framebox.pack_start(left_aligment_of_frame, False, False, 0)
-            #TextView itself
-            surface = gtk.Notebook()
-            surface.set_property('show_tabs', False)
-            surface.set_name('question_frame')
-            entry_field = gtk.TextView()
-            entry_field.set_property("height-request", 120)
-            entry_field.set_name(fact_key_name)
-            entry_field.show()
-            self.edit_boxes[entry_field] = fact_key
-            surface.append_page(entry_field)
-            framebox.pack_start(surface, True, True, 0)
-            surface.show()
-            #Right Alignment
-            right_aligment_of_frame = gtk.Alignment()
-            right_aligment_of_frame.set_property("width-request", 10)
-            framebox.pack_start(right_aligment_of_frame, False, False, 0)
-            right_aligment_of_frame.show()
-            framebox.show()
+    def layout (self):
+        """ Hides or shows neccessary widgets. It depends on card_type """
+        pronunciation_box = self.w_tree.get_widget("pronunciation_box")
+        pronunciation_box.set_property('visible', self.card_type.id == '3')
 
-            fields_container.pack_start(framebox, True, True, 0)
 
-        return fields_container
+    def change_card_type_cb(self, widget):
+        """ Changes card_type when user choose it from listbox """
+        # looks awful. fix me
+        cardtypes = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+        selected_item = self.w_tree.get_widget("cardtypes").get_active()
+        for key in cardtypes.keys():
+            selected_key = int(selected_item) + 1
+            if key == selected_key.__str__():
+                self.card_type = cardtypes.get(key)
+                break
+        self.layout()
+
 
     def start(self, w_tree):
         """ Start input window """
         
         self.w_tree = w_tree
-        card_type_by_id = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
 
-        #FIX ME for all types of card 
-        #Now default card type 1 (Front-to-back only) 
-        self.card_type = card_type_by_id.get('1')
+        self.switcher.set_current_page(self.input)
 
-        #Prepare fields_container
-        parent_fields_container = w_tree.get_widget('fields_container_parent')
-        self.fields_container = self.create_entries()
-        parent_fields_container.pack_start(self.fields_container, True, True, 0)
-
-        category_names_by_id = dict([(i, name) for (i, name) in \
+        # Fill Categories list
+        # categories = { id:category, ...}
+        categories = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
+        categories_widget = w_tree.get_widget("categories")
+        categories_liststore = gtk.ListStore(str)
+        for category in sorted(categories.values()):
+            categories_liststore.append([category])
+        categories_widget.set_model(categories_liststore)
+        categories_widget.set_text_column(0)
+        if categories.values():
+            categories_widget.get_child().set_text(\
+                sorted(categories.values())[0])
+        
+        # Fill Card-types list
+        # cardtypes = { id:card_type_object, ...}
+        cardtypes = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+        cardtypes_widget = w_tree.get_widget("cardtypes")
+        cardtypes_liststore = gtk.ListStore(str)
+        for key in sorted(cardtypes.keys()):
+            cardtypes_liststore.append([cardtypes.get(key).name])
+        cardtypes_widget.set_model(cardtypes_liststore)
+        cardtypes_widget.set_text_column(0)
+        if cardtypes:
+            cardtypes_widget.get_child().set_text(\
+                cardtypes.get(sorted(cardtypes.keys())[0]).name)
+        self.card_type = cardtypes.get(sorted(cardtypes.keys())[0])
+        self.layout()
 
         HildonBaseUi.start(self, w_tree)
 
-        # switch to Page Input
-        self.switcher.set_current_page(self.input)
-
-        categories = w_tree.get_widget("categories")
-        self.liststore = gtk.ListStore(str)
-
-        for category in category_names_by_id.values():
-            self.liststore.append([category])
-        categories.set_model(self.liststore)
-        categories.set_text_column(0)
-        if category_names_by_id.values():
-            categories.get_child().set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
         """ Add card to database """
-
         try:
             fact_data = self.get_data()
         except ValueError:
@@ -151,8 +124,9 @@ class HildonUiControllerInput(HildonBaseUi):
 
         # Create new card
         main = ui_controller_main()
+        categories_widget = self.w_tree.get_widget("categories")
         main.create_new_cards(fact_data, self.card_type, 5,
-            [self.categories.get_child().get_text()])
+            [categories_widget.get_child().get_text()])
 
         database().save(config()['path'])
 
@@ -162,16 +136,23 @@ class HildonUiControllerInput(HildonBaseUi):
 
     def add_card2_cb(self, widget, event):
         """ Hook for add_card for eventboxes """
-
         self.add_card_cb (widget)
+
 
     def get_data(self, check_for_required=True):
         """ Get data from widgets """
-
         fact = {}
-        for edit_box, fact_key in self.edit_boxes.iteritems():
-            start, end = edit_box.get_buffer().get_bounds()
-            fact[fact_key] = edit_box.get_buffer().get_text(start, end)
+        question_widget = self.w_tree.get_widget("question_box_text")
+        answer_widget = self.w_tree.get_widget("answer_box_text")
+        pronunciation_widget = self.w_tree.get_widget("pronunciation_box_text")
+        if self.card_type.id == '3':
+            widgets = [('f', question_widget), ('t', answer_widget), \
+                ('p', pronunciation_widget)]
+        else:
+            widgets = [('q', question_widget), ('a', answer_widget)]
+        for fact_key, widget in widgets:
+            start, end = widget.get_buffer().get_bounds()
+            fact[fact_key] = widget.get_buffer().get_text(start, end)
 
         if not check_for_required:
             return fact
@@ -180,34 +161,16 @@ class HildonUiControllerInput(HildonBaseUi):
                 raise ValueError
         return fact
 
+
     def clear_data_widgets(self):
         """ Clear data in widgets """
+        question_widget = self.w_tree.get_widget("question_box_text")
+        question_widget.get_buffer().set_text("")
+        answer_widget = self.w_tree.get_widget("answer_box_text")
+        answer_widget.get_buffer().set_text("")
+        pronunciation_widget = self.w_tree.get_widget("pronunciation_box_text")
+        pronunciation_widget.get_buffer().set_text("")
 
-        self.edit_boxes = {}
-
-        #FIX ME It may work more faster if I make clearing only edit_box
-
-        #Destroy fields_container 
-        if self.fields_container:
-            self.fields_container.destroy()
-
-        #Prepare fields_container
-        parent_fields_container = \
-            self.w_tree.get_widget('fields_container_parent')
-        self.fields_container = self.create_entries()
-        parent_fields_container.pack_start(self.fields_container, 
-            True, True, 0)
-
-
-    def to_main_menu_cb(self, widget):
-        """ Return to main menu """
-
-        #Destroy fields_container
-        if self.fields_container:
-            self.fields_container.destroy()
-        #Destroy categories entry
-#        if self.listsore:
-#            self.liststore.destroy()
 
 
 
