@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun May 17 21:16:37 2009 -->
+<!--Generated with glade3 3.4.5 on Sat May 23 22:38:41 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -452,22 +452,7 @@
                             <property name="width_request">16</property>
                             <property name="visible">True</property>
                             <child>
-                              <widget class="GtkButton" id="review_toolbar_delete_card_button1">
-                                <property name="width_request">56</property>
-                                <property name="height_request">56</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="response_id">0</property>
-                                <signal name="clicked" handler="edit_card"/>
-                                <child>
-                                  <placeholder/>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="x_options">GTK_EXPAND</property>
-                                <property name="y_options"></property>
-                              </packing>
+                              <placeholder/>
                             </child>
                           </widget>
                           <packing>
@@ -534,11 +519,30 @@
                           </packing>
                         </child>
                         <child>
+                          <widget class="GtkButton" id="edit_card">
+                            <property name="width_request">80</property>
+                            <property name="height_request">80</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="response_id">0</property>
+                            <signal name="clicked" handler="edit_card"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
                           <widget class="GtkVSeparator" id="vseparator2">
                             <property name="visible">True</property>
                           </widget>
                           <packing>
-                            <property name="position">2</property>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                         <child>
@@ -557,7 +561,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
-                            <property name="position">3</property>
+                            <property name="position">4</property>
                           </packing>
                         </child>
                       </widget>
