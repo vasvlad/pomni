@@ -47,7 +47,7 @@ class HildonUiControllerException(Exception):
             '\n' + "  " + exception + "  " + '\n')
         dialog.run()
         dialog.hide()
-        
+
         Exception.__init__(self)
 
 
