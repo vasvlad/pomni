@@ -39,47 +39,46 @@ _ = gettext.gettext
 
 
 class HildonUiControllerInput(HildonBaseUi):
-    """ Hildon Input controller """
+    """ Hildon Input controller. """
 
     def __init__(self):
-        """ Initialization items of input window """
+        """ Initialization items of input window. """
 
-        HildonBaseUi.__init__(self, signals=['add_card', 'add_card2', 'change_card_type'])
+        HildonBaseUi.__init__(self, signals=['add_card', 'change_card_type'])
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
-        self.fields_container = None
-        self.liststore = None
-        self.card_type = None
-        self.w_tree = None
-        self.edit_boxes = {}
+        self.card = ui_controller_main()
 
 
     def layout (self):
-        """ Hides or shows neccessary widgets. It depends on card_type """
-        pronunciation_box = self.w_tree.get_widget("pronunciation_box")
-        pronunciation_box.set_property('visible', self.card_type.id == '3')
+        """ Hides or shows neccessary widgets. It depends on card_type. """
+
+        self.w_tree.get_widget("pronun_box").set_property(\
+            'visible', self.card_type.id == '3')
+
+
+    def set_card_type(self):
+        """ Set card type when user select it in cardtypes combobox. """
+
+        cardtypes = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+        selected_id = (int(self.w_tree.get_widget("cardtypes").get_active())\
+            + 1).__str__()
+        self.card_type = cardtypes.get(selected_id)
 
 
     def change_card_type_cb(self, widget):
-        """ Changes card_type when user choose it from listbox """
-        # looks awful. fix me
-        cardtypes = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
-        selected_item = self.w_tree.get_widget("cardtypes").get_active()
-        for key in cardtypes.keys():
-            selected_key = int(selected_item) + 1
-            if key == selected_key.__str__():
-                self.card_type = cardtypes.get(key)
-                break
+        """ Changes cardtype when user choose it from listbox. """
+
+        self.set_card_type()
         self.layout()
 
 
     def start(self, w_tree):
-        """ Start input window """
+        """ Start input window. """
         
         self.w_tree = w_tree
-
         self.switcher.set_current_page(self.input)
 
         # Fill Categories list
@@ -116,35 +115,28 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
     def add_card_cb(self, widget):
-        """ Add card to database """
+        """ Add card to database. """
+
         try:
-            fact_data = self.get_data()
+            fact_data = self.get_widgets_data()
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
         # Create new card
-        main = ui_controller_main()
-        categories_widget = self.w_tree.get_widget("categories")
-        main.create_new_cards(fact_data, self.card_type, 5,
-            [categories_widget.get_child().get_text()])
-
+        #self.card = ui_controller_main()
+        self.card.create_new_cards(fact_data, self.card_type, 0, [\
+            self.w_tree.get_widget("categories").get_child().get_text()], True)
         database().save(config()['path'])
-
-        #FIX ME need checking for success for previous operations
-        self.clear_data_widgets()
+        self.clear_widgets()
 
 
-    def add_card2_cb(self, widget, event):
-        """ Hook for add_card for eventboxes """
-        self.add_card_cb (widget)
+    def get_widgets_data(self, check_for_required=True):
+        """ Get data from widgets. """
 
-
-    def get_data(self, check_for_required=True):
-        """ Get data from widgets """
         fact = {}
         question_widget = self.w_tree.get_widget("question_box_text")
         answer_widget = self.w_tree.get_widget("answer_box_text")
-        pronunciation_widget = self.w_tree.get_widget("pronunciation_box_text")
+        pronunciation_widget = self.w_tree.get_widget("pronun_box_text")
         if self.card_type.id == '3':
             widgets = [('f', question_widget), ('t', answer_widget), \
                 ('p', pronunciation_widget)]
@@ -154,22 +146,19 @@ class HildonUiControllerInput(HildonBaseUi):
             start, end = widget.get_buffer().get_bounds()
             fact[fact_key] = widget.get_buffer().get_text(start, end)
 
-        if not check_for_required:
-            return fact
-        for required in self.card_type.required_fields():
-            if not fact[required]:
-                raise ValueError
+        if check_for_required:
+            for required in self.card_type.required_fields():
+                if not fact[required]:
+                    raise ValueError
         return fact
 
 
-    def clear_data_widgets(self):
-        """ Clear data in widgets """
-        question_widget = self.w_tree.get_widget("question_box_text")
-        question_widget.get_buffer().set_text("")
-        answer_widget = self.w_tree.get_widget("answer_box_text")
-        answer_widget.get_buffer().set_text("")
-        pronunciation_widget = self.w_tree.get_widget("pronunciation_box_text")
-        pronunciation_widget.get_buffer().set_text("")
+    def clear_widgets(self):
+        """ Clear data in widgets. """
+
+        self.w_tree.get_widget("question_box_text").get_buffer().set_text("")
+        self.w_tree.get_widget("answer_box_text").get_buffer().set_text("")
+        self.w_tree.get_widget("pronun_box_text").get_buffer().set_text("")
 
 
 
