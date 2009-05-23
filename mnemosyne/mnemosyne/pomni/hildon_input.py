@@ -48,7 +48,6 @@ class HildonUiControllerInput(HildonBaseUi):
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
-        self.card = ui_controller_main()
 
 
     def layout (self):
@@ -123,8 +122,8 @@ class HildonUiControllerInput(HildonBaseUi):
             return # Let the user try again to fill out the missing data.
 
         # Create new card
-        #self.card = ui_controller_main()
-        self.card.create_new_cards(fact_data, self.card_type, 0, [\
+        card = ui_controller_main()
+        card.create_new_cards(fact_data, self.card_type, 0, [\
             self.w_tree.get_widget("categories").get_child().get_text()], True)
         database().save(config()['path'])
         self.clear_widgets()
