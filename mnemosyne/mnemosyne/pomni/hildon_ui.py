@@ -252,17 +252,6 @@ class HildonUI():
         self.controllers['input'].start(fact)
 
 
-def _test():
-    """ Run doctests
-    """
-    import doctest
-    doctest.testmod()
-
-
-if __name__ == "__main__":
-    _test()
-
-
 # Local Variables:
 # mode: python
 # py-indent-offset: 4

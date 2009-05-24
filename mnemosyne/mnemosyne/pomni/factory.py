@@ -53,10 +53,6 @@ def ui_factory(interface=None):
     raise ValueError("No idea how to create %s UI" % interface)
 
 
-if __name__ == "__main__":
-    _test()
-
-
 # Local Variables:
 # mode: python
 # py-indent-offset: 4
