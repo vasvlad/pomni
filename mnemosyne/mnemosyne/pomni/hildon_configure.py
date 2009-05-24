@@ -31,19 +31,20 @@ from pomni.hildon_ui import HildonBaseUi, HildonUI
 class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
     """ Hildon Config controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
+
         """ Initialization items of config window """
-        HildonBaseUi.__init__(self,  signals = ['change_fullscreen', \
+        self.w_tree = w_tree
+        HildonBaseUi.__init__(self, self.w_tree, signals = [ \
+                    'change_fullscreen', \
                     'change_font_size', 'change_startup_with_review',\
                     'change_theme'])
         self.modified = False
         self.theme_modified = False
         self.configuration = config()
 
-    def start(self, w_tree):
+    def start(self):
         """ Start config window """
-        self.w_tree = w_tree
-        HildonBaseUi.start(self, w_tree)
         self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])
         self.checkbox_start_in_review_mode.set_active(
@@ -54,7 +55,7 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
         theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
-        self.switcher.set_current_page(self.config)
+        HildonBaseUi.start(self, self.config)
 
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
