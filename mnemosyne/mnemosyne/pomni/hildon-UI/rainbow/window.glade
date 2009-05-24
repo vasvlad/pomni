@@ -700,7 +700,7 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <widget class="GtkVBox" id="vbox3">
+                  <widget class="GtkVBox" id="input_data">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <child>
@@ -830,12 +830,12 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkVBox" id="pronunciation_box">
+                          <widget class="GtkVBox" id="pronun_box">
                             <property name="visible">True</property>
                             <property name="border_width">10</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <widget class="GtkLabel" id="pronunciation_box_label">
+                              <widget class="GtkLabel" id="pronun_box_label">
                                 <property name="visible">True</property>
                                 <property name="xalign">0</property>
                                 <property name="label" translatable="yes">Pronunciation: </property>
@@ -847,7 +847,7 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkTextView" id="pronunciation_box_text">
+                              <widget class="GtkTextView" id="pronun_box_text">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                               </widget>
