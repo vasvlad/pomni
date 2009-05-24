@@ -541,6 +541,32 @@ style "grade-button" {
 }
 widget "*.grade*" style "grade-button"
 widget "*.grade*.GtkLabel" style "grade-button"
+
+# Style for "Edit card" button
+style "edit-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "edit_card_small.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "edit_card_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "edit_card_big.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.review_toolbar_edit_card_button" style "edit-card-button"
 #----------------------------- Review mode ------------------
 
 
