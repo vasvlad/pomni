@@ -41,17 +41,18 @@ _ = gettext.gettext
 class HildonUiControllerInput(HildonBaseUi):
     """ Hildon Input controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         """ Initialization items of input window """
 
-        HildonBaseUi.__init__(self, signals=['add_card', 'add_card2'])
+        self.w_tree = w_tree
+        HildonBaseUi.__init__(self, self.w_tree, signals=['add_card', 'add_card2'])
 
         self.title = _("Mnemosyne") + " - " + \
             splitext(basename(config()["path"]))[0]
         self.fields_container = None
         self.liststore = None
         self.card_type = None
-        self.w_tree = None
+
         self.edit_boxes = {}
 
     def create_entries (self,fact = None):
@@ -112,10 +113,8 @@ class HildonUiControllerInput(HildonBaseUi):
 
         return fields_container
 
-    def start(self, w_tree,fact = None):
+    def start(self, fact = None):
         """ Start input window """
-        
-        self.w_tree = w_tree
 
         if fact:
              self.fact = fact
@@ -136,19 +135,18 @@ class HildonUiControllerInput(HildonBaseUi):
             self.fields_container.destroy()
 
         #Prepare fields_container
-        parent_fields_container = w_tree.get_widget('fields_container_parent')
+        parent_fields_container = self.w_tree.get_widget('fields_container_parent')
         self.fields_container = self.create_entries(self.fact)
         parent_fields_container.pack_start(self.fields_container, True, True, 0)
 
         category_names_by_id = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
 
-        HildonBaseUi.start(self, w_tree)
 
         # switch to Page Input
         self.switcher.set_current_page(self.input)
 
-        categories = w_tree.get_widget("categories")
+        categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
 
         for category in category_names_by_id.values():

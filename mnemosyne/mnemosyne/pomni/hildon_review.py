@@ -40,10 +40,11 @@ _ = gettext.gettext
 class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     """ Hildon Review controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         """ Initialization items of review window """
 
-        HildonBaseUi.__init__(self, signals=["get_answer", \
+        self.w_tree = w_tree
+        HildonBaseUi.__init__(self, self.w_tree, signals=["get_answer", \
             "grade", "delete_card", "edit_card"])
         UiControllerReview.__init__(self)
 
@@ -52,12 +53,12 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.grade = 0
         self.card = None
+        
 
 
-    def start(self, w_tree):
+    def start(self):
         """ Start new review window """
 
-        HildonBaseUi.start(self, w_tree)
         self.switcher.set_current_page(self.review)
         self.new_question()
 
@@ -127,9 +128,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
+        """ Initialize class """
+
         self.base = HildonUiControllerReview
-        self.base.__init__(self)
+        self.base.__init__(self, w_tree)
 
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible """
@@ -139,7 +142,7 @@ class EternalControllerReview(HildonUiControllerReview):
                 _("Database is empty!"), "OK")
             self.button_getanswer.set_sensitive(False)
             return
-            
+
         self.card = scheduler().get_new_question(learn_ahead)
         if self.card:
             document = getattr(self,'question_text').document

@@ -45,24 +45,10 @@ def ui_factory(interface=None):
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-        try:
-            theme = config()["theme_path"].split("/")[-1]
-        except KeyError:
-            globals()[theme] = "eternal"
-
+    
         from pomni.hildon_ui import HildonUI
-
-        controllers = {}
-        for mode in ("review", "input", "configure", "main"):
-            cname = theme.capitalize() + 'Controller' + mode.capitalize()
-            module = __import__("pomni.hildon_%s" % mode, 
-                    globals(), locals(), [cname])
-            controllers[mode] = getattr(module, cname)()
-
-        component_manager.register("ui_controller_review", \
-            controllers["review"])
         component_manager.register("renderer", HtmlHildon())
-        return HildonUI(controllers)
+        return HildonUI()
 
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)

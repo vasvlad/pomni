@@ -30,6 +30,7 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
+from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.component_manager import config, \
     ui_controller_main, database
 
@@ -58,15 +59,19 @@ class HildonBaseUi():
     # page's indexes in switcher
     main_menu, review, input, config = range(4)
 
-    def __init__(self, signals):
+    def __init__(self,  w_tree, signals):
 
         self.signals = ["to_main_menu"]
 
         if signals:
             self.signals.extend(signals)
 
-        self.w_tree = None
-        self.starting = False
+        self.w_tree = w_tree
+        # connect signals to methods
+        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+                for sig in self.signals]))
+
+
 
     def __getattr__(self, name):
         """ Lazy get widget as an attribute """
@@ -75,18 +80,6 @@ class HildonBaseUi():
         if widget:
             return widget
         raise AttributeError()
-
-    def start(self, w_tree):
-        """ Init w_tree, connect callbacks to signals """
-
-        if self.starting == False:
-
-            self.w_tree = w_tree
-
-            # connect signals to methods
-            w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-                for sig in self.signals]))
-            self.starting = True
 
 
     def to_main_menu_cb(self, widget):
@@ -99,21 +92,41 @@ class HildonBaseUi():
 class HildonUI():
     """ Hildon UI """
 
-    def __init__(self, controllers):
+    def __init__(self):
 
         def gen_callback(mode):
             """Generate callback for mode."""
 
             def callback(widget, event = None):
                 """Callback function."""
-                self.controllers[mode].start(self.w_tree)
+                self.controllers[mode].start()
             return callback
 
+
+        try:
+            theme = config()["theme_path"].split("/")[-1]
+        except KeyError:
+            globals()[theme] = "eternal"
+
+        # Load the glade file for current theme
         ui_controller_main().widget = self
         theme_path = config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
+
+
+
+        controllers = {}
+        for mode in ("review", "input", "configure", "main"):
+            cname = theme.capitalize() + 'Controller' + mode.capitalize()
+            module = __import__("pomni.hildon_%s" % mode, 
+                    globals(), locals(), [cname])
+            controllers[mode] = getattr(module, cname)(self.w_tree)
+
+        component_manager.register("ui_controller_review", \
+            controllers["review"])
+
 
         # Set unvisible tabs of switcher
         switcher = self.w_tree.get_widget("switcher")
@@ -144,7 +157,7 @@ class HildonUI():
     def start(self, mode):
         """ Start UI  """
 
-        self.controllers[mode].start(self.w_tree)
+        self.controllers[mode].start()
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
@@ -233,7 +246,7 @@ class HildonUI():
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
         """ Start Edit/Update window """
 
-        self.controllers['input'].start(self.w_tree,fact)
+        self.controllers['input'].start(fact)
 
 
 def _test():
