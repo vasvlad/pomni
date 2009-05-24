@@ -146,6 +146,7 @@ class HildonUiControllerInput(HildonBaseUi):
         categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
 
+        self.liststore.clear()
         for category in category_names_by_id.values():
             self.liststore.append([category])
         categories.set_model(self.liststore)
