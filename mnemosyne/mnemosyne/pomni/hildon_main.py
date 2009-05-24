@@ -101,7 +101,7 @@ class RainbowControllerMain(HildonUiControllerMain):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, [])
+        self.base.__init__(self, w_tree, [])
         self.spliter_trigger = True
 
     def start(self, ):

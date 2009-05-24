@@ -191,9 +191,9 @@ class EternalControllerReview(HildonUiControllerReview):
 class RainbowControllerReview(HildonUiControllerReview):
     """ Rainbow UI review controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         self.base = HildonUiControllerReview
-        self.base.__init__(self)
+        self.base.__init__(self, w_tree)
 
 
     def new_question(self, learn_ahead=False):

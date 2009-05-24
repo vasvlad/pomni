@@ -33,4 +33,4 @@ latex = "latex"
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
 
 # path to default theme
-theme_path = "./hildon-UI/eternal"
+theme_path = "./hildon-UI/rainbow"
