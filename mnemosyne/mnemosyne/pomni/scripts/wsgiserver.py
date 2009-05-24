@@ -61,19 +61,17 @@ class MyWSGIRequestHandler(WSGIRequestHandler):
 def wsgi_application(environ, start_response, socket):
     import simplejson
     if environ['HTTP_TRANSFER_ENCODING'] == 'chunked':
-        i = 0
         while True:
             size = socket.readline()
             if size == '0\r\n':
                 break
-            simplejson.loads(socket.readline())
-            i += 1
+            print simplejson.loads(socket.readline())
             if socket.readline() != '\r\n':
                 start_response('400 Bad Request', [('Content-Type', 'text/html')])
                 return ["Wrong format of HTTP chunk\n\r"]
 
     start_response('200 OK', [('Content-Type', 'text/json')])
-    return ["%d\n\r" % i]
+    return ["OK\n\r"]
 
 httpd = make_server('', 9999, wsgi_application, handler_class=MyWSGIRequestHandler)
 httpd.serve_forever()
