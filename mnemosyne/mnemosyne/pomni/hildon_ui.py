@@ -79,12 +79,14 @@ class HildonBaseUi():
     def start(self, w_tree):
         """ Init w_tree, connect callbacks to signals """
 
-        if not self.w_tree:
+        if self.starting == False:
+
             self.w_tree = w_tree
 
             # connect signals to methods
             w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in self.signals]))
+            self.starting = True
 
 
     def to_main_menu_cb(self, widget):
