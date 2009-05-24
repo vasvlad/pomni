@@ -87,7 +87,10 @@ class HildonBaseUi():
 
         self.switcher.set_current_page(self.main_menu)
 
+    def start(self, mode = None):
+        """ Change page """
 
+        self.switcher.set_current_page(mode)
 
 class HildonUI():
     """ Hildon UI """

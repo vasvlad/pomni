@@ -28,7 +28,6 @@ import gettext
 import gtk
 import gtk.glade
 
-from os.path import splitext, basename
 
 from mnemosyne.libmnemosyne.component_manager import database, config, \
         ui_controller_main, card_types
@@ -45,17 +44,18 @@ class HildonUiControllerInput(HildonBaseUi):
         """ Initialization items of input window """
 
         self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals=['add_card', 'add_card2'])
+        HildonBaseUi.__init__(self, self.w_tree, signals=['add_card', \
+                                                          'add_card2'])
 
-        self.title = _("Mnemosyne") + " - " + \
-            splitext(basename(config()["path"]))[0]
         self.fields_container = None
         self.liststore = None
         self.card_type = None
+        self.fact = None
+        self.update = None
 
         self.edit_boxes = {}
 
-    def create_entries (self,fact = None):
+    def create_entries (self, fact = None):
 
         ''' Create widget inclusive varios entries '''
 
@@ -93,8 +93,8 @@ class HildonUiControllerInput(HildonBaseUi):
             entry_field = gtk.TextView()
             #Fill entry
             if fact:
-                 textbuffer = entry_field.get_buffer()
-                 textbuffer.set_text(fact.data[fact_key])
+                textbuffer = entry_field.get_buffer()
+                textbuffer.set_text(fact.data[fact_key])
             entry_field.set_property("height-request", 120)
             entry_field.set_name(fact_key_name)
             entry_field.show()
@@ -116,12 +116,8 @@ class HildonUiControllerInput(HildonBaseUi):
     def start(self, fact = None):
         """ Start input window """
 
-        if fact:
-             self.fact = fact
-             self.update = True
-        else:
-             self.update = False
-             self.fact = None
+        self.fact = fact
+        self.update = fact is not None
 
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
@@ -135,7 +131,8 @@ class HildonUiControllerInput(HildonBaseUi):
             self.fields_container.destroy()
 
         #Prepare fields_container
-        parent_fields_container = self.w_tree.get_widget('fields_container_parent')
+        parent_fields_container = \
+                               self.w_tree.get_widget('fields_container_parent')
         self.fields_container = self.create_entries(self.fact)
         parent_fields_container.pack_start(self.fields_container, True, True, 0)
 
@@ -144,7 +141,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
         # switch to Page Input
-        self.switcher.set_current_page(self.input)
+        HildonBaseUi.start(self, self.input)
 
         categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
@@ -168,8 +165,10 @@ class HildonUiControllerInput(HildonBaseUi):
 
         if self.update:
             # Update card
-            status = main.update_related_cards(self.fact, fact_data,
-                                self.card_type, [self.categories.get_child().get_text()], None)
+            main.update_related_cards(self.fact, fact_data,
+                                    self.card_type,
+                                    [self.categories.get_child().get_text()],
+                                    None)
         else:
             # Create new card
             main.create_new_cards(fact_data, self.card_type, 5,

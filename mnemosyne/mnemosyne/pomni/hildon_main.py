@@ -92,8 +92,7 @@ class EternalControllerMain(HildonUiControllerMain):
 
     def start(self):
         """ Start base class """
-
-        self.switcher.set_current_page(self.main_menu)
+        HildonBaseUi.start(self, self.main_menu)
 
 class RainbowControllerMain(HildonUiControllerMain):
     """ Rainbow UI Main Controller """

@@ -26,13 +26,11 @@ Hildon UI
 
 import gettext
 
-from os.path import splitext, basename
-
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
-from pomni.hildon_ui import HildonBaseUi, HildonUiControllerException
+from pomni.hildon_ui import HildonBaseUi
 
 _ = gettext.gettext
 
@@ -48,31 +46,26 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
             "grade", "delete_card", "edit_card"])
         UiControllerReview.__init__(self)
 
-        self.title = _("Mnemosyne") + " - " + \
-            splitext(basename(config()["path"]))[0]
-
         self.grade = 0
         self.card = None
-        
 
 
     def start(self):
         """ Start new review window """
 
-        self.switcher.set_current_page(self.review)
+        HildonBaseUi.start(self, self.review)
         self.new_question()
 
-
-    def update_dialog(self, redraw_all = True):
+    # UiControllerReview API
+    def update_dialog(self):
         """ This is part of UiControllerReview API """
 
         self.new_question()
 
-
     def new_question(self, learn_ahead=False):
         """ Create new question """
 
-        
+
     def show_answer(self):
         """ Show answer in review window """
 
@@ -116,12 +109,8 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
         self.card = None
 
-    # UiControllerReview API
 
-    def update_dialog(self, redraw_all= None):
-        """ This is part of UiControllerReview API. Don't remove this hook"""
 
-        pass
 
 
 

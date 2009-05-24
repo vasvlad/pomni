@@ -27,7 +27,6 @@ UI Factory. Creates UI objects
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
-from mnemosyne.libmnemosyne.component_manager import config
 
 def ui_factory(interface=None):
     """ Create UI(View in terms of MVC) """

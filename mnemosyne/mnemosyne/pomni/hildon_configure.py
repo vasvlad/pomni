@@ -35,7 +35,8 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
 
         """ Initialization items of config window """
         self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals = ['change_fullscreen', \
+        HildonBaseUi.__init__(self, self.w_tree, signals = [ \
+                    'change_fullscreen', \
                     'change_font_size', 'change_startup_with_review',\
                     'change_theme'])
         self.modified = False
@@ -54,7 +55,7 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
         theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
-        self.switcher.set_current_page(self.config)
+        HildonBaseUi.start(self, self.config)
 
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
