@@ -1,54 +1,19 @@
-import os, sys, random, time, urllib, httplib, urlparse
-import simplejson
+#!/usr/bin/python -tt
+# vim: sw=4 ts=4 expandtab ai
 
-def parse_JSON(fileobj):
-    i = 0
-    for data in os.fdopen(fileobj.fileno(), 'rb', -1):
-        simplejson.loads(data)
-        i += 1
-    return i
+# Author: Ed Bartosh <bartosh@gmail.com>
 
-def parse_XML(fileobj): # Incrementally.
-    from xml.etree.cElementTree import iterparse
-    context = iterparse(fileobj, events=("end",))
-    i = 0
-    for event, elem in context:
-        if event == "end" and elem.tag == "card":
-            data = dict(elem.items()).values()
-            for j in [0, 2, 3, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17]:
-                data[j] = int(data[j])
-            for j in [4, 11, 12]:
-                data[j] = float(data[j])
-            i += 1
-    return i
+"""WSGI sync client for mnemosyne."""
+
+import os, time, urllib, httplib, urlparse
+from random import randint, choice
 
 def randstr(length):
-    return ''.join([random.choice('abcdefghijklmnopqrstuvwxyz') \
+    return ''.join([choice('abcdefghijklmnopqrstuvwxyz') \
            for i in xrange(length)])
 
-def generate_JSON(cards=10000):
-    for cardid in xrange(cards):
-        data = [cardid, randstr(40), cardid, cardid,
-            random.randint(1,5), str(2.5),random.randint(1,100), str(0), str(0), str(10),
-            str(0.0), str(0.0), str(1), randstr(40), str(10), str(1), str(1), str(1),
-            randstr(40), randstr(40)]
-        yield "%s\n" % simplejson.dumps(data)
-
-def generate_XML(cards=10000):
-    from xml.etree.cElementTree import Element, SubElement, tostring
-    yield "<mnemosyne>"
-    root = Element("mnemosyne")
-    for cardid in xrange(cards):
-        yield """<card _fact_id="%s" _id="%s" acq_reps="%s" acq_reps_since_lapse="%s" active="%s" easiness="%s" extra_data="%s" fact_view_id="%s" grade="%s" id="%s" in_view="%s" lapses="%s" last_rep="%s" needs_sync="%s" next_rep="%s" ret_reps="%s" seen_in_this_session="%s" unseen="%s"><q>%s</q><a>%s</a></card>""" % (cardid, randstr(40), cardid, cardid,
-                    random.randint(1,5), str(2.5), random.randint(1,100),
-                    str(0), str(0), str(10),
-                    str(0.0), str(0.0), str(1),
-                    randstr(40), str(10),
-                    str(1), str(1), str(1), randstr(40), randstr(40))
-    yield "</mnemosyne>"
-
 def parse_uri(uri):
-    scheme, netplace, path, query, fragid = urlparse.urlsplit(uri)
+    netplace, path, query = urlparse.urlsplit(uri)[1:4]
 
     if ':' in netplace: 
         host, port = netplace.split(':', 2)
@@ -61,7 +26,9 @@ def parse_uri(uri):
 
     return host, port, path
 
-def putdata(uri, iterator):
+def postdata(uri, iterator):
+    """Post data incrementally using chunked HTTP POST."""
+
     host, port, path = parse_uri(uri)
     conn = httplib.HTTPConnection(host, port)
     conn.putrequest('POST', path)
@@ -106,32 +73,86 @@ def run_async(func):
     return async_func
 
 @run_async
-def getcardsjson():
-    t1 = time.time()
-    cards = parse_JSON(urllib.urlopen("http://mnemosyneweb.appspot.com/sync/JSON"))
-    print "getcards JSON: got %d cards from server in %f sec" % (cards, time.time()-t1)
+def getcards(urlp, proto, cards=10000):
+    """Get cards from server and parse them."""
+    
+    def parse_json(fileobj):
+        """Parse card info in JSON format."""
+        import simplejson
+        i = 0
+        for data in os.fdopen(fileobj.fileno(), 'rb', -1):
+            simplejson.loads(data)
+            i += 1
+        return i
+
+    def parse_xml(fileobj): # Incrementally.
+        """Parse card info in XML format."""
+
+        from xml.etree.cElementTree import iterparse
+        context = iterparse(fileobj, events=("end",))
+        i = 0
+        for event, elem in context:
+            if event == "end" and elem.tag == "card":
+                data = dict(elem.items()).values()
+                for j in [0, 2, 3, 5, 6, 7, 8, 10, 13, 14, 15, 16, 17]:
+                    data[j] = int(data[j])
+                for j in [4, 11, 12]:
+                    data[j] = float(data[j])
+                i += 1
+        return i
+
+    start = time.time()
+    
+    cards = locals()["parse_%s" % proto.lower()](\
+        urllib.urlopen("%s/%s?cards=%d" % (urlp, proto, cards)))
+
+    print "getcards %s: got %d cards from server in %f sec" % \
+        (proto, cards, time.time() - start)
 
 @run_async
-def putcardsjson():
-    t1 = time.time()
-    message = putdata("http://mnemosyneweb.appspot.com/sync/JSON", generate_JSON())
-    print "putcards JSON: %s %f" % (message, time.time()-t1)
+def sendcards(urlp, proto, cards=10000):
+    """Send cards to the server."""
 
-@run_async
-def getcardsxml():
-    t1 = time.time()
-    cards = parse_XML(urllib.urlopen("http://mnemosyneweb.appspot.com/sync/XML"))
-    print "getcards XML: got %d cards from server in %f sec" % (cards, time.time()-t1)
+    def generate_xml(cards=cards):
+        """Generate card info in XML format."""
 
-@run_async
-def putcardsxml():
-    t1 = time.time()
-    message = putdata("http://mnemosyneweb.appspot.com/sync/XML", generate_XML())
-    print "putcards XML: %s %f" % (message, time.time()-t1)
+        yield "<mnemosyne>"
+        for cardid in xrange(cards):
+            yield '<card _fact_id="%s" _id="%s" acq_reps="%s" '\
+              'acq_reps_since_lapse="%s" active="%s" easiness="%s" '\
+              'extra_data="%s" fact_view_id="%s" grade="%s" id="%s" '\
+              'in_view="%s" lapses="%s" last_rep="%s" needs_sync="%s" '\
+              'next_rep="%s" ret_reps="%s" seen_in_this_session="%s" '\
+              'unseen="%s"><q>%s</q><a>%s</a></card>' % (cardid, randstr(40),
+              cardid, cardid, randint(1,5), str(2.5),
+              randint(1,100), str(0), str(0), str(10), str(0.0),
+              str(0.0), str(1), randstr(40), str(10), str(1), str(1), str(1),
+              randstr(40), randstr(40))
+        yield "</mnemosyne>"
+
+    def generate_json(cards=10000):
+
+        """Generate card info in JSON format."""
+        import simplejson
+        for cardid in xrange(cards):
+            data = [cardid, randstr(40), cardid, cardid,
+                randint(1,5), str(2.5), randint(1,100), str(0), str(0), 
+                str(10), str(0.0), str(0.0), str(1), randstr(40), str(10),
+                str(1), str(1), str(1), randstr(40), randstr(40)]
+            yield "%s\n" % simplejson.dumps(data)
+
+
+    start = time.time()
+    
+    message = postdata("%s/%s" %(urlp, proto), 
+                locals()["generate_%s" % proto.lower()](cards))
+    
+    print "putcards %s: %s took %f sec" % (proto, message, time.time() - start)
 
 if __name__ == "__main__":
-    getcardsjson()
-    getcardsxml()
-    putcardsjson()
-    putcardsxml()
+    URL = "http://mnemosyneweb.appspot.com/sync"
+    getcards(URL, "JSON", 1000)
+    getcards(URL, "XML", 1000)
+    sendcards(URL, "JSON", 1000)
+    sendcards(URL, "XML", 1000)
 
