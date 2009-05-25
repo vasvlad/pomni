@@ -40,226 +40,77 @@
 # it is assigned to the actual widgets at the bottom of the file.
 
 
-style "button"
-{
-  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
-  GtkWidget::focus-width = 0
-  GtkButton::default_border = { 0, 0, 0, 0 }
-  GtkButton::child-displacement-x = 0
-  GtkButton::child-displacement-y = 0
-  GtkButton::interior_focus = 0
-  GtkButton::child_spacing = 0
-  xthickness = 7
-  ythickness = 0
-}
-
-
-style "review-button" = "button"
-{
-  engine "sapwood" 
-  {
-    image {
-      function = FOCUS
-	  state    = ACTIVE
-    }
-    image {
-      function = FOCUS
-	  file     = "textarea.png"
-	  border   = { 16, 16, 15, 15 }
-    }
-    image {
-	  function = BOX
-	  file     = "textarea.png"
-  	  border   = { 16, 16, 15, 15 }
-    }
-  }
-}
-
-
-style "getanswerarea-button" = "button"
-{
-  engine "sapwood" 
-  {
-    image {
-      function = FOCUS
-	  state    = ACTIVE
-    }
-    image {
-      function = FOCUS
-	  file     = "getanswerarea.png"
-	  border   = { 15, 15, 15, 15 }
-    }
-    image {
-	  function = BOX
-	  file     = "getanswerarea.png"
-  	  border   = { 15, 15, 15, 15 }	
-    }
-  }
-}
-
-
 style "question_answer_frame" {
-#  xthickness = 8
-#  ythickness = 8
-  
-  engine "sapwood" {
-    image {
-	function = BOX
-	file     = "textarea.png"
-	border   = { 16, 16, 15, 15 }
+    xthickness = 5
+    ythickness = 5
+    engine "sapwood" {
+        image {
+	    function = BOX
+	    file     = "textarea.png"
+	    border   = { 16, 16, 15, 15 }
+        }
     }
-  }
 }
 
+style "nothing" {
+    GtkNotebook::inner_left_border = 0
+    GtkNotebook::inner_right_border = 0
+    GtkNotebook::tab-overlap = 0
+    GtkNotebook::arrow-spacing = 6
+    GtkNotebook::label-padding = 2
 
-#------ fonts styles -------------
-style "review-title-label" {
-	font_name = "Nokia Sans 16.0"
-	fg[NORMAL] = "#c2c1bf"
+    # Themings for images on different sides of the notebook.
+    engine "sapwood" {
+        image {
+            function = BOX
+            detail   = "notebook"
+            border   = { 0, 0, 0, 0 }
+            file     = "nothing.png"
+        }
+    }
 }
 
-style "review-answer-label" {
-	font_name = "Nokia Sans 25.0"
-	fg[NORMAL] = "#000000"
-}
-
-style "review-question-label" {
-	font_name = "Nokia Sans 25.0"
-	fg[NORMAL] = "#000000"
-}
-
-style "review-getanswer-label" {
-	font_name = "Nokia Sans 40.0"
-	fg[NORMAL] = "#FFFFFF"
-}
-
-
-
-style "button-label" {
-	font_name = "Nokia Sans Bold Italic 20.0"
-}
-
-style "info-window-label" {
-	font_name = "Nokia Sans 17.0"
-	fg[NORMAL] = "#000000"
-}
-
-
-
-
-style "nothing"
-{
-  GtkNotebook::inner_left_border = 0
-  GtkNotebook::inner_right_border = 0
-  GtkNotebook::tab-overlap = 0
-  GtkNotebook::arrow-spacing = 6
-  GtkNotebook::label-padding = 2
-
-  # Themings for images on different sides of the notebook.
-  engine "sapwood"
-  {
-    image
-      {
-        function = BOX
-        detail   = "notebook"
-        border   = { 0, 0, 0, 0 }
-        file     = "nothing.png"
-      }
-  }
-}
-
-style "nothingviewport"
-{
+style "nothingviewport" {
     xthickness = 0
     ythickness = 0
     GtkScrolledWindow ::scrollbars-within-bevel = 0
     GtkScrolledWindow ::scrollbar-spacing = 0
     GtkScrolledWindow ::inner_left_border = 0
     GtkScrolledWindow ::inner_right_border = 0
-
-    engine "sapwood"
-    {
-       image
-        {
+    engine "sapwood" {
+        image {
             function = SHADOW
             file = "nothing.png"
             border = {0, 0, 0, 0}
-         }
-      image
-      {
-        function = BOX
-        border   = { 0, 0, 0, 0 }
-        file     = "nothing.png"
-      }
-    }
-}
-
-
-style "spliter-paned"  {
-
-    GtkPaned::handle_size = 1
-
-    engine "sapwood"
-    {
-        image
-        {
-            function    = HANDLE
-            file        = "nothing.png"
-            overlay_file= "nothing.png"
-            orientation = HORIZONTAL
-            border      = {0,0,0,0}
-            overlay_stretch = TRUE
+        }
+        image {
+            function = BOX
+            border   = { 0, 0, 0, 0 }
+            file     = "nothing.png"
         }
     }
-}
-
-
-style "warning-notebook"
-{
-  GtkNotebook::inner_left_border = 0
-  GtkNotebook::inner_right_border = 0
-  GtkNotebook::tab-overlap = 0
-  GtkNotebook::arrow-spacing = 6
-  GtkNotebook::label-padding = 2
-
-  # Themings for images on different sides of the notebook.
-  engine "sapwood"
-  {
-    image
-      {
-        function = BOX
-	detail   = "notebook"
-          file = "warning_window.png"
-          border = {30, 30, 75, 75}
-      }
-  }
 }
 
 style "input-combobox-entry-entry" {
-
-  engine "sapwood"
-    {
-      image
-        {
-	  function = SHADOW
-	  state    = INSENSITIVE
-  	  file = "comboboxarea.png"
-	  border   = { 10, 10, 15, 15 }
-	}
-      image
-        {
-	  function = FLAT_BOX
+    engine "sapwood" {
+        image {
+            function = SHADOW
+            state    = INSENSITIVE
+            file = "comboboxarea.png"
+	        border   = { 10, 10, 15, 15 }
+	    }
+        image {
+	        function = FLAT_BOX
         }
-      image
-        {
-	  function = SHADOW
- 	  file = "comboboxarea.png"
- 	  border   = { 10, 10, 15, 15 }
-	}
+        image {
+	        function = SHADOW
+ 	        file = "comboboxarea.png"
+ 	        border   = { 10, 10, 15, 15 }
+	    }
     }
 }
-style "input-combobox-entry-button-down" {
 
+style "input-combobox-entry-button-down" {
 	engine "sapwood" {
 		image {
 			function = FOCUS
@@ -281,98 +132,35 @@ style "input-combobox-entry-button-down" {
 	}
 }
 
-
-style "theme-button" {
-
-  GtkWidget::focus-line-pattern = "\0\0\0\0\0\0\0\0"
-  GtkWidget::focus-width = 0
-  GtkButton::default_border = { 0, 0, 0, 0 }
-  GtkButton::child-displacement-x = 0
-  GtkButton::child-displacement-y = 0
-  GtkButton::interior_focus = 0
-  GtkButton::child_spacing = 0
-  xthickness = 7
-  ythickness = 0
-
-  engine "pixmap" {
-
-    image {
-        function = FOCUS
-	state    = ACTIVE
+style "input-combobox-entry-arrow" {
+    engine "sapwood" {
+        image{
+            function = ARROW
+            state = ACTIVE
+            overlay_file = "input_arrow_down.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = ARROW
+            state = NORMAL
+            overlay_file = "input_arrow_down.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = ARROW
+            state    = INSENSITIVE
+            overlay_file = "input_arrow_down.png"
+            overlay_stretch = FALSE
+        }
     }
-
-    image {
-        function = FOCUS
-	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0}
-    }
-
-    image {
-	function = BOX
-	file     = "button_theme.png"
-	border   = { 0, 0, 0, 0 }
-    }
-
-  }
 }
 
-
-#widget "*.button_answer" style "review-button"
-#widget "*.button_getanswer" style "getanswerarea-button"
-widget "*.title_label" style "review-title-label"
-#widget "*.answer" style "nothingviewport"
-#widget "*.answer_text" style "review-answer-label"
-#widget "*.question_viewport" style "nothingviewport"
-#widget "*.question_text" style "review-answer-label"
-#widget "*.getanswer" style "review-getanswer-label"
-widget "*.question" style "review-button"
 widget "*.switcher" style "nothing"
-widget "*.spliter" style "spliter-paned"
 widget "*.answer_frame" style "question_answer_frame"
 widget "*.question_frame" style "question_answer_frame"
-widget "*.additional" style "theme-button"
-widget "*.additionallabel" style "button-label"
 widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
 widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
-widget "*.label_warning" style "review-question-label"
-widget "*.label_ok" style "review-question-label"
-widget "*.notebook_wwindows" style "nothing"
-
-
-style "input-combobox-entry-arrow"
-{
-  engine "sapwood"
-    {
-      image 
-        {
-          function = ARROW
-          state = ACTIVE
-          overlay_file = "input_arrow_down.png"
-          overlay_stretch = FALSE
-        }
-      image
-        {
-          function = ARROW
-          state = NORMAL
-          overlay_file = "input_arrow_down.png"
-          overlay_stretch = FALSE
-        }
-      image
-        {
-          function = ARROW
-          state    = INSENSITIVE
-          overlay_file = "input_arrow_down.png"
-          overlay_stretch = FALSE
-        }
-    }
-}
-
 widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
-
-
-
-
-
 
 
 #----------------------------- Main Menu ------------------
@@ -510,6 +298,7 @@ widget "*.menu_button_exit" style "menu-button-exit"
 #----------------------------- Review mode ------------------
 style "question-area" {
     GtkButton::focus-line-width = 0
+    GtkButton::inner-border = {2,2,5,5}
     engine "pixmap" {
         image {
             function = BOX
@@ -523,6 +312,7 @@ widget "*.question_container" style "question-area"
 
 style "answer-viewport" {
     GtkButton::focus-line-width = 0
+    GtkButton::inner-border = {2,2,5,5}
     engine "pixmap" {
         image {
             function = BOX
