@@ -25,16 +25,17 @@ class HtmlHildon(Renderer):
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
             <style type="text/css">
             *{font-size:30px;}
-            table { margin-left: auto;
-                    margin-right: auto; /* Centers table, but not its contents. */
-                    height: 100%;
-                    }
-
-            body { color: black;
+            table {
+                height:100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            body { 
+                color: black;
                 background-color: white;
                 margin: 0;
                 padding: 0;
-                }\n"""
+            }\n"""
 
             for field in card_type.fields: # Center content in table
                 self._css[card_type] += "div#"+ field[0] + \
@@ -51,5 +52,5 @@ class HtmlHildon(Renderer):
             for f in filters():
                 s = f.run(s, fact)
             html += "<div id=\"%s\">%s</div>" % (key, s)
-            html += "</td></tr></table></body></html>"
+        html += "</td></tr></table></body></html>"
         return html
