@@ -53,31 +53,6 @@ def ui_factory(interface=None):
     raise ValueError("No idea how to create %s UI" % interface)
 
 
-def backend_factory(name=None):
-    """ Create backend """
-
-    if name == "pickle":
-        from mnemosyne.libmnemosyne.databases.pickle import Pickle
-        return Pickle()
-
-    if not name or name == 'sqlite':
-        from mnemosyne.libmnemosyne.databases.sqlite import Sqlite
-        return Sqlite()
-
-    raise ValueError("No idea how to create %s backend" % name)
-
-
-def _test():
-    """ Run doctests
-    """
-    import doctest
-    doctest.testmod()
-
-
-if __name__ == "__main__":
-    _test()
-
-
 # Local Variables:
 # mode: python
 # py-indent-offset: 4
