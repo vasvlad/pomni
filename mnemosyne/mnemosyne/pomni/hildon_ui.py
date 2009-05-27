@@ -41,7 +41,7 @@ class HildonUiControllerException(Exception):
     """ Exception hook """
 
     def __init__(self, w_tree, exception):
-        """ Show Warning Window """
+        """Show Warning Window."""
 
         dialog = w_tree.get_widget("information_dialog")
         w_tree.get_widget("information_dialog_label").set_text(\
@@ -60,21 +60,17 @@ class HildonBaseUi():
     main_menu, review, input, config = range(4)
 
     def __init__(self,  w_tree, signals):
-
-        self.signals = ["to_main_menu"]
-
-        if signals:
-            self.signals.extend(signals)
+        """Variables initialization."""
 
         self.w_tree = w_tree
-        # connect signals to methods
-        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-                for sig in self.signals]))
-
+        self.signals = ["to_main_menu"]
+        self.signals.extend(signals)
+        self.w_tree.signal_autoconnect(
+            dict([(sig, getattr(self, sig + "_cb")) for sig in self.signals]))
 
 
     def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
+        """Lazy get widget as an attribute."""
 
         widget = self.w_tree.get_widget(name)
         if widget:
@@ -83,14 +79,18 @@ class HildonBaseUi():
 
 
     def to_main_menu_cb(self, widget):
-        """ Return to main menu """
+        """Return to main menu."""
 
         self.switcher.set_current_page(self.main_menu)
 
+
     def start(self, mode = None):
-        """ Change page """
+        """Change current switcher page."""
 
         self.switcher.set_current_page(mode)
+
+
+
 
 class HildonUI():
     """ Hildon UI """
@@ -105,7 +105,6 @@ class HildonUI():
                 self.controllers[mode].start()
             return callback
 
-
         try:
             theme = config()["theme_path"].split("/")[-1]
         except KeyError:
@@ -118,8 +117,6 @@ class HildonUI():
         gtk.glade.set_custom_handler(self.custom_handler)
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
-
-
         controllers = {}
         for mode in ("review", "input", "configure", "main"):
             cname = theme.capitalize() + 'Controller' + mode.capitalize()
@@ -130,10 +127,8 @@ class HildonUI():
         component_manager.register("ui_controller_review", \
             controllers["review"])
 
-
         # Set unvisible tabs of switcher
-        switcher = self.w_tree.get_widget("switcher")
-        switcher.set_property('show_tabs', False)
+        self.w_tree.get_widget("switcher").set_property('show_tabs', False)
         self.window = self.w_tree.get_widget("window")
         self.window.connect('delete_event', self.exit_cb)
 
@@ -157,15 +152,16 @@ class HildonUI():
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in self.signals]))
 
+
     def start(self, mode):
         """ Start UI  """
 
         self.controllers[mode].start()
         gtk.main()
 
-    def custom_handler(self, glade, function_name, widget_name, *args):
 
-        """ Hook for custom widgets """
+    def custom_handler(self, glade, function_name, widget_name, *args):
+        """Hook for custom widgets."""
 
         if glade and widget_name and  hasattr(self, function_name):
             handler = getattr(self, function_name)
@@ -175,26 +171,26 @@ class HildonUI():
 
     @staticmethod
     def exit_cb(widget=None):
-        """ If pressed quit button then close the window """
+        """If pressed quit button then close the window."""
 
         database().unload()
         gtk.main_quit()
 
 
     def window_keypress_cb(self, widget, event, *args):
-        """ Key pressed """
+        """Key pressed."""
 
         if event.keyval == gtk.keysyms.F6:
             # The "Full screen" hardware key has been pressed
             if self.fullscreen:
                 self.window.unfullscreen()
-                self.fullscreen = False
             else:
                 self.window.fullscreen()
-                self.fullscreen = True
+            self.fullscreen = not self.fullscreen
+
 
     def window_state_cb(self, widget, event):
-        """ Checking window state """
+        """Checking window state."""
 
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
@@ -211,16 +207,17 @@ class HildonUI():
         view.show()
         return view
 
+
     @staticmethod
     def clear_label(caption):
-        """ Remove &-symbol from caption if exists"""
+        """Remove &-symbol from caption if exists."""
         index = caption.find("&")
         if not index == -1:
             return caption[:index] + caption[index+1:]
         return caption
     
     def information_box(self, message, button_caption):
-        """ Create Information message """
+        """Create Information message."""
         dialog = self.w_tree.get_widget("information_dialog")
         self.w_tree.get_widget("information_dialog_label").set_text(\
             '\n' + "  " + message + "  " + '\n')
@@ -229,8 +226,9 @@ class HildonUI():
         dialog.run()
         dialog.hide()
 
+
     def question_box(self, question, option0, option1, option2):
-        """ Create Question message """
+        """Create Question message."""
         dialog = self.w_tree.get_widget("question_dialog")
         dialog_label = self.w_tree.get_widget("question_dialog_label")
         dialog_label.set_text('\n' + "  " + question + "  " + '\n')
@@ -241,13 +239,14 @@ class HildonUI():
         dialog.hide()
         return result
 
+
     def update_status_bar(self, message=None):
         """ Not Implemented """
-
         pass
 
+
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        """ Start Edit/Update window """
+        """Start Edit/Update window."""
 
         self.controllers['input'].start(fact)
 
