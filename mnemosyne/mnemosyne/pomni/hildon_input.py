@@ -43,10 +43,7 @@ class HildonUiControllerInput(HildonBaseUi):
     def __init__(self, w_tree):
         """ Initialization items of input window """
 
-        self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals=['add_card', \
-                                                          'add_card2'])
-
+        HildonBaseUi.__init__(self, w_tree, signals=['add_card', 'add_card2'])
         self.fields_container = None
         self.liststore = None
         self.card_type = None
