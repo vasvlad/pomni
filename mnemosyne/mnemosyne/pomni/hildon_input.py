@@ -38,7 +38,7 @@ _ = gettext.gettext
 
 
 class HildonUiControllerInput(HildonBaseUi):
-    """ Hildon Input controller """
+    """ Hildon Input controller. """
 
     def __init__(self, w_tree):
         """ Initialization items of input window """
@@ -121,10 +121,10 @@ class HildonUiControllerInput(HildonBaseUi):
 
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
+        selected_id = (int(self.w_tree.get_widget("cardtypes").get_active())\
+            + 1).__str__()
+        self.card_type = cardtypes.get(selected_id)
 
-        #FIX ME for all types of card 
-        #Now default card type 1 (Front-to-back only) 
-        self.card_type = card_type_by_id.get('1')
 
         #Destroy container if it was created early
         if self.fields_container:
@@ -135,11 +135,6 @@ class HildonUiControllerInput(HildonBaseUi):
                                self.w_tree.get_widget('fields_container_parent')
         self.fields_container = self.create_entries(self.fact)
         parent_fields_container.pack_start(self.fields_container, True, True, 0)
-
-        category_names_by_id = dict([(i, name) for (i, name) in \
-            enumerate(database().category_names())])
-
-
         # switch to Page Input
         HildonBaseUi.start(self, self.input)
 
@@ -155,10 +150,10 @@ class HildonUiControllerInput(HildonBaseUi):
             categories.get_child().set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
-        """ Add card to database """
+        """ Add card to database. """
 
         try:
-            fact_data = self.get_data()
+            fact_data = self.get_widgets_data()
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
@@ -176,61 +171,32 @@ class HildonUiControllerInput(HildonBaseUi):
                 [self.categories.get_child().get_text()])
 
         database().save(config()['path'])
-
-        #FIX ME need checking for success for previous operations
-        self.clear_data_widgets()
+        self.clear_widgets()
 
         if self.update:
             self.switcher.set_current_page(self.review)
 
-    def add_card2_cb(self, widget, event):
-        """ Hook for add_card for eventboxes """
-
-        self.add_card_cb (widget)
-
-    def get_data(self, check_for_required=True):
-        """ Get data from widgets """
+    def get_widgets_data(self, check_for_required=True):
+        """ Get data from widgets. """
 
         fact = {}
-        for edit_box, fact_key in self.edit_boxes.iteritems():
-            start, end = edit_box.get_buffer().get_bounds()
-            fact[fact_key] = edit_box.get_buffer().get_text(start, end)
+        question_widget = self.w_tree.get_widget("question_box_text")
+        answer_widget = self.w_tree.get_widget("answer_box_text")
+        pronunciation_widget = self.w_tree.get_widget("pronun_box_text")
+        if self.card_type.id == '3':
+            widgets = [('f', question_widget), ('t', answer_widget), \
+                ('p', pronunciation_widget)]
+        else:
+            widgets = [('q', question_widget), ('a', answer_widget)]
+        for fact_key, widget in widgets:
+            start, end = widget.get_buffer().get_bounds()
+            fact[fact_key] = widget.get_buffer().get_text(start, end)
 
-        if not check_for_required:
-            return fact
-        for required in self.card_type.required_fields():
-            if not fact[required]:
-                raise ValueError
+        if check_for_required:
+            for required in self.card_type.required_fields():
+                if not fact[required]:
+                    raise ValueError
         return fact
-
-    def clear_data_widgets(self):
-        """ Clear data in widgets """
-
-        self.edit_boxes = {}
-
-        #FIX ME It may work more faster if I make clearing only edit_box
-
-        #Destroy fields_container 
-        if self.fields_container:
-            self.fields_container.destroy()
-
-        #Prepare fields_container
-        parent_fields_container = \
-            self.w_tree.get_widget('fields_container_parent')
-        self.fields_container = self.create_entries()
-        parent_fields_container.pack_start(self.fields_container, 
-            True, True, 0)
-
-
-    def to_main_menu_cb(self, widget):
-        """ Return to main menu """
-
-        #Destroy fields_container
-        if self.fields_container:
-            self.fields_container.destroy()
-        #Destroy categories entry
-#        if self.listsore:
-#            self.liststore.destroy()
 
 
 
