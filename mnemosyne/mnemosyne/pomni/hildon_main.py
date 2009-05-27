@@ -30,8 +30,9 @@ from pomni.hildon_ui import HildonBaseUi
 class HildonUiControllerMain(HildonBaseUi):
     """ Hidon Main Controller  """
 
-    def __init__(self, signals=None):
-        HildonBaseUi.__init__(self, signals)
+    def __init__(self, w_tree, signals=None):
+
+        HildonBaseUi.__init__(self, w_tree, signals)
 
     def edit_current_card(self):
         """ Not Implemented Yet """
@@ -70,16 +71,12 @@ class HildonUiControllerMain(HildonBaseUi):
 class EternalControllerMain(HildonUiControllerMain):
     """ Eternal UI Main Controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, ["size_allocate"])
+        self.base.__init__(self, w_tree, ["size_allocate"])
         self.spliter_trigger = True
-
-    def start(self, w_tree):
-        """ Start base class """
-        HildonBaseUi.start(self, w_tree)
 
     def size_allocate_cb(self, widget, user_data):
         """ Checking window size """
@@ -93,33 +90,24 @@ class EternalControllerMain(HildonUiControllerMain):
             else:
                 self.spliter_trigger = True
 
-
+    def start(self):
+        """ Start base class """
+        HildonBaseUi.start(self, self.main_menu)
 
 class RainbowControllerMain(HildonUiControllerMain):
     """ Rainbow UI Main Controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         """ Added spliter widget to class """
 
         self.base = HildonUiControllerMain
-        self.base.__init__(self, [])
+        self.base.__init__(self, w_tree, [])
         self.spliter_trigger = True
 
-    def start(self, w_tree):
+    def start(self, ):
         """ Start base class """
-        HildonBaseUi.start(self, w_tree)
 
-
-
-def _test():
-    """ Run doctests
-    """
-    import doctest
-    doctest.testmod()
-
-
-if __name__ == "__main__":
-    _test()
+        self.switcher.set_current_page(self.main_menu)
 
 
 # Local Variables:
