@@ -34,11 +34,9 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
     def __init__(self, w_tree):
 
         """ Initialization items of config window """
-        self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals = [ \
-                    'change_fullscreen', \
-                    'change_font_size', 'change_startup_with_review',\
-                    'change_theme'])
+        HildonBaseUi.__init__(self, w_tree, signals = [ \
+                    'change_fullscreen', 'change_font_size',\
+                    'change_startup_with_review', 'change_theme'])
         self.modified = False
         self.theme_modified = False
         self.configuration = config()

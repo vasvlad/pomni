@@ -39,19 +39,17 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     """ Hildon Review controller """
 
     def __init__(self, w_tree):
-        """ Initialization items of review window """
+        """ Initialization items of review window. """
 
-        self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals=["get_answer", \
+        HildonBaseUi.__init__(self, w_tree, signals=["get_answer", \
             "grade", "delete_card", "edit_card"])
         UiControllerReview.__init__(self)
-
         self.grade = 0
         self.card = None
 
 
     def start(self):
-        """ Start new review window """
+        """ Start new review window. """
 
         HildonBaseUi.start(self, self.review)
         self.new_question()
