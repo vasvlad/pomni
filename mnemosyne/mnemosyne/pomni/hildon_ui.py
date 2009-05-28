@@ -53,44 +53,7 @@ class HildonUiControllerException(Exception):
 
 
 
-class HildonBaseUi():
-    """ Base Hildon UI functionality """
 
-    # page's indexes in switcher
-    main_menu, review, input, config = range(4)
-
-    def __init__(self,  w_tree, signals):
-
-        self.signals = ["to_main_menu"]
-
-        if signals:
-            self.signals.extend(signals)
-
-        self.w_tree = w_tree
-        # connect signals to methods
-        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-                for sig in self.signals]))
-
-
-
-    def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
-
-
-    def to_main_menu_cb(self, widget):
-        """ Return to main menu """
-
-        self.switcher.set_current_page(self.main_menu)
-
-    def start(self, mode = None):
-        """ Change page """
-
-        self.switcher.set_current_page(mode)
 
 class HildonUI():
     """ Hildon UI """
@@ -102,7 +65,7 @@ class HildonUI():
 
             def callback(widget, event = None):
                 """Callback function."""
-                self.controllers[mode].start()
+                self.controllers[mode].activate()
             return callback
 
 
@@ -160,7 +123,7 @@ class HildonUI():
     def start(self, mode):
         """ Start UI  """
 
-        self.controllers[mode].start()
+        self.controllers[mode].activate()
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):

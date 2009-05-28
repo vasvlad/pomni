@@ -25,25 +25,35 @@ Hildon UI
 """
 
 from mnemosyne.libmnemosyne.component_manager import config
-from pomni.hildon_ui import HildonBaseUi, HildonUI
+from pomni.hildon_ui import HildonUI
 
 
-class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
+class HildonUiControllerConfigure(HildonUI):
     """ Hildon Config controller """
+
+    main_menu, review, input, config = range(4)
 
     def __init__(self, w_tree):
 
         """ Initialization items of config window """
         self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals = [ \
-                    'change_fullscreen', \
-                    'change_font_size', 'change_startup_with_review',\
-                    'change_theme'])
+        signals = ['change_fullscreen', 'change_font_size', \
+            'change_startup_with_review', 'change_theme', 'config_to_main_menu']
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         self.modified = False
         self.theme_modified = False
         self.configuration = config()
 
-    def start(self):
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
+
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
+
+    def activate(self):
         """ Start config window """
         self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])
@@ -55,7 +65,7 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
         theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
-        HildonBaseUi.start(self, self.config)
+        self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter """
@@ -94,7 +104,7 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
             "New theme: " + new_theme.capitalize())
         self.configuration.save()
         
-    def to_main_menu_cb(self, widget):
+    def config_to_main_menu_cb(self, widget):
         """ Return to main menu """
         if self.modified:
             self.configuration.save()
