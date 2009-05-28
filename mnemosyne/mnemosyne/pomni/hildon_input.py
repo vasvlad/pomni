@@ -31,23 +31,18 @@ import gtk.glade
 
 from mnemosyne.libmnemosyne.component_manager import database, config, \
         ui_controller_main, card_types
-
+from pomni.hildon_ui import HildonBaseController
 _ = gettext.gettext
 
 
-class HildonUiControllerInput():
+class HildonUiControllerInput(HildonBaseController):
     """ Hildon Input controller """
 
-    main_menu, review, input, config = range(4)
-
     def __init__(self, w_tree):
-        """ Initialization items of input window """
+        """ Initialization items of input window. """
 
-        self.w_tree = w_tree
-
-        #fix me: move to EternalControllerInput
+        HildonBaseController.__init__(self, w_tree)
         signals = ["add_card", "add_card2", "input_to_main_menu"]
-
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
 
@@ -58,18 +53,8 @@ class HildonUiControllerInput():
         self.update = None
         self.edit_boxes = {}
 
-    def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
-
-
     def create_entries (self, fact = None):
-
-        ''' Create widget inclusive varios entries '''
+        """ Create widget inclusive varios entries. """
 
         fields_container = gtk.VBox()
         fields_container.set_name('fields_container')
@@ -126,7 +111,7 @@ class HildonUiControllerInput():
         return fields_container
 
     def activate(self, fact = None):
-        """ Start input window """
+        """ Start input window. """
 
         self.fact = fact
         self.update = fact is not None
@@ -167,7 +152,7 @@ class HildonUiControllerInput():
             categories.get_child().set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
-        """ Add card to database """
+        """ Add card to database. """
 
         try:
             fact_data = self.get_data()
@@ -196,12 +181,12 @@ class HildonUiControllerInput():
             self.switcher.set_current_page(self.review)
 
     def add_card2_cb(self, widget, event):
-        """ Hook for add_card for eventboxes """
+        """ Hook for add_card for eventboxes. """
 
         self.add_card_cb (widget)
 
     def get_data(self, check_for_required=True):
-        """ Get data from widgets """
+        """ Get data from widgets. """
 
         fact = {}
         for edit_box, fact_key in self.edit_boxes.iteritems():
@@ -216,7 +201,7 @@ class HildonUiControllerInput():
         return fact
 
     def clear_data_widgets(self):
-        """ Clear data in widgets """
+        """ Clear data in widgets. """
 
         self.edit_boxes = {}
 
@@ -233,9 +218,8 @@ class HildonUiControllerInput():
         parent_fields_container.pack_start(self.fields_container, 
             True, True, 0)
 
-
     def input_to_main_menu_cb(self, widget):
-        """ Return to main menu """
+        """ Return to main menu. """
 
         #Destroy fields_container
         if self.fields_container:
@@ -246,10 +230,8 @@ class HildonUiControllerInput():
 #            self.liststore.destroy()
 
 
-
 class EternalControllerInput(HildonUiControllerInput):
     """ Eternal Input mode controller """
-    
 
 
 class RainbowControllerInput(HildonUiControllerInput):
