@@ -202,7 +202,8 @@ class RainbowControllerReview(HildonUiControllerReview):
 
     def __init__(self, w_tree):
 
-        signals = ["review_to_main_menu"]
+        signals = ["get_answer", "grade", "delete_card", \
+            "edit_card", "review_to_main_menu"]
         HildonUiControllerReview.__init__(self, w_tree, signals)
 
 
