@@ -546,6 +546,18 @@ style "add-card" {
 widget "*.addcard" style "add-card"
 widget "*.to_input" style "add-card"
 
+style "edit-card" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "edit_big.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.edit_card" style "edit-card"
 
 style "grade0" {
     GtkButton::focus-line-width = 0

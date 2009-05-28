@@ -26,13 +26,11 @@ Hildon UI
 
 import gettext
 
-from os.path import splitext, basename
-
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
-from pomni.hildon_ui import HildonBaseUi, HildonUiControllerException
+from pomni.hildon_ui import HildonBaseUi
 
 _ = gettext.gettext
 
@@ -40,38 +38,34 @@ _ = gettext.gettext
 class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     """ Hildon Review controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         """ Initialization items of review window """
 
-        HildonBaseUi.__init__(self, signals=["get_answer", \
-            "grade", "delete_card"])
+        self.w_tree = w_tree
+        HildonBaseUi.__init__(self, self.w_tree, signals=["get_answer", \
+            "grade", "delete_card", "edit_card"])
         UiControllerReview.__init__(self)
-
-        self.title = _("Mnemosyne") + " - " + \
-            splitext(basename(config()["path"]))[0]
 
         self.grade = 0
         self.card = None
 
 
-    def start(self, w_tree):
+    def start(self):
         """ Start new review window """
 
-        HildonBaseUi.start(self, w_tree)
-        self.switcher.set_current_page(self.review)
+        HildonBaseUi.start(self, self.review)
         self.new_question()
 
-
-    def update_dialog(self, redraw_all = True):
+    # UiControllerReview API
+    def update_dialog(self, redraw_all=True):
         """ This is part of UiControllerReview API """
 
         self.new_question()
 
-
     def new_question(self, learn_ahead=False):
         """ Create new question """
 
-        
+
     def show_answer(self):
         """ Show answer in review window """
 
@@ -91,11 +85,19 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     @staticmethod
     def delete_card_cb(widget):
-        """ Hook for showing a right answer """
+        """ Hook for delete card """
 
         # Create new card
         main = ui_controller_main()
         main.delete_current_fact()
+
+    @staticmethod
+    def edit_card_cb(widget):
+        """ Hook for edit card """
+
+        # Edit card
+        main = ui_controller_main()
+        main.edit_current_card()
 
     def grade_cb(self, widget):
         """ Call grade of answer """
@@ -109,12 +111,17 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
 
 
+
+
+
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
+        """ Initialize class """
+
         self.base = HildonUiControllerReview
-        self.base.__init__(self)
+        self.base.__init__(self, w_tree)
 
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible """
@@ -124,7 +131,7 @@ class EternalControllerReview(HildonUiControllerReview):
                 _("Database is empty!"), "OK")
             self.button_getanswer.set_sensitive(False)
             return
-            
+
         self.card = scheduler().get_new_question(learn_ahead)
         if self.card:
             document = getattr(self,'question_text').document
@@ -184,9 +191,9 @@ class EternalControllerReview(HildonUiControllerReview):
 class RainbowControllerReview(HildonUiControllerReview):
     """ Rainbow UI review controller """
 
-    def __init__(self):
+    def __init__(self, w_tree):
         self.base = HildonUiControllerReview
-        self.base.__init__(self)
+        self.base.__init__(self, w_tree)
 
 
     def new_question(self, learn_ahead=False):
@@ -255,17 +262,6 @@ class RainbowControllerReview(HildonUiControllerReview):
                              '*{font-size:%spx;}' % font_size)
         document.write_stream(answer_text)
         document.close_stream()
-
-
-def _test():
-    """ Run doctests
-    """
-    import doctest
-    doctest.testmod()
-
-
-if __name__ == "__main__":
-    _test()
 
 
 # Local Variables:

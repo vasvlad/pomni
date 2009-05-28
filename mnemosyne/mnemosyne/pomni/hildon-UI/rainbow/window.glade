@@ -614,10 +614,24 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkTable" id="review_toolbar_table0">
+                          <widget class="GtkTable" id="review_toolbar_edit_card_table">
                             <property name="visible">True</property>
                             <child>
-                              <placeholder/>
+                              <widget class="GtkButton" id="review_toolbar_edit_card_button">
+                                <property name="width_request">56</property>
+                                <property name="height_request">56</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <signal name="clicked" handler="edit_card"/>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="x_options">GTK_EXPAND</property>
+                                <property name="y_options"></property>
+                              </packing>
                             </child>
                           </widget>
                           <packing>
