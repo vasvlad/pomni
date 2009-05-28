@@ -64,10 +64,12 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     def new_question(self, learn_ahead=False):
         """ Create new question """
+        pass
 
 
     def show_answer(self):
         """ Show answer in review window """
+        pass
 
 
     def grade_answer(self, grade):
@@ -108,10 +110,6 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Unknown """
 
         self.card = None
-
-
-
-
 
 
 class EternalControllerReview(HildonUiControllerReview):
