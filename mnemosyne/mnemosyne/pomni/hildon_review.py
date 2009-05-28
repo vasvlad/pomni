@@ -30,28 +30,37 @@ from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 
-from pomni.hildon_ui import HildonBaseUi
-
 _ = gettext.gettext
 
 
-class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
+class HildonUiControllerReview(UiControllerReview):
     """ Hildon Review controller """
 
-    def __init__(self, w_tree):
-        """ Initialization items of review window. """
+    main_menu, review, input, config = range(4)
 
-        HildonBaseUi.__init__(self, w_tree, signals=["get_answer", \
-            "grade", "delete_card", "edit_card"])
-        UiControllerReview.__init__(self)
+    def __init__(self, w_tree, signals):
+        """ Initialization items of review window """
+
+        self.w_tree = w_tree
+        if signals:
+            self.w_tree.signal_autoconnect(\
+                dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         self.grade = 0
         self.card = None
+        UiControllerReview.__init__(self)
 
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
 
-    def start(self):
-        """ Start new review window. """
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
 
-        HildonBaseUi.start(self, self.review)
+    def activate(self):
+        """ Start new review window """
+
+        self.switcher.set_current_page(self.review)
         self.new_question()
 
     # UiControllerReview API
@@ -108,6 +117,9 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         """ Unknown """
 
         self.card = None
+    
+    def review_to_main_menu_cb(self, widget):
+        self.switcher.set_current_page(self.main_menu)
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -116,8 +128,9 @@ class EternalControllerReview(HildonUiControllerReview):
     def __init__(self, w_tree):
         """ Initialize class """
 
-        self.base = HildonUiControllerReview
-        self.base.__init__(self, w_tree)
+        signals = ["get_answer", "grade", "delete_card", \
+            "edit_card", "review_to_main_menu"]
+        HildonUiControllerReview.__init__(self, w_tree, signals)
 
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible """
@@ -188,8 +201,10 @@ class RainbowControllerReview(HildonUiControllerReview):
     """ Rainbow UI review controller """
 
     def __init__(self, w_tree):
-        self.base = HildonUiControllerReview
-        self.base.__init__(self, w_tree)
+
+        signals = ["get_answer", "grade", "delete_card", \
+            "edit_card", "review_to_main_menu"]
+        HildonUiControllerReview.__init__(self, w_tree, signals)
 
 
     def new_question(self, learn_ahead=False):

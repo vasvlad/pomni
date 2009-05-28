@@ -24,15 +24,26 @@
 Hildon UI. Main mode controllers.
 """
 
-from pomni.hildon_ui import HildonBaseUi
 
-
-class HildonUiControllerMain(HildonBaseUi):
+class HildonUiControllerMain():
     """ Hidon Main Controller  """
+
+    main_menu, review, input, config = range(4)
 
     def __init__(self, w_tree, signals=None):
 
-        HildonBaseUi.__init__(self, w_tree, signals)
+        self.w_tree = w_tree
+        if signals:
+            self.w_tree.signal_autoconnect(\
+                dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
+
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
 
     def edit_current_card(self):
         """ Not Implemented Yet """
@@ -74,8 +85,8 @@ class EternalControllerMain(HildonUiControllerMain):
     def __init__(self, w_tree):
         """ Added spliter widget to class """
 
-        self.base = HildonUiControllerMain
-        self.base.__init__(self, w_tree, ["size_allocate"])
+        signals = ["size_allocate"]
+        HildonUiControllerMain.__init__(self, w_tree, signals)
         self.spliter_trigger = True
 
     def size_allocate_cb(self, widget, user_data):
@@ -90,9 +101,12 @@ class EternalControllerMain(HildonUiControllerMain):
             else:
                 self.spliter_trigger = True
 
-    def start(self):
+    def activate(self):
         """ Start base class """
-        HildonBaseUi.start(self, self.main_menu)
+        self.switcher.set_current_page(self.main_menu)
+
+
+
 
 class RainbowControllerMain(HildonUiControllerMain):
     """ Rainbow UI Main Controller """
@@ -100,11 +114,9 @@ class RainbowControllerMain(HildonUiControllerMain):
     def __init__(self, w_tree):
         """ Added spliter widget to class """
 
-        self.base = HildonUiControllerMain
-        self.base.__init__(self, w_tree, [])
-        self.spliter_trigger = True
+        HildonUiControllerMain.__init__(self, w_tree, [])
 
-    def start(self, ):
+    def activate(self):
         """ Start base class """
 
         self.switcher.set_current_page(self.main_menu)

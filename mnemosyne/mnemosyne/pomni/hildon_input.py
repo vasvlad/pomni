@@ -32,25 +32,40 @@ import gtk.glade
 from mnemosyne.libmnemosyne.component_manager import database, config, \
         ui_controller_main, card_types
 
-from pomni.hildon_ui import HildonBaseUi
-
 _ = gettext.gettext
 
 
-class HildonUiControllerInput(HildonBaseUi):
+class HildonUiControllerInput():
     """ Hildon Input controller """
+
+    main_menu, review, input, config = range(4)
 
     def __init__(self, w_tree):
         """ Initialization items of input window """
 
-        HildonBaseUi.__init__(self, w_tree, signals=['add_card', 'add_card2'])
+        self.w_tree = w_tree
+
+        #fix me: move to EternalControllerInput
+        signals = ["add_card", "add_card2", "input_to_main_menu"]
+
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
         self.fields_container = None
         self.liststore = None
         self.card_type = None
         self.fact = None
         self.update = None
-
         self.edit_boxes = {}
+
+    def __getattr__(self, name):
+        """ Lazy get widget as an attribute """
+
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
+
 
     def create_entries (self, fact = None):
 
@@ -110,7 +125,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
         return fields_container
 
-    def start(self, fact = None):
+    def activate(self, fact = None):
         """ Start input window """
 
         self.fact = fact
@@ -138,7 +153,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
         # switch to Page Input
-        HildonBaseUi.start(self, self.input)
+        self.switcher.set_current_page(self.input)
 
         categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
@@ -219,12 +234,13 @@ class HildonUiControllerInput(HildonBaseUi):
             True, True, 0)
 
 
-    def to_main_menu_cb(self, widget):
+    def input_to_main_menu_cb(self, widget):
         """ Return to main menu """
 
         #Destroy fields_container
         if self.fields_container:
             self.fields_container.destroy()
+        self.switcher.set_current_page(self.main_menu)
         #Destroy categories entry
 #        if self.listsore:
 #            self.liststore.destroy()
