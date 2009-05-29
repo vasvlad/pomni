@@ -24,26 +24,18 @@
 Hildon UI. Main mode controllers.
 """
 
+from pomni.hildon_ui import HildonBaseController
 
-class HildonUiControllerMain():
+
+class HildonUiControllerMain(HildonBaseController):
     """ Hidon Main Controller  """
-
-    main_menu, review, input, config = range(4)
 
     def __init__(self, w_tree, signals=None):
 
-        self.w_tree = w_tree
+        HildonBaseController.__init__(self, w_tree)
         if signals:
             self.w_tree.signal_autoconnect(\
                 dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
-
-    def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
 
     def edit_current_card(self):
         """ Not Implemented Yet """

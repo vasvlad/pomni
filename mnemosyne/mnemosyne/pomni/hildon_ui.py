@@ -52,6 +52,28 @@ class HildonUiControllerException(Exception):
         Exception.__init__(self)
 
 
+class HildonBaseController():
+    """Base controllers functionality."""
+
+    main_menu, review, input, config = range(4)
+
+    def __init__(self, w_tree):
+        """Attributes initialization."""
+
+        self.w_tree = w_tree
+
+    def __getattr__(self, name):
+        """Lazy get widget as an attribute."""
+
+        widget = self.w_tree.get_widget(name)
+        if widget:
+            return widget
+        raise AttributeError()
+    
+    def to_main_menu_cb(self, widget):
+        """Returns to main menu."""
+
+        self.switcher.set_current_page(self.main_menu)
 
 
 class HildonUI():

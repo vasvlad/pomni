@@ -25,18 +25,16 @@ Hildon UI
 """
 
 from mnemosyne.libmnemosyne.component_manager import config
-from pomni.hildon_ui import HildonUI
+from pomni.hildon_ui import HildonUI, HildonBaseController
 
 
-class HildonUiControllerConfigure(HildonUI):
+class HildonUiControllerConfigure(HildonUI, HildonBaseController):
     """ Hildon Config controller """
 
-    main_menu, review, input, config = range(4)
-
     def __init__(self, w_tree):
+        """Initialization items of config window."""
 
-        """ Initialization items of config window """
-        self.w_tree = w_tree
+        HildonBaseController.__init__(self, w_tree)
         signals = ['change_fullscreen', 'change_font_size', \
             'change_startup_with_review', 'change_theme', 'config_to_main_menu']
         self.w_tree.signal_autoconnect(\
@@ -45,16 +43,9 @@ class HildonUiControllerConfigure(HildonUI):
         self.theme_modified = False
         self.configuration = config()
 
-    def __getattr__(self, name):
-        """ Lazy get widget as an attribute """
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
-
     def activate(self):
-        """ Start config window """
+        """Start config window."""
+
         self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])
         self.checkbox_start_in_review_mode.set_active(
@@ -68,13 +59,15 @@ class HildonUiControllerConfigure(HildonUI):
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
-        """ Change Fullscreen parameter """
+        """ Change Fullscreen parameter. """
+
         self.modified = True
         self.configuration['fullscreen'] = \
             self.checkbox_fullscreen_mode.get_active()
 
     def change_font_size_cb(self, widget, param1, param2):
-        """ Change Font size parameter """
+        """ Change Font size parameter. """
+
         self.modified = True
         value = self.font_size_slider.get_value()
         self.configuration['font_size'] = value
@@ -82,13 +75,15 @@ class HildonUiControllerConfigure(HildonUI):
             value.__int__().__str__())
 
     def change_startup_with_review_cb(self, widget):
-        """ Change 'Startup with Review' parameter """
+        """ Change 'Startup with Review' parameter. """
+
         self.modified = True
         self.configuration['startup_with_review'] = \
             self.checkbox_start_in_review_mode.get_active()
 
     def change_theme_cb(self, widget):
-        """ Change current theme """
+        """ Change current theme. """
+
         self.theme_modified = True
         path_list = self.configuration["theme_path"].split("/")
         current_theme = path_list.pop()
@@ -105,7 +100,8 @@ class HildonUiControllerConfigure(HildonUI):
         self.configuration.save()
         
     def config_to_main_menu_cb(self, widget):
-        """ Return to main menu """
+        """ Return to main menu. """
+
         if self.modified:
             self.configuration.save()
         if self.theme_modified:
@@ -113,11 +109,9 @@ class HildonUiControllerConfigure(HildonUI):
         self.switcher.set_current_page(self.main_menu)
 
 
-
 class EternalControllerConfigure(HildonUiControllerConfigure):
     """ Eternal Configure controller """
     pass
-
 
 
 class RainbowControllerConfigure(HildonUiControllerConfigure):
