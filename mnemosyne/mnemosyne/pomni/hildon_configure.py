@@ -28,7 +28,7 @@ import gettext
 _ = gettext.gettext
 
 from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
-from pomni.hildon_ui import HildonUI, HildonBaseController
+from pomni.hildon_ui import HildonBaseController
 
 
 class HildonUiControllerConfigure(HildonBaseController):
