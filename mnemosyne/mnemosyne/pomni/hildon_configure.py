@@ -108,15 +108,8 @@ class HildonUiControllerConfigure(HildonUI, HildonBaseController):
             self.information_box("Restart the program to take effect!", "OK")
         self.switcher.set_current_page(self.main_menu)
 
-
-class EternalControllerConfigure(HildonUiControllerConfigure):
-    """ Eternal Configure controller """
-    pass
-
-
-class RainbowControllerConfigure(HildonUiControllerConfigure):
-    """ Rainbow Configure controller """
-    pass
+EternalControllerConfigure = HildonUiControllerConfigure
+RainbowControllerConfigure = HildonUiControllerConfigure
 
 
 # Local Variables:
