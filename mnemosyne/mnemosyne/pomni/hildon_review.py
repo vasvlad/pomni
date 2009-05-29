@@ -37,16 +37,19 @@ _ = gettext.gettext
 class HildonUiControllerReview(HildonBaseController, UiControllerReview):
     """ Hildon Review controller """
 
-    def __init__(self, w_tree, signals):
+    def __init__(self, w_tree):
         """ Initialization items of review window. """
 
         HildonBaseController.__init__(self, w_tree)
         UiControllerReview.__init__(self)
-        if signals:
-            self.w_tree.signal_autoconnect(\
-                {"review_to_main_menu": self.to_main_menu_cb})
-            self.w_tree.signal_autoconnect(\
-                dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+        
+        signals = ["get_answer", "grade", "delete_card", "edit_card"]
+
+        self.w_tree.signal_autoconnect(\
+            {"review_to_main_menu": self.to_main_menu_cb})
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
         self.grade = 0
         self.card = None
 
@@ -63,7 +66,6 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         self.new_question()
 
     def new_question(self, learn_ahead=False):
-<<<<<<< HEAD:mnemosyne/mnemosyne/pomni/hildon_review.py
         """ Create new question """
         pass
 
@@ -115,12 +117,6 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
-
-    def __init__(self, w_tree):
-        """ Initialize class """
-
-        signals = ["get_answer", "grade", "delete_card", "edit_card"]
-        HildonUiControllerReview.__init__(self, w_tree, signals)
 
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible. """
@@ -188,11 +184,6 @@ class EternalControllerReview(HildonUiControllerReview):
 
 class RainbowControllerReview(HildonUiControllerReview):
     """ Rainbow UI review controller """
-
-    def __init__(self, w_tree):
-
-        signals = ["get_answer", "grade", "delete_card", "edit_card"]
-        HildonUiControllerReview.__init__(self, w_tree, signals)
 
     def new_question(self, learn_ahead=False):
         """ Show new question. """
