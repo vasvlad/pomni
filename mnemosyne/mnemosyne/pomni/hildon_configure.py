@@ -24,11 +24,14 @@
 Hildon UI
 """
 
-from mnemosyne.libmnemosyne.component_manager import config
+import gettext
+_ = gettext.gettext
+
+from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
 from pomni.hildon_ui import HildonUI, HildonBaseController
 
 
-class HildonUiControllerConfigure(HildonUI, HildonBaseController):
+class HildonUiControllerConfigure(HildonBaseController):
     """ Hildon Config controller """
 
     def __init__(self, w_tree):
@@ -105,7 +108,8 @@ class HildonUiControllerConfigure(HildonUI, HildonBaseController):
         if self.modified:
             self.configuration.save()
         if self.theme_modified:
-            self.information_box("Restart the program to take effect!", "OK")
+            ui_controller_main().widget.information_box(\
+                _("Restart the program to take effect!"), "OK")
         self.switcher.set_current_page(self.main_menu)
 
 EternalControllerConfigure = HildonUiControllerConfigure
