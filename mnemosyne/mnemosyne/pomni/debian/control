@@ -1,7 +1,7 @@
 Source: pomni
 Section: user/education
 Maintainer: Ed Bartosh <bartosh@gmail.com>
-Build-Depends: debhelper (>= 5), python, python-setuptools
+Build-Depends: debhelper (>= 5), python2.5, python-setuptools
 Standards-Version: 3.8.0
 
 Package: pomni

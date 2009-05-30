@@ -5,7 +5,7 @@
 
 PACKAGE := $(shell head -1 $(CURDIR)/debian/changelog | sed 's/^\([^ ]\+\) .*/\1/')
 PREFIX := $(CURDIR)/debian/$(PACKAGE)
-PYTHON := PYTHONOPTIMIZE=2 python
+PYTHON := PYTHONOPTIMIZE=2 python2.5
 
 build: build-stamp
 
