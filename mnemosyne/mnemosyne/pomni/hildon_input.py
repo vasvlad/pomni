@@ -106,6 +106,11 @@ class EternalControllerInput(HildonUiControllerInput):
                 textbuffer = entry_field.get_buffer()
                 textbuffer.set_text(fact.data[fact_key])
             entry_field.set_property("height-request", 120)
+            # turn off hildon autocapitalization
+            try:
+                entry_field.set_property("hildon-input-mode", "full")
+            except TypeError:
+                pass
             entry_field.set_name(fact_key_name)
             entry_field.show()
             self.edit_boxes[entry_field] = fact_key
@@ -253,6 +258,15 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.categories.set_text_column(0)
         self.init_listboxes()
         self.layout()
+
+        # Turn off hildon autocapitalization
+        try:
+            for widget in (self.question_box_text, self.answer_box_text,
+                           self.pronun_box_text):
+                widget.set_property("hildon-input-mode", 'full')
+        except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
+            pass # so, skip silently
+
 
     def layout (self):
         """ Hides or shows neccessary widgets. It depends on card_type. """
