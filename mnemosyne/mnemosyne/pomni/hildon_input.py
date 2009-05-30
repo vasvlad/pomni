@@ -38,13 +38,22 @@ _ = gettext.gettext
 class HildonUiControllerInput(HildonBaseController):
     """ Hildon Input controller """
 
-    def __init__(self, w_tree):
+    def __init__(self, w_tree, signals):
         """ Initialization items of input window. """
 
         HildonBaseController.__init__(self, w_tree)
-        signals = ["add_card", "add_card2", "input_to_main_menu"]
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
+
+class EternalControllerInput(HildonUiControllerInput):
+    """ Eternal Input mode controller """
+
+    def __init__(self, w_tree):
+        """ Initialization items of input window. """
+
+        signals = ["add_card", "add_card2", "input_to_main_menu"]
+        HildonUiControllerInput.__init__(self, w_tree, signals)
 
         self.fields_container = None
         self.liststore = None
@@ -233,9 +242,6 @@ class HildonUiControllerInput(HildonBaseController):
 #            self.liststore.destroy()
 
 
-class EternalControllerInput(HildonUiControllerInput):
-    """ Eternal Input mode controller """
-
 
 class RainbowControllerInput(HildonUiControllerInput):
     """ Rainbow Input mode controller """
@@ -243,27 +249,24 @@ class RainbowControllerInput(HildonUiControllerInput):
     def __init__(self, w_tree):
         """ Initialization items of input window. """
 
-        HildonBaseUi.__init__(self, w_tree, signals=['add_card', 'change_card_type'])
-        self.card_type = None
-
+        signals = ["add_card", "change_card_type", "input_to_main_menu"]
+        HildonUiControllerInput.__init__(self, w_tree, signals)
+        self.fill_listboxes()
+        self.layout()
 
     def layout (self):
         """ Hides or shows neccessary widgets. It depends on card_type. """
 
         if self.card_type:        
-            self.w_tree.get_widget("pronun_box").set_property(\
-                'visible', self.card_type.id == '3')
-
+            self.pronun_box.set_property('visible', self.card_type.id == '3')
 
     def set_card_type(self):
-        """ Set card type when user select it in cardtypes combobox. """
+        """ Set card type when user select it in cardtypes listbox. """
 
         cardtypes = dict([(card_type.id, card_type) \
             for card_type in card_types()])
-        selected_id = (int(self.w_tree.get_widget("cardtypes").get_active())\
-            + 1).__str__()
+        selected_id = (int(self.cardtypes.get_active()) + 1).__str__()
         self.card_type = cardtypes.get(selected_id)
-
 
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from listbox. """
@@ -272,14 +275,14 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.layout()
 
 
-    def start(self, fact = None):
-        """ Start input window. """
-        
+    def fill_listboxes(self):
+        """ Fill listboxes by categories and cardtypes. """
+
         # Fill Categories list
         # categories = { id:category, ...}
         categories = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
-        categories_widget = self.w_tree.get_widget("categories")
+        categories_widget = self.categories
         categories_liststore = gtk.ListStore(str)
         for category in sorted(categories.values()):
             categories_liststore.append([category])
@@ -288,12 +291,14 @@ class RainbowControllerInput(HildonUiControllerInput):
         if categories.values():
             categories_widget.get_child().set_text(\
                 sorted(categories.values())[0])
+        else:
+            categories_widget.get_child().set_text("default category")
         
         # Fill Card-types list
         # cardtypes = { id:card_type_object, ...}
         cardtypes = dict([(card_type.id, card_type) \
             for card_type in card_types()])
-        cardtypes_widget = self.w_tree.get_widget("cardtypes")
+        cardtypes_widget = self.cardtypes
         cardtypes_liststore = gtk.ListStore(str)
         for key in sorted(cardtypes.keys()):
             cardtypes_liststore.append([cardtypes.get(key).name])
@@ -303,10 +308,11 @@ class RainbowControllerInput(HildonUiControllerInput):
             cardtypes_widget.get_child().set_text(\
                 cardtypes.get(sorted(cardtypes.keys())[0]).name)
         self.card_type = cardtypes.get(sorted(cardtypes.keys())[0])
-        self.layout()
 
-        HildonBaseUi.start(self, self.input)
+    def activate(self, fact = None):
+        """ Start input window. """
 
+        self.switcher.set_current_page(self.input)
 
     def add_card_cb(self, widget):
         """ Add card to database. """
@@ -319,18 +325,17 @@ class RainbowControllerInput(HildonUiControllerInput):
         # Create new card
         card = ui_controller_main()
         card.create_new_cards(fact_data, self.card_type, 0, [\
-            self.w_tree.get_widget("categories").get_child().get_text()], True)
+            self.categories.get_child().get_text()], True)
         database().save(config()['path'])
         self.clear_widgets()
-
 
     def get_widgets_data(self, check_for_required=True):
         """ Get data from widgets. """
 
         fact = {}
-        question_widget = self.w_tree.get_widget("question_box_text")
-        answer_widget = self.w_tree.get_widget("answer_box_text")
-        pronunciation_widget = self.w_tree.get_widget("pronun_box_text")
+        question_widget = self.question_box_text
+        answer_widget = self.answer_box_text
+        pronunciation_widget = self.pronun_box_text
         if self.card_type.id == '3':
             widgets = [('f', question_widget), ('t', answer_widget), \
                 ('p', pronunciation_widget)]
@@ -346,17 +351,18 @@ class RainbowControllerInput(HildonUiControllerInput):
                     raise ValueError
         return fact
 
-
     def clear_widgets(self):
         """ Clear data in widgets. """
 
-        self.w_tree.get_widget("question_box_text").get_buffer().set_text("")
-        self.w_tree.get_widget("answer_box_text").get_buffer().set_text("")
-        self.w_tree.get_widget("pronun_box_text").get_buffer().set_text("")
+        self.question_box_text.get_buffer().set_text("")
+        self.answer_box_text.get_buffer().set_text("")
+        self.pronun_box_text.get_buffer().set_text("")
 
+    def input_to_main_menu_cb(self, widget):
+        """ Return to main menu. """
 
-    def to_main_menu_cb(self, widget):
         self.switcher.set_current_page(self.main_menu)
+
 
 # Local Variables:
 # mode: python
