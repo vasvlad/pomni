@@ -89,25 +89,19 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
         self.show_answer()
 
-    @staticmethod
-    def delete_card_cb(widget):
+    def delete_card_cb(self, widget):
         """ Hook for delete card. """
 
         # Delete card
-        review_controller = ui_controller_review()
-        if review_controller.card and review_controller.card.fact:
-            main = ui_controller_main()
-            main.delete_current_fact()
+        if self.card and self.card.fact:
+            ui_controller_main().delete_current_fact()
 
-    @staticmethod
-    def edit_card_cb(widget):
+    def edit_card_cb(self, widget):
         """ Hook for edit card. """
 
         # Edit card
-        review_controller = ui_controller_review()
-        if review_controller.card and review_controller.card.fact:
-            main = ui_controller_main()
-            main.edit_current_card()
+        if self.card and self.card.fact:
+            ui_controller_main().edit_current_card()
 
     def grade_cb(self, widget):
         """ Call grade of answer. """
