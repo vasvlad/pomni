@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA
-#
+# pomni
 
 """
 Hildon UI: Input mode classes.
@@ -38,13 +38,22 @@ _ = gettext.gettext
 class HildonUiControllerInput(HildonBaseController):
     """ Hildon Input controller """
 
-    def __init__(self, w_tree):
+    def __init__(self, w_tree, signals):
         """ Initialization items of input window. """
 
         HildonBaseController.__init__(self, w_tree)
-        signals = ["add_card", "add_card2", "input_to_main_menu"]
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
+
+class EternalControllerInput(HildonUiControllerInput):
+    """ Eternal Input mode controller """
+
+    def __init__(self, w_tree):
+        """ Initialization items of input window. """
+
+        signals = ["add_card", "add_card2", "input_to_main_menu"]
+        HildonUiControllerInput.__init__(self, w_tree, signals)
 
         self.fields_container = None
         self.liststore = None
@@ -140,7 +149,6 @@ class HildonUiControllerInput(HildonBaseController):
         category_names_by_id = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
 
-
         # switch to Page Input
         self.switcher.set_current_page(self.input)
 
@@ -149,6 +157,7 @@ class HildonUiControllerInput(HildonBaseController):
             self.liststore.append([category])
         if category_names_by_id.values():
             self.categories.get_child().set_text(category_names_by_id.values()[0])
+
 
     def add_card_cb(self, widget):
         """ Add card to database. """
@@ -179,10 +188,12 @@ class HildonUiControllerInput(HildonBaseController):
         if self.update:
             self.switcher.set_current_page(self.review)
 
+
     def add_card2_cb(self, widget, event):
         """ Hook for add_card for eventboxes. """
 
         self.add_card_cb (widget)
+
 
     def get_data(self, check_for_required=True):
         """ Get data from widgets. """
@@ -198,6 +209,7 @@ class HildonUiControllerInput(HildonBaseController):
             if not fact[required]:
                 raise ValueError
         return fact
+
 
     def clear_data_widgets(self):
         """ Clear data in widgets. """
@@ -229,12 +241,126 @@ class HildonUiControllerInput(HildonBaseController):
 #            self.liststore.destroy()
 
 
-class EternalControllerInput(HildonUiControllerInput):
-    """ Eternal Input mode controller """
-
 
 class RainbowControllerInput(HildonUiControllerInput):
     """ Rainbow Input mode controller """
+
+    def __init__(self, w_tree):
+        """ Initialization items of input window. """
+
+        signals = ["add_card", "change_card_type", "input_to_main_menu"]
+        HildonUiControllerInput.__init__(self, w_tree, signals)
+        self.fill_listboxes()
+        self.layout()
+
+    def layout (self):
+        """ Hides or shows neccessary widgets. It depends on card_type. """
+
+        if self.card_type:        
+            self.pronun_box.set_property('visible', self.card_type.id == '3')
+
+    def set_card_type(self):
+        """ Set card type when user select it in cardtypes listbox. """
+
+        cardtypes = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+        selected_id = (int(self.cardtypes.get_active()) + 1).__str__()
+        self.card_type = cardtypes.get(selected_id)
+
+    def change_card_type_cb(self, widget):
+        """ Changes cardtype when user choose it from listbox. """
+
+        self.set_card_type()
+        self.layout()
+
+
+    def fill_listboxes(self):
+        """ Fill listboxes by categories and cardtypes. """
+
+        # Fill Categories list
+        # categories = { id:category, ...}
+        categories = dict([(i, name) for (i, name) in \
+            enumerate(database().category_names())])
+        categories_widget = self.categories
+        categories_liststore = gtk.ListStore(str)
+        for category in sorted(categories.values()):
+            categories_liststore.append([category])
+        categories_widget.set_model(categories_liststore)
+        categories_widget.set_text_column(0)
+        if categories.values():
+            categories_widget.get_child().set_text(\
+                sorted(categories.values())[0])
+        else:
+            categories_widget.get_child().set_text("default category")
+        
+        # Fill Card-types list
+        # cardtypes = { id:card_type_object, ...}
+        cardtypes = dict([(card_type.id, card_type) \
+            for card_type in card_types()])
+        cardtypes_widget = self.cardtypes
+        cardtypes_liststore = gtk.ListStore(str)
+        for key in sorted(cardtypes.keys()):
+            cardtypes_liststore.append([cardtypes.get(key).name])
+        cardtypes_widget.set_model(cardtypes_liststore)
+        cardtypes_widget.set_text_column(0)
+        if cardtypes:
+            cardtypes_widget.get_child().set_text(\
+                cardtypes.get(sorted(cardtypes.keys())[0]).name)
+        self.card_type = cardtypes.get(sorted(cardtypes.keys())[0])
+
+    def activate(self, fact = None):
+        """ Start input window. """
+
+        self.switcher.set_current_page(self.input)
+
+    def add_card_cb(self, widget):
+        """ Add card to database. """
+
+        try:
+            fact_data = self.get_widgets_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
+
+        # Create new card
+        card = ui_controller_main()
+        card.create_new_cards(fact_data, self.card_type, 0, [\
+            self.categories.get_child().get_text()], True)
+        database().save(config()['path'])
+        self.clear_widgets()
+
+    def get_widgets_data(self, check_for_required=True):
+        """ Get data from widgets. """
+
+        fact = {}
+        question_widget = self.question_box_text
+        answer_widget = self.answer_box_text
+        pronunciation_widget = self.pronun_box_text
+        if self.card_type.id == '3':
+            widgets = [('f', question_widget), ('t', answer_widget), \
+                ('p', pronunciation_widget)]
+        else:
+            widgets = [('q', question_widget), ('a', answer_widget)]
+        for fact_key, widget in widgets:
+            start, end = widget.get_buffer().get_bounds()
+            fact[fact_key] = widget.get_buffer().get_text(start, end)
+
+        if check_for_required:
+            for required in self.card_type.required_fields():
+                if not fact[required]:
+                    raise ValueError
+        return fact
+
+    def clear_widgets(self):
+        """ Clear data in widgets. """
+
+        self.question_box_text.get_buffer().set_text("")
+        self.answer_box_text.get_buffer().set_text("")
+        self.pronun_box_text.get_buffer().set_text("")
+
+    def input_to_main_menu_cb(self, widget):
+        """ Return to main menu. """
+
+        self.switcher.set_current_page(self.main_menu)
 
 
 # Local Variables:
