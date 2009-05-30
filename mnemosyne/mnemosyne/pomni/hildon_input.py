@@ -52,6 +52,10 @@ class HildonUiControllerInput(HildonBaseController):
         self.fact = None
         self.update = None
         self.edit_boxes = {}
+        self.categories = self.w_tree.get_widget("categories")
+        self.liststore = gtk.ListStore(str)
+        self.categories.set_model(self.liststore)
+        self.categories.set_text_column(0)
 
     def create_entries (self, fact = None):
         """ Create widget inclusive varios entries. """
@@ -140,16 +144,11 @@ class HildonUiControllerInput(HildonBaseController):
         # switch to Page Input
         self.switcher.set_current_page(self.input)
 
-        categories = self.w_tree.get_widget("categories")
-        self.liststore = gtk.ListStore(str)
-
         self.liststore.clear()
         for category in category_names_by_id.values():
             self.liststore.append([category])
-        categories.set_model(self.liststore)
-        categories.set_text_column(0)
         if category_names_by_id.values():
-            categories.get_child().set_text(category_names_by_id.values()[0])
+            self.categories.get_child().set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
         """ Add card to database. """
