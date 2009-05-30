@@ -61,6 +61,10 @@ class EternalControllerInput(HildonUiControllerInput):
         self.fact = None
         self.update = None
         self.edit_boxes = {}
+        self.categories = self.w_tree.get_widget("categories")
+        self.liststore = gtk.ListStore(str)
+        self.categories.set_model(self.liststore)
+        self.categories.set_text_column(0)
 
     def create_entries (self, fact = None):
         """ Create widget inclusive varios entries. """
@@ -148,16 +152,11 @@ class EternalControllerInput(HildonUiControllerInput):
         # switch to Page Input
         self.switcher.set_current_page(self.input)
 
-        categories = self.w_tree.get_widget("categories")
-        self.liststore = gtk.ListStore(str)
-
         self.liststore.clear()
         for category in category_names_by_id.values():
             self.liststore.append([category])
-        categories.set_model(self.liststore)
-        categories.set_text_column(0)
         if category_names_by_id.values():
-            categories.get_child().set_text(category_names_by_id.values()[0])
+            self.categories.get_child().set_text(category_names_by_id.values()[0])
 
 
     def add_card_cb(self, widget):
@@ -251,7 +250,10 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         signals = ["add_card", "change_card_type", "input_to_main_menu"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
-        self.fill_listboxes()
+        self.categories_liststore = gtk.ListStore(str)
+        self.categories.set_model(self.categories_liststore)
+        self.categories.set_text_column(0)
+        self.init_listboxes()
         self.layout()
 
     def layout (self):
@@ -274,28 +276,28 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.set_card_type()
         self.layout()
 
+    def update_categories(self):
+        """ Update categories listbox content. """
 
-    def fill_listboxes(self):
-        """ Fill listboxes by categories and cardtypes. """
-
-        # Fill Categories list
-        # categories = { id:category, ...}
+        self.categories_liststore.clear()
         categories = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
-        categories_widget = self.categories
-        categories_liststore = gtk.ListStore(str)
-        for category in sorted(categories.values()):
-            categories_liststore.append([category])
-        categories_widget.set_model(categories_liststore)
-        categories_widget.set_text_column(0)
         if categories.values():
-            categories_widget.get_child().set_text(\
+            for category in sorted(categories.values()):
+                self.categories_liststore.append([category])
+            # self.categories - categories listbox
+            self.categories.get_child().set_text(\
                 sorted(categories.values())[0])
         else:
-            categories_widget.get_child().set_text("default category")
+            self.categories.get_child().set_text("default category")
+
+    def init_listboxes(self):
+        """ Fill listboxes by categories and cardtypes. """
         
+        # Fill Categories list
+        self.update_categories()
+
         # Fill Card-types list
-        # cardtypes = { id:card_type_object, ...}
         cardtypes = dict([(card_type.id, card_type) \
             for card_type in card_types()])
         cardtypes_widget = self.cardtypes
@@ -311,7 +313,8 @@ class RainbowControllerInput(HildonUiControllerInput):
 
     def activate(self, fact = None):
         """ Start input window. """
-
+        
+        self.update_categories()
         self.switcher.set_current_page(self.input)
 
     def add_card_cb(self, widget):
