@@ -97,6 +97,11 @@ class HildonUiControllerInput(HildonBaseController):
                 textbuffer = entry_field.get_buffer()
                 textbuffer.set_text(fact.data[fact_key])
             entry_field.set_property("height-request", 120)
+            # turn off hildon autocapitalization
+            try:
+                entry_field.set_property("hildon-input-mode", "full")
+            except TypeError:
+                pass
             entry_field.set_name(fact_key_name)
             entry_field.show()
             self.edit_boxes[entry_field] = fact_key
