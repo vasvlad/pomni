@@ -27,9 +27,10 @@ Hildon UI
 import gettext
 
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        config, ui_controller_main
+        config, ui_controller_review, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
 from pomni.hildon_ui import HildonBaseController
+
 
 _ = gettext.gettext
 
@@ -88,21 +89,19 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
         self.show_answer()
 
-    @staticmethod
-    def delete_card_cb(widget):
+    def delete_card_cb(self, widget):
         """ Hook for delete card. """
 
-        # Create new card
-        main = ui_controller_main()
-        main.delete_current_fact()
+        # Delete card
+        if self.card and self.card.fact:
+            ui_controller_main().delete_current_fact()
 
-    @staticmethod
-    def edit_card_cb(widget):
+    def edit_card_cb(self, widget):
         """ Hook for edit card. """
 
         # Edit card
-        main = ui_controller_main()
-        main.edit_current_card()
+        if self.card and self.card.fact:
+            ui_controller_main().edit_current_card()
 
     def grade_cb(self, widget):
         """ Call grade of answer. """
