@@ -29,49 +29,54 @@ import gettext
 from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
         config, ui_controller_main
 from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
-
-from pomni.hildon_ui import HildonBaseUi
+from pomni.hildon_ui import HildonBaseController
 
 _ = gettext.gettext
 
 
-class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
+class HildonUiControllerReview(HildonBaseController, UiControllerReview):
     """ Hildon Review controller """
 
     def __init__(self, w_tree):
-        """ Initialization items of review window """
+        """ Initialization items of review window. """
 
-        self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals=["get_answer", \
-            "grade", "delete_card", "edit_card"])
+        HildonBaseController.__init__(self, w_tree)
         UiControllerReview.__init__(self)
+        
+        signals = ["get_answer", "grade", "delete_card", "edit_card"]
+
+        self.w_tree.signal_autoconnect(\
+            {"review_to_main_menu": self.to_main_menu_cb})
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
 
         self.grade = 0
         self.card = None
 
+    def activate(self):
+        """ Start new review window. """
 
-    def start(self):
-        """ Start new review window """
-
-        HildonBaseUi.start(self, self.review)
+        self.switcher.set_current_page(self.review)
         self.new_question()
 
     # UiControllerReview API
     def update_dialog(self, redraw_all=True):
-        """ This is part of UiControllerReview API """
+        """ This is part of UiControllerReview API. """
 
         self.new_question()
 
     def new_question(self, learn_ahead=False):
         """ Create new question """
+        pass
 
 
     def show_answer(self):
         """ Show answer in review window """
+        pass
 
 
     def grade_answer(self, grade):
-        """ Grade the answer """
+        """ Grade the answer. """
 
         scheduler().process_answer(self.card, grade)
         self.new_question()
@@ -79,13 +84,13 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
     # Glade callbacks
 
     def get_answer_cb(self, widget):
-        """ Hook for showing a right answer """
+        """ Hook for showing a right answer. """
 
         self.show_answer()
 
     @staticmethod
     def delete_card_cb(widget):
-        """ Hook for delete card """
+        """ Hook for delete card. """
 
         # Create new card
         main = ui_controller_main()
@@ -93,14 +98,14 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
 
     @staticmethod
     def edit_card_cb(widget):
-        """ Hook for edit card """
+        """ Hook for edit card. """
 
         # Edit card
         main = ui_controller_main()
         main.edit_current_card()
 
     def grade_cb(self, widget):
-        """ Call grade of answer """
+        """ Call grade of answer. """
 
         self.grade_answer(int(widget.name[-1]))
 
@@ -110,21 +115,11 @@ class HildonUiControllerReview(HildonBaseUi, UiControllerReview):
         self.card = None
 
 
-
-
-
-
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
 
-    def __init__(self, w_tree):
-        """ Initialize class """
-
-        self.base = HildonUiControllerReview
-        self.base.__init__(self, w_tree)
-
     def new_question(self, learn_ahead=False):
-        """ Show new question. Make get_answer_box visible """
+        """ Show new question. Make get_answer_box visible. """
 
         if not database().card_count():
             ui_controller_main().widget.information_box(\
@@ -163,9 +158,8 @@ class EternalControllerReview(HildonUiControllerReview):
         self.grades.set_property('visible', False)
         self.answer_box.set_property('visible', False)
 
-
     def show_answer(self):
-        """ Show answer. Make grades and answer_box visible """
+        """ Show answer. Make grades and answer_box visible. """
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(True)                   
@@ -191,23 +185,16 @@ class EternalControllerReview(HildonUiControllerReview):
 class RainbowControllerReview(HildonUiControllerReview):
     """ Rainbow UI review controller """
 
-    def __init__(self, w_tree):
-        self.base = HildonUiControllerReview
-        self.base.__init__(self, w_tree)
-
-
     def new_question(self, learn_ahead=False):
-        """ Show new question """
+        """ Show new question. """
 
         self.show_answer("<html><p align=center style='margin-top:35px; \
             font-size:16;'>Press to get answer</p></html>")            
         if not database().card_count():
             ui_controller_main().widget.information_box(\
                 _("Database is empty!"), "OK")
-            answer_viewport = self.w_tree.get_widget("answer_viewport")
-            answer_viewport.set_sensitive(False)
-            grades_table = self.w_tree.get_widget("grades_table")
-            grades_table.set_sensitive(False)
+            self.answer_viewport.set_sensitive(False)
+            self.grades_table.set_sensitive(False)
             return
             
         self.card = scheduler().get_new_question(learn_ahead)
@@ -231,23 +218,17 @@ class RainbowControllerReview(HildonUiControllerReview):
             else:
                 ui_controller_main().widget.information_box(\
                     _("Finished!"), "OK")
-                answer_viewport = self.w_tree.get_widget("answer_viewport")
-                answer_viewport.set_sensitive(False)
-                grades_table = self.w_tree.get_widget("grades_table")
-                grades_table.set_sensitive(False)
+                self.answer_viewport.set_sensitive(False)
+                self.grades_table.set_sensitive(False)
                 return        
                 
-        grades_table = self.w_tree.get_widget("grades_table")
-        grades_table.set_sensitive(False)
-
+        self.grades_table.set_sensitive(False)
 
     def show_answer(self, text=None):
         """ Show answer """
         
-        answer_viewport = self.w_tree.get_widget("answer_viewport")
-        answer_viewport.set_sensitive(True)
-        grades_table = self.w_tree.get_widget("grades_table")
-        grades_table.set_sensitive(True)
+        self.answer_viewport.set_sensitive(True)
+        self.grades_table.set_sensitive(True)
         
         if not text:
             answer_text = self.card.answer()

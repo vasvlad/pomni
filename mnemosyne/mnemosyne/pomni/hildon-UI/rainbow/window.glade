@@ -663,7 +663,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="to_main_menu"/>
+                                <signal name="clicked" handler="review_to_main_menu"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -974,7 +974,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="to_main_menu"/>
+                            <signal name="clicked" handler="input_to_main_menu"/>
                           </widget>
                           <packing>
                             <property name="x_options">GTK_EXPAND</property>
@@ -1141,7 +1141,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
-                                <signal name="clicked" handler="to_main_menu"/>
+                                <signal name="clicked" handler="config_to_main_menu"/>
                                 <child>
                                   <placeholder/>
                                 </child>

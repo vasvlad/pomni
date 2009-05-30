@@ -24,27 +24,31 @@
 Hildon UI
 """
 
-from mnemosyne.libmnemosyne.component_manager import config
-from pomni.hildon_ui import HildonBaseUi, HildonUI
+import gettext
+_ = gettext.gettext
+
+from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
+from pomni.hildon_ui import HildonBaseController
 
 
-class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
+class HildonUiControllerConfigure(HildonBaseController):
     """ Hildon Config controller """
 
     def __init__(self, w_tree):
+        """Initialization items of config window."""
 
-        """ Initialization items of config window """
-        self.w_tree = w_tree
-        HildonBaseUi.__init__(self, self.w_tree, signals = [ \
-                    'change_fullscreen', \
-                    'change_font_size', 'change_startup_with_review',\
-                    'change_theme'])
+        HildonBaseController.__init__(self, w_tree)
+        signals = ['change_fullscreen', 'change_font_size', \
+            'change_startup_with_review', 'change_theme', 'config_to_main_menu']
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         self.modified = False
         self.theme_modified = False
         self.configuration = config()
 
-    def start(self):
-        """ Start config window """
+    def activate(self):
+        """Start config window."""
+
         self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])
         self.checkbox_start_in_review_mode.set_active(
@@ -55,16 +59,18 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
         theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
-        HildonBaseUi.start(self, self.config)
+        self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
-        """ Change Fullscreen parameter """
+        """ Change Fullscreen parameter. """
+
         self.modified = True
         self.configuration['fullscreen'] = \
             self.checkbox_fullscreen_mode.get_active()
 
     def change_font_size_cb(self, widget, param1, param2):
-        """ Change Font size parameter """
+        """ Change Font size parameter. """
+
         self.modified = True
         value = self.font_size_slider.get_value()
         self.configuration['font_size'] = value
@@ -72,13 +78,15 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
             value.__int__().__str__())
 
     def change_startup_with_review_cb(self, widget):
-        """ Change 'Startup with Review' parameter """
+        """ Change 'Startup with Review' parameter. """
+
         self.modified = True
         self.configuration['startup_with_review'] = \
             self.checkbox_start_in_review_mode.get_active()
 
     def change_theme_cb(self, widget):
-        """ Change current theme """
+        """ Change current theme. """
+
         self.theme_modified = True
         path_list = self.configuration["theme_path"].split("/")
         current_theme = path_list.pop()
@@ -94,25 +102,18 @@ class HildonUiControllerConfigure(HildonBaseUi, HildonUI):
             "New theme: " + new_theme.capitalize())
         self.configuration.save()
         
-    def to_main_menu_cb(self, widget):
-        """ Return to main menu """
+    def config_to_main_menu_cb(self, widget):
+        """ Return to main menu. """
+
         if self.modified:
             self.configuration.save()
         if self.theme_modified:
-            self.information_box("Restart the program to take effect!", "OK")
+            ui_controller_main().widget.information_box(\
+                _("Restart the program to take effect!"), "OK")
         self.switcher.set_current_page(self.main_menu)
 
-
-
-class EternalControllerConfigure(HildonUiControllerConfigure):
-    """ Eternal Configure controller """
-    pass
-
-
-
-class RainbowControllerConfigure(HildonUiControllerConfigure):
-    """ Rainbow Configure controller """
-    pass
+EternalControllerConfigure = HildonUiControllerConfigure
+RainbowControllerConfigure = HildonUiControllerConfigure
 
 
 # Local Variables:

@@ -31,26 +31,27 @@ import gtk.glade
 
 from mnemosyne.libmnemosyne.component_manager import database, config, \
         ui_controller_main, card_types
-
-from pomni.hildon_ui import HildonBaseUi
-
+from pomni.hildon_ui import HildonBaseController
 _ = gettext.gettext
 
 
-class HildonUiControllerInput(HildonBaseUi):
+class HildonUiControllerInput(HildonBaseController):
     """ Hildon Input controller """
 
     def __init__(self, w_tree):
         """ Initialization items of input window. """
 
-        HildonBaseUi.__init__(self, w_tree, signals=['add_card', 'add_card2'])
+        HildonBaseController.__init__(self, w_tree)
+        signals = ["add_card", "add_card2", "input_to_main_menu"]
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
         self.fields_container = None
         self.liststore = None
         self.card_type = None
         self.fact = None
         self.update = None
         self.edit_boxes = {}
-
 
     def create_entries (self, fact = None):
         """ Create widget inclusive varios entries. """
@@ -109,8 +110,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
         return fields_container
 
-
-    def start(self, fact = None):
+    def activate(self, fact = None):
         """ Start input window. """
 
         self.fact = fact
@@ -137,7 +137,7 @@ class HildonUiControllerInput(HildonBaseUi):
             enumerate(database().category_names())])
 
         # switch to Page Input
-        HildonBaseUi.start(self, self.input)
+        self.switcher.set_current_page(self.input)
 
         categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
@@ -182,13 +182,13 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
     def add_card2_cb(self, widget, event):
-        """ Hook for add_card for eventboxes """
+        """ Hook for add_card for eventboxes. """
 
         self.add_card_cb (widget)
 
 
     def get_data(self, check_for_required=True):
-        """ Get data from widgets """
+        """ Get data from widgets. """
 
         fact = {}
         for edit_box, fact_key in self.edit_boxes.iteritems():
@@ -204,7 +204,7 @@ class HildonUiControllerInput(HildonBaseUi):
 
 
     def clear_data_widgets(self):
-        """ Clear data in widgets """
+        """ Clear data in widgets. """
 
         self.edit_boxes = {}
 
@@ -221,22 +221,20 @@ class HildonUiControllerInput(HildonBaseUi):
         parent_fields_container.pack_start(self.fields_container, 
             True, True, 0)
 
-
-    def to_main_menu_cb(self, widget):
-        """ Return to main menu """
+    def input_to_main_menu_cb(self, widget):
+        """ Return to main menu. """
 
         #Destroy fields_container
         if self.fields_container:
             self.fields_container.destroy()
+        self.switcher.set_current_page(self.main_menu)
         #Destroy categories entry
 #        if self.listsore:
 #            self.liststore.destroy()
 
 
-
 class EternalControllerInput(HildonUiControllerInput):
     """ Eternal Input mode controller """
-    
 
 
 class RainbowControllerInput(HildonUiControllerInput):
