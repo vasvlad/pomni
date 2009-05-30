@@ -69,7 +69,7 @@ class HildonBaseController():
         if widget:
             return widget
         raise AttributeError()
-    
+
     def to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
