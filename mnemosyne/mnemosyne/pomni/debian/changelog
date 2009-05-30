@@ -11,8 +11,13 @@ pomni (0.1.0) unstable; urgency=low
   * A lot of UI changes in 'Rainbow'
   * Refactored UI classes (Vlad)
   * Implemented editing in review mode (Vlad)
+  * Refactored UI classes again:
+        renamed start -> activate
+        renamed HildonBaseUI -> HildonBaseController
+        refactored & fixed collback assigning
+        ControllerConfigure isn't inherited from HildonUI anymore
 
- -- Ed Bartosh <bartosh@gmail.com>  Mon, 25 May 2009 00:03:29 +0300
+ -- Ed Bartosh <bartosh@gmail.com>  Fri, 29 May 2009 14:37:04 +0300
 
 pomni (0.0.9) unstable; urgency=low
 

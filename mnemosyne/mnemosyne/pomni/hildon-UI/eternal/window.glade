@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat May 23 22:38:41 2009 -->
+<!--Generated with glade3 3.4.5 on Sat May 30 11:09:40 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -33,6 +33,10 @@
                     <property name="response_id">0</property>
                     <signal name="clicked" handler="review"/>
                   </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                  </packing>
                 </child>
                 <child>
                   <widget class="GtkButton" id="input">
@@ -46,6 +50,8 @@
                     <signal name="clicked" handler="input"/>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -59,6 +65,8 @@
                     <signal name="clicked" handler="configure"/>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -72,6 +80,8 @@
                     <signal name="clicked" handler="exit"/>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -542,6 +552,8 @@
                             <property name="visible">True</property>
                           </widget>
                           <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
                             <property name="position">3</property>
                           </packing>
                         </child>
@@ -553,7 +565,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="to_main_menu"/>
+                            <signal name="clicked" handler="review_to_main_menu"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -642,10 +654,7 @@
                         <property name="height_request">26</property>
                         <property name="visible">True</property>
                         <child internal-child="entry">
-                          <widget class="GtkEntry" id="categories-entry">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="text" translatable="yes">Categories</property>
+                          <widget class="GtkEntry" id="comboboxentry-entry1">
                           </widget>
                         </child>
                       </widget>
@@ -816,6 +825,8 @@
                         <property name="visible">True</property>
                       </widget>
                       <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -827,7 +838,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="to_main_menu"/>
+                        <signal name="clicked" handler="input_to_main_menu"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -877,6 +888,12 @@
                       <placeholder/>
                     </child>
                     <child>
+                      <widget class="GtkLabel" id="label_text_size">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkHScale" id="font_size_slider">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -889,12 +906,6 @@
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
                       </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkLabel" id="label_text_size">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
                     </child>
                   </widget>
                 </child>
@@ -931,6 +942,18 @@
                     <property name="visible">True</property>
                     <property name="n_columns">2</property>
                     <child>
+                      <widget class="GtkLabel" id="config_mode_label_theme">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Current theme: </property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="x_options"></property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
                       <widget class="GtkButton" id="config_mode_button_theme">
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
@@ -949,18 +972,6 @@
                         <property name="x_padding">8</property>
                       </packing>
                     </child>
-                    <child>
-                      <widget class="GtkLabel" id="config_mode_label_theme">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Current theme: </property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="x_options"></property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -973,11 +984,12 @@
                     <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="can_default">True</property>
                     <property name="has_default">True</property>
                     <property name="receives_default">True</property>
                     <property name="label" translatable="yes">Back to main menu</property>
                     <property name="response_id">0</property>
-                    <signal name="clicked" handler="to_main_menu"/>
+                    <signal name="clicked" handler="config_to_main_menu"/>
                   </widget>
                   <packing>
                     <property name="position">4</property>
@@ -1102,6 +1114,10 @@
                 <property name="use_underline">True</property>
                 <property name="response_id">-8</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="questionwindow_button_no">
@@ -1114,6 +1130,8 @@
                 <property name="response_id">-9</property>
               </widget>
               <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -1219,6 +1237,10 @@
                 <property name="label" translatable="yes">ok</property>
                 <property name="response_id">0</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+              </packing>
             </child>
           </widget>
           <packing>
