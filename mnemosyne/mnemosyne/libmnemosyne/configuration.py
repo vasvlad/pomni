@@ -122,7 +122,7 @@ class Configuration(Component, dict):
              "fullscreen": True,
              "font_size": 30.0,
              "startup_with_review": False,
-             "times_loaded": 0
+             "times_loaded": 0,
              "active_plugins": set() # Plugin classes, not instances.
             }.items():
 
