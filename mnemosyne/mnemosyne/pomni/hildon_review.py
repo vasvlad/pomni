@@ -43,7 +43,7 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
         HildonBaseController.__init__(self, w_tree)
         UiControllerReview.__init__(self)
-        
+
         signals = ["get_answer", "grade", "delete_card", "edit_card"]
 
         self.w_tree.signal_autoconnect(\
@@ -151,7 +151,7 @@ class EternalControllerReview(HildonUiControllerReview):
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
             widget.set_sensitive(False)
-            
+
         self.button_getanswer.set_sensitive(True)
         self.get_answer_box.set_property('visible', True)
         self.grades.set_property('visible', False)
@@ -161,9 +161,9 @@ class EternalControllerReview(HildonUiControllerReview):
         """ Show answer. Make grades and answer_box visible. """
 
         for widget in [getattr(self, "grade%i" % num) for num in range(6)]:
-            widget.set_sensitive(True)                   
+            widget.set_sensitive(True)
         self.button_getanswer.set_sensitive(True)
-        
+
         answer_text = self.card.answer()
         document = getattr(self,'answer_text').document
         document.clear()
@@ -174,7 +174,7 @@ class EternalControllerReview(HildonUiControllerReview):
                              '*{font-size:%spx;}' % font_size)
         document.write_stream(answer_text)
         document.close_stream()
-        
+
         self.get_answer_box.set_property('visible', False)
         self.grades.set_property('visible', True)
         self.answer_box.set_property('visible', True)
@@ -225,7 +225,7 @@ class RainbowControllerReview(HildonUiControllerReview):
 
     def show_answer(self, text=None):
         """ Show answer """
-        
+
         self.answer_viewport.set_sensitive(True)
         self.grades_table.set_sensitive(True)
         
