@@ -3,22 +3,16 @@
 #
 
 from mnemosyne.libmnemosyne.renderer import Renderer
-from mnemosyne.libmnemosyne.component_manager import filters
-
-# TODO: read card type css from $basedir/css/$card_type if it exits.
-# TODO: add convenience functions to modify the css on disk:
-#   set_background(card_type, color), set_font(card_type, fact_key, font),
-#   set_alignment(card_type, fact_key, alignment), ...
-
 
 class TextRenderer(Renderer):
+    def __init__(self, component_manager):
+        Renderer.__init__(self, component_manager)
     
     def render_card_fields(self, fact, fields):
         txt = ''
         for field in fields:
-            key = field[0]
-            s = fact[key]
-            for f in filters():
+            s = fact[field]
+            for f in self.filters():
                 s = f.run(s, fact)
             txt += s
         return txt
