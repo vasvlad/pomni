@@ -79,7 +79,7 @@ def main(argv):
     #    else:
     #        opts.mode = 'main'
 
-    return ui_factory(opts.ui, basedir).start(opts.mode)
+    return ui_factory(basedir, opts.ui).start(opts.mode)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

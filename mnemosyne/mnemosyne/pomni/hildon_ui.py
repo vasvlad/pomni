@@ -30,9 +30,11 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
-from mnemosyne.libmnemosyne.component_manager import component_manager
-from mnemosyne.libmnemosyne.component_manager import config, \
-    ui_controller_main, database
+from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
+
+#from mnemosyne.libmnemosyne.component_manager import component_manager
+#from mnemosyne.libmnemosyne.component_manager import config, \
+#    ui_controller_main, database
 
 _ = gettext.gettext
 
@@ -76,7 +78,7 @@ class HildonBaseController():
         self.switcher.set_current_page(self.main_menu)
 
 
-class HildonUI():
+class HildonUI(MainWidget):
     """ Hildon UI """
 
     def __init__(self):

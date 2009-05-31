@@ -29,10 +29,6 @@ from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from mnemosyne.libmnemosyne import Mnemosyne
 
-class FakeControllerReview(object):
-    def new_question(self):
-        pass
-
 class App(Mnemosyne):
     def __init__(self, resource_limited=False):
         Mnemosyne.__init__(self, resource_limited)
@@ -40,10 +36,7 @@ class App(Mnemosyne):
              "GetTextTranslator"))
 
     def initialise(self, basedir, filename=None):
-        # assign fake review controller
-        # to avoid new_question call in self.initialise
-        self.components.append(("pomni.factory.FakeControllerReview",
-                                     "ReviewWdgt"))
+        self.components.append(("pomni.hildon_ui", "HildonUI"))
         Mnemosyne.initialise(self, basedir, filename=None)
 
 def ui_factory(basedir, interface=None):
@@ -62,8 +55,7 @@ def ui_factory(basedir, interface=None):
 
     if not interface or interface == "hildon":
     
-        from pomni.hildon_ui import HildonUI
-        return HildonUI()
+        return app.main_widget()
 
     # add next gui here
     raise ValueError("No idea how to create %s UI" % interface)
