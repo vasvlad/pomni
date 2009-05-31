@@ -27,12 +27,30 @@ UI Factory. Creates UI objects
 from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
-def ui_factory(interface=None):
-    """ Create UI(View in terms of MVC) """
+from mnemosyne.libmnemosyne import Mnemosyne
 
-    from mnemosyne.libmnemosyne.ui_controllers_main.default_main_controller \
-                                               import DefaultMainController
-    component_manager.register("ui_controller_main", DefaultMainController())
+class FakeControllerReview(object):
+    def new_question(self):
+        pass
+
+class App(Mnemosyne):
+    def __init__(self, resource_limited=False):
+        Mnemosyne.__init__(self, resource_limited)
+        self.components.insert(0, ("mnemosyne.libmnemosyne.translator",
+             "GetTextTranslator"))
+
+    def initialise(self, basedir, filename=None):
+        # assign fake review controller
+        # to avoid new_question call in self.initialise
+        self.components.append(("pomni.factory.FakeControllerReview",
+                                     "ReviewWdgt"))
+        Mnemosyne.initialise(self, basedir, filename=None)
+
+def ui_factory(basedir, interface=None):
+    """UI factory. Return main ui object."""
+
+    app = App()
+    app.initialise(basedir)
 
     if interface == 'cmd':
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
@@ -45,7 +63,6 @@ def ui_factory(interface=None):
     if not interface or interface == "hildon":
     
         from pomni.hildon_ui import HildonUI
-        component_manager.register("renderer", HtmlHildon())
         return HildonUI()
 
     # add next gui here

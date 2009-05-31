@@ -47,7 +47,7 @@ def parse_commandline(argv):
 
     parser.add_option("-u", "--ui", help="ui type", default="hildon")
     parser.add_option("-d", "--datadir", help="data directory")
-    parser.add_option("-m", "--mode", help="working mode. "\
+    parser.add_option("-m", "--mode", default="review", help="working mode. "\
                       "'main', 'input', 'review' or 'configure'")
 
     return parser.parse_args(argv)
@@ -67,22 +67,19 @@ def main(argv):
     else:
         basedir = os.path.join(os.environ['HOME'], ".pomni")
 
-    mnemosyne = Mnemosyne()
-    mnemosyne.initialise(basedir)
+    #cdatabase = database()
+    #db_name = os.path.join(basedir, config()['path'])
 
-    cdatabase = database()
-    db_name = os.path.join(basedir, config()['path'])
+    #if os.path.exists(db_name):
+    #    cdatabase.load(db_name)
 
-    if os.path.exists(db_name):
-        cdatabase.load(db_name)
+    #if not opts.mode:
+    #    if config()['startup_with_review']: 
+    #        opts.mode = 'review'
+    #    else:
+    #        opts.mode = 'main'
 
-    if not opts.mode:
-        if config()['startup_with_review']: 
-            opts.mode = 'review'
-        else:
-            opts.mode = 'main'
-
-    return ui_factory(opts.ui).start(opts.mode)
+    return ui_factory(opts.ui, basedir).start(opts.mode)
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
