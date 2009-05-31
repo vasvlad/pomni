@@ -1,3 +1,12 @@
+pomni (0.2.0~beta1) unstable; urgency=low
+
+  * Implemented input and review modes for 3sided card type (Max)
+  * Turned off hildon autocapitalization
+  * fixed bug #93 "Various tracebacks in empty database" (Vlad) 
+  * fixed bug #94 "Traceback after the second enttry in the Input mode" (Vlad) 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 31 May 2009 03:08:43 +0300
+
 pomni (0.1.0) unstable; urgency=low
 
   * New look of main menu (Max)
