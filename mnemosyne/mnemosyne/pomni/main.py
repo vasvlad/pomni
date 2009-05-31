@@ -37,9 +37,7 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../")
 
 from optparse import OptionParser
-
-from mnemosyne.libmnemosyne.component_manager import database, config
-
+from mnemosyne.libmnemosyne import Mnemosyne
 from pomni.factory import ui_factory
 
 def parse_commandline(argv):
@@ -53,40 +51,6 @@ def parse_commandline(argv):
                       "'main', 'input', 'review' or 'configure'")
 
     return parser.parse_args(argv)
-
-def initialise(basedir):
-    """Custom initialise.
-    Faster replacement for libmnemosyne.initialise
-    """
-    from mnemosyne.libmnemosyne.component_manager import component_manager
-    from mnemosyne.libmnemosyne import initialise_new_empty_database
-
-    # Configuration.
-    from mnemosyne.libmnemosyne.configuration import Configuration
-    component_manager.register("config", Configuration())
-    
-    # Logger.
-    from mnemosyne.libmnemosyne.loggers.txt_logger import TxtLogger
-    component_manager.register("log", TxtLogger())   
-    
-    # Database.
-    from mnemosyne.libmnemosyne.databases.SQLite import SQLite
-    component_manager.register("database", SQLite())
-
-    # Scheduler.
-    from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne import SM2Mnemosyne
-    component_manager.register("scheduler", SM2Mnemosyne())
-    
-    # Card types.
-    from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
-    component_manager.register("card_type", FrontToBack())
-    from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
-    component_manager.register("card_type", BothWays())
-    from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
-    component_manager.register("card_type", ThreeSided())
-
-    config().initialise(basedir)
-    initialise_new_empty_database()
 
 def main(argv):
     """ Main """
@@ -103,7 +67,8 @@ def main(argv):
     else:
         basedir = os.path.join(os.environ['HOME'], ".pomni")
 
-    initialise(basedir)
+    mnemosyne = Mnemosyne()
+    mnemosyne.initialise(basedir)
 
     cdatabase = database()
     db_name = os.path.join(basedir, config()['path'])
