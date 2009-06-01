@@ -84,6 +84,8 @@ def initialise(basedir):
     component_manager.register("card_type", BothWays())
     from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
     component_manager.register("card_type", ThreeSided())
+    from mnemosyne.libmnemosyne.card_types.cloze import Cloze
+    component_manager.register("card_type", Cloze())
 
     config().initialise(basedir)
     initialise_new_empty_database()
