@@ -358,9 +358,11 @@ class RainbowControllerInput(HildonUiControllerInput):
         question_widget = self.question_box_text
         answer_widget = self.answer_box_text
         pronunciation_widget = self.pronun_box_text
-        if self.card_type.id == '3':
+        if self.card_type.name == _("Foreign word with pronunciation"):
             widgets = [('f', question_widget), ('t', answer_widget), \
                 ('p', pronunciation_widget)]
+        elif self.card_type.name ==  _("Cloze deletion"):
+            widgets = [('text', question_widget)]
         else:
             widgets = [('q', question_widget), ('a', answer_widget)]
         for fact_key, widget in widgets:
