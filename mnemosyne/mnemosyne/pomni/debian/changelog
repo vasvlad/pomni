@@ -1,8 +1,9 @@
 pomni (0.2.0~beta2) unstable; urgency=low
 
   * implemented input and review modes for clozed deletion card type (Max) 
+  * implemented input and review modes for 2sided card type (Max) 
 
- -- Ed Bartosh <bartosh@gmail.com>  Tue, 02 Jun 2009 23:17:00 +0300
+ -- Ed Bartosh <bartosh@gmail.com>  Thu, 04 Jun 2009 21:35:44 +0300
 
 pomni (0.2.0~beta1) unstable; urgency=low
 
