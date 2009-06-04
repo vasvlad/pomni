@@ -29,6 +29,14 @@ from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from mnemosyne.libmnemosyne import Mnemosyne
 
+from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
+
+class FakeControllerReview(ReviewWidget):
+    """ Hildon Review controller """
+
+    def activate(self):
+        pass
+
 class App(Mnemosyne):
     def __init__(self, resource_limited=False):
         Mnemosyne.__init__(self, resource_limited)
@@ -36,14 +44,12 @@ class App(Mnemosyne):
              "GetTextTranslator"))
 
     def initialise(self, basedir, filename=None):
-        self.components.append(("pomni.hildon_ui", "HildonUI"))
         Mnemosyne.initialise(self, basedir, filename=None)
 
 def ui_factory(basedir, interface=None):
     """UI factory. Return main ui object."""
 
     app = App()
-    app.initialise(basedir)
 
     if interface == 'cmd':
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
@@ -54,7 +60,16 @@ def ui_factory(basedir, interface=None):
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-    
+        # FIXME: get current theme here
+
+        app.components.append(("pomni.hildon_ui", "HildonUI"))
+        app.components.append(("pomni.factory",
+                               "FakeControllerReview"))
+        print 'before initialise'
+        app.initialise(basedir)
+
+        print '>>> main-widget=', app.main_widget()
+
         return app.main_widget()
 
     # add next gui here
