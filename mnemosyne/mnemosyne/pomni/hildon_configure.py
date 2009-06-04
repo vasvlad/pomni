@@ -27,27 +27,28 @@ Hildon UI
 import gettext
 _ = gettext.gettext
 
-from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
 from pomni.hildon_ui import HildonBaseController
 
 
 class HildonUiControllerConfigure(HildonBaseController):
     """ Hildon Config controller """
 
-    def __init__(self, w_tree):
+    def __init__(self, component_manager):
         """Initialization items of config window."""
 
-        HildonBaseController.__init__(self, w_tree)
+        HildonBaseController.__init__(self, component_manager)
+
+    def activate(self):
         signals = ['change_fullscreen', 'change_font_size', \
             'change_startup_with_review', 'change_theme', 'config_to_main_menu']
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         self.modified = False
         self.theme_modified = False
-        self.configuration = config()
+        self.configuration = self.config()
 
-    def activate(self):
-        """Start config window."""
+    def show(self):
+        """Show config window."""
 
         self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])

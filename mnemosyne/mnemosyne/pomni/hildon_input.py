@@ -28,38 +28,28 @@ import gettext
 import gtk
 import gtk.glade
 
-
-from mnemosyne.libmnemosyne.component_manager import database, config, \
-        ui_controller_main, card_types
 from pomni.hildon_ui import HildonBaseController
 _ = gettext.gettext
 
 
-class HildonUiControllerInput(HildonBaseController):
-    """ Hildon Input controller """
-
-    def __init__(self, w_tree, signals):
-        """ Initialization items of input window. """
-
-        HildonBaseController.__init__(self, w_tree)
-        self.w_tree.signal_autoconnect(\
-            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
-
-
-class EternalControllerInput(HildonUiControllerInput):
+class EternalControllerInput(HildonBaseController):
     """ Eternal Input mode controller """
 
-    def __init__(self, w_tree):
+    def __init__(self, component_manager):
         """ Initialization items of input window. """
 
-        signals = ["add_card", "add_card2", "input_to_main_menu"]
-        HildonUiControllerInput.__init__(self, w_tree, signals)
-
+        HildonBaseController.__init__(self, component_manager)
         self.fields_container = None
         self.card_type = None
         self.fact = None
         self.update = None
         self.edit_boxes = {}
+
+    def activate(self):
+
+        signals = ["add_card", "add_card2", "input_to_main_menu"]
+        self.w_tree.signal_autoconnect(\
+                dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         
         self.categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
@@ -128,8 +118,8 @@ class EternalControllerInput(HildonUiControllerInput):
 
         return fields_container
 
-    def activate(self, fact = None):
-        """ Start input window. """
+    def show(self, fact = None):
+        """Show input window."""
 
         self.fact = fact
         self.update = fact is not None
@@ -166,7 +156,7 @@ class EternalControllerInput(HildonUiControllerInput):
             self.categories.get_child().set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
-        """ Add card to database. """
+        """Add card to database."""
 
         try:
             fact_data = self.get_data()
@@ -195,7 +185,7 @@ class EternalControllerInput(HildonUiControllerInput):
             self.switcher.set_current_page(self.review)
 
     def add_card2_cb(self, widget, event):
-        """ Hook for add_card for eventboxes. """
+        """Hook for add_card for eventboxes."""
 
         self.add_card_cb (widget)
 
@@ -245,19 +235,26 @@ class EternalControllerInput(HildonUiControllerInput):
 
 
 
-class RainbowControllerInput(HildonUiControllerInput):
+class RainbowControllerInput(HildonBaseController):
     """ Rainbow Input mode controller """
 
-    def __init__(self, w_tree):
+    def __init__(self, component_manager):
         """ Initialization items of input window. """
 
+        HildonBaseController.__init__(self, component_manager)
+
+    def activate(self):
         signals = ["add_card", "change_card_type", "input_to_main_menu"]
-        HildonUiControllerInput.__init__(self, w_tree, signals)
+        self.w_tree.signal_autoconnect(\
+           dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
         self.init_listboxes()
         self.layout()
+
+    def show(self):
 
         # Turn off hildon autocapitalization
         try:

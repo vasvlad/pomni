@@ -26,24 +26,23 @@ Hildon UI
 
 import gettext
 
-from mnemosyne.libmnemosyne.component_manager import database, scheduler, \
-        config, ui_controller_review, ui_controller_main
-from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 from pomni.hildon_ui import HildonBaseController
 
 
 _ = gettext.gettext
 
 
-class HildonUiControllerReview(HildonBaseController, UiControllerReview):
+class HildonUiControllerReview(HildonBaseController, ReviewWidget):
     """ Hildon Review controller """
 
-    def __init__(self, w_tree):
+    def __init__(self, component_manager):
         """ Initialization items of review window. """
 
-        HildonBaseController.__init__(self, w_tree)
-        UiControllerReview.__init__(self)
-        
+        HildonBaseController.__init__(self, component_manager)
+        ReviewWidget.__init__(self, component_manager)
+
+    def activate(self):
         signals = ["get_answer", "grade", "delete_card", "edit_card"]
 
         self.w_tree.signal_autoconnect(\
@@ -54,7 +53,7 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         self.grade = 0
         self.card = None
 
-    def activate(self):
+    def show(self):
         """ Start new review window. """
 
         self.switcher.set_current_page(self.review)
@@ -116,6 +115,9 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
 class EternalControllerReview(HildonUiControllerReview):
     """ Eternal UI review controller """
+
+    def __init__(self, component_manager):
+        HildonUiControllerReview.__init__(self, component_manager)
 
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible. """
