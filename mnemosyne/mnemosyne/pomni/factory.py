@@ -24,32 +24,15 @@
 UI Factory. Creates UI objects
 """
 
-from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
-from mnemosyne.libmnemosyne.renderers.text import TextRenderer
+#from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
+#from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from mnemosyne.libmnemosyne import Mnemosyne
 
-from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
-
-class FakeControllerReview(ReviewWidget):
-    """ Hildon Review controller """
-
-    def activate(self):
-        pass
-
-class App(Mnemosyne):
-    def __init__(self, resource_limited=False):
-        Mnemosyne.__init__(self, resource_limited)
-        self.components.insert(0, ("mnemosyne.libmnemosyne.translator",
-             "GetTextTranslator"))
-
-    def initialise(self, basedir, filename=None):
-        Mnemosyne.initialise(self, basedir, filename=None)
-
-def ui_factory(basedir, interface=None):
+def app_factory(interface=None):
     """UI factory. Return main ui object."""
 
-    app = App()
+    app = Mnemosyne()
 
     if interface == 'cmd':
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
@@ -62,18 +45,16 @@ def ui_factory(basedir, interface=None):
     if not interface or interface == "hildon":
         # FIXME: get current theme here
 
-        app.components.append(("pomni.hildon_ui", "HildonUI"))
-        app.components.append(("pomni.factory",
-                               "FakeControllerReview"))
-        print 'before initialise'
-        app.initialise(basedir)
+        app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
+                                  "GetTextTranslator"))
 
-        print '>>> main-widget=', app.main_widget()
+        app.components.append(("pomni.hildon_ui", "HildonMainWidget"))
+        app.components.append(("pomni.hildon_review", "HildonReviewWidget"))
 
-        return app.main_widget()
+        return app
 
     # add next gui here
-    raise ValueError("No idea how to create %s UI" % interface)
+    raise ValueError("No idea how to create %s app" % interface)
 
 
 # Local Variables:

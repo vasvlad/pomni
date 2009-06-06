@@ -38,7 +38,7 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 
 from optparse import OptionParser
 from mnemosyne.libmnemosyne import Mnemosyne
-from pomni.factory import ui_factory
+from pomni.factory import app_factory
 
 def parse_commandline(argv):
     """ Parse commandline, check options """
@@ -79,7 +79,10 @@ def main(argv):
     #    else:
     #        opts.mode = 'main'
 
-    return ui_factory(basedir, opts.ui).start(opts.mode)
+    app = app_factory(opts.ui)
+    app.initialise(basedir)
+    app.main_widget().show()
+    app.finalise()
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))

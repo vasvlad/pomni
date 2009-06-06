@@ -33,10 +33,6 @@ import gtkhtml2
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
-#from mnemosyne.libmnemosyne.component_manager import component_manager
-#from mnemosyne.libmnemosyne.component_manager import config, \
-#    ui_controller_main, database
-
 _ = gettext.gettext
 
 
@@ -69,7 +65,7 @@ class HildonBaseController(UiComponent):
     def __getattr__(self, name):
         """Lazy get widget as an attribute."""
 
-        if not self.w_tree:
+        if 'w_tree' not in self.__dict__:
             self.w_tree = self.main_widget().w_tree
 
         widget = self.w_tree.get_widget(name)
@@ -82,16 +78,17 @@ class HildonBaseController(UiComponent):
 
         self.switcher.set_current_page(self.main_menu)
 
+class HildonMainWidget(MainWidget):
+    """Hildon main widget."""
 
-class HildonUI(MainWidget):
-    """ Hildon UI """
+    main_menu, review, input, configuration = range(4)
 
-    def __init__(self, component_manager):
-        MainWidget.__init__(self, component_manager)
-        #self.w_tree = None
+    #def __init__(self, component_manager):
+    #    MainWidget.__init__(self, component_manager)
+    #    #self.w_tree = None
 
     def activate(self):
-        print 'HildonUI.activate'
+        print 'HildonMainWidget.activate'
         def gen_callback(mode):
             """Generate callback for mode."""
 
@@ -110,25 +107,24 @@ class HildonUI(MainWidget):
         theme_path = self.config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
-        self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
+        w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
-        controllers = {}
-        for mode in ("input", "configure", "main", "review"):
-            cname = theme.capitalize() + 'Controller' + mode.capitalize()
-            module = __import__("pomni.hildon_%s" % mode, 
-                    globals(), locals(), [cname])
-            print cname
-            controllers[mode] = getattr(module, cname)(self.component_manager)
-            controllers[mode].activate()
-
-        #controllers["review"] = self.component_manager.review_widget()
-        #print 'review:', controllers["review"]
+        #controllers = {}
+        #for mode in ("input", "configure") #, "main", "review"):
+        #    cname = theme.capitalize() + 'Controller' + mode.capitalize()
+        #    module = __import__("pomni.hildon_%s" % mode, 
+        #            globals(), locals(), [cname])
+        #    print cname
+        #    controllers[mode] = getattr(module, cname)(self.component_manager)
+        #    #controllers[mode].activate()
 
         # Set unvisible tabs of switcher
-        self.w_tree.get_widget("switcher").set_property('show_tabs', False)
-        self.window = self.w_tree.get_widget("window")
+        self.switcher = w_tree.get_widget("switcher")
+        self.switcher.set_property('show_tabs', False)
+        self.window = w_tree.get_widget("window")
         self.window.connect('delete_event', self.exit_cb)
 
+        self.spliter_trigger = True
         self.question_flag = False
         # fullscreen mode
         if self.config()['fullscreen']:
@@ -138,26 +134,29 @@ class HildonUI(MainWidget):
             self.fullscreen = False
 
         # Generate callbacks for modes
-        self.controllers = controllers
-        signals = ["review", "input", "configure"]
-        for signal in signals:
-            setattr(self, signal + '_cb', gen_callback(signal))
+        #self.controllers = controllers
+        #print 'assigned controllers to', self
+        #signals = ["review", "input", "configure"]
+        #for signal in signals:
+        #    setattr(self, signal + '_cb', gen_callback(signal))
 
-        self.signals = ["exit", "window_state", "window_keypress"] + signals
+        #self.signals = ["exit", "window_state", "window_keypress"] + signals
 
         # connect signals to methods
-        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in self.signals]))
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in ("exit", "window_state", "window_keypress", "size_allocate")]))
+
+        self.w_tree = w_tree
 
         print 'HildonUI.activate finished', self
 
 
-    def start(self, mode):
-        """ Start UI  """
+    def show(self): #, mode):
+        """Start UI."""
 
-        self.controllers[mode].show()
+        #self.controllers[mode].show()
+        self.switcher.set_current_page(self.main_menu)
         gtk.main()
-
 
     def custom_handler(self, glade, function_name, widget_name, *args):
         """Hook for custom widgets."""
@@ -167,12 +166,22 @@ class HildonUI(MainWidget):
             return handler(args)
 
     # Callbacks
+    def size_allocate_cb(self, widget, user_data):
+        """ Checking window size """
 
-    @staticmethod
-    def exit_cb(widget=None):
+        if (self.switcher.get_current_page() == self.review):
+            if (self.spliter_trigger):
+                # Set Spliter (GtkVpan) to pseudo medium
+                self.spliter_trigger = False
+                pseudo_medium = (widget.allocation.height - 70)/2 - 20
+                self.spliter.set_property('position', pseudo_medium)
+            else:
+                self.spliter_trigger = True
+
+    def exit_cb(self, widget=None):
         """If pressed quit button then close the window."""
 
-        database().unload()
+        self.database().unload()
         gtk.main_quit()
 
 
@@ -248,6 +257,37 @@ class HildonUI(MainWidget):
         """Start Edit/Update window."""
 
         self.controllers['input'].activate(fact)
+
+    def information_box(self, message):
+        pass
+            
+    def question_box(self, question, option0, option1, option2):
+        pass
+    
+    def error_box(self, message):
+        pass
+    
+    def save_file_dialog(self, path, filter, caption=""):
+        pass
+    
+    def open_file_dialog(self, path, filter, caption=""):
+        pass
+
+    def set_window_title(self, title):
+        pass
+    
+    def run_add_card_dialog(self):
+        pass
+
+    def run_edit_fact_dialog(self, fact, allow_cancel=True):
+        pass
+    
+    def run_card_appearance_dialog(self):
+        pass
+
+    def run_manage_card_types_dialog(self):
+        pass
+
 
 
 # Local Variables:
