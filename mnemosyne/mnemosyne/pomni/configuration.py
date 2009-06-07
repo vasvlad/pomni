@@ -21,34 +21,42 @@
 #
 
 """
-Hildon UI
+Hildon UI. Configuration Widget.
 """
 
 import gettext
 _ = gettext.gettext
 
-from pomni.hildon_ui import HildonBaseController
+from mnemosyne.libmnemosyne.ui_component import UiComponent
 
+class ConfigurationWidget(UiComponent):
+    """Hildon Configuration Widget."""
 
-class HildonUiControllerConfigure(HildonBaseController):
-    """ Hildon Config controller """
+    menu = 0
 
     def __init__(self, component_manager):
-        """Initialization items of config window."""
+        UiComponent.__init__(self, component_manager)
 
-        HildonBaseController.__init__(self, component_manager)
+        self.w_tree = self.main_widget().w_tree
+        self.switcher = self.main_widget().switcher
 
-    def activate(self):
-        signals = ['change_fullscreen', 'change_font_size', \
-            'change_startup_with_review', 'change_theme', 'config_to_main_menu']
         self.w_tree.signal_autoconnect(\
-            dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
+            dict([(sig, getattr(self, sig + "_cb")) for sig in ('change_fullscreen', 
+                'change_font_size', 'change_startup_with_review', 'change_theme', 
+                'config_to_main_menu')]))
         self.modified = False
         self.theme_modified = False
         self.configuration = self.config()
 
-    def show(self):
-        """Show config window."""
+        # assign widgets to the self attribute with the same name
+        for widget in ("checkbox_fullscreen_mode", 
+            "checkbox_start_in_review_mode", "font_size_slider", 
+            "label_text_size", "config_mode_label_theme"):
+            setattr(self, widget, self.w_tree.get_widget(widget))
+
+
+    def activate(self):
+        """Activate configuration mode."""
 
         self.checkbox_fullscreen_mode.set_active(
             self.configuration['fullscreen'])
@@ -60,8 +68,8 @@ class HildonUiControllerConfigure(HildonBaseController):
         theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
-        self.switcher.set_current_page(self.config)
 
+    # callbacks
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter. """
 
@@ -109,12 +117,12 @@ class HildonUiControllerConfigure(HildonBaseController):
         if self.modified:
             self.configuration.save()
         if self.theme_modified:
-            ui_controller_main().widget.information_box(\
+            self.main_widget().information_box(\
                 _("Restart the program to take effect!"), "OK")
-        self.switcher.set_current_page(self.main_menu)
+        self.switcher.set_current_page(self.menu)
 
-EternalControllerConfigure = HildonUiControllerConfigure
-RainbowControllerConfigure = HildonUiControllerConfigure
+EternalConfigurationWidget = ConfigurationWidget
+RainbowConfigurationWidget = ConfigurationWidget
 
 
 # Local Variables:
