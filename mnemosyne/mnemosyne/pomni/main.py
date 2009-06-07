@@ -74,7 +74,7 @@ class HildonMainWidget(MainWidget):
         self.switcher = w_tree.get_widget("switcher")
         self.switcher.set_property('show_tabs', False)
         self.window = w_tree.get_widget("window")
-        self.window.connect('delete_event', self.exit_cb)
+        self.window.connect('delete_event', self.exit)
 
         self.spliter_trigger = True
         self.question_flag = False
@@ -99,7 +99,7 @@ class HildonMainWidget(MainWidget):
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
-            module = __import__("pomni.hildon_%s" % mode, globals(),
+            module = __import__("pomni.%s" % mode, globals(),
                                 locals(), [cname])
             widget = getattr(module, cname)(self.component_manager)
             self.widgets[mode] = widget
@@ -125,23 +125,28 @@ class HildonMainWidget(MainWidget):
             handler = getattr(self, function_name)
             return handler(args)
 
-    # Callbacks
-    def main_menu_cb(self):
-        self.activate_mode(self, 'menu')
+    # modes
+    def menu(self):
+        """Activate menu."""
+        self.activate_mode('menu')
 
-    def input_cb(self, widget=None):
+    def input(self, widget=None):
+        """Activate input mode through main ui controller."""
         self.ui_controller_main().add_cards()
 
-    def configure_cb(self, widget=None):
+    def configure(self, widget=None):
+        """Activate configure mode through main ui controller."""
         self.ui_controller_main().configure()
 
-    def review_cb(self, widget=None):
+    def review(self, widget=None):
+        """Activate review mode."""
         self.review_widget.activate()
 
-    def exit_cb(self, widget=None):
-        """If pressed quit button then close the window."""
+    def exit(self, widget=None):
+        """Exit from main gtk loop."""
         gtk.main_quit()
 
+    # callbacks
     def size_allocate_cb(self, widget, user_data):
         """ Checking window size """
 
@@ -173,6 +178,7 @@ class HildonMainWidget(MainWidget):
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
 
+    # ui helpers
     @staticmethod
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
@@ -193,6 +199,7 @@ class HildonMainWidget(MainWidget):
             return caption[:index] + caption[index+1:]
         return caption
     
+    # Main Widget API
     def information_box(self, message, button_caption='OK'):
         """Create Information message."""
         dialog = self.w_tree.get_widget("information_dialog")
@@ -238,18 +245,6 @@ class HildonMainWidget(MainWidget):
 
     def set_window_title(self, title):
         print 'set_window_title'
-
-    def activate_mode(self, mode):
-        self.switcher.set_current_page(getattr(self, mode))
-        widget = self.widgets.get(mode, None)
-        if not widget: # lazy widget creation
-            cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
-            module = __import__("pomni.%s" % mode, globals(), 
-                                locals(), [cname])
-            widget = getattr(module, cname)(self.component_manager)
-            self.widgets[mode] = widget
-
-        widget.activate()
 
     def run_add_cards_dialog(self):
         self.activate_mode('input')

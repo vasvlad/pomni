@@ -227,9 +227,7 @@ class EternalInputWidget(UiComponent):
 
 #################### Old design ###########################################
 
-from pomni.hildon_ui import HildonBaseController
-
-class EternalControllerInput(HildonBaseController):
+class EternalControllerInput():
     """ Eternal Input mode controller """
 
     def __init__(self, component_manager):
@@ -432,7 +430,7 @@ class EternalControllerInput(HildonBaseController):
 
 
 
-class RainbowControllerInput(HildonBaseController):
+class RainbowControllerInput():
     """ Rainbow Input mode controller """
 
     def __init__(self, component_manager):

@@ -26,8 +26,6 @@ Hildon UI. Menu widgets.
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
-_ = gettext.gettext
-
 class EternalMenuWidget(UiComponent):
 
     review, input, configuration = range(1, 4)
@@ -39,7 +37,7 @@ class EternalMenuWidget(UiComponent):
         self.switcher = self.main_widget().switcher
 
         self.w_tree.signal_autoconnect(\
-            dict([(sig, getattr(self, mode + "_cb")) \
+            dict([(mode, getattr(self, mode + "_cb")) \
                 for mode in ["input", "review", "configure", "exit"]]))
 
     # callbacks
@@ -58,10 +56,8 @@ class EternalMenuWidget(UiComponent):
 
 
 ############### old design #############################
-from pomni.hildon_ui import HildonBaseController
 
-
-class HildonUiControllerMain(HildonBaseController):
+class HildonUiControllerMain():
     """ Hidon Main Controller  """
 
     def show(self):

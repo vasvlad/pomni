@@ -27,7 +27,6 @@ Hildon UI
 import gettext
 
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
-from pomni.hildon_ui import HildonBaseController
 
 
 _ = gettext.gettext
@@ -93,7 +92,7 @@ class HildonReviewWidget(ReviewWidget):
 
 
 
-class HildonUiControllerReview(HildonBaseController, ReviewWidget):
+class HildonUiControllerReview():
     """ Hildon Review controller """
 
     def __init__(self, component_manager):
