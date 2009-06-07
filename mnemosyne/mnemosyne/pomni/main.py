@@ -87,7 +87,7 @@ class HildonMainWidget(MainWidget):
 
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ("window_state", "window_keypress", "size_allocate")
+            for sig in ("window_state", "window_keypress", "size_allocate")]))
 
         self.w_tree = w_tree
         print 'HildonUI.activate finished', self
