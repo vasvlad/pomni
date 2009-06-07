@@ -33,6 +33,66 @@ from pomni.hildon_ui import HildonBaseController
 _ = gettext.gettext
 
 
+class HildonReviewWidget(ReviewWidget):
+    """Hildon Review Widget."""
+
+    def activate(self):
+        self.w_tree = self.main_widget().w_tree
+
+    def enable_edit_current_card(self, enabled):
+        print 'enable_edit_current_card'
+        
+    def enable_delete_current_card(self, enabled):
+        print 'enable_delete_current_card'
+        
+    def enable_edit_deck(self, enable): 
+        print 'enable_edit_deck'
+        
+    def question_box_visible(self, visible):
+        print 'question_box_visible'
+        
+    def answer_box_visible(self, visible):
+        print 'answer_box_visible'
+        
+    def set_question_label(self, text):
+        print 'set_question_label'
+        
+    def set_question(self, text):
+        print 'set_question'
+        
+    def set_answer(self, text):
+        print 'set_answer'
+        
+    def clear_question(self): 
+        print 'clear_question'
+        
+    def clear_answer(self): 
+        print 'clear_answer'
+
+    def update_show_button(self, text, default, enabled): 
+        print 'update_show_button'
+
+    def enable_grades(self, enabled): 
+        print 'enable_grades'
+    
+    def set_default_grade(self, grade):
+        print 'set_default_grade'
+        
+    def set_grades_title(self, text): 
+        print 'set_grades_title'
+            
+    def set_grade_text(self, grade, text): 
+        print 'set_grade_text'
+            
+    def set_grade_tooltip(self, grade, text): 
+        print 'set_grade_tooltip'
+
+    def update_status_bar(self, message=None):
+        print 'update_status_bar'
+
+
+
+
 class HildonUiControllerReview(HildonBaseController, ReviewWidget):
     """ Hildon Review controller """
 
@@ -122,8 +182,8 @@ class EternalControllerReview(HildonUiControllerReview):
     def new_question(self, learn_ahead=False):
         """ Show new question. Make get_answer_box visible. """
 
-        if not database().card_count():
-            ui_controller_main().widget.information_box(\
+        if not self.database().card_count():
+            self.main_widget().information_box(\
                 _("Database is empty!"), "OK")
             self.button_getanswer.set_sensitive(False)
             return
