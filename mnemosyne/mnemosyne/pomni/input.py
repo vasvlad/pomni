@@ -21,7 +21,7 @@
 #
 
 """
-Hildon UI: Input mode classes.
+Hildon UI: Input mode Widgets.
 """
 
 import gettext
@@ -29,13 +29,12 @@ import gtk
 import gtk.glade
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
-from pomni.hildon_ui import HildonBaseController
 
 _ = gettext.gettext
 
 class EternalInputWidget(UiComponent):
     
-    main_menu, review = 0, 1
+    menu, review = 0, 1
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
@@ -64,7 +63,7 @@ class EternalInputWidget(UiComponent):
         #Destroy fields_container
         if self.fields_container:
             self.fields_container.destroy()
-        self.switcher.set_current_page(self.main_menu)
+        self.switcher.set_current_page(self.menu)
 
     def add_card_cb(self, widget):
         """Add card to database."""
@@ -227,6 +226,8 @@ class EternalInputWidget(UiComponent):
 
 
 #################### Old design ###########################################
+
+from pomni.hildon_ui import HildonBaseController
 
 class EternalControllerInput(HildonBaseController):
     """ Eternal Input mode controller """
