@@ -48,8 +48,8 @@ def app_factory(interface=None):
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
                                   "GetTextTranslator"))
 
-        app.components.append(("pomni.hildon_ui", "HildonMainWidget"))
-        app.components.append(("pomni.hildon_review", "HildonReviewWidget"))
+        app.components.append(("pomni.main", "HildonMainWidget"))
+        app.components.append(("pomni.review", "HildonReviewWidget"))
 
         return app
 
