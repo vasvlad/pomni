@@ -43,16 +43,16 @@ class EternalMenuWidget(UiComponent):
     # callbacks
     def input_cb(self, widget):
         """Return to main menu."""
-        self.main_widget().input_cb(widget)
+        self.main_widget().input_(widget)
 
     def review_cb(self, widget):
-        self.main_widget().review_cb(widget)
+        self.main_widget().review_(widget)
 
     def configure_cb(self, widget):
-        self.main_widget().configure(widget)
+        self.main_widget().configure_(widget)
 
     def exit_cb(self, widget):
-        self.main_widget().exit_cb(widget)
+        self.main_widget().exit_(widget)
 
 
 ############### old design #############################

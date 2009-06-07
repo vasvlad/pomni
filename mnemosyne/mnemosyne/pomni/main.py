@@ -74,7 +74,6 @@ class HildonMainWidget(MainWidget):
         self.switcher = w_tree.get_widget("switcher")
         self.switcher.set_property('show_tabs', False)
         self.window = w_tree.get_widget("window")
-        self.window.connect('delete_event', self.exit)
 
         self.spliter_trigger = True
         self.question_flag = False
@@ -86,6 +85,7 @@ class HildonMainWidget(MainWidget):
             self.fullscreen = False
 
         # connect signals to methods
+        self.window.connect("delete_event", self.exit_)
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in ("window_state", "window_keypress", "size_allocate")]))
 
@@ -115,7 +115,7 @@ class HildonMainWidget(MainWidget):
             else:
                 mode = 'menu'
 
-        getattr(self, '%s_cb' % mode)()
+        getattr(self, mode + '_')()
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
@@ -126,27 +126,27 @@ class HildonMainWidget(MainWidget):
             return handler(args)
 
     # modes
-    def menu(self):
+    def menu_(self):
         """Activate menu."""
         self.activate_mode('menu')
 
-    def input(self, widget=None):
+    def input_(self, widget=None):
         """Activate input mode through main ui controller."""
         self.ui_controller_main().add_cards()
 
-    def configure(self, widget=None):
+    def configure_(self, widget=None):
         """Activate configure mode through main ui controller."""
         self.ui_controller_main().configure()
 
-    def review(self, widget=None):
+    def review_(self, widget=None):
         """Activate review mode."""
         self.review_widget.activate()
 
-    def exit(self, widget=None):
+    def exit_(self, widget):
         """Exit from main gtk loop."""
         gtk.main_quit()
 
-    # callbacks
+    # gtk window callbacks
     def size_allocate_cb(self, widget, user_data):
         """ Checking window size """
 
