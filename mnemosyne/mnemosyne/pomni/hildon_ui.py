@@ -78,47 +78,25 @@ class HildonBaseController(UiComponent):
 
         self.switcher.set_current_page(self.main_menu)
 
+
 class HildonMainWidget(MainWidget):
     """Hildon main widget."""
 
     main_menu, review, input, configuration = range(4)
 
-    #def __init__(self, component_manager):
-    #    MainWidget.__init__(self, component_manager)
-    #    #self.w_tree = None
-
     def activate(self):
-        print 'HildonMainWidget.activate'
-        def gen_callback(mode):
-            """Generate callback for mode."""
-
-            def callback(widget, event = None):
-                """Callback function."""
-                self.controllers[mode].show()
-            return callback
-
-        try:
-            self.theme = self.config()["theme_path"].split("/")[-1]
-        except KeyError:
-            locals()["theme"] = "eternal"
+        """Basic UI setup. 
+           Load theme glade file, assign gtk window callbacks.
+        """
 
         self.widgets = {}
 
         # Load the glade file for current theme
-        #ui_controller_main().widget = self
+        self.theme = self.config()["theme_path"].split("/")[-1]
         theme_path = self.config()["theme_path"]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
         w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
-
-        #controllers = {}
-        #for mode in ("input", "configure") #, "main", "review"):
-        #    cname = theme.capitalize() + 'Controller' + mode.capitalize()
-        #    module = __import__("pomni.hildon_%s" % mode, 
-        #            globals(), locals(), [cname])
-        #    print cname
-        #    controllers[mode] = getattr(module, cname)(self.component_manager)
-        #    #controllers[mode].activate()
 
         # Set unvisible tabs of switcher
         self.switcher = w_tree.get_widget("switcher")
@@ -135,30 +113,37 @@ class HildonMainWidget(MainWidget):
         else:
             self.fullscreen = False
 
-        # Generate callbacks for modes
-        #self.controllers = controllers
-        #print 'assigned controllers to', self
-        #signals = ["review", "input", "configure"]
-        #for signal in signals:
-        #    setattr(self, signal + '_cb', gen_callback(signal))
-
-        #self.signals = ["exit", "window_state", "window_keypress"] + signals
-
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ("exit", "window_state", "window_keypress", "size_allocate",
-                        "input")]))
+            for sig in ("window_state", "window_keypress", "size_allocate")
 
         self.w_tree = w_tree
-
         print 'HildonUI.activate finished', self
 
+    def activate_mode(self, mode):
+        """Activate mode in lazy way."""
 
-    def show(self): #, mode):
-        """Start UI."""
+        self.switcher.set_current_page(getattr(self, mode))
+        widget = self.widgets.get(mode, None)
+        if not widget: # lazy widget creation
+            cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
+            module = __import__("pomni.hildon_%s" % mode, globals(),
+                                locals(), [cname])
+            widget = getattr(module, cname)(self.component_manager)
+            self.widgets[mode] = widget
 
-        #self.controllers[mode].show()
-        self.switcher.set_current_page(self.main_menu)
+        widget.activate()
+
+    def start(self, mode):
+        """UI entry point. Activates specified mode."""
+
+        if not mode:
+            if self.config()['startup_with_review']:
+                mode = 'review'
+            else:
+                mode = 'main_menu'
+
+        getattr(self, '%s_cb' % mode)()
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
@@ -169,8 +154,21 @@ class HildonMainWidget(MainWidget):
             return handler(args)
 
     # Callbacks
-    def input_cb(self, widget):
+    def main_menu_cb(self):
+        self.activate_mode(self, 'main_menu')
+
+    def input_cb(self, widget=None):
         self.ui_controller_main().add_cards()
+
+    def configure_cb(self, widget=None):
+        self.ui_controller_main().configure()
+
+    def review_cb(self, widget=None):
+        self.review_widget.activate()
+
+    def exit_cb(self, widget=None):
+        """If pressed quit button then close the window."""
+        gtk.main_quit()
 
     def size_allocate_cb(self, widget, user_data):
         """ Checking window size """
@@ -183,13 +181,6 @@ class HildonMainWidget(MainWidget):
                 self.spliter.set_property('position', pseudo_medium)
             else:
                 self.spliter_trigger = True
-
-    def exit_cb(self, widget=None):
-        """If pressed quit button then close the window."""
-
-        self.database().unload()
-        gtk.main_quit()
-
 
     def window_keypress_cb(self, widget, event, *args):
         """Key pressed."""
@@ -275,18 +266,27 @@ class HildonMainWidget(MainWidget):
 
     def set_window_title(self, title):
         print 'set_window_title'
-    
-    def run_add_cards_dialog(self):
-        self.switcher.set_current_page(self.input)
-        widget = self.widgets.get('input', None)
+
+    def activate_mode(self, mode):
+        self.switcher.set_current_page(getattr(self, mode))
+        widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
-            cname = self.theme.capitalize() + 'InputWidget'
-            module = __import__("pomni.hildon_input", globals(), 
+            cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
+            module = __import__("pomni.hildon_%s" % mode, globals(), 
                                 locals(), [cname])
             widget = getattr(module, cname)(self.component_manager)
-            self.widgets['input'] = widget
+            self.widgets[mode] = widget
 
         widget.activate()
+
+    def run_add_cards_dialog(self):
+        self.activate_mode('input')
+
+    def run_edit_deck_dialog(self):
+        print 'edit_deck_dialog'
+    
+    def run_configuration_dialog(self):
+        self.activate_mode('configuration')
 
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
         print 'run_edit_fact_dialog'

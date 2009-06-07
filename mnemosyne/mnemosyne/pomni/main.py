@@ -73,7 +73,7 @@ def main(argv):
     #if os.path.exists(db_name):
     #    cdatabase.load(db_name)
 
-    #if not opts.mode:
+    if not opts.mode:
     #    if config()['startup_with_review']: 
     #        opts.mode = 'review'
     #    else:
@@ -81,7 +81,7 @@ def main(argv):
 
     app = app_factory(opts.ui)
     app.initialise(basedir)
-    app.main_widget().show()
+    app.main_widget().start(opts.mode)
     app.finalise()
 
 if __name__ == "__main__":
