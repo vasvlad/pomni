@@ -98,9 +98,11 @@ class HildonMainWidget(MainWidget):
             return callback
 
         try:
-            theme = self.config()["theme_path"].split("/")[-1]
+            self.theme = self.config()["theme_path"].split("/")[-1]
         except KeyError:
             locals()["theme"] = "eternal"
+
+        self.widgets = {}
 
         # Load the glade file for current theme
         #ui_controller_main().widget = self
@@ -144,7 +146,8 @@ class HildonMainWidget(MainWidget):
 
         # connect signals to methods
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ("exit", "window_state", "window_keypress", "size_allocate")]))
+            for sig in ("exit", "window_state", "window_keypress", "size_allocate",
+                        "input")]))
 
         self.w_tree = w_tree
 
@@ -166,6 +169,9 @@ class HildonMainWidget(MainWidget):
             return handler(args)
 
     # Callbacks
+    def input_cb(self, widget):
+        self.ui_controller_main().add_cards()
+
     def size_allocate_cb(self, widget, user_data):
         """ Checking window size """
 
@@ -224,7 +230,7 @@ class HildonMainWidget(MainWidget):
             return caption[:index] + caption[index+1:]
         return caption
     
-    def information_box(self, message, button_caption):
+    def information_box(self, message, button_caption='OK'):
         """Create Information message."""
         dialog = self.w_tree.get_widget("information_dialog")
         self.w_tree.get_widget("information_dialog_label").set_text(\
@@ -250,43 +256,46 @@ class HildonMainWidget(MainWidget):
 
     def update_status_bar(self, message=None):
         """ Not Implemented """
-        pass
+        print 'update_status_bar'
 
 
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
         """Start Edit/Update window."""
+        print 'run_edit_fact_dialog'
 
-        self.controllers['input'].activate(fact)
 
-    def information_box(self, message):
-        pass
-            
-    def question_box(self, question, option0, option1, option2):
-        pass
-    
     def error_box(self, message):
-        pass
+        print 'error_box'
     
     def save_file_dialog(self, path, filter, caption=""):
-        pass
+        print 'save_file_dialog'
     
     def open_file_dialog(self, path, filter, caption=""):
-        pass
+        print 'open_file_dialog'
 
     def set_window_title(self, title):
-        pass
+        print 'set_window_title'
     
-    def run_add_card_dialog(self):
-        pass
+    def run_add_cards_dialog(self):
+        self.switcher.set_current_page(self.input)
+        widget = self.widgets.get('input', None)
+        if not widget: # lazy widget creation
+            cname = self.theme.capitalize() + 'InputWidget'
+            module = __import__("pomni.hildon_input", globals(), 
+                                locals(), [cname])
+            widget = getattr(module, cname)(self.component_manager)
+            self.widgets['input'] = widget
+
+        widget.activate()
 
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        pass
+        print 'run_edit_fact_dialog'
     
     def run_card_appearance_dialog(self):
-        pass
+        print 'run_card_appearance_dialog'
 
     def run_manage_card_types_dialog(self):
-        pass
+        print 'run_manage_card_types_dialog'
 
 
 
