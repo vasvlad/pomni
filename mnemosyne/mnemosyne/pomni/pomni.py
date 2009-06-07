@@ -67,18 +67,6 @@ def main(argv):
     else:
         basedir = os.path.join(os.environ['HOME'], ".pomni")
 
-    #cdatabase = database()
-    #db_name = os.path.join(basedir, config()['path'])
-
-    #if os.path.exists(db_name):
-    #    cdatabase.load(db_name)
-
-    if not opts.mode:
-    #    if config()['startup_with_review']: 
-    #        opts.mode = 'review'
-    #    else:
-    #        opts.mode = 'main'
-
     app = app_factory(opts.ui)
     app.initialise(basedir)
     app.main_widget().start(opts.mode)
