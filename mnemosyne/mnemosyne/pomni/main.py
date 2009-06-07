@@ -21,7 +21,7 @@
 #
 
 """
-Hildon UI
+Hildon UI. Main Widget.
 """
 
 import os
@@ -36,7 +36,7 @@ from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 _ = gettext.gettext
 
 
-class HildonUiControllerException(Exception):
+class HildonUiException(Exception):
     """ Exception hook """
 
     def __init__(self, w_tree, exception):
@@ -51,38 +51,10 @@ class HildonUiControllerException(Exception):
         Exception.__init__(self)
 
 
-class HildonBaseController(UiComponent):
-    """Base controllers functionality."""
-
-    main_menu, review, input, configuration = range(4)
-
-    def __init__(self, component_manager):
-        """Attributes initialization."""
-
-        print 'HildonBaseController.__init__'
-        UiComponent.__init__(self, component_manager)
-
-    def __getattr__(self, name):
-        """Lazy get widget as an attribute."""
-
-        if 'w_tree' not in self.__dict__:
-            self.w_tree = self.main_widget().w_tree
-
-        widget = self.w_tree.get_widget(name)
-        if widget:
-            return widget
-        raise AttributeError()
-
-    def to_main_menu_cb(self, widget):
-        """Returns to main menu."""
-
-        self.switcher.set_current_page(self.main_menu)
-
-
 class HildonMainWidget(MainWidget):
     """Hildon main widget."""
 
-    main_menu, review, input, configuration = range(4)
+    menu, review, input, configuration = range(4)
 
     def activate(self):
         """Basic UI setup. 
@@ -141,7 +113,7 @@ class HildonMainWidget(MainWidget):
             if self.config()['startup_with_review']:
                 mode = 'review'
             else:
-                mode = 'main_menu'
+                mode = 'menu'
 
         getattr(self, '%s_cb' % mode)()
         gtk.main()
@@ -155,7 +127,7 @@ class HildonMainWidget(MainWidget):
 
     # Callbacks
     def main_menu_cb(self):
-        self.activate_mode(self, 'main_menu')
+        self.activate_mode(self, 'menu')
 
     def input_cb(self, widget=None):
         self.ui_controller_main().add_cards()
@@ -272,7 +244,7 @@ class HildonMainWidget(MainWidget):
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
-            module = __import__("pomni.hildon_%s" % mode, globals(), 
+            module = __import__("pomni.%s" % mode, globals(), 
                                 locals(), [cname])
             widget = getattr(module, cname)(self.component_manager)
             self.widgets[mode] = widget
@@ -296,7 +268,6 @@ class HildonMainWidget(MainWidget):
 
     def run_manage_card_types_dialog(self):
         print 'run_manage_card_types_dialog'
-
 
 
 # Local Variables:
