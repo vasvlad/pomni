@@ -253,6 +253,7 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         signals = ["add_card", "change_card_type", "input_to_main_menu"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
+        self.update = None
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
@@ -293,6 +294,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Changes cardtype when user choose it from listbox. """
 
         self.set_card_type()
+        self.clear_widgets()
         self.layout()
 
     def update_categories(self):
@@ -333,7 +335,16 @@ class RainbowControllerInput(HildonUiControllerInput):
     def activate(self, fact = None):
         """ Start input window. """
         
+        self.fact = fact
+        self.update = fact is not None
+
         self.update_categories()
+        self.clear_widgets()
+        if fact:
+            self.card_type = fact.card_type
+            self.layout()
+            self.set_widgets_data(fact)
+        
         self.switcher.set_current_page(self.input)
 
     def add_card_cb(self, widget):
@@ -344,12 +355,19 @@ class RainbowControllerInput(HildonUiControllerInput):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        # Create new card
-        card = ui_controller_main()
-        card.create_new_cards(fact_data, self.card_type, 0, [\
-            self.categories.get_child().get_text()], True)
-        database().save(config()['path'])
+        main = ui_controller_main()
+        if self.update: #Update card
+            main.update_related_cards(self.fact, fact_data, self.card_type,\
+                [self.categories.get_child().get_text()], None)
+        else: #Create new card
+            main.create_new_cards(fact_data, self.card_type, 0, [\
+                self.categories.get_child().get_text()], True)
+                
+        # Card saved in main.create_new_cards
+        #database().save(config()['path'])
         self.clear_widgets()
+        if self.update:
+            self.switcher.set_current_page(self.review)
 
     def get_widgets_data(self, check_for_required=True):
         """ Get data from widgets. """
@@ -374,6 +392,22 @@ class RainbowControllerInput(HildonUiControllerInput):
                 if not fact[required]:
                     raise ValueError
         return fact
+
+    def set_widgets_data(self, fact):
+        """ Set widgets data from fact. """
+
+        question_widget = self.question_box_text
+        answer_widget = self.answer_box_text
+        pronunciation_widget = self.pronun_box_text
+        if self.card_type.name == _("Foreign word with pronunciation"):
+            widgets = [('f', question_widget), ('t', answer_widget), \
+                ('p', pronunciation_widget)]
+        elif self.card_type.name ==  _("Cloze deletion"):
+            widgets = [('text', question_widget)]
+        else:
+            widgets = [('q', question_widget), ('a', answer_widget)]
+        for fact_key, widget in widgets:
+            widget.get_buffer().set_text(fact[fact_key])
 
     def clear_widgets(self):
         """ Clear data in widgets. """
