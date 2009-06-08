@@ -252,6 +252,7 @@ class RainbowControllerReview(HildonUiControllerReview):
         """ Update Question and Answer fields. """
         
         self.update_question_text()
+        self.show_answer()
 
 
 
