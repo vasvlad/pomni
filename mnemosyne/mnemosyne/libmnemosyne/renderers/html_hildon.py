@@ -54,3 +54,11 @@ class HtmlHildon(Renderer):
             html += "<div id=\"%s\">%s</div>" % (key, s)
         html += "</td></tr></table></body></html>"
         return html
+
+    def render_text(self, text, field_name, card_type):
+        html = "<html><head>" + self.css(card_type) + \
+            "</head><body><table><tr><td><div id=\"%s\">"
+        html += "<div id=\"%s\">%s</div>" % (field_name, text)
+        html += "</td></tr></table></body></html>"
+        return html
+

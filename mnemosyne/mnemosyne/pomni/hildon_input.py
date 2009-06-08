@@ -272,15 +272,22 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Hides or shows neccessary widgets. It depends on card_type. """
 
         if self.card_type:        
-            self.pronun_box.set_property('visible', self.card_type.id == '3')
+            self.answer_box.set_property('visible', True)
+            self.pronun_box.set_property('visible', False)
+            if self.card_type.name == _("Foreign word with pronunciation"):
+                self.pronun_box.set_property('visible', True)
+            elif self.card_type.name == _("Cloze deletion"):
+                self.answer_box.set_property('visible', False)
 
     def set_card_type(self):
         """ Set card type when user select it in cardtypes listbox. """
 
         cardtypes = dict([(card_type.id, card_type) \
             for card_type in card_types()])
-        selected_id = (int(self.cardtypes.get_active()) + 1).__str__()
-        self.card_type = cardtypes.get(selected_id)
+        cardname = self.cardtypes.get_active_text()
+        for cardtype in cardtypes.values():
+            if cardtype.name == cardname:
+                self.card_type = cardtype
 
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from listbox. """
@@ -351,9 +358,11 @@ class RainbowControllerInput(HildonUiControllerInput):
         question_widget = self.question_box_text
         answer_widget = self.answer_box_text
         pronunciation_widget = self.pronun_box_text
-        if self.card_type.id == '3':
+        if self.card_type.name == _("Foreign word with pronunciation"):
             widgets = [('f', question_widget), ('t', answer_widget), \
                 ('p', pronunciation_widget)]
+        elif self.card_type.name ==  _("Cloze deletion"):
+            widgets = [('text', question_widget)]
         else:
             widgets = [('q', question_widget), ('a', answer_widget)]
         for fact_key, widget in widgets:
