@@ -199,17 +199,7 @@ class RainbowControllerReview(HildonUiControllerReview):
         self.card = scheduler().get_new_question(learn_ahead)
         
         if self.card:
-            document = getattr(self,'question_text').document
-            document.clear()
-            document.open_stream('text/html')
-            # Adapting for html
-            question_text = self.card.question()
-            if question_text.startswith('<html>'):
-                font_size = config()['font_size']
-                question_text = question_text.replace('*{font-size:30px;}',
-                 '*{font-size:%spx;}' % font_size)
-            document.write_stream(question_text)
-            document.close_stream()
+            self.update_question_text()
         else:
             if not ui_controller_main().widget.question_box(
                   _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
@@ -217,10 +207,8 @@ class RainbowControllerReview(HildonUiControllerReview):
             else:
                 ui_controller_main().widget.information_box(\
                     _("Finished!"), "OK")
+                self.update_question_text(clean=True)
                 self.answer_viewport.set_sensitive(False)
-                self.grades_table.set_sensitive(False)
-                return        
-                
         self.grades_table.set_sensitive(False)
 
     def show_answer(self, text=None):
@@ -242,6 +230,30 @@ class RainbowControllerReview(HildonUiControllerReview):
                              '*{font-size:%spx;}' % font_size)
         document.write_stream(answer_text)
         document.close_stream()
+
+    def update_question_text(self, clean=False):
+        """ Update question text. """
+
+        document = getattr(self,'question_text').document
+        document.clear()
+        document.open_stream('text/html')
+        if not clean:
+            question_text = self.card.question()
+            if question_text.startswith('<html>'):
+                font_size = config()['font_size']
+                question_text = question_text.replace('*{font-size:30px;}',
+                    '*{font-size:%spx;}' % font_size)
+            document.write_stream(question_text)
+        else:
+            document.write_stream("""<html><body></body></html>""")
+        document.close_stream()
+
+    def update_dialog(self, redraw_all=True):
+        """ Update Question and Answer fields. """
+        
+        self.update_question_text()
+
+
 
 
 # Local Variables:
