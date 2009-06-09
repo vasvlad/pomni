@@ -21,7 +21,7 @@
 #
 
 """
-Hildon UI
+Hildon UI. Review widgets.
 """
 
 import gettext
@@ -32,7 +32,7 @@ from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 _ = gettext.gettext
 
 
-class HildonReviewWidget(ReviewWidget):
+class EternalReviewWidget(ReviewWidget):
     """Hildon Review Widget."""
 
     def activate(self):
@@ -90,7 +90,7 @@ class HildonReviewWidget(ReviewWidget):
         print 'update_status_bar'
 
 
-
+################# old design #####################################
 
 class HildonUiControllerReview():
     """ Hildon Review controller """

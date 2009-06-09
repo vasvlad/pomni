@@ -140,7 +140,7 @@ class HildonMainWidget(MainWidget):
 
     def review_(self, widget=None):
         """Activate review mode."""
-        self.review_widget.activate()
+        self.review_widget().activate()
 
     def exit_(self, widget):
         """Exit from main gtk loop."""
