@@ -13,7 +13,7 @@ from mnemosyne.libmnemosyne.card_type import CardType
 from mnemosyne.libmnemosyne.fact_view import FactView
 from mnemosyne.libmnemosyne.component_manager import database
 
-cloze_re = re.compile(r"\[(.+?)\]", re.DOTALL)
+cloze_re = re.compile(r"\*(.+?)\*", re.DOTALL)
 
 manual = _("This card type can be used to blank fragments in a text, e.g.")
 manual += " \n" + _("\"The capital of France is [Paris]\",")
@@ -57,12 +57,13 @@ class Cloze(CardType, Plugin):
         self.activation_message = manual
 
     def validate_data(self, fact_data):
-        return "[" in fact_data["text"] and "]" in fact_data["text"]
+        print fact_data["text"]
+        return fact_data["text"].startwith("*") and fact_data["text"].endwith("*")
         
     def question(self, card):
         extra_data = eval(card.extra_data)
-        question = card.fact["text"].replace("[", "").replace("]", "")
-        question = question.replace(extra_data[0], "[...]",  1)
+        question = card.fact["text"].replace("*", "")
+        question = question.replace(extra_data[0], "...",  1)
         return self.get_renderer().render_text(question, "text",
                                                card.fact.card_type)
 
@@ -90,7 +91,7 @@ class Cloze(CardType, Plugin):
         """
         
         new_cards, updated_cards, deleted_cards = [], [], []
-        if new_fact_data["text"].count("[") == fact["text"].count("["):
+        if new_fact_data["text"].count("*") == fact["text"].count("*"):
             new_clozes = []
             for match in cloze_re.finditer(new_fact_data["text"]):
                 new_clozes.append(match.group(1))
