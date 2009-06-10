@@ -613,6 +613,38 @@ style "delete-card-button" {
 }
 widget "*.*delete_card_button" style "delete-card-button"
 
+# Style for "Add picture" button
+style "add-picture-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "add_picture_small.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "add_picture_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "add_picture_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "add_picture_big_insensitive.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.input_toolbar_add_picture_button" style "add-picture-button"
+
 # Style for "To Main Menu" button
 style "main-menu-button" {
     GtkButton::focus-line-width = 0
