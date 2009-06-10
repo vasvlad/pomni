@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Wed Jun 10 12:54:18 2009 -->
+<!--Generated with glade3 3.4.5 on Wed Jun 10 13:57:38 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -816,8 +816,7 @@
                               <widget class="GtkTextView" id="question_box_text">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <signal name="focus_in_event" handler="question_on_focus_in"/>
-                                <signal name="focus_out_event" handler="question_on_focus_out"/>
+                                <signal name="focus_in_event" handler="enable_add_picture_button"/>
                               </widget>
                               <packing>
                                 <property name="position">1</property>
@@ -844,6 +843,7 @@
                               <widget class="GtkTextView" id="answer_box_text">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <signal name="focus_in_event" handler="disable_add_picture_button"/>
                               </widget>
                               <packing>
                                 <property name="position">1</property>
@@ -873,6 +873,7 @@
                               <widget class="GtkTextView" id="pronun_box_text">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <signal name="focus_in_event" handler="disable_add_picture_button"/>
                               </widget>
                               <packing>
                                 <property name="position">1</property>

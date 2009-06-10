@@ -251,9 +251,11 @@ class RainbowControllerInput(HildonUiControllerInput):
     def __init__(self, w_tree):
         """ Initialization items of input window. """
 
-        signals = ["add_card", "change_card_type", "input_to_main_menu"]
+        signals = ["add_card", "change_card_type", "input_to_main_menu", \
+            "enable_add_picture_button", "disable_add_picture_button", "add_picture"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
+        self.input_toolbar_add_picture_button.set_sensitive(False)
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
@@ -267,7 +269,6 @@ class RainbowControllerInput(HildonUiControllerInput):
                 widget.set_property("hildon-input-mode", 'full')
         except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
             pass # so, skip silently
-
 
     def layout (self):
         """ Hides or shows neccessary widgets. It depends on card_type. """
@@ -295,6 +296,7 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.set_card_type()
         self.clear_widgets()
+        self.input_toolbar_add_picture_button.set_sensitive(False)
         self.layout()
 
     def update_categories(self):
@@ -421,6 +423,21 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.switcher.set_current_page(self.main_menu)
 
+    def add_picture_cb(self, widget):
+        print "123"
+
+    def enable_add_picture_button_cb(self, widget, event):
+        """ Enable Add picture button when activate
+            Question widget. Is depends on card-type. """
+
+        if self.card_type.name == _("Front-to-back and back-to-front") or \
+            self.card_type.name == _("Front-to-back only"):
+            self.input_toolbar_add_picture_button.set_sensitive(True)
+
+    def disable_add_picture_button_cb(self, widget, event):
+        """ Disable Add picture button Question widget. """
+
+        self.input_toolbar_add_picture_button.set_sensitive(False)
 
 # Local Variables:
 # mode: python
