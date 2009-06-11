@@ -257,7 +257,6 @@ class RainbowControllerInput(HildonUiControllerInput):
             "add_picture", "select_item"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
-        self.imagedir = "./images" # fix me: get value from config
         self.input_toolbar_add_picture_button.set_sensitive(False)
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
@@ -431,12 +430,20 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.switcher.set_current_page(self.main_menu)
 
     def add_picture_cb(self, widget):
+        """ Show image selection dialog. """
 
         self.images_liststore.clear()
+        self.imagedir = config()['imagedir']
+        if not os.path.exists(self.imagedir):
+            self.imagedir = "./images" # on Desktop
+            if not os.path.exists(self.imagedir):
+                ui_controller_main().widget.information_box(\
+                    _("'Images' directory does not exist!"), "OK")
+                return                
         if os.listdir(self.imagedir):
             for file in os.listdir(self.imagedir):
-                pixbuf = gtk.gdk.pixbuf_new_from_file(os.path.join(self.imagedir, file))
-
+                pixbuf = gtk.gdk.pixbuf_new_from_file(\
+                    os.path.join(self.imagedir, file))
                 self.images_liststore.append([file, pixbuf])
             # fix me: it's not a real size of item in iconView
             width = pixbuf.get_width()
@@ -444,12 +451,13 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.image_selection_window.resize(8*width, 2*height)
             self.image_selection_window.show()
         else:
-            print "no files in directory"
-
+            ui_controller_main().widget.information_box(\
+                _("There are no files in 'Images' directory!"), "OK")
+            
     def select_item_cb(self, widget, event):
         """ 
         Set html-text with image path when user
-        select image from Select-image dialog. 
+        select image from image selection dialog. 
         """
 
         self.image_selection_window.hide()
