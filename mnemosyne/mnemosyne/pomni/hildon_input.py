@@ -27,6 +27,7 @@ Hildon UI: Input mode classes.
 import gettext
 import gtk
 import gtk.glade
+import os
 
 
 from mnemosyne.libmnemosyne.component_manager import database, config, \
@@ -252,13 +253,19 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Initialization items of input window. """
 
         signals = ["add_card", "change_card_type", "input_to_main_menu", \
-            "enable_add_picture_button", "disable_add_picture_button", "add_picture"]
+            "enable_add_picture_button", "disable_add_picture_button", \
+            "add_picture", "select_item"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
+        self.imagedir = "./images" # fix me: get value from config
         self.input_toolbar_add_picture_button.set_sensitive(False)
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
+        self.images_liststore = gtk.ListStore(str, gtk.gdk.Pixbuf)
+        self.iconview_widget.set_model(self.images_liststore)
+        self.iconview_widget.set_text_column(0)
+        self.iconview_widget.set_pixbuf_column(1)
         self.init_listboxes()
         self.layout()
 
@@ -424,8 +431,34 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.switcher.set_current_page(self.main_menu)
 
     def add_picture_cb(self, widget):
-        print "123"
 
+        self.images_liststore.clear()
+        if os.listdir(self.imagedir):
+            for file in os.listdir(self.imagedir):
+                pixbuf = gtk.gdk.pixbuf_new_from_file(os.path.join(self.imagedir, file))
+
+                self.images_liststore.append([file, pixbuf])
+            # fix me: it's not a real size of item in iconView
+            width = pixbuf.get_width()
+            height = pixbuf.get_height()
+            self.image_selection_window.resize(8*width, 2*height)
+            self.image_selection_window.show()
+        else:
+            print "no files in directory"
+
+    def select_item_cb(self, widget, event):
+        """ 
+        Set html-text with image path when user
+        select image from Select-image dialog. 
+        """
+
+        self.image_selection_window.hide()
+        item_index = self.iconview_widget.get_selected_items()[0]
+        item_text = self.images_liststore.get_value(\
+            self.images_liststore.get_iter(item_index),0)
+        self.question_box_text.get_buffer().set_text(\
+            "<img src='%s'>" % os.path.join(self.imagedir, item_text))
+        
     def enable_add_picture_button_cb(self, widget, event):
         """ Enable Add picture button when activate
             Question widget. Is depends on card-type. """
