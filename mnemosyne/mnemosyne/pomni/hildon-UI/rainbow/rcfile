@@ -443,6 +443,7 @@ style "config-checkboxes-label" {
 widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
 widget "*.config_mode_label_theme" style "config-checkboxes"
+widget "*.config_mode_label_imagedir" style "config-checkboxes"
 
 style "config-button-theme" {
     GtkButton::focus-line-width = 0
@@ -456,6 +457,19 @@ style "config-button-theme" {
     }
 }
 widget "*.config_mode_button_theme" style "config-button-theme"
+
+style "imagedir-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "imagedir_button.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_button_imagedir" style "imagedir-button"
 #----------------------------- Config mode ------------------
 
 
