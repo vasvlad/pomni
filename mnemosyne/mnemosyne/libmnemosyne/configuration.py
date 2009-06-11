@@ -104,6 +104,7 @@ class Configuration(dict):
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
              "themes": ['eternal', 'rainbow'],
+             "imagedir": "/home/user/MyDocs/.images",
              "scheduler": "SM2",
              "database": "sqlite",
              "fullscreen": True,
