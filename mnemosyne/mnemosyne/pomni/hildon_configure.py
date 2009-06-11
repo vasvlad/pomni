@@ -29,7 +29,7 @@ _ = gettext.gettext
 
 from mnemosyne.libmnemosyne.component_manager import config, ui_controller_main
 from pomni.hildon_ui import HildonBaseController
-
+import os
 
 class HildonUiControllerConfigure(HildonBaseController):
     """ Hildon Config controller """
@@ -59,6 +59,7 @@ class HildonUiControllerConfigure(HildonBaseController):
         theme = self.configuration['theme_path'].split("/")[-1]
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
+        self.config_mode_entry_imagedir.set_text(config()['imagedir'])
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
@@ -101,7 +102,7 @@ class HildonUiControllerConfigure(HildonBaseController):
         self.config_mode_label_theme.set_text(\
             "New theme: " + new_theme.capitalize())
         self.configuration.save()
-        
+
     def config_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
@@ -110,6 +111,13 @@ class HildonUiControllerConfigure(HildonBaseController):
         if self.theme_modified:
             ui_controller_main().widget.information_box(\
                 _("Restart the program to take effect!"), "OK")
+        if not os.path.exists(self.config_mode_entry_imagedir.get_text()):
+            ui_controller_main().widget.information_box(\
+                _("Image dir does not exist! Select another."), "OK")
+            return
+        else:
+            self.configuration['imagedir'] = self.config_mode_entry_imagedir.get_text()
+            self.configuration.save()
         self.switcher.set_current_page(self.main_menu)
 
 EternalControllerConfigure = HildonUiControllerConfigure
