@@ -45,6 +45,15 @@ class HildonUiControllerInput(HildonBaseController):
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
 
+        self.fact = None
+        self.update = None
+
+    def activate(self, fact = None):
+        """ Start input window. """
+
+        self.fact = fact
+        self.update = fact is not None
+
 
 class EternalControllerInput(HildonUiControllerInput):
     """ Eternal Input mode controller """
@@ -57,10 +66,8 @@ class EternalControllerInput(HildonUiControllerInput):
 
         self.fields_container = None
         self.card_type = None
-        self.fact = None
-        self.update = None
         self.edit_boxes = {}
-        
+
         self.categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
         self.categories.set_model(self.liststore)
@@ -131,8 +138,14 @@ class EternalControllerInput(HildonUiControllerInput):
     def activate(self, fact = None):
         """ Start input window. """
 
-        self.fact = fact
-        self.update = fact is not None
+        HildonUiControllerInput.activate(self, fact)
+
+
+        # Hide or Visible delete button
+        if (self.fact):
+            self.input_toolbar_delete_card_button.set_property('visible', True)
+        else:
+            self.input_toolbar_delete_card_button.set_property('visible', False)
 
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
@@ -161,9 +174,10 @@ class EternalControllerInput(HildonUiControllerInput):
         self.liststore.clear()
         for category in category_names_by_id.values():
             self.liststore.append([category])
-        
+
         if category_names_by_id.values():
-            self.categories.get_child().set_text(category_names_by_id.values()[0])
+            self.categories.get_child().\
+            set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
         """ Add card to database. """
@@ -264,14 +278,15 @@ class RainbowControllerInput(HildonUiControllerInput):
             for widget in (self.question_box_text, self.answer_box_text,
                            self.pronun_box_text):
                 widget.set_property("hildon-input-mode", 'full')
-        except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
+        except (TypeError, AttributeError): # stock gtk doesn't have
+                                            # hildon properties
             pass # so, skip silently
 
 
     def layout (self):
         """ Hides or shows neccessary widgets. It depends on card_type. """
 
-        if self.card_type:        
+        if self.card_type:
             self.answer_box.set_property('visible', True)
             self.pronun_box.set_property('visible', False)
             if self.card_type.name == _("Foreign word with pronunciation"):
@@ -332,7 +347,15 @@ class RainbowControllerInput(HildonUiControllerInput):
 
     def activate(self, fact = None):
         """ Start input window. """
-        
+
+        HildonUiControllerInput.activate(self, fact)
+
+        # Hide or Visible delete button
+        if (self.fact):
+            self.input_toolbar_delete_card_button.set_property('visible', True)
+        else:
+            self.input_toolbar_delete_card_button.set_property('visible', False)
+
         self.update_categories()
         self.switcher.set_current_page(self.input)
 
@@ -344,10 +367,17 @@ class RainbowControllerInput(HildonUiControllerInput):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        # Create new card
-        card = ui_controller_main()
-        card.create_new_cards(fact_data, self.card_type, 0, [\
-            self.categories.get_child().get_text()], True)
+        if self.update:
+            # Update card
+            main.update_related_cards(self.fact, fact_data,
+                                    self.card_type,
+                                    [self.categories.get_child().get_text()],
+                                    None)
+        else:
+            # Create new card
+            main.create_new_cards(fact_data, self.card_type, 5,
+                [self.categories.get_child().get_text()])
+
         database().save(config()['path'])
         self.clear_widgets()
 

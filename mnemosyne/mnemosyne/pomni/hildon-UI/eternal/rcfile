@@ -529,7 +529,7 @@ style "delete-card" {
         }
     }
 }
-widget "*.delete_card" style "delete-card"
+widget "*.input_toolbar_delete_card_button" style "delete-card"
 widget "*.delete_car" style "delete-card"
 
 style "add-card" {

@@ -92,9 +92,14 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
     def delete_card_cb(self, widget):
         """ Hook for delete card. """
 
+        fact = self.card.fact
         # Delete card
         if self.card and self.card.fact:
             ui_controller_main().delete_current_fact()
+            # If it input mode and card was deleted  back to review
+            if fact != self.card.fact and \
+               self.switcher.get_current_page() == self.input:
+                self.switcher.set_current_page(self.review)
 
     def edit_card_cb(self, widget):
         """ Hook for edit card. """
