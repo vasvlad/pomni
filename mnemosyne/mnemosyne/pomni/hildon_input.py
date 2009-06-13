@@ -254,7 +254,7 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         signals = ["add_card", "change_card_type", "input_to_main_menu", \
             "enable_add_picture_button", "disable_add_picture_button", \
-            "add_picture", "select_item"]
+            "add_picture", "select_item", "close_image_selection_dialog"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.input_toolbar_add_picture_button.set_sensitive(False)
@@ -263,7 +263,6 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.categories.set_text_column(0)
         self.images_liststore = gtk.ListStore(str, gtk.gdk.Pixbuf)
         self.iconview_widget.set_model(self.images_liststore)
-        self.iconview_widget.set_text_column(0)
         self.iconview_widget.set_pixbuf_column(1)
         self.init_listboxes()
         self.layout()
@@ -432,6 +431,14 @@ class RainbowControllerInput(HildonUiControllerInput):
     def add_picture_cb(self, widget):
         """ Show image selection dialog. """
 
+        def resize_image(pixbuf):
+            x_ratio = pixbuf.get_width() / 64.0
+            y_ratio = pixbuf.get_height() / 64.0
+            new_width = int(pixbuf.get_width() / x_ratio)
+            new_height = int(pixbuf.get_height() / y_ratio)
+            return pixbuf.scale_simple(\
+                new_width, new_height, gtk.gdk.INTERP_BILINEAR)
+
         self.images_liststore.clear()
         self.imagedir = config()['imagedir']
         if not os.path.exists(self.imagedir):
@@ -442,32 +449,32 @@ class RainbowControllerInput(HildonUiControllerInput):
                 return                
         if os.listdir(self.imagedir):
             for file in os.listdir(self.imagedir):
-                pixbuf = gtk.gdk.pixbuf_new_from_file(\
-                    os.path.join(self.imagedir, file))
-                self.images_liststore.append([file, pixbuf])
-            # fix me: it's not a real size of item in iconView
-            #width = pixbuf.get_width()
-            #height = pixbuf.get_height()
-            #self.image_selection_window.resize(8*width, 2*height)
-            self.iconview_widget.set_columns(4)
-            self.image_selection_window.show()
+                if os.path.isfile(os.path.join(self.imagedir, file)):
+                    pixbuf = gtk.gdk.pixbuf_new_from_file(\
+                        os.path.join(self.imagedir, file))
+                    self.images_liststore.append([file, resize_image(pixbuf)])
+            self.image_selection_dialog.show()
         else:
             ui_controller_main().widget.information_box(\
                 _("There are no files in 'Images' directory!"), "OK")
             
-    def select_item_cb(self, widget, event):
+    def select_item_cb(self, widget):
         """ 
         Set html-text with image path when user
         select image from image selection dialog. 
         """
 
-        self.image_selection_window.hide()
+        self.image_selection_dialog.hide()
         item_index = self.iconview_widget.get_selected_items()[0]
         item_text = self.images_liststore.get_value(\
             self.images_liststore.get_iter(item_index),0)
         self.question_box_text.get_buffer().set_text(\
             "<img src='%s'>" % os.path.join(self.imagedir, item_text))
+       
+    def close_image_selection_dialog_cb(self, widget):
         
+        self.image_selection_dialog.hide()
+
     def enable_add_picture_button_cb(self, widget, event):
         """ Enable Add picture button when activate
             Question widget. Is depends on card-type. """
