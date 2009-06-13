@@ -504,6 +504,8 @@ widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
 widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
 widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
 widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-label"
 
 style "question-dialog-button-yes" {
     engine "pixmap" {
@@ -533,6 +535,7 @@ style "question-dialog-button-yes" {
 widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
 widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
 widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.image_selection_dialog_button_select" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
     engine "pixmap" {
@@ -560,6 +563,7 @@ style "question-dialog-button-no" {
     }
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
+widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
 #----------------------------- Dialogs ------------------
 
 
