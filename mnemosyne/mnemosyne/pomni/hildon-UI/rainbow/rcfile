@@ -485,6 +485,7 @@ style "dialog" {
     }
 }
 class "GtkDialog" style "dialog"
+#widget "image_selection_window" style "dialog"
 
 style "dialog-label" {
     font_name = "Nokia Sans Bold 16"
@@ -563,6 +564,14 @@ widget "*.question_dialog_button_no" style "question-dialog-button-no"
 
 
 #----------------------------- General ------------------
+# style for scrolls in Image selection dialog
+style "image-selection-dialog-scrollbars" {
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+}
+widget_class "*.GtkVScrollbar" style "image-selection-dialog-scrollbars"
+
 # Style for Main window
 style "main-window" {
     engine "pixmap"{

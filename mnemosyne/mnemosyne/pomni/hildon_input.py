@@ -446,9 +446,10 @@ class RainbowControllerInput(HildonUiControllerInput):
                     os.path.join(self.imagedir, file))
                 self.images_liststore.append([file, pixbuf])
             # fix me: it's not a real size of item in iconView
-            width = pixbuf.get_width()
-            height = pixbuf.get_height()
-            self.image_selection_window.resize(8*width, 2*height)
+            #width = pixbuf.get_width()
+            #height = pixbuf.get_height()
+            #self.image_selection_window.resize(8*width, 2*height)
+            self.iconview_widget.set_columns(4)
             self.image_selection_window.show()
         else:
             ui_controller_main().widget.information_box(\
