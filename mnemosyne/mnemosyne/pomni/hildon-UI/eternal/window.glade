@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jun 13 12:48:57 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Jun 13 14:56:10 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="visible">True</property>
@@ -888,12 +888,6 @@
                       <placeholder/>
                     </child>
                     <child>
-                      <widget class="GtkLabel" id="label_text_size">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Font size:</property>
-                      </widget>
-                    </child>
-                    <child>
                       <widget class="GtkHScale" id="font_size_slider">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -907,31 +901,73 @@
                         <property name="bottom_attach">3</property>
                       </packing>
                     </child>
+                    <child>
+                      <widget class="GtkLabel" id="label_text_size">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Font size:</property>
+                      </widget>
+                    </child>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
+                  <widget class="GtkHBox" id="hbox3">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Start in fullscreen mode</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_fullscreen"/>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkbox_fullscreen_mode">
+                        <property name="width_request">100</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">Start in fullscreen mode</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_fullscreen"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="checkbox_start_in_review_mode">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">Open 'Review' mode at startup</property>
+                        <property name="response_id">0</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_startup_with_review"/>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="checkbox_start_in_review_mode">
+                  <widget class="GtkTable" id="table9">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Open 'Review' mode at startup</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="change_startup_with_review"/>
+                    <property name="n_columns">2</property>
+                    <child>
+                      <widget class="GtkEntry" id="config_mode_entry_imagedir">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="config_mode_label_imagedir">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Image directory: </property>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="x_padding">8</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
                     <property name="position">2</property>
@@ -941,18 +977,6 @@
                   <widget class="GtkTable" id="table2">
                     <property name="visible">True</property>
                     <property name="n_columns">2</property>
-                    <child>
-                      <widget class="GtkLabel" id="config_mode_label_theme">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Current theme: </property>
-                      </widget>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="x_options"></property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
                     <child>
                       <widget class="GtkButton" id="config_mode_button_theme">
                         <property name="width_request">50</property>
@@ -970,6 +994,18 @@
                         <property name="x_options"></property>
                         <property name="y_options"></property>
                         <property name="x_padding">8</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="config_mode_label_theme">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Current theme: </property>
+                      </widget>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="x_options"></property>
+                        <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                   </widget>

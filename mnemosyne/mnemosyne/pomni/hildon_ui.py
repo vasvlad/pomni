@@ -29,6 +29,8 @@ import gettext
 import gtk
 import gtk.glade
 import gtkhtml2
+import urllib
+import urlparse
 
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.component_manager import config, \
@@ -36,6 +38,7 @@ from mnemosyne.libmnemosyne.component_manager import config, \
 
 _ = gettext.gettext
 
+htmlOpener = urllib.FancyURLopener()
 
 class HildonUiControllerException(Exception):
     """ Exception hook """
@@ -184,8 +187,15 @@ class HildonUI():
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
 
+        def request_url(document, url, stream):
+            uri = urlparse.urljoin("", url)
+            f = htmlOpener.open(uri)
+            stream.write(f.read())
+            stream.close()
+
         view = gtkhtml2.View()
         document = gtkhtml2.Document()
+        document.connect('request_url', request_url)
         view.set_document(document)
         view.document = document
         view.show()

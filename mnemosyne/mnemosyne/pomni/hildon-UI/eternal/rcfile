@@ -460,6 +460,7 @@ widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
 widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkbox-label"
 widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkbox-label"
 widget "*.config_mode_label_theme" style "config-checkbox-label"
+widget "*.config_mode_label_imagedir" style "config-checkbox-label"
 
 style "config-scales" {
     GtkScale::slider-length = 60
