@@ -252,92 +252,81 @@ class RainbowControllerInput(HildonUiControllerInput):
     def __init__(self, w_tree):
         """ Initialization items of input window. """
 
-        signals = ["add_card", "change_card_type", "input_to_main_menu", \
-            "enable_add_picture_button", "disable_add_picture_button", \
-            "add_picture", "select_item", "close_image_selection_dialog"]
+        signals = ["add_card", "input_to_main_menu", "change_card_type",
+            "add_picture", "select_item", "close_image_selection_dialog",
+            "change_card_content", "change_category"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
-        self.input_toolbar_add_picture_button.set_sensitive(False)
-        self.categories_liststore = gtk.ListStore(str)
-        self.categories.set_model(self.categories_liststore)
-        self.categories.set_text_column(0)
+        self.cardtypes = {}
+        self.categories_list = []
         self.images_liststore = gtk.ListStore(str, gtk.gdk.Pixbuf)
         self.iconview_widget.set_model(self.images_liststore)
         self.iconview_widget.set_pixbuf_column(1)
-        self.init_listboxes()
+        self.set_card_type()
         self.layout()
 
         # Turn off hildon autocapitalization
         try:
-            for widget in (self.question_box_text, self.answer_box_text,
-                           self.pronun_box_text):
+            for widget in (self.question_text_w, self.answer_text_w,
+                           self.pronun_text_w, self.foreign_text_w,
+                           self.translation_text_w, self.cloze_text_w):
                 widget.set_property("hildon-input-mode", 'full')
         except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
             pass # so, skip silently
 
     def layout (self):
-        """ Hides or shows neccessary widgets. It depends on card_type. """
+        """ Switches to neccessary input page. It depends on card_type. """
 
         if self.card_type:        
-            self.answer_box.set_property('visible', True)
-            self.pronun_box.set_property('visible', False)
-            if self.card_type.name == _("Foreign word with pronunciation"):
-                self.pronun_box.set_property('visible', True)
-            elif self.card_type.name == _("Cloze deletion"):
-                self.answer_box.set_property('visible', False)
+            cardtype_dict = {
+                _("Front-to-back only"): 0,
+                _("Front-to-back and back-to-front"): 0, 
+                _("Foreign word with pronunciation"): 1,
+                _("Cloze deletion"): 2 }
+            self.card_type_switcher_w.set_current_page(\
+                cardtype_dict[self.card_type.name])
 
     def set_card_type(self):
-        """ Set card type when user select it in cardtypes listbox. """
+        """ Set card current type. """
 
-        cardtypes = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
-        cardname = self.cardtypes.get_active_text()
-        for cardtype in cardtypes.values():
-            if cardtype.name == cardname:
-                self.card_type = cardtype
+        if not self.cardtypes:
+            self.cardtypes = dict([(card_type.id, card_type) \
+                for card_type in card_types()])
+        widgets_cardtypes_dict = {
+        "front_to_back_mode_selector_w": _("Front-to-back only"),\
+        "both_way_mode_selector_w": _("Front-to-back and back-to-front"),\
+        "three_side_mode_selector_w": _("Foreign word with pronunciation"),\
+        "cloze_mode_selector_w": _("Cloze deletion")}
+        for widget_name, cardtype_name in widgets_cardtypes_dict.items():
+            widget = self.w_tree.get_widget(widget_name)
+            if widget.get_active() == True:
+                for cardtype in self.cardtypes.values():
+                    if cardtype.name == cardtype_name:
+                        self.card_type = cardtype
+                        return
 
     def change_card_type_cb(self, widget):
-        """ Changes cardtype when user choose it from listbox. """
+        """ Changes cardtype when user choose it from cardtype column. """
 
-        self.set_card_type()
         self.clear_widgets()
-        self.input_toolbar_add_picture_button.set_sensitive(False)
+        self.set_card_type()
         self.layout()
+
+    def change_card_content_cb(self, widget):
+        print widget.name
 
     def update_categories(self):
         """ Update categories listbox content. """
 
-        self.categories_liststore.clear()
+        self.categories_list = []
         categories = dict([(i, name) for (i, name) in \
             enumerate(database().category_names())])
         if categories.values():
             for category in sorted(categories.values()):
-                self.categories_liststore.append([category])
-            # self.categories - categories listbox
-            self.categories.get_child().set_text(\
-                sorted(categories.values())[0])
+                self.categories_list.append(category)
+            self.category_name_w.set_text(sorted(categories.values())[0])
         else:
-            self.categories.get_child().set_text("default category")
-
-    def init_listboxes(self):
-        """ Fill listboxes by categories and cardtypes. """
-        
-        # Fill Categories list
-        self.update_categories()
-
-        # Fill Card-types list
-        cardtypes = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
-        cardtypes_widget = self.cardtypes
-        cardtypes_liststore = gtk.ListStore(str)
-        for key in sorted(cardtypes.keys()):
-            cardtypes_liststore.append([cardtypes.get(key).name])
-        cardtypes_widget.set_model(cardtypes_liststore)
-        cardtypes_widget.set_text_column(0)
-        if cardtypes:
-            cardtypes_widget.get_child().set_text(\
-                cardtypes.get(sorted(cardtypes.keys())[0]).name)
-        self.card_type = cardtypes.get(sorted(cardtypes.keys())[0])
+            self.category_name_w.set_text("default category")
 
     def activate(self, fact = None):
         """ Start input window. """
@@ -347,7 +336,7 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.update_categories()
         self.clear_widgets()
-        if fact:
+        if fact: # If enter from Review mode
             self.card_type = fact.card_type
             self.layout()
             self.set_widgets_data(fact)
@@ -365,10 +354,10 @@ class RainbowControllerInput(HildonUiControllerInput):
         main = ui_controller_main()
         if self.update: #Update card
             main.update_related_cards(self.fact, fact_data, self.card_type,\
-                [self.categories.get_child().get_text()], None)
+                [self.category_name_w.get_text()], None)
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, 0, [\
-                self.categories.get_child().get_text()], True)
+                self.category_name_w.get_text()], True)
                 
         # Card saved in main.create_new_cards
         #database().save(config()['path'])
@@ -380,16 +369,15 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Get data from widgets. """
 
         fact = {}
-        question_widget = self.question_box_text
-        answer_widget = self.answer_box_text
-        pronunciation_widget = self.pronun_box_text
         if self.card_type.name == _("Foreign word with pronunciation"):
-            widgets = [('f', question_widget), ('t', answer_widget), \
-                ('p', pronunciation_widget)]
+            widgets = [('f', self.foreign_text_w), 
+                       ('t', self.translation_text_w), 
+                       ('p', self.pronun_text_w)]
         elif self.card_type.name ==  _("Cloze deletion"):
-            widgets = [('text', question_widget)]
+            widgets = [('text', self.cloze_text_w)]
         else:
-            widgets = [('q', question_widget), ('a', answer_widget)]
+            widgets = [('q', self.question_text_w),
+                       ('a', self.answer_text_w)]
         for fact_key, widget in widgets:
             start, end = widget.get_buffer().get_bounds()
             fact[fact_key] = widget.get_buffer().get_text(start, end)
@@ -403,25 +391,39 @@ class RainbowControllerInput(HildonUiControllerInput):
     def set_widgets_data(self, fact):
         """ Set widgets data from fact. """
 
-        question_widget = self.question_box_text
-        answer_widget = self.answer_box_text
-        pronunciation_widget = self.pronun_box_text
         if self.card_type.name == _("Foreign word with pronunciation"):
-            widgets = [('f', question_widget), ('t', answer_widget), \
-                ('p', pronunciation_widget)]
+            widgets = [('f', self.foreign_text_w),
+                       ('t', self.translation_text_w),
+                       ('p', self.pronun_text_w)]
         elif self.card_type.name ==  _("Cloze deletion"):
-            widgets = [('text', question_widget)]
+            widgets = [('text', cloze_text_w)]
         else:
-            widgets = [('q', question_widget), ('a', answer_widget)]
+            widgets = [('q', self.question_text_w),
+                       ('a', self.answer_text_w)]
         for fact_key, widget in widgets:
             widget.get_buffer().set_text(fact[fact_key])
 
     def clear_widgets(self):
         """ Clear data in widgets. """
 
-        self.question_box_text.get_buffer().set_text("")
-        self.answer_box_text.get_buffer().set_text("")
-        self.pronun_box_text.get_buffer().set_text("")
+        self.question_text_w.get_buffer().set_text("")
+        self.answer_text_w.get_buffer().set_text("")
+        self.foreign_text_w.get_buffer().set_text("")
+        self.pronun_text_w.get_buffer().set_text("")
+        self.translation_text_w.get_buffer().set_text("")
+        self.cloze_text_w.get_buffer().set_text("")
+
+    def change_category_cb(self, widget):
+        if widget.name == "prev_category_w":
+            direction = -1
+        direction = 1
+        category_index = self.categories_list.index(\
+            self.category_name_w.get_text())
+        try:
+            new_category = self.categories_list[category_index + direction]
+            self.category_name_w.set_text(new_category)
+        except IndexError:
+            pass
 
     def input_to_main_menu_cb(self, widget):
         """ Return to main menu. """
@@ -468,25 +470,13 @@ class RainbowControllerInput(HildonUiControllerInput):
         item_index = self.iconview_widget.get_selected_items()[0]
         item_text = self.images_liststore.get_value(\
             self.images_liststore.get_iter(item_index),0)
-        self.question_box_text.get_buffer().set_text(\
+        self.question_text_w.get_buffer().set_text(\
             "<img src='%s'>" % os.path.join(self.imagedir, item_text))
        
     def close_image_selection_dialog_cb(self, widget):
         
         self.image_selection_dialog.hide()
 
-    def enable_add_picture_button_cb(self, widget, event):
-        """ Enable Add picture button when activate
-            Question widget. Is depends on card-type. """
-
-        if self.card_type.name == _("Front-to-back and back-to-front") or \
-            self.card_type.name == _("Front-to-back only"):
-            self.input_toolbar_add_picture_button.set_sensitive(True)
-
-    def disable_add_picture_button_cb(self, widget, event):
-        """ Disable Add picture button Question widget. """
-
-        self.input_toolbar_add_picture_button.set_sensitive(False)
 
 # Local Variables:
 # mode: python
