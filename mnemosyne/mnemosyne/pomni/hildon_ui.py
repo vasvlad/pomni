@@ -100,7 +100,7 @@ class HildonUI():
         # Load the glade file for current theme
         ui_controller_main().widget = self
         theme_path = config()["theme_path"]
-        gtk.rc_parse(os.path.join(theme_path, "rcfile"))
+        #gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
         self.w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
