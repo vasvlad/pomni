@@ -254,7 +254,8 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         signals = ["add_card", "input_to_main_menu", "change_card_type",
             "add_picture", "select_item", "close_image_selection_dialog",
-            "change_card_content", "change_category"]
+            "change_category", "manage_categories", "create_new_category",
+            "close_categories_manager_dialog"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
@@ -274,6 +275,21 @@ class RainbowControllerInput(HildonUiControllerInput):
         except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
             pass # so, skip silently
 
+    def activate(self, fact = None):
+        """ Start input window. """
+        
+        self.fact = fact
+        self.update = fact is not None
+
+        self.update_categories()
+        self.clear_widgets()
+        if fact: # If enter from Review mode
+            self.card_type = fact.card_type
+            self.layout()
+            self.set_widgets_data(fact)
+        
+        self.switcher.set_current_page(self.input)
+
     def layout (self):
         """ Switches to neccessary input page. It depends on card_type. """
 
@@ -287,7 +303,7 @@ class RainbowControllerInput(HildonUiControllerInput):
                 cardtype_dict[self.card_type.name])
 
     def set_card_type(self):
-        """ Set card current type. """
+        """ Set current card type. """
 
         if not self.cardtypes:
             self.cardtypes = dict([(card_type.id, card_type) \
@@ -305,18 +321,8 @@ class RainbowControllerInput(HildonUiControllerInput):
                         self.card_type = cardtype
                         return
 
-    def change_card_type_cb(self, widget):
-        """ Changes cardtype when user choose it from cardtype column. """
-
-        self.clear_widgets()
-        self.set_card_type()
-        self.layout()
-
-    def change_card_content_cb(self, widget):
-        print widget.name
-
     def update_categories(self):
-        """ Update categories listbox content. """
+        """ Update categories list content. """
 
         self.categories_list = []
         categories = dict([(i, name) for (i, name) in \
@@ -326,44 +332,8 @@ class RainbowControllerInput(HildonUiControllerInput):
                 self.categories_list.append(category)
             self.category_name_w.set_text(sorted(categories.values())[0])
         else:
+            self.categories_list.append("default category")
             self.category_name_w.set_text("default category")
-
-    def activate(self, fact = None):
-        """ Start input window. """
-        
-        self.fact = fact
-        self.update = fact is not None
-
-        self.update_categories()
-        self.clear_widgets()
-        if fact: # If enter from Review mode
-            self.card_type = fact.card_type
-            self.layout()
-            self.set_widgets_data(fact)
-        
-        self.switcher.set_current_page(self.input)
-
-    def add_card_cb(self, widget):
-        """ Add card to database. """
-
-        try:
-            fact_data = self.get_widgets_data()
-        except ValueError:
-            return # Let the user try again to fill out the missing data.
-
-        main = ui_controller_main()
-        if self.update: #Update card
-            main.update_related_cards(self.fact, fact_data, self.card_type,\
-                [self.category_name_w.get_text()], None)
-        else: #Create new card
-            main.create_new_cards(fact_data, self.card_type, 0, [\
-                self.category_name_w.get_text()], True)
-                
-        # Card saved in main.create_new_cards
-        #database().save(config()['path'])
-        self.clear_widgets()
-        if self.update:
-            self.switcher.set_current_page(self.review)
 
     def get_widgets_data(self, check_for_required=True):
         """ Get data from widgets. """
@@ -413,6 +383,33 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.translation_text_w.get_buffer().set_text("")
         self.cloze_text_w.get_buffer().set_text("")
 
+    def change_card_type_cb(self, widget):
+        """ Changes cardtype when user choose it from cardtype column. """
+
+        self.clear_widgets()
+        self.set_card_type()
+        self.layout()
+
+    def add_card_cb(self, widget):
+        """ Add card to database. """
+
+        try:
+            fact_data = self.get_widgets_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
+
+        main = ui_controller_main()
+        if self.update: #Update card
+            main.update_related_cards(self.fact, fact_data, self.card_type,\
+                [self.category_name_w.get_text()], None)
+        else: #Create new card
+            main.create_new_cards(fact_data, self.card_type, 0, [\
+                self.category_name_w.get_text()], True)
+                
+        self.clear_widgets()
+        if self.update:
+            self.switcher.set_current_page(self.review)
+
     def change_category_cb(self, widget):
         if widget.name == "prev_category_w":
             direction = -1
@@ -421,14 +418,20 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.category_name_w.get_text())
         try:
             new_category = self.categories_list[category_index + direction]
-            self.category_name_w.set_text(new_category)
         except IndexError:
-            pass
+            if direction:
+                new_category = self.categories_list[0]
+            else:
+                new_category = self.categories_list[len(self.categories_list)-1]
+        self.category_name_w.set_text(new_category)
 
-    def input_to_main_menu_cb(self, widget):
-        """ Return to main menu. """
-
-        self.switcher.set_current_page(self.main_menu)
+    def create_new_category_cb(self, widget):
+        
+        new_category = self.categories_manager_dialog_entry.get_text()
+        if new_category:
+            self.categories_list.append(new_category)
+            self.categories_manager_dialog_entry.set_text("")
+            self.categories_manager_dialog.hide()
 
     def add_picture_cb(self, widget):
         """ Show image selection dialog. """
@@ -450,12 +453,13 @@ class RainbowControllerInput(HildonUiControllerInput):
                     _("'Images' directory does not exist!"), "OK")
                 return                
         if os.listdir(self.imagedir):
+            self.image_selection_dialog.show()
             for file in os.listdir(self.imagedir):
                 if os.path.isfile(os.path.join(self.imagedir, file)):
                     pixbuf = gtk.gdk.pixbuf_new_from_file(\
                         os.path.join(self.imagedir, file))
                     self.images_liststore.append([file, resize_image(pixbuf)])
-            self.image_selection_dialog.show()
+            #self.image_selection_dialog.show()
         else:
             ui_controller_main().widget.information_box(\
                 _("There are no files in 'Images' directory!"), "OK")
@@ -472,10 +476,26 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.images_liststore.get_iter(item_index),0)
         self.question_text_w.get_buffer().set_text(\
             "<img src='%s'>" % os.path.join(self.imagedir, item_text))
-       
+      
+    def manage_categories_cb(self, widget):
+        """ Show categories manager dialog. """
+
+        self.categories_manager_dialog.show()
+
+    def close_categories_manager_dialog_cb(self, widget):
+        """ Close categories manager dialog. """
+
+        self.categories_manager_dialog.hide()
+
     def close_image_selection_dialog_cb(self, widget):
-        
+        """ Close image selection dialog. """
+
         self.image_selection_dialog.hide()
+
+    def input_to_main_menu_cb(self, widget):
+        """ Return to main menu. """
+
+        self.switcher.set_current_page(self.main_menu)
 
 
 # Local Variables:
