@@ -507,8 +507,8 @@ class RainbowControllerInput(HildonUiControllerInput):
 
     def clear_text_cb(self, widget, event):
         """ Clear textview content. """
-
-        widget.get_buffer().set_text("")
+        if not self.update:
+            widget.get_buffer().set_text("")
 
     def show_add_category_block_cb(self, widget):
         """ Shows add category block. """
