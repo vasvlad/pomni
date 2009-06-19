@@ -254,8 +254,8 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         signals = ["add_card", "input_to_main_menu", "change_card_type",
             "add_picture", "select_item", "close_image_selection_dialog",
-            "change_category", "manage_categories", "create_new_category",
-            "close_categories_manager_dialog", "clear_text"]
+            "change_category", "create_new_category", "clear_text",
+            "show_add_category_block", "hide_add_category_block"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
@@ -430,11 +430,11 @@ class RainbowControllerInput(HildonUiControllerInput):
     def create_new_category_cb(self, widget):
         """ Create new category. """
         
-        new_category = self.categories_manager_dialog_entry.get_text()
+        new_category = self.input_mode_new_category_entry.get_text()
         if new_category:
             self.categories_list.append(new_category)
-            self.categories_manager_dialog_entry.set_text("")
-            self.categories_manager_dialog.hide()
+            self.input_mode_new_category_entry.set_text("")
+            self.hide_add_category_block_cb(None)
 
     def add_picture_cb(self, widget):
         """ Show image selection dialog. """
@@ -480,17 +480,6 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.question_text_w.get_buffer().set_text(\
             "<img src='%s'>" % os.path.join(self.imagedir, item_text))
       
-    def manage_categories_cb(self, widget):
-        """ Show categories manager dialog. """
-
-        self.categories_manager_dialog.set_decorated(False)    
-        self.categories_manager_dialog.show()
-
-    def close_categories_manager_dialog_cb(self, widget):
-        """ Close categories manager dialog. """
-
-        self.categories_manager_dialog.hide()
-
     def close_image_selection_dialog_cb(self, widget):
         """ Close image selection dialog. """
 
@@ -500,6 +489,19 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Clear textview content. """
 
         widget.get_buffer().set_text("")
+
+    def show_add_category_block_cb(self, widget):
+        """ Shows add category block. """
+
+        self.input_mode_change_category_block.hide()
+        self.input_mode_add_category_block.show()
+        self.input_mode_new_category_entry.grab_focus()
+
+    def hide_add_category_block_cb(self, widget):
+        """ Hides add category block. """
+
+        self.input_mode_change_category_block.show()
+        self.input_mode_add_category_block.hide()
 
     def input_to_main_menu_cb(self, widget):
         """ Return to main menu. """
