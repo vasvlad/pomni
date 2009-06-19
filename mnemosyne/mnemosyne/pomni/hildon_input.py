@@ -301,6 +301,11 @@ class RainbowControllerInput(HildonUiControllerInput):
                 _("Cloze deletion"): 2 }
             self.card_type_switcher_w.set_current_page(\
                 cardtype_dict[self.card_type.name])
+            self.picture_content_button.set_sensitive(\
+                not cardtype_dict[self.card_type.name])
+            self.sound_content_button.set_sensitive(\
+                not cardtype_dict[self.card_type.name])
+                
 
     def set_card_type(self):
         """ Set current card type. """

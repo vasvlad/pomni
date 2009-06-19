@@ -561,6 +561,12 @@ style "sound-content-button" {
             file = "sound_content_button.png"
             stretch = TRUE
         }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "sound_content_button_insensitive.png"
+            stretch = TRUE
+        }
     }
 }
 widget "*.sound_content_button" style "sound-content-button"
@@ -584,6 +590,12 @@ style "picture-content-button" {
             function = BOX
             state = PRELIGHT
             file = "picture_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "picture_content_button_insensitive.png"
             stretch = TRUE
         }
     }
