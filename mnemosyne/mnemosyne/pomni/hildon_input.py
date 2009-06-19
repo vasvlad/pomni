@@ -434,6 +434,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         if new_category:
             self.categories_list.append(new_category)
             self.input_mode_new_category_entry.set_text("")
+            self.category_name_w.set_text(new_category)
             self.hide_add_category_block_cb(None)
 
     def add_picture_cb(self, widget):
