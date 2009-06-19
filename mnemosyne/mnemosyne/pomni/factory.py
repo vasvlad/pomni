@@ -28,11 +28,35 @@ UI Factory. Creates UI objects
 #from mnemosyne.libmnemosyne.renderers.text import TextRenderer
 
 from mnemosyne.libmnemosyne import Mnemosyne
+from mnemosyne.libmnemosyne.component import Component
+
+class ConfigHook(Component):
+    component_type = 'hook'
+    used_for = 'configuration_defaults'
+
+    def run(self):
+        try:
+            for key, value in {\
+                "theme_path": "/usr/share/pomni/hildon-UI/eternal",
+                "themes": ['eternal', 'rainbow'],
+                "scheduler": "SM2",
+                "database": "sqlite",
+                "fullscreen": True,
+                "font_size": 30.0,
+                "startup_with_review": False,
+                "times_loaded": 0}.iteritems():
+
+                self.config().setdefault(key, value)
+
+            print ">>>>", self.config()['theme_path']
+        except Exception, exobj:
+            print '>>>>>Exception:', exobj
 
 def app_factory(interface=None):
     """UI factory. Return main ui object."""
 
     app = Mnemosyne()
+    app.components.append(("pomni.factory", "ConfigHook"))
 
     if interface == 'cmd':
         from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
