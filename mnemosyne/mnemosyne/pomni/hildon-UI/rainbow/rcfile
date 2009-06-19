@@ -40,129 +40,6 @@
 # it is assigned to the actual widgets at the bottom of the file.
 
 
-style "question_answer_frame" {
-    xthickness = 5
-    ythickness = 5
-    engine "sapwood" {
-        image {
-	    function = BOX
-	    file     = "textarea.png"
-	    border   = { 16, 16, 15, 15 }
-        }
-    }
-}
-
-style "nothing" {
-    GtkNotebook::inner_left_border = 0
-    GtkNotebook::inner_right_border = 0
-    GtkNotebook::tab-overlap = 0
-    GtkNotebook::arrow-spacing = 6
-    GtkNotebook::label-padding = 2
-
-    # Themings for images on different sides of the notebook.
-    engine "sapwood" {
-        image {
-            function = BOX
-            detail   = "notebook"
-            border   = { 0, 0, 0, 0 }
-            file     = "nothing.png"
-        }
-    }
-}
-
-style "nothingviewport" {
-    xthickness = 0
-    ythickness = 0
-    GtkScrolledWindow ::scrollbars-within-bevel = 0
-    GtkScrolledWindow ::scrollbar-spacing = 0
-    GtkScrolledWindow ::inner_left_border = 0
-    GtkScrolledWindow ::inner_right_border = 0
-    engine "sapwood" {
-        image {
-            function = SHADOW
-            file = "nothing.png"
-            border = {0, 0, 0, 0}
-        }
-        image {
-            function = BOX
-            border   = { 0, 0, 0, 0 }
-            file     = "nothing.png"
-        }
-    }
-}
-
-style "input-combobox-entry-entry" {
-    engine "sapwood" {
-        image {
-            function = SHADOW
-            state    = INSENSITIVE
-            file = "comboboxarea.png"
-	        border   = { 10, 10, 15, 15 }
-	    }
-        image {
-	        function = FLAT_BOX
-        }
-        image {
-	        function = SHADOW
- 	        file = "comboboxarea.png"
- 	        border   = { 10, 10, 15, 15 }
-	    }
-    }
-}
-
-style "input-combobox-entry-button-down" {
-	engine "sapwood" {
-		image {
-			function = FOCUS
-		}
-		image {
-			function = BOX
-			file = "combobox_right_bottom.png"
-			state = INSENSITIVE
-			border = { 10, 10, 15, 15 }
-		}
-		image {
-			function = BOX
-			file = "combobox_right_bottom.png"
-			border = { 10, 10, 15, 15 }
-		}
-		image {
-			function = TAB
-		}
-	}
-}
-
-style "input-combobox-entry-arrow" {
-    engine "sapwood" {
-        image{
-            function = ARROW
-            state = ACTIVE
-            overlay_file = "input_arrow_down.png"
-            overlay_stretch = FALSE
-        }
-        image {
-            function = ARROW
-            state = NORMAL
-            overlay_file = "input_arrow_down.png"
-            overlay_stretch = FALSE
-        }
-        image {
-            function = ARROW
-            state    = INSENSITIVE
-            overlay_file = "input_arrow_down.png"
-            overlay_stretch = FALSE
-        }
-    }
-}
-
-widget "*.switcher" style "nothing"
-widget "*.answer_frame" style "question_answer_frame"
-widget "*.question_frame" style "question_answer_frame"
-widget_class "*.<GtkComboBoxEntry>.GtkEntry" style  "input-combobox-entry-entry"
-widget_class "*.<GtkComboBoxEntry>.GtkToggleButton" style "input-combobox-entry-button-down"
-widget_class "*.<GtkComboBoxEntry>.GtkToggleButton.GtkArrow" style "input-combobox-entry-arrow"
-
-
 #----------------------------- Main Menu ------------------
 style "program-name-label" {
     font_name = "Nokia Sans Italic 10"
@@ -183,7 +60,6 @@ style "menu-button" {
     GtkButton::focus-line-width = 0
 }
 
-# Style for Review menu button. Have 3 states.
 style "menu-button-review" = "menu-button" {
     engine "pixmap" {
         image {
@@ -205,7 +81,6 @@ style "menu-button-review" = "menu-button" {
 }
 widget "*.menu_button_review" style "menu-button-review"
 
-# Style for Input menu button. Have 3 states.
 style "menu-button-input" = "menu-button" {
     engine "pixmap" {
         image {
@@ -227,7 +102,6 @@ style "menu-button-input" = "menu-button" {
 }
 widget "*.menu_button_input" style "menu-button-input"
 
-# Style for Synh menu button. Have 3 states.
 style "menu-button-synh" = "menu-button" {
     engine "pixmap" {
         image {
@@ -249,7 +123,6 @@ style "menu-button-synh" = "menu-button" {
 }
 widget "*.menu_button_synh" style "menu-button-synh"
 
-# Style for Conf menu button. Have 3 states.
 style "menu-button-conf" = "menu-button" {
     engine "pixmap" {
         image {
@@ -271,7 +144,6 @@ style "menu-button-conf" = "menu-button" {
 }
 widget "*.menu_button_conf" style "menu-button-conf"
 
-# Style for Exit menu button. Have 3 states.
 style "menu-button-exit" = "menu-button" {
     engine "pixmap" {
         image {
@@ -332,7 +204,6 @@ style "grade-button" {
 widget "*.grade*" style "grade-button"
 widget "*.grade*.GtkLabel" style "grade-button"
 
-# Style for "Edit card" button
 style "edit-card-button" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
@@ -361,8 +232,440 @@ widget "*.review_toolbar_edit_card_button" style "edit-card-button"
 
 
 #----------------------------- Input mode ------------------
-#----------------------------- Input mode ------------------
+style "input-mode-add-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_add_card_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_add_card_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_add_card_big.png"
+        }
+    }
+}
+widget "*.input_mode_toolbar_add_card_w" style "input-mode-add-card-button"
 
+style "input-mode-delete-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_delete_card_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_delete_card_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_delete_card_big.png"
+        }
+    }
+}
+widget "*.input_mode_toolbar_delete_card_w" style "input-mode-delete-card-button"
+
+style "input-mode-add-category-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_add_new_category_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_add_new_category_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_add_new_category_big.png"
+        }
+    }
+}
+widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
+
+style "input-mode-close-add-category-block-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_close_add_category_block_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_close_add_category_block_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_close_add_category_block_big.png"
+        }
+    }
+}
+widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
+
+style "input-mode-prev-category-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_prev_category_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_prev_category_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_prev_category_big.png"
+        }
+    }
+}
+widget "*.input_mode_prev_category_w" style "input-mode-prev-category-button"
+
+style "input-mode-next-category-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_next_category_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_next_category_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_next_category_big.png"
+        }
+    }
+}
+widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
+
+style "front-to-back-cardtype" {
+    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "front_to_back_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "front_to_back_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "front_to_back_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+    }
+}
+widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
+
+style "both-way-cardtype" {
+    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "both_way_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "both_way_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "both_way_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+    }
+}
+widget "*.both_way_mode_selector_w" style "both-way-cardtype"
+
+style "three-side-cardtype" {
+    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "three_side_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "three_side_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "three_side_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
+    }
+}
+widget "*.three_side_mode_selector_w" style "three-side-cardtype"
+
+style "cloze-cardtype" {
+    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "cloze_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "cloze_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "cloze_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+    }
+}
+widget "*.cloze_mode_selector_w" style "cloze-cardtype"
+
+style "sound-content-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "sound_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "sound_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "sound_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "sound_content_button_insensitive.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.sound_content_button" style "sound-content-button"
+
+style "picture-content-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "picture_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "picture_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "picture_content_button.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "picture_content_button_insensitive.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.picture_content_button" style "picture-content-button"
+
+style "vseparator" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "vseparator.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.vseparator1" style "vseparator"
+widget "*.vseparator2" style "vseparator"
+
+style "hseparator" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "hseparator.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.hseparator1" style "hseparator"
+
+style "input-mode-textview-container" {
+    xthickness = 5
+    ythickness = 5
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "textarea.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.input_mode_answer_container" style "input-mode-textview-container"
+widget "*.input_mode_question_container" style "input-mode-textview-container"
+widget "*.input_mode_foreign_container" style "input-mode-textview-container"
+widget "*.input_mode_pronun_container" style "input-mode-textview-container"
+widget "*.input_mode_translate_container" style "input-mode-textview-container"
+widget "*.input_mode_cloze_container" style "input-mode-textview-container"
+widget "*.input_mode_new_category_entry_container" style "input-mode-textview-container"
+
+style "category-name-container" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "nothing.png"
+        }
+    }
+}
+widget "*.category_name_container" style "category-name-container"
+
+style "entry" {
+    font_name = "Nokia Sans 14"
+}
+widget "*.input_mode_new_category_entry" style "entry"
+
+style "category-label" {
+    font_name = "Nokia Sans 11"
+}
+widget "*.input_mode_new_category_label" style "category-label"
+widget "*.category_name_w" style "category-label"
+#----------------------------- Input mode -----------------
 
 
 #----------------------------- Config mode ------------------
@@ -485,7 +788,6 @@ style "dialog" {
     }
 }
 class "GtkDialog" style "dialog"
-#widget "image_selection_window" style "dialog"
 
 style "dialog-label" {
     font_name = "Nokia Sans Bold 16"
@@ -506,8 +808,11 @@ widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
 widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
 widget "*.image_selection_dialog_button_close.GtkLabel" style "dialog-button-label"
 widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-label"
+widget "*.categories_manager_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.categories_manager_dialog_button_create.GtkLabel" style "dialog-button-label"
 
 style "question-dialog-button-yes" {
+    GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
@@ -536,8 +841,10 @@ widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
 widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
 widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
 widget "*.image_selection_dialog_button_select" style "question-dialog-button-yes"
+widget "*.categories_manager_dialog_button_create" style "question-dialog-button-yes"
 
 style "question-dialog-button-no" {
+    GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
@@ -564,10 +871,21 @@ style "question-dialog-button-no" {
 }
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
 widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
+widget "*.categories_manager_dialog_button_close" style "question-dialog-button-no"
 #----------------------------- Dialogs ------------------
 
 
 #----------------------------- General ------------------
+style "main-switcher" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file     = "nothing.png"
+        }
+    }
+}
+widget "*.switcher" style "main-switcher"
+
 # style for scrolls in Image selection dialog
 style "image-selection-dialog-scrollbars" {
     GtkRange::slider-width = 60
@@ -694,4 +1012,5 @@ style "main-menu-button" {
     }
 }
 widget "*.*main_menu_button" style "main-menu-button"
+widget "*.input_mode_toolbar_button_back_w" style "main-menu-button"
 #----------------------------- General ------------------
