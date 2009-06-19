@@ -255,7 +255,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         signals = ["add_card", "input_to_main_menu", "change_card_type",
             "add_picture", "select_item", "close_image_selection_dialog",
             "change_category", "manage_categories", "create_new_category",
-            "close_categories_manager_dialog"]
+            "close_categories_manager_dialog", "clear_text", "test", "check"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
@@ -376,12 +376,12 @@ class RainbowControllerInput(HildonUiControllerInput):
     def clear_widgets(self):
         """ Clear data in widgets. """
 
-        self.question_text_w.get_buffer().set_text("")
-        self.answer_text_w.get_buffer().set_text("")
-        self.foreign_text_w.get_buffer().set_text("")
-        self.pronun_text_w.get_buffer().set_text("")
-        self.translation_text_w.get_buffer().set_text("")
-        self.cloze_text_w.get_buffer().set_text("")
+        self.question_text_w.get_buffer().set_text("Type QUESTION here...")
+        self.answer_text_w.get_buffer().set_text("Type ANSWER here...")
+        self.foreign_text_w.get_buffer().set_text("Type FOREIGN here...")
+        self.pronun_text_w.get_buffer().set_text("Type PRONUNCIATION here...")
+        self.translation_text_w.get_buffer().set_text("Type TRANSLATION here...")
+        self.cloze_text_w.get_buffer().set_text("Type TEXT here...")
 
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from cardtype column. """
@@ -492,11 +492,29 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.image_selection_dialog.hide()
 
+    def clear_text_cb(self, widget, event):
+        """ Clear textview content. """
+
+        widget.get_buffer().set_text("")
+
     def input_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
         self.switcher.set_current_page(self.main_menu)
 
+    def test_cb(self, widget, event):
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
+        elif event.type == gtk.gdk._2BUTTON_PRESS:
+            event = gtk.gdk.Event(gtk.gdk._2BUTTON_PRESS)
+        event.button = 1
+        event.time = 10
+        event.send_event = True
+        event.window = widget.child.window
+        widget.child.emit("button-press-event", event)
+
+    def check_cb(self, widget, event):
+        print event
 
 # Local Variables:
 # mode: python
