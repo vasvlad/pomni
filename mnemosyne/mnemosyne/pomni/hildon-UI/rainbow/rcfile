@@ -276,27 +276,49 @@ style "input-mode-delete-card-button" {
 }
 widget "*.input_mode_toolbar_delete_card_w" style "input-mode-delete-card-button"
 
-style "input-mode-categories-button" {
+style "input-mode-add-category-button" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
             state = NORMAL
-            file = "input_mode_categories_small.png"
+            file = "input_mode_add_new_category_small.png"
         }
         image {
             function = BOX
             state = PRELIGHT
-            file = "input_mode_categories_big.png"
+            file = "input_mode_add_new_category_big.png"
         }
         image {
             function = BOX
             state = ACTIVE
-            file = "input_mode_categories_big.png"
+            file = "input_mode_add_new_category_big.png"
         }
     }
 }
-widget "*.input_mode_toolbar_categories_w" style "input-mode-categories-button"
+widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
+
+style "input-mode-close-add-category-block-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_mode_close_add_category_block_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "input_mode_close_add_category_block_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "input_mode_close_add_category_block_big.png"
+        }
+    }
+}
+widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
 
 style "input-mode-prev-category-button" {
     GtkButton::focus-line-width = 0
@@ -609,6 +631,28 @@ widget "*.input_mode_foreign_container" style "input-mode-textview-container"
 widget "*.input_mode_pronun_container" style "input-mode-textview-container"
 widget "*.input_mode_translate_container" style "input-mode-textview-container"
 widget "*.input_mode_cloze_container" style "input-mode-textview-container"
+widget "*.input_mode_new_category_entry_container" style "input-mode-textview-container"
+
+style "category-name-container" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "nothing.png"
+        }
+    }
+}
+widget "*.category_name_container" style "category-name-container"
+
+style "entry" {
+    font_name = "Nokia Sans 14"
+}
+widget "*.input_mode_new_category_entry" style "entry"
+
+style "category-label" {
+    font_name = "Nokia Sans 11"
+}
+widget "*.input_mode_new_category_label" style "category-label"
+widget "*.category_name_w" style "category-label"
 #----------------------------- Input mode -----------------
 
 
@@ -816,11 +860,6 @@ style "question-dialog-button-no" {
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
 widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
 widget "*.categories_manager_dialog_button_close" style "question-dialog-button-no"
-
-style "entry" {
-    font_name = "Nokia Sans 20"
-}
-widget "*.categories_manager_dialog_entry" style "entry"
 #----------------------------- Dialogs ------------------
 
 
