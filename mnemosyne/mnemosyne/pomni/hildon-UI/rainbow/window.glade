@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Jun 19 13:02:31 2009 -->
+<!--Generated with glade3 3.4.5 on Fri Jun 19 14:49:23 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -18,9 +18,10 @@
         <child>
           <widget class="GtkNotebook" id="switcher">
             <property name="visible">True</property>
+            <property name="show_border">False</property>
             <property name="tab_border">0</property>
             <property name="tab_hborder">0</property>
-            <property name="tab_vborder">1</property>
+            <property name="tab_vborder">0</property>
             <child>
               <widget class="GtkVBox" id="main_menu_vbox">
                 <property name="visible">True</property>
@@ -28,7 +29,7 @@
                   <widget class="GtkLabel" id="program_name_label">
                     <property name="visible">True</property>
                     <property name="xalign">1</property>
-                    <property name="label" translatable="yes">Pomni v.0.0.8   </property>
+                    <property name="label" translatable="yes">Pomni v.0.2.0   </property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -719,8 +720,6 @@
             <child>
               <widget class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkHBox" id="hbox3">
                     <property name="visible">True</property>
@@ -958,8 +957,6 @@
                                     <child>
                                       <widget class="GtkVBox" id="vbox4">
                                         <property name="visible">True</property>
-                                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                                         <child>
                                           <widget class="GtkButton" id="picture_content_button">
                                             <property name="width_request">50</property>
@@ -1762,25 +1759,25 @@
   </widget>
   <widget class="GtkDialog" id="categories_manager_dialog">
     <property name="border_width">5</property>
-    <property name="type">GTK_WINDOW_POPUP</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="skip_pager_hint">True</property>
+    <property name="deletable">False</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox4">
         <property name="visible">True</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-        <property name="spacing">2</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <property name="can_focus">True</property>
+        <property name="spacing">5</property>
         <child>
           <widget class="GtkEntry" id="categories_manager_dialog_entry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="has_focus">True</property>
             <property name="invisible_char">●</property>
-            <property name="caps_lock_warning">False</property>
           </widget>
           <packing>
             <property name="position">1</property>
