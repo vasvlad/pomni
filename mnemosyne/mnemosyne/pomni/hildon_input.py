@@ -255,7 +255,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         signals = ["add_card", "input_to_main_menu", "change_card_type",
             "add_picture", "select_item", "close_image_selection_dialog",
             "change_category", "manage_categories", "create_new_category",
-            "close_categories_manager_dialog", "clear_text", "test", "check"]
+            "close_categories_manager_dialog", "clear_text"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
@@ -411,6 +411,8 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.switcher.set_current_page(self.review)
 
     def change_category_cb(self, widget):
+        """ Change current category. """
+
         if widget.name == "prev_category_w":
             direction = -1
         direction = 1
@@ -426,6 +428,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.category_name_w.set_text(new_category)
 
     def create_new_category_cb(self, widget):
+        """ Create new category. """
         
         new_category = self.categories_manager_dialog_entry.get_text()
         if new_category:
@@ -480,6 +483,7 @@ class RainbowControllerInput(HildonUiControllerInput):
     def manage_categories_cb(self, widget):
         """ Show categories manager dialog. """
 
+        self.categories_manager_dialog.set_decorated(False)    
         self.categories_manager_dialog.show()
 
     def close_categories_manager_dialog_cb(self, widget):
@@ -502,19 +506,6 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.switcher.set_current_page(self.main_menu)
 
-    def test_cb(self, widget, event):
-        if event.type == gtk.gdk.BUTTON_PRESS:
-            event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
-        elif event.type == gtk.gdk._2BUTTON_PRESS:
-            event = gtk.gdk.Event(gtk.gdk._2BUTTON_PRESS)
-        event.button = 1
-        event.time = 10
-        event.send_event = True
-        event.window = widget.child.window
-        widget.child.emit("button-press-event", event)
-
-    def check_cb(self, widget, event):
-        print event
 
 # Local Variables:
 # mode: python
