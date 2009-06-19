@@ -35,22 +35,15 @@ class ConfigHook(Component):
     used_for = 'configuration_defaults'
 
     def run(self):
-        try:
-            for key, value in {\
-                "theme_path": "/usr/share/pomni/hildon-UI/eternal",
-                "themes": ['eternal', 'rainbow'],
-                "scheduler": "SM2",
-                "database": "sqlite",
-                "fullscreen": True,
-                "font_size": 30.0,
-                "startup_with_review": False,
-                "times_loaded": 0}.iteritems():
+        for key, value in {\
+            "theme_path": "/usr/share/pomni/hildon-UI/eternal",
+            "themes": ['eternal', 'rainbow'],
+            "fullscreen": True,
+            "font_size": 30.0,
+            "startup_with_review": False,
+            "times_loaded": 0}.iteritems():
 
-                self.config().setdefault(key, value)
-
-            print ">>>>", self.config()['theme_path']
-        except Exception, exobj:
-            print '>>>>>Exception:', exobj
+            self.config().setdefault(key, value)
 
 def app_factory(interface=None):
     """UI factory. Return main ui object."""
@@ -67,8 +60,6 @@ def app_factory(interface=None):
         return CommandlineUI()
 
     if not interface or interface == "hildon":
-        # FIXME: get current theme here
-
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
                                   "GetTextTranslator"))
 
