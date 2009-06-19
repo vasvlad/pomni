@@ -736,46 +736,24 @@ style "hseparator" {
 }
 widget "*.hseparator1" style "hseparator"
 
-style "input-mode-answer-container" {
+style "input-mode-textview-container" {
     xthickness = 5
     ythickness = 5
     engine "pixmap" {
         image {
-            function = BOX
-            state = NORMAL
-            file = "textarea2.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "textarea2.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "textarea2.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = SELECTED
-            file = "textarea2.png"
+            function = SHADOW
+            file = "textarea.png"
             border = {12,12,12,12}
             stretch = TRUE
         }
     }
 }
-#widget "*.input_mode_answer_container" style "input-mode-answer-container"
-#widget "*.input_mode_question_container" style "input-mode-answer-container"
-#widget "*.input_mode_foreign_container" style "input-mode-answer-container"
-#widget "*.input_mode_pronun_container" style "input-mode-answer-container"
-#widget "*.input_mode_translate_container" style "input-mode-answer-container"
-#widget "*.input_mode_cloze_container" style "input-mode-answer-container"
+widget "*.input_mode_answer_container" style "input-mode-textview-container"
+widget "*.input_mode_question_container" style "input-mode-textview-container"
+widget "*.input_mode_foreign_container" style "input-mode-textview-container"
+widget "*.input_mode_pronun_container" style "input-mode-textview-container"
+widget "*.input_mode_translate_container" style "input-mode-textview-container"
+widget "*.input_mode_cloze_container" style "input-mode-textview-container"
 #----------------------------- Input mode -----------------
 
 
