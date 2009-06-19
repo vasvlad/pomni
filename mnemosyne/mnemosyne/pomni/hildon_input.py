@@ -329,16 +329,16 @@ class RainbowControllerInput(HildonUiControllerInput):
     def update_categories(self):
         """ Update categories list content. """
 
-        self.categories_list = []
-        categories = dict([(i, name) for (i, name) in \
-            enumerate(database().category_names())])
-        if categories.values():
-            for category in sorted(categories.values()):
-                self.categories_list.append(category)
-            self.category_name_w.set_text(sorted(categories.values())[0])
-        else:
-            self.categories_list.append("default category")
-            self.category_name_w.set_text("default category")
+        if not self.categories_list:
+            categories = dict([(i, name) for (i, name) in \
+                enumerate(database().category_names())])
+            if categories.values():
+                for category in sorted(categories.values()):
+                    self.categories_list.append(category)
+                self.category_name_w.set_text(sorted(categories.values())[0])
+            else:
+                self.categories_list.append("default category")
+                self.category_name_w.set_text("default category")
 
     def get_widgets_data(self, check_for_required=True):
         """ Get data from widgets. """
