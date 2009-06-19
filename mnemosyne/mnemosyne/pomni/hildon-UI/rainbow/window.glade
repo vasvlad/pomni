@@ -29,7 +29,7 @@
                   <widget class="GtkLabel" id="program_name_label">
                     <property name="visible">True</property>
                     <property name="xalign">1</property>
-                    <property name="label" translatable="yes">Pomni v.0.0.8   </property>
+                    <property name="label" translatable="yes">Pomni v.0.2.0 beta2   </property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
@@ -377,15 +377,11 @@
             <child>
               <widget class="GtkVBox" id="review_mode_vbox">
                 <property name="visible">True</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkVBox" id="review_widgets_vbox">
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="spacing">5</property>
                     <property name="homogeneous">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkTable" id="question_viewport_table">
                         <property name="visible">True</property>
@@ -724,15 +720,11 @@
             <child>
               <widget class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkVBox" id="vbox3">
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="homogeneous">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkHBox" id="input_mode_change_category_block">
                         <property name="visible">True</property>
