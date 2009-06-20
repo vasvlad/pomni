@@ -198,11 +198,167 @@ widget "*.answer_viewport" style "answer-viewport"
 
 style "grade-button" {
     GtkButton::focus-line-width = 0
-    font_name = "Nokia Sans Bold 12"
-    bg[NORMAL] = "#AAAAAA"
+#    font_name = "Nokia Sans Bold 12"
+#    bg[NORMAL] = "#AAAAAA"
 }
-widget "*.grade*" style "grade-button"
-widget "*.grade*.GtkLabel" style "grade-button"
+#widget "*.grade*" style "grade-button"
+#widget "*.grade*.GtkLabel" style "grade-button"
+
+style "grade0" = "grade-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "grade0_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "grade0_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "grade0_big.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade0_insensitive.png"
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" = "grade-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "grade1_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "grade1_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "grade1_big.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade1_insensitive.png"
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" = "grade-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "grade2_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "grade2_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "grade2_big.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade2_insensitive.png"
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" = "grade-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "grade3_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "grade3_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "grade3_big.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade3_insensitive.png"
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" = "grade-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "grade4_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "grade4_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "grade4_big.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade4_insensitive.png"
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" = "grade-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "grade5_small.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "grade5_big.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "grade5_big.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade5_insensitive.png"
+        }
+    }
+}
+widget "*.grade5" style "grade5"
 
 style "edit-card-button" {
     GtkButton::focus-line-width = 0
@@ -613,6 +769,8 @@ style "vseparator" {
 }
 widget "*.vseparator1" style "vseparator"
 widget "*.vseparator2" style "vseparator"
+widget "*.review_mode_vseparator1" style "vseparator"
+widget "*.review_mode_vseparator2" style "vseparator"
 
 style "hseparator" {
     engine "pixmap" {
