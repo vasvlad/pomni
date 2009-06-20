@@ -192,8 +192,8 @@ class RainbowControllerReview(HildonUiControllerReview):
     def new_question(self, learn_ahead=False):
         """ Show new question. """
 
-        self.show_answer("<html><p align=center style='margin-top:35px; \
-            font-size:16;'>Press to get answer</p></html>")            
+        self.show_answer("<html><p align=center style='margin-top:72px; \
+            font-size:20;'>Press to get answer</p></html>")            
         if not database().card_count():
             ui_controller_main().widget.information_box(\
                 _("Database is empty!"), "OK")
