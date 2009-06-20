@@ -87,10 +87,7 @@ class Mnemosyne(Component):
         # Loading the database should come after all user plugins have been
         # loaded, since these could be needed e.g. for a card type in the
         # database.
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/__init__.py
-=======
         self.check_lockfile()
->>>>>>> upstream:mnemosyne/mnemosyne/libmnemosyne/__init__.py
         self.load_database(filename)
         self.log().started_program()
         self.log().started_scheduler()
