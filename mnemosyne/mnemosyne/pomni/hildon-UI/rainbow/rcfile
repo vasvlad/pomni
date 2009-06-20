@@ -209,7 +209,8 @@ style "grade0" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "grade0_small.png"
+            #file = "grade0_small.png"
+            file = "grade0_big.png"
         }
         image {
             function = BOX
@@ -235,7 +236,8 @@ style "grade1" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "grade1_small.png"
+            #file = "grade1_small.png"
+            file = "grade1_big.png"
         }
         image {
             function = BOX
@@ -261,7 +263,8 @@ style "grade2" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "grade2_small.png"
+            #file = "grade2_small.png"
+            file = "grade2_big.png"
         }
         image {
             function = BOX
@@ -287,7 +290,8 @@ style "grade3" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "grade3_small.png"
+            #file = "grade3_small.png"
+            file = "grade3_big.png"
         }
         image {
             function = BOX
@@ -313,7 +317,8 @@ style "grade4" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "grade4_small.png"
+            #file = "grade4_small.png"
+            file = "grade4_big.png"
         }
         image {
             function = BOX
@@ -339,7 +344,8 @@ style "grade5" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            file = "grade5_small.png"
+            #file = "grade5_small.png"
+            file = "grade5_big.png"
         }
         image {
             function = BOX
@@ -365,25 +371,78 @@ style "edit-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "edit_card_small.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+            #state = NORMAL
+            #file = "edit_card_small.png"
             file = "edit_card_big.png"
             stretch = TRUE
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "edit_card_big.png"
-            stretch = TRUE
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "edit_card_big.png"
+#            stretch = TRUE
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "edit_card_big.png"
+#            stretch = TRUE
+#        }
     }
 }
 widget "*.review_toolbar_edit_card_button" style "edit-card-button"
+
+style "add-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+#            state = NORMAL
+#            file = "add_card_small.png"
+            file = "add_card_big.png"
+            stretch = TRUE
+        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "add_card_big.png"
+#            stretch = TRUE
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "add_card_big.png"
+#            stretch = TRUE
+#        }
+    }
+}
+widget "*.review_toolbar_add_card_button" style "add-card-button"
+
+style "delete-card-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+#            state = NORMAL
+#            file = "delete_card_small.png"
+            file = "delete_card_big.png"
+            stretch = TRUE
+        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "delete_card_big.png"
+#            stretch = TRUE
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "delete_card_big.png"
+#            stretch = TRUE
+#        }
+    }
+}
+widget "*.review_toolbar_delete_card_button" style "delete-card-button"
 #----------------------------- Review mode ------------------
 
 
@@ -393,63 +452,43 @@ style "input-mode-add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "input_mode_add_card_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+#            state = NORMAL
+#            file = "input_mode_add_card_small.png"
             file = "input_mode_add_card_big.png"
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "input_mode_add_card_big.png"
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "input_mode_add_card_big.png"
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "input_mode_add_card_big.png"
+#        }
     }
 }
 widget "*.input_mode_toolbar_add_card_w" style "input-mode-add-card-button"
-
-style "input-mode-delete-card-button" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "input_mode_delete_card_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "input_mode_delete_card_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "input_mode_delete_card_big.png"
-        }
-    }
-}
-widget "*.input_mode_toolbar_delete_card_w" style "input-mode-delete-card-button"
 
 style "input-mode-add-category-button" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "input_mode_add_new_category_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+#            state = NORMAL
+#            file = "input_mode_add_new_category_small.png"
             file = "input_mode_add_new_category_big.png"
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "input_mode_add_new_category_big.png"
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "input_mode_add_new_category_big.png"
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "input_mode_add_new_category_big.png"
+#        }
     }
 }
 widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
@@ -459,19 +498,20 @@ style "input-mode-close-add-category-block-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "input_mode_close_add_category_block_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+#            state = NORMAL
+#            file = "input_mode_close_add_category_block_small.png"
             file = "input_mode_close_add_category_block_big.png"
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "input_mode_close_add_category_block_big.png"
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "input_mode_close_add_category_block_big.png"
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "input_mode_close_add_category_block_big.png"
+#        }
     }
 }
 widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
@@ -481,19 +521,20 @@ style "input-mode-prev-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "input_mode_prev_category_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+#            state = NORMAL
+#            file = "input_mode_prev_category_small.png"
             file = "input_mode_prev_category_big.png"
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "input_mode_prev_category_big.png"
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "input_mode_prev_category_big.png"
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "input_mode_prev_category_big.png"
+#        }
     }
 }
 widget "*.input_mode_prev_category_w" style "input-mode-prev-category-button"
@@ -503,19 +544,20 @@ style "input-mode-next-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "input_mode_next_category_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+#            state = NORMAL
+#            file = "input_mode_next_category_small.png"
             file = "input_mode_next_category_big.png"
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "input_mode_next_category_big.png"
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "input_mode_next_category_big.png"
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "input_mode_next_category_big.png"
+#        }
     }
 }
 widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
@@ -1064,58 +1106,6 @@ style "main-window" {
 #class "GtkWindow" style "main-window"
 widget "window" style "main-window"
 
-# Style for "Add card" button
-style "add-card-button" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "add_card_small.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "add_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "add_card_big.png"
-            stretch = TRUE
-        }
-    }
-}
-widget "*.*add_card_button" style "add-card-button"
-
-# Style for "Delete card" button
-style "delete-card-button" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "delete_card_small.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "delete_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "delete_card_big.png"
-            stretch = TRUE
-        }
-    }
-}
-widget "*.*delete_card_button" style "delete-card-button"
-
 # Style for "Add picture" button
 style "add-picture-button" {
     GtkButton::focus-line-width = 0
@@ -1154,19 +1144,20 @@ style "main-menu-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "back_small.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
+#            state = NORMAL
+#            file = "back_small.png"
             file = "back_big.png"
         }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "back_big.png"
-        }
+#        image {
+#            function = BOX
+#            state = PRELIGHT
+#            file = "back_big.png"
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "back_big.png"
+#        }
     }
 }
 widget "*.*main_menu_button" style "main-menu-button"
