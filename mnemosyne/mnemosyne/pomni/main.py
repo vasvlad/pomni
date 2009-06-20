@@ -235,7 +235,7 @@ class HildonMainWidget(MainWidget):
 
 
     def error_box(self, message):
-        print 'error_box'
+        print 'error_box', message
     
     def save_file_dialog(self, path, filter, caption=""):
         print 'save_file_dialog'
