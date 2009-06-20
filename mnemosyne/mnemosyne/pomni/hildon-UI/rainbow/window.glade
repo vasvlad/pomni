@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jun 20 12:21:15 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Jun 20 20:27:52 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -478,6 +478,8 @@
                 </child>
               </widget>
               <packing>
+                <property name="left_attach">4</property>
+                <property name="right_attach">5</property>
                 <property name="x_options"></property>
                 <property name="x_padding">14</property>
               </packing>
@@ -485,45 +487,24 @@
             <child>
               <widget class="GtkTable" id="review_toolbar">
                 <property name="visible">True</property>
-                <property name="n_rows">5</property>
+                <property name="n_rows">4</property>
                 <property name="homogeneous">True</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="review_toolbar_add_card_button">
+                  <widget class="GtkButton" id="review_toolbar_main_menu_button">
                     <property name="width_request">56</property>
                     <property name="height_request">56</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="response_id">0</property>
-                    <signal name="clicked" handler="input"/>
+                    <signal name="clicked" handler="review_to_main_menu"/>
                     <child>
                       <placeholder/>
                     </child>
                   </widget>
                   <packing>
-                    <property name="x_options">GTK_EXPAND</property>
-                    <property name="y_options">GTK_EXPAND</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="review_toolbar_delete_card_button">
-                    <property name="width_request">56</property>
-                    <property name="height_request">56</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="delete_card"/>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                     <property name="x_options">GTK_EXPAND</property>
                     <property name="y_options">GTK_EXPAND</property>
                   </packing>
@@ -549,29 +530,45 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="review_toolbar_main_menu_button">
+                  <widget class="GtkButton" id="review_toolbar_delete_card_button">
                     <property name="width_request">56</property>
                     <property name="height_request">56</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="response_id">0</property>
-                    <signal name="clicked" handler="review_to_main_menu"/>
+                    <signal name="clicked" handler="delete_card"/>
                     <child>
                       <placeholder/>
                     </child>
                   </widget>
                   <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_EXPAND</property>
+                    <property name="y_options">GTK_EXPAND</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="review_toolbar_add_card_button">
+                    <property name="width_request">56</property>
+                    <property name="height_request">56</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="response_id">0</property>
+                    <signal name="clicked" handler="input"/>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </widget>
+                  <packing>
                     <property name="x_options">GTK_EXPAND</property>
                     <property name="y_options">GTK_EXPAND</property>
                   </packing>
                 </child>
               </widget>
               <packing>
-                <property name="left_attach">4</property>
-                <property name="right_attach">5</property>
                 <property name="x_options"></property>
                 <property name="x_padding">14</property>
               </packing>
@@ -677,12 +674,14 @@
           <widget class="GtkVBox" id="input_mode_vbox">
             <property name="visible">True</property>
             <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
             <child>
               <widget class="GtkVBox" id="vbox3">
                 <property name="visible">True</property>
                 <property name="border_width">6</property>
                 <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <property name="homogeneous">True</property>
+                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkHBox" id="input_mode_change_category_block">
                     <property name="visible">True</property>
@@ -858,80 +857,19 @@
               <widget class="GtkHBox" id="hbox2">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkTable" id="card_types_table">
+                  <widget class="GtkTable" id="input_mode_toolbar">
                     <property name="visible">True</property>
                     <property name="n_rows">4</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkRadioButton" id="front_to_back_mode_selector_w">
+                      <widget class="GtkButton" id="input_mode_toolbar_button_back_w">
                         <property name="width_request">56</property>
                         <property name="height_request">56</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <property name="active">True</property>
-                        <signal name="released" handler="change_card_type"/>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="x_options"></property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkRadioButton" id="both_way_mode_selector_w">
-                        <property name="width_request">56</property>
-                        <property name="height_request">56</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="response_id">0</property>
-                        <property name="active">True</property>
-                        <property name="group">front_to_back_mode_selector_w</property>
-                        <signal name="released" handler="change_card_type"/>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options"></property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkRadioButton" id="three_side_mode_selector_w">
-                        <property name="width_request">56</property>
-                        <property name="height_request">56</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="response_id">0</property>
-                        <property name="active">True</property>
-                        <property name="group">front_to_back_mode_selector_w</property>
-                        <signal name="released" handler="change_card_type"/>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                        <property name="x_options"></property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkRadioButton" id="cloze_mode_selector_w">
-                        <property name="width_request">56</property>
-                        <property name="height_request">56</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="response_id">0</property>
-                        <property name="active">True</property>
-                        <property name="group">front_to_back_mode_selector_w</property>
-                        <signal name="released" handler="change_card_type"/>
+                        <signal name="clicked" handler="input_to_main_menu"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -939,7 +877,63 @@
                       <packing>
                         <property name="top_attach">3</property>
                         <property name="bottom_attach">4</property>
-                        <property name="x_options"></property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="input_mode_toolbar_add_card_w">
+                        <property name="width_request">56</property>
+                        <property name="height_request">56</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="add_card"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="sound_content_button">
+                        <property name="width_request">56</property>
+                        <property name="height_request">56</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="picture_content_button">
+                        <property name="width_request">56</property>
+                        <property name="height_request">56</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="add_picture"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
@@ -1214,36 +1208,38 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkTable" id="input_mode_toolbar">
+                  <widget class="GtkTable" id="card_types_table">
                     <property name="visible">True</property>
                     <property name="n_rows">4</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkButton" id="picture_content_button">
+                      <widget class="GtkRadioButton" id="front_to_back_mode_selector_w">
                         <property name="width_request">56</property>
                         <property name="height_request">56</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="add_picture"/>
+                        <property name="active">True</property>
+                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="x_options"></property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="sound_content_button">
+                      <widget class="GtkRadioButton" id="both_way_mode_selector_w">
                         <property name="width_request">56</property>
                         <property name="height_request">56</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
                         <property name="response_id">0</property>
+                        <property name="active">True</property>
+                        <property name="group">front_to_back_mode_selector_w</property>
+                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1251,19 +1247,20 @@
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="x_options"></property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="input_mode_toolbar_add_card_w">
+                      <widget class="GtkRadioButton" id="three_side_mode_selector_w">
                         <property name="width_request">56</property>
                         <property name="height_request">56</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="add_card"/>
+                        <property name="active">True</property>
+                        <property name="group">front_to_back_mode_selector_w</property>
+                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1271,19 +1268,20 @@
                       <packing>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
-                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="x_options"></property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="input_mode_toolbar_button_back_w">
+                      <widget class="GtkRadioButton" id="cloze_mode_selector_w">
                         <property name="width_request">56</property>
                         <property name="height_request">56</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="input_to_main_menu"/>
+                        <property name="active">True</property>
+                        <property name="group">front_to_back_mode_selector_w</property>
+                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1291,6 +1289,7 @@
                       <packing>
                         <property name="top_attach">3</property>
                         <property name="bottom_attach">4</property>
+                        <property name="x_options"></property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
