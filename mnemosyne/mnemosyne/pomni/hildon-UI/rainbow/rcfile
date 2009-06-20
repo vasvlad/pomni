@@ -563,7 +563,7 @@ style "input-mode-next-category-button" {
 widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
 
 style "front-to-back-cardtype" {
-    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::indicator-size = 72
     GtkRadioButton::focus-line-width = 0
     engine "pixmap" {
         image {
@@ -607,7 +607,7 @@ style "front-to-back-cardtype" {
 widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
 
 style "both-way-cardtype" {
-    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::indicator-size = 72
     GtkRadioButton::focus-line-width = 0
     engine "pixmap" {
         image {
@@ -651,7 +651,7 @@ style "both-way-cardtype" {
 widget "*.both_way_mode_selector_w" style "both-way-cardtype"
 
 style "three-side-cardtype" {
-    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::indicator-size = 72
     GtkRadioButton::focus-line-width = 0
     engine "pixmap" {
         image {
@@ -695,7 +695,7 @@ style "three-side-cardtype" {
 widget "*.three_side_mode_selector_w" style "three-side-cardtype"
 
 style "cloze-cardtype" {
-    GtkRadioButton::indicator-size = 50
+    GtkRadioButton::indicator-size = 72
     GtkRadioButton::focus-line-width = 0
     engine "pixmap" {
         image {
