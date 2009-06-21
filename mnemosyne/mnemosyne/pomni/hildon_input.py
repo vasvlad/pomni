@@ -313,8 +313,15 @@ class RainbowControllerInput(HildonUiControllerInput):
                 _("Front-to-back and back-to-front"): 0, 
                 _("Foreign word with pronunciation"): 1,
                 _("Cloze deletion"): 2 }
+            selectors_dict = {
+                _("Front-to-back only"): "front_to_back_mode_selector_w",
+                _("Front-to-back and back-to-front"):"both_way_mode_selector_w", 
+                _("Foreign word with pronunciation"):"three_side_mode_selector_w",
+                _("Cloze deletion"): "cloze_mode_selector_w"}
             self.card_type_switcher_w.set_current_page(\
                 cardtype_dict[self.card_type.name])
+            self.w_tree.get_widget(selectors_dict[self.card_type.name])\
+                .set_active(True)
             self.picture_content_button.set_sensitive(\
                 not cardtype_dict[self.card_type.name])
             self.sound_content_button.set_sensitive(\
