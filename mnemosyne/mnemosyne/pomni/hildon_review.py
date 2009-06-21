@@ -192,19 +192,27 @@ class RainbowControllerReview(HildonUiControllerReview):
     def new_question(self, learn_ahead=False):
         """ Show new question. """
 
-        self.show_answer("<html><p align=center style='margin-top:72px; \
-            font-size:20;'>Press to get answer</p></html>")            
         if not database().card_count():
             ui_controller_main().widget.information_box(\
                 _("Database is empty!"), "OK")
-            self.answer_viewport.set_sensitive(False)
+            self.answer_container.set_sensitive(False)
             self.grades_table.set_sensitive(False)
             return
             
         self.card = scheduler().get_new_question(learn_ahead)
         
         if self.card:
-            self.update_question_text()
+            # Resize text and answer fields
+            question_text = self.update_html_text('question_text')
+            x,y, width, height, depth = self.question_text.window.get_geometry()
+            if "<img src=" in question_text:
+                self.question_container.set_size_request(width, 260)
+                self.show_answer("<html><p align=center style='margin-top:16px;\
+                    font-size:20;'>Press to get answer</p></html>")
+            else:
+                self.question_container.set_size_request(width, 30)
+                self.show_answer("<html><p align=center style='margin-top:72px;\
+                    font-size:20;'>Press to get answer</p></html>")
         else:
             if not ui_controller_main().widget.question_box(
                   _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
@@ -212,51 +220,47 @@ class RainbowControllerReview(HildonUiControllerReview):
             else:
                 ui_controller_main().widget.information_box(\
                     _("Finished!"), "OK")
-                self.update_question_text(clean=True)
-                self.answer_viewport.set_sensitive(False)
+                self.update_html_text('question_text', clean=True)
+                self.update_html_text('answer_text', clean=True)
+                self.answer_container.set_sensitive(False)
         self.grades_table.set_sensitive(False)
 
     def show_answer(self, text=None):
-        """ Show answer """
+        """ Show card answer. """
 
-        self.answer_viewport.set_sensitive(True)
+        self.answer_container.set_sensitive(True)
+        self.update_html_text('answer_text', text)
         self.grades_table.set_sensitive(True)
-        
-        if not text:
-            answer_text = self.card.answer()
-        else:
-            answer_text = text
-        document = getattr(self,'answer_text').document
-        document.clear()
-        document.open_stream('text/html')
-        if answer_text.startswith('<html>'):
-            font_size = config()['font_size']
-            answer_text = answer_text.replace('*{font-size:30px;}',
-                             '*{font-size:%spx;}' % font_size)
-        document.write_stream(answer_text)
-        document.close_stream()
 
-    def update_question_text(self, clean=False):
-        """ Update question text. """
+    def update_html_text(self, widget_name, new_text = None, clean=False):
+        """ Update html text. """
 
-        document = getattr(self,'question_text').document
+        return_text = None
+        document = getattr(self, widget_name).document
         document.clear()
         document.open_stream('text/html')
         if not clean:
-            question_text = self.card.question()
-            if question_text.startswith('<html>'):
+            if new_text:
+                return_text = new_text
+            else:
+                if widget_name == 'question_text':
+                    return_text = self.card.question()
+                else:
+                    return_text = self.card.answer()
+            if return_text.startswith('<html>'):
                 font_size = config()['font_size']
-                question_text = question_text.replace('*{font-size:30px;}',
+                return_text = return_text.replace('*{font-size:30px;}',
                     '*{font-size:%spx;}' % font_size)
-            document.write_stream(question_text)
+            document.write_stream(return_text)
         else:
             document.write_stream("""<html><body></body></html>""")
         document.close_stream()
+        return return_text
 
     def update_dialog(self, redraw_all=True):
         """ Update Question and Answer fields. """
         
-        self.update_question_text()
+        self.update_html_text('question_text')
         self.show_answer()
 
 
