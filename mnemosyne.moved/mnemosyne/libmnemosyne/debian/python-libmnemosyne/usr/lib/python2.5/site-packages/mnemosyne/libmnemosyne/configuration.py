@@ -2,24 +2,24 @@
 # configuration.py <Peter.Bienstman@UGent.be>
 #
 
+import gettext
+_ = gettext.gettext
+
 import os
 import sys
+import uuid
 import locale
 import cPickle
 
-from mnemosyne.libmnemosyne.translator import _
-from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.libmnemosyne.component_manager import database
+from mnemosyne.libmnemosyne.exceptions import ConfigError, SaveError
 
 config_py = \
 """# Mnemosyne configuration file.
 
 # Upload server. Only change when prompted by the developers.
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/configuration.py
 upload_server = "xxxmnemosyne-proj.dyndns.org:80"
 upload_logs = False
-=======
-upload_server = "mnemosyne-proj.dyndns.org:80"
->>>>>>> upstream:mnemosyne/mnemosyne/libmnemosyne/configuration.py
 
 # Set to True to prevent you from accidentally revealing the answer
 # when clicking the edit button.
@@ -48,7 +48,6 @@ latex = "latex -interaction=nonstopmode"
 
 # Latex dvipng command.
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/configuration.py
 
 # default scheduler
 scheduler = "SM2"
@@ -56,36 +55,18 @@ scheduler = "SM2"
 # default database
 database = "sqlite"
 
-=======
->>>>>>> upstream:mnemosyne/mnemosyne/libmnemosyne/configuration.py
 """
 
-class Configuration(Component, dict):
+class Configuration(dict):
 
-    component_type = "config"
-
-    def __init__(self, component_manager):
-        Component.__init__(self, component_manager)
-        basedir = None
-        resource_limited = False
-
-    def activate(self):
-        self.determine_basedir()
-        self.fill_basedir()
-        self.load()
-        self.load_user_config()
-        self.correct_config()
-        
     def set_defaults(self):
         
         """Fill the config with default values.  Is called after every load,
-        since a new version of Mnemosyne might have introduced new keys.
+        since a new version of Mnemosyne might have introduced new keys."""
 
-        """
-        
         for key, value in \
             {"first_run": True, 
-             "path": _("default") + self.database().suffix,
+             "path": _("default") + database().suffix,
              "import_dir": self.basedir, 
              "import_format": "XML",
              "reset_learning_data_import": False,
@@ -94,7 +75,7 @@ class Configuration(Component, dict):
              "reset_learning_data_export": False,
              "import_img_dir": self.basedir, 
              "import_sound_dir": self.basedir,
-             "user_id": None,
+             "user_id": str(uuid.uuid4()),
              "upload_logs": True, 
              "upload_server": "mnemosyne-proj.dyndns.org:80",
              "log_index": 1, 
@@ -105,9 +86,8 @@ class Configuration(Component, dict):
              "list_font": None,
              "grade_0_items_at_once": 5,
              "randomise_new_cards": False,
-             "randomise_scheduled_cards": False,
              "card_type_name_of_last_added": "",
-             "tags_of_last_added": _("<default>"),
+             "categories_of_last_added": _("<default>"),
              "sort_column": None,
              "sort_order": None,
              "show_intervals": "never",
@@ -122,62 +102,68 @@ class Configuration(Component, dict):
              "latex_postamble": "\\end{document}", 
              "latex": "latex -interaction=nonstopmode",
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
-             "active_plugins": set() # Plugin classes, not instances.
+             "theme_path": "/usr/share/pomni/hildon-UI/eternal",
+             "themes": ['eternal', 'rainbow'],
+             "imagedir": "/home/user/MyDocs/.images",
+             "scheduler": "SM2",
+             "database": "sqlite",
+             "fullscreen": True,
+             "font_size": 30.0,
+             "startup_with_review": False,
+             "active_plugins": set(), # plugin class
+             "times_loaded": 0
             }.items():
-
+            
             self.setdefault(key, value)
-
-        if not self["user_id"]:
-            import uuid
-            self["user_id"] = str(uuid.uuid4())
-
-        # Allow other plugins or frontend to set their configuration data.
-        for f in self.component_manager.get_all("hook",
-                                                "configuration_defaults"):
-            f.run()
 
     def load(self):
         try:
-            config_file = file(os.path.join(self.basedir,
-                                            "config"), 'rb')
+            config_file = file(os.path.join(self.basedir, "config"), 'rb')
             for key, value in cPickle.load(config_file).iteritems():
                 self[key] = value
             self.set_defaults()
         except:
-            from mnemosyne.libmnemosyne.utils import traceback_string
-            raise RuntimeError, _("Error in config:") \
-                  + "\n" + traceback_string()
+            raise ConfigError(stack_trace=True)
         
     def save(self):
         try:
-            config_file = file(os.path.join(self.basedir,
-                                            "config"), 'wb')
-            cPickle.dump(dict(self), config_file)
+            config_file = file(os.path.join(self.basedir, "config"), 'wb')
+            cPickle.dump(self, config_file)
         except:
-            from mnemosyne.libmnemosyne.utils import traceback_string
-            raise RuntimeError, _("Unable to save config file:") \
-                  + "\n" + traceback_string()
-
-    def determine_basedir(self):
-        exists = os.path.exists
-        join = os.path.join
+            raise SaveError
+            
+    def initialise(self, basedir=None):
         
+        """Typical initialisation sequence. Custom applications can modify this
+        as needed.
+        
+        """
+        
+        self.determine_basedir(basedir)
+        self.fill_basedir()
+        self.load()
+        self.load_user_config()
+        self.correct_config()
+
+    def determine_basedir(self, basedir):
         self.old_basedir = None
-        if self.basedir == None:
+        if basedir == None:
             home = os.path.expanduser("~")
             try:
                 home = home.decode(locale.getdefaultlocale()[1])
             except:
                 pass
             if sys.platform == "darwin":
-                self.old_basedir = join(home, ".mnemosyne")
-                self.basedir = join(home, "Library", "Mnemosyne")
-                if not exists(self.basedir) and \
-                       exists(self.old_basedir):
-                    self.migrate_basedir(self.old_basedir,
-                                         self.basedir)
+                self.old_basedir = os.path.join(home, ".mnemosyne")
+                self.basedir = os.path.join(home, "Library", "Mnemosyne")
+                if not os.path.exists(self.basedir) \
+                   and os.path.exists(self.old_basedir):
+                    self.migrate_basedir(self.old_basedir, self.basedir)
             else:
-                self.basedir = join(home, ".mnemosyne")
+                self.basedir = os.path.join(home, ".mnemosyne")
+        else:
+            self.basedir = basedir
+            
 
     def fill_basedir(self):
         
@@ -186,29 +172,22 @@ class Configuration(Component, dict):
         last version.
         
         """
-
-        exists = os.path.exists
-        join = os.path.join
         
         # Create paths.
-        if not exists(self.basedir):
+        if not os.path.exists(self.basedir):
             os.mkdir(self.basedir)
         for directory in ["history", "latex", "css", "plugins", "backups"]:
-            if not exists(join(self.basedir, directory)):
-                os.mkdir(join(self.basedir, directory))
+            if not os.path.exists(os.path.join(self.basedir, directory)):
+                os.mkdir(os.path.join(self.basedir, directory))
         # Create default configuration.
-        if not exists(join(self.basedir, "config")):
+        if not os.path.exists(os.path.join(self.basedir, "config")):
             self.save()
         # Create default config.py.
-        configfile = join(self.basedir, "config.py")
-        if not exists(configfile):
-            f = file(configfile, "w")
+        configfile = os.path.join(self.basedir, "config.py")
+        if not os.path.exists(configfile):
+            f = file(configfile, 'w')
             print >> f, config_py
             f.close()
-
-    def mediadir(self):
-        return os.path.join(self.config().basedir,
-                            os.path.basename(self["path"]) + "_media")
 
     def load_user_config(self):
         sys.path.insert(0, self.basedir)
@@ -240,8 +219,7 @@ class Configuration(Component, dict):
         # Recreate user id and log index from history folder in case the
         # config file was accidentally deleted.
         if self["log_index"] == 1:
-            join = os.path.join
-            _dir = os.listdir(unicode(join(self.basedir, "history")))
+            _dir = os.listdir(unicode(os.path.join(self.basedir, "history")))
             history_files = [x for x in _dir if x[-4:] == ".bz2"]
             history_files.sort()
             if history_files:

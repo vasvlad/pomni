@@ -1,0 +1,29 @@
+Format: 1.8
+Date: Thu, 04 Jun 2009 21:35:44 +0300
+Source: pomni
+Binary: pomni
+Architecture: source all
+Version: 0.2.0~beta2
+Distribution: unstable
+Urgency: low
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Changed-By: Ed Bartosh <bartosh@gmail.com>
+Description: 
+ pomni      - Learning tool based on spaced repetition technique
+Changes: 
+ pomni (0.2.0~beta2) unstable; urgency=low
+ .
+   * implemented input and review modes for clozed deletion card type (Max)
+   * implemented input and review modes for 2sided card type (Max)
+Checksums-Sha1: 
+ f90e0919fee7704f3d10c0687ed92a0b56a5b694 494 pomni_0.2.0~beta2.dsc
+ f85ae710db8c18a5342576aa342e6aac8c79b552 3016167 pomni_0.2.0~beta2.tar.gz
+ ab9138a27f4989c7c117cf43e822b98994ca1f85 1285108 pomni_0.2.0~beta2_all.deb
+Checksums-Sha256: 
+ 7bd3bae76a07d0055feb5fa50a8cfc75bb80055cba8c9bb9b5debc4ce4c6c041 494 pomni_0.2.0~beta2.dsc
+ 2f35e57256eec7a4af7d86c6dad1771fc39f508031a7d4829253bbe0520a1f73 3016167 pomni_0.2.0~beta2.tar.gz
+ 104fba44de6e47d5892145cf13b7b714bfdb296d62696d55ac7075a92c832a6d 1285108 pomni_0.2.0~beta2_all.deb
+Files: 
+ e9e94488a3be1344d175835ec10fdb35 494 user/education - pomni_0.2.0~beta2.dsc
+ 4f1b39bbb6fcab6409f139c226c8786e 3016167 user/education - pomni_0.2.0~beta2.tar.gz
+ db28ff97c6d0a2f56a4431bf6357e356 1285108 user/education - pomni_0.2.0~beta2_all.deb
