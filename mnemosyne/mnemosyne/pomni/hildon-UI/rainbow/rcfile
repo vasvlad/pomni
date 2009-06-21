@@ -182,7 +182,7 @@ style "question-area" {
 }
 widget "*.question_container" style "question-area"
 
-style "answer-viewport" {
+style "answer-container" {
     GtkButton::focus-line-width = 0
     GtkButton::inner-border = {2,2,5,5}
     engine "pixmap" {
@@ -194,7 +194,7 @@ style "answer-viewport" {
         }
     }
 }
-widget "*.answer_viewport" style "answer-viewport"
+widget "*.answer_container" style "answer-container"
 
 style "grade-button" {
     GtkButton::focus-line-width = 0
