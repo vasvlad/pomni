@@ -96,10 +96,6 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         # Delete card
         if self.card and self.card.fact:
             ui_controller_main().delete_current_fact()
-            # If it input mode and card was deleted  back to review
-            if fact != self.card.fact and \
-               self.switcher.get_current_page() == self.input:
-                self.switcher.set_current_page(self.review)
 
     def edit_card_cb(self, widget):
         """ Hook for edit card. """
@@ -197,12 +193,15 @@ class RainbowControllerReview(HildonUiControllerReview):
                 _("Database is empty!"), "OK")
             self.answer_container.set_sensitive(False)
             self.grades_table.set_sensitive(False)
+            self.review_toolbar_delete_card_button.set_sensitive(False)
             return
             
         self.card = scheduler().get_new_question(learn_ahead)
+        self.review_toolbar_delete_card_button.set_sensitive(False)
         
         if self.card:
             # Resize text and answer fields
+            self.review_toolbar_delete_card_button.set_sensitive(True)
             question_text = self.update_html_text('question_text')
             x,y, width, height, depth = self.question_text.window.get_geometry()
             if "<img src=" in question_text:
@@ -239,20 +238,23 @@ class RainbowControllerReview(HildonUiControllerReview):
         document = getattr(self, widget_name).document
         document.clear()
         document.open_stream('text/html')
-        if not clean:
+        if not clean: #Set new text
             if new_text:
                 return_text = new_text
             else:
-                if widget_name == 'question_text':
-                    return_text = self.card.question()
+                if self.card:
+                    if widget_name == 'question_text':
+                        return_text = self.card.question()
+                    else:
+                        return_text = self.card.answer()
                 else:
-                    return_text = self.card.answer()
+                    return_text = """<html><body></body></html>"""
             if return_text.startswith('<html>'):
                 font_size = config()['font_size']
                 return_text = return_text.replace('*{font-size:30px;}',
                     '*{font-size:%spx;}' % font_size)
             document.write_stream(return_text)
-        else:
+        else: #Clean text
             document.write_stream("""<html><body></body></html>""")
         document.close_stream()
         return return_text
