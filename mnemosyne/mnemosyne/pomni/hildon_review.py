@@ -193,6 +193,7 @@ class RainbowControllerReview(HildonUiControllerReview):
                 _("Database is empty!"), "OK")
             self.answer_container.set_sensitive(False)
             self.grades_table.set_sensitive(False)
+            self.review_toolbar_delete_card_button.set_sensitive(False)
             return
             
         self.card = scheduler().get_new_question(learn_ahead)
