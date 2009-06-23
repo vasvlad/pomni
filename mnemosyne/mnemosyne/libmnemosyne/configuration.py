@@ -105,6 +105,7 @@ class Configuration(dict):
              "theme_path": "/usr/share/pomni/hildon-UI/eternal",
              "themes": ['eternal', 'rainbow'],
              "imagedir": "/home/user/MyDocs/.images",
+             "sounddir": "/home/user/MyDocs/.sounds",
              "scheduler": "SM2",
              "database": "sqlite",
              "fullscreen": True,
