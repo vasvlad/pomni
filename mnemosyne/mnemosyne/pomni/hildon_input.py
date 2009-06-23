@@ -413,6 +413,28 @@ class RainbowControllerInput(HildonUiControllerInput):
             "Type TRANSLATION here...")
         self.cloze_text_w.get_buffer().set_text("Type TEXT here...")
 
+    def check_complete_input(self):
+        """ Check for non empty fields. """
+
+        cardtype_dict = {
+            _("Front-to-back only"): \
+            [self.question_text_w, self.answer_text_w],
+            _("Front-to-back and back-to-front"): \
+            [self.question_text_w, self.answer_text_w], 
+            _("Foreign word with pronunciation"): \
+            [self.foreign_text_w, self.pronun_text_w, self.translation_text_w],
+            _("Cloze deletion"): [self.cloze_text_w]}
+
+        pattern_list = ["Type %s here..." % item for item in ["ANSWER", \
+            "QUESTION", "FOREIGN", "PRONUNCIATION", "TRANSLATION", "TEXT"]]
+        pattern_list.append("")
+        result = True
+        for widget in cardtype_dict[self.card_type.name]:
+            start, end = widget.get_buffer().get_bounds()
+            if widget.get_buffer().get_text(start, end) in pattern_list:
+                return False
+        return result
+
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from cardtype column. """
 
@@ -423,6 +445,10 @@ class RainbowControllerInput(HildonUiControllerInput):
     def add_card_cb(self, widget):
         """ Add card to database. """
 
+        # check for empty fields
+        if not self.check_complete_input():
+            return
+
         try:
             fact_data = self.get_widgets_data()
         except ValueError:
@@ -432,14 +458,12 @@ class RainbowControllerInput(HildonUiControllerInput):
         if self.update: #Update card
             main.update_related_cards(self.fact, fact_data, self.card_type, \
                 [self.category_name_w.get_text()], None)
+            self.switcher.set_current_page(self.review)
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, 0, [\
                 self.category_name_w.get_text()], True)
+            self.clear_widgets()
                 
-        self.clear_widgets()
-        if self.update:
-            self.switcher.set_current_page(self.review)
-
     def change_category_cb(self, widget):
         """ Change current category. """
 
