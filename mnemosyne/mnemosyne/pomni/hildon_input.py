@@ -267,16 +267,18 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Initialization items of input window. """
 
         signals = ["add_card", "input_to_main_menu", "change_card_type",
-            "add_picture", "select_item", "close_image_selection_dialog",
-            "change_category", "create_new_category", "clear_text",
-            "show_add_category_block", "hide_add_category_block"]
+        "add_picture", "select_item", "close_media_selection_dialog",
+        "change_category", "create_new_category", "clear_text","add_sound",
+        "show_add_category_block", "hide_add_category_block"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
         self.categories_list = []
-        self.images_liststore = gtk.ListStore(str, gtk.gdk.Pixbuf)
-        self.iconview_widget.set_model(self.images_liststore)
-        self.iconview_widget.set_pixbuf_column(1)
+        #liststore = [text, type, filename, dirname, pixbuf]
+        self.liststore = gtk.ListStore(str, str, str, str, gtk.gdk.Pixbuf)
+        self.iconview_widget.set_model(self.liststore)
+        self.iconview_widget.set_pixbuf_column(4)
+        self.iconview_widget.set_text_column(0)
         self.set_card_type()
         self.layout()
 
@@ -286,7 +288,8 @@ class RainbowControllerInput(HildonUiControllerInput):
                            self.pronun_text_w, self.foreign_text_w,
                            self.translation_text_w, self.cloze_text_w):
                 widget.set_property("hildon-input-mode", 'full')
-        except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
+        except (TypeError, AttributeError):
+        # stock gtk doesn't have hildon properties
             pass # so, skip silently
 
     def activate(self, fact = None):
@@ -309,15 +312,15 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         if self.card_type:        
             cardtype_dict = {
-                _("Front-to-back only"): 0,
-                _("Front-to-back and back-to-front"): 0, 
-                _("Foreign word with pronunciation"): 1,
-                _("Cloze deletion"): 2 }
+            _("Front-to-back only"): 0,
+            _("Front-to-back and back-to-front"): 0, 
+            _("Foreign word with pronunciation"): 1,
+            _("Cloze deletion"): 2 }
             selectors_dict = {
-                _("Front-to-back only"): "front_to_back_mode_selector_w",
-                _("Front-to-back and back-to-front"):"both_way_mode_selector_w", 
-                _("Foreign word with pronunciation"):"three_side_mode_selector_w",
-                _("Cloze deletion"): "cloze_mode_selector_w"}
+            _("Front-to-back only"): "front_to_back_mode_selector_w",
+            _("Front-to-back and back-to-front"):"both_way_mode_selector_w", 
+            _("Foreign word with pronunciation"):"three_side_mode_selector_w",
+            _("Cloze deletion"): "cloze_mode_selector_w"}
             self.card_type_switcher_w.set_current_page(\
                 cardtype_dict[self.card_type.name])
             self.w_tree.get_widget(selectors_dict[self.card_type.name])\
@@ -392,7 +395,7 @@ class RainbowControllerInput(HildonUiControllerInput):
                        ('t', self.translation_text_w),
                        ('p', self.pronun_text_w)]
         elif self.card_type.name ==  _("Cloze deletion"):
-            widgets = [('text', cloze_text_w)]
+            widgets = [('text', self.cloze_text_w)]
         else:
             widgets = [('q', self.question_text_w),
                        ('a', self.answer_text_w)]
@@ -406,7 +409,8 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.answer_text_w.get_buffer().set_text("Type ANSWER here...")
         self.foreign_text_w.get_buffer().set_text("Type FOREIGN here...")
         self.pronun_text_w.get_buffer().set_text("Type PRONUNCIATION here...")
-        self.translation_text_w.get_buffer().set_text("Type TRANSLATION here...")
+        self.translation_text_w.get_buffer().set_text(\
+            "Type TRANSLATION here...")
         self.cloze_text_w.get_buffer().set_text("Type TEXT here...")
 
     def change_card_type_cb(self, widget):
@@ -426,7 +430,7 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         main = ui_controller_main()
         if self.update: #Update card
-            main.update_related_cards(self.fact, fact_data, self.card_type,\
+            main.update_related_cards(self.fact, fact_data, self.card_type, \
                 [self.category_name_w.get_text()], None)
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, 0, [\
@@ -467,6 +471,8 @@ class RainbowControllerInput(HildonUiControllerInput):
         """ Show image selection dialog. """
 
         def resize_image(pixbuf):
+            """ Resize image to 64x64 px. """
+
             x_ratio = pixbuf.get_width() / 64.0
             y_ratio = pixbuf.get_height() / 64.0
             new_width = int(pixbuf.get_width() / x_ratio)
@@ -474,7 +480,7 @@ class RainbowControllerInput(HildonUiControllerInput):
             return pixbuf.scale_simple(\
                 new_width, new_height, gtk.gdk.INTERP_BILINEAR)
 
-        self.images_liststore.clear()
+        self.liststore.clear()
         self.imagedir = config()['imagedir']
         if not os.path.exists(self.imagedir):
             self.imagedir = "./images" # on Desktop
@@ -483,34 +489,61 @@ class RainbowControllerInput(HildonUiControllerInput):
                     _("'Images' directory does not exist!"), "OK")
                 return                
         if os.listdir(self.imagedir):
-            self.image_selection_dialog.show()
-            for file in os.listdir(self.imagedir):
-                if os.path.isfile(os.path.join(self.imagedir, file)):
+            self.media_selection_dialog.show()
+            for fname in os.listdir(self.imagedir):
+                if os.path.isfile(os.path.join(self.imagedir, fname)):
                     pixbuf = gtk.gdk.pixbuf_new_from_file(\
-                        os.path.join(self.imagedir, file))
-                    self.images_liststore.append([file, resize_image(pixbuf)])
-            #self.image_selection_dialog.show()
+                        os.path.join(self.imagedir, fname))
+                    self.liststore.append(["", "img", fname, \
+                        self.imagedir, resize_image(pixbuf)])
         else:
             ui_controller_main().widget.information_box(\
                 _("There are no files in 'Images' directory!"), "OK")
             
     def select_item_cb(self, widget):
         """ 
-        Set html-text with image path when user
-        select image from image selection dialog. 
+        Set html-text with media path and type when user
+        select media filefrom media selection dialog. 
         """
 
-        self.image_selection_dialog.hide()
+        self.media_selection_dialog.hide()
         item_index = self.iconview_widget.get_selected_items()[0]
-        item_text = self.images_liststore.get_value(\
-            self.images_liststore.get_iter(item_index),0)
-        self.question_text_w.get_buffer().set_text(\
-            "<img src='%s'>" % os.path.join(self.imagedir, item_text))
-      
-    def close_image_selection_dialog_cb(self, widget):
+        item_type = self.liststore.get_value(\
+            self.liststore.get_iter(item_index), 1)
+        item_fname = self.liststore.get_value(\
+            self.liststore.get_iter(item_index), 2)
+        item_dirname = self.liststore.get_value(\
+            self.liststore.get_iter(item_index), 3)
+        self.question_text_w.get_buffer().set_text("<%s src='%s'>" % \
+            (item_type, os.path.join(item_dirname, item_fname)))
+    
+    def add_sound_cb(self, widget):
+        """ Show sound selection dialog. """
+
+        self.liststore.clear()
+        self.sounddir = config()['sounddir']
+        if not os.path.exists(self.sounddir):
+            self.sounddir = "./sounds" # on Desktop
+            if not os.path.exists(self.sounddir):
+                ui_controller_main().widget.information_box(\
+                    _("'Sounds' directory does not exist!"), "OK")
+                return                
+        if os.listdir(self.sounddir):
+            self.media_selection_dialog.show()
+            for fname in os.listdir(self.sounddir):
+                if os.path.isfile(os.path.join(self.sounddir, fname)):
+                    sound_logo_file = os.path.join(\
+                        config()["theme_path"], "soundlogo.png")
+                    pixbuf = gtk.gdk.pixbuf_new_from_file(sound_logo_file)
+                    self.liststore.append([fname, "sound", fname, self.sounddir, pixbuf])
+        else:
+            ui_controller_main().widget.information_box(\
+                _("There are no files in 'Sounds' directory!"), "OK")
+
+    def close_media_selection_dialog_cb(self, widget):
         """ Close image selection dialog. """
 
-        self.image_selection_dialog.hide()
+        self.media_selection_dialog.hide()
 
     def clear_text_cb(self, widget, event):
         """ Clear textview content. """
