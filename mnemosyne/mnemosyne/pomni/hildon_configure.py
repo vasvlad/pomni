@@ -60,6 +60,7 @@ class HildonUiControllerConfigure(HildonBaseController):
         self.config_mode_label_theme.set_text("Current theme: " + \
             theme.capitalize())
         self.config_mode_entry_imagedir.set_text(config()['imagedir'])
+        self.config_mode_entry_sounddir.set_text(config()['sounddir'])
         self.switcher.set_current_page(self.config)
 
     def change_fullscreen_cb(self, widget):
@@ -106,8 +107,6 @@ class HildonUiControllerConfigure(HildonBaseController):
     def config_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
-        if self.modified:
-            self.configuration.save()
         if self.theme_modified:
             ui_controller_main().widget.information_box(\
                 _("Restart the program to take effect!"), "OK")
@@ -115,9 +114,13 @@ class HildonUiControllerConfigure(HildonBaseController):
             ui_controller_main().widget.information_box(\
                 _("Image dir does not exist! Select another."), "OK")
             return
-        else:
-            self.configuration['imagedir'] = self.config_mode_entry_imagedir.get_text()
-            self.configuration.save()
+        if not os.path.exists(self.config_mode_entry_sounddir.get_text()):
+            ui_controller_main().widget.information_box(\
+                _("Sound dir does not exist! Select another."), "OK")
+            return
+        self.configuration['imagedir'] = self.config_mode_entry_imagedir.get_text()
+        self.configuration['sounddir'] = self.config_mode_entry_sounddir.get_text()
+        self.configuration.save()
         self.switcher.set_current_page(self.main_menu)
 
 EternalControllerConfigure = HildonUiControllerConfigure
