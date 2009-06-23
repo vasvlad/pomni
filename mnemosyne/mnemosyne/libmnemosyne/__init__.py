@@ -91,7 +91,6 @@ class Mnemosyne(Component):
         # Loading the database should come after all user plugins have been
         # loaded, since these could be needed e.g. for a card type in the
         # database.
-        self.check_lockfile()
         self.load_database(filename)
         self.log().started_program()
         self.log().started_scheduler()
@@ -211,3 +210,5 @@ class Mnemosyne(Component):
         self.component_manager.deactivate_all()
         unregister_component_manager(user_id)
         
+        
+

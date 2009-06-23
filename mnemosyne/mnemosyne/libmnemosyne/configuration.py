@@ -14,12 +14,7 @@ config_py = \
 """# Mnemosyne configuration file.
 
 # Upload server. Only change when prompted by the developers.
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/configuration.py
-upload_server = "xxxmnemosyne-proj.dyndns.org:80"
-upload_logs = False
-=======
 upload_server = "mnemosyne-proj.dyndns.org:80"
->>>>>>> upstream:mnemosyne/mnemosyne/libmnemosyne/configuration.py
 
 # Set to True to prevent you from accidentally revealing the answer
 # when clicking the edit button.
@@ -48,16 +43,6 @@ latex = "latex -interaction=nonstopmode"
 
 # Latex dvipng command.
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/configuration.py
-
-# default scheduler
-scheduler = "SM2"
-
-# default database
-database = "sqlite"
-
-=======
->>>>>>> upstream:mnemosyne/mnemosyne/libmnemosyne/configuration.py
 """
 
 class Configuration(Component, dict):
