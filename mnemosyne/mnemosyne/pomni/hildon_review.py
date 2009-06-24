@@ -44,7 +44,7 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         HildonBaseController.__init__(self, w_tree)
         UiControllerReview.__init__(self)
 
-        signals = ["get_answer", "grade", "delete_card", "edit_card"]
+        signals = ["get_answer", "grade", "delete_card", "edit_card", "play_sound"]
 
         self.w_tree.signal_autoconnect(\
             {"review_to_main_menu": self.to_main_menu_cb})
@@ -113,6 +113,11 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         """ Unknown """
 
         self.card = None
+
+    def play_sound_cb(self, widget):
+        """ Paly/stop sound for sound card. """
+
+        pass
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -263,8 +268,13 @@ class RainbowControllerReview(HildonUiControllerReview):
         """ Update Question and Answer fields. """
         
         self.update_html_text('question_text')
-        self.show_answer()
+        #self.show_answer()
 
+    def play_sound_cb(self, widget):
+        """ Play/stop listening. """
+
+        # It's eq SoundManager.stop
+        self.update_html_text('question_text')
 
 
 
