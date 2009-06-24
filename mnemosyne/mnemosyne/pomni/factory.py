@@ -36,11 +36,12 @@ class ConfigHook(Component):
 
     def run(self):
         for key, value in {\
-            "theme_path": "/usr/share/pomni/hildon-UI/eternal",
+            "theme_path": "/usr/share/pomni/hildon-UI/rainbow",
             "themes": ['eternal', 'rainbow'],
             "fullscreen": True,
             "font_size": 30.0,
             "startup_with_review": False,
+            "upload_logs": False,
             "times_loaded": 0}.iteritems():
 
             self.config().setdefault(key, value)
@@ -64,7 +65,8 @@ def app_factory(interface=None):
                                   "GetTextTranslator"))
 
         app.components.append(("pomni.main", "HildonMainWidget"))
-        app.components.append(("pomni.review", "HildonReviewWidget"))
+        app.components.append(("mnemosyne.libmnemosyne.ui_components.review_widget",
+                               "ReviewWidget"))
 
         return app
 

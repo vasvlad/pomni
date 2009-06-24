@@ -32,12 +32,8 @@ from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 
 _ = gettext.gettext
 
-class HildonReviewWidget(ReviewWidget):
-    instantiate = Component.LATER
-
-
-class EternalReviewWidget(HildonReviewWidget):
-    """Hildon Review Widget."""
+class RainbowReviewWidget(ReviewWidget):
+    """Rainbow theme: Review Widget."""
 
     def activate(self):
         self.w_tree = self.main_widget().w_tree

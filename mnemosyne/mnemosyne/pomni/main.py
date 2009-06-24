@@ -140,7 +140,16 @@ class HildonMainWidget(MainWidget):
 
     def review_(self, widget=None):
         """Activate review mode."""
-        self.review_widget().activate()
+
+        mode = 'review'
+        if mode not in self.widgets:
+            self.activate_mode(mode)
+            #self.component_manager.get_current("ui_controller_review").activate()
+            self.component_manager.register(self.widgets[mode])
+            print '>>>', self.widgets[mode], type(self.widgets[mode])
+            #self.ui_controller_review().new_question()
+        else:
+            self.activate_mode(mode)
 
     def exit_(self, widget):
         """Exit from main gtk loop."""
@@ -155,7 +164,8 @@ class HildonMainWidget(MainWidget):
                 # Set Spliter (GtkVpan) to pseudo medium
                 self.spliter_trigger = False
                 pseudo_medium = (widget.allocation.height - 70)/2 - 20
-                self.spliter.set_property('position', pseudo_medium)
+                self.w_tree.get_widget("spliter").set_property('position', 
+                    pseudo_medium)
             else:
                 self.spliter_trigger = True
 
