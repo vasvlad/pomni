@@ -5,7 +5,10 @@ import gst
 
 class SoundPlayer(Filter):
     def __init__(self):
+        self.name = "soundmanager"
+        self.fname = ""
         self.player = gst.element_factory_make("playbin", "player")
+        self.player.set_property("volume", 8)
         self.state = "stopped"
         bus = self.player.get_bus()
         bus.add_signal_watch()
@@ -24,18 +27,24 @@ class SoundPlayer(Filter):
             err, debug = message.parse_error()
             print "SoundPlayer:error: %s" % err, debug
 
-    def play(self, fname):
+    def play(self, fname=None):
         """ Play or stop playing. """
 
         if self.state == "stopped":
-            self.player.set_property("uri", "file://" + fname)
+            if fname:
+                self.fname = fname
+            self.player.set_property("uri", "file://" + self.fname)
             self.player.set_state(gst.STATE_PLAYING)
             self.state = "playing"
         else:
-            self.player.set_state(gst.STATE_NULL)
-            self.state = "stopped"
-            
-        
+            self.stop()
+
+    def stop(self):
+        """ Stop playing. """
+
+        self.player.set_state(gst.STATE_NULL)
+        self.state = "stopped"
+                    
     def run(self, text, fact):
         """ Filter hook. """
 
