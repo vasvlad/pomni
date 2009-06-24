@@ -1,8 +1,7 @@
 # Mnemosyne configuration file.
 
 # Upload server. Only change when prompted by the developers.
-upload_server = "xxxxmnemosyne-proj.dyndns.org:80"
-upload_logs = False
+upload_server = "mnemosyne-proj.dyndns.org:80"
 
 # Set to True to prevent you from accidentally revealing the answer
 # when clicking the edit button.
@@ -16,21 +15,19 @@ backups_to_keep = 5
 # minutes, and midnight corresponds to 0.
 day_starts_at = 3
 
-# Latex preamble.
-latex_preamble = """
-\documentclass[12pt]{article}
-\pagestyle{empty}
-\begin{document}
-"""
+# Latex preamble. Note that for the pre- and postamble you need to
+# use double slashes instead of single slashes here, to have them
+# escaped when Python reads them in.
+latex_preamble = """\\documentclass[12pt]{article}
+\\pagestyle{empty}
+\\begin{document}"""
 
 # Latex postamble.
-latex_postamble = "\end{document}"
+latex_postamble = "\\end{document}"
 
 # Latex command.
-latex = "latex"
+latex = "latex -interaction=nonstopmode"
 
 # Latex dvipng command.
 dvipng = "dvipng -D 200 -T tight tmp.dvi"
 
-# path to default theme
-theme_path = "./hildon-UI/eternal"
