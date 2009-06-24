@@ -295,6 +295,7 @@ class RainbowControllerInput(HildonUiControllerInput):
     def activate(self, fact = None):
         """ Start input window. """
         
+        self.soundmanager.stop()
         self.fact = fact
         self.update = fact is not None
 
