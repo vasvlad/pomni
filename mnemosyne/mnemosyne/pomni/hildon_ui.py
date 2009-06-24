@@ -34,7 +34,7 @@ import urlparse
 
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.component_manager import config, \
-    ui_controller_main, database
+    ui_controller_main, database, filters
 
 _ = gettext.gettext
 
@@ -64,6 +64,10 @@ class HildonBaseController():
         """Attributes initialization."""
 
         self.w_tree = w_tree
+        for filter in filters():
+            if hasattr(filter, 'name'):
+                if filter.name == "soundmanager":
+                    self.soundmanager = filter
 
     def __getattr__(self, name):
         """Lazy get widget as an attribute."""
