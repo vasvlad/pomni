@@ -75,7 +75,6 @@ class HildonMainWidget(MainWidget):
         self.switcher.set_property('show_tabs', False)
         self.window = w_tree.get_widget("window")
 
-        self.spliter_trigger = True
         self.question_flag = False
         # fullscreen mode
         if self.config()['fullscreen']:
@@ -87,7 +86,7 @@ class HildonMainWidget(MainWidget):
         # connect signals to methods
         self.window.connect("delete_event", self.exit_)
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ("window_state", "window_keypress", "size_allocate")]))
+            for sig in ("window_state", "window_keypress")]))
 
         self.w_tree = w_tree
         print 'HildonUI.activate finished', self
@@ -156,19 +155,6 @@ class HildonMainWidget(MainWidget):
         gtk.main_quit()
 
     # gtk window callbacks
-    def size_allocate_cb(self, widget, user_data):
-        """ Checking window size """
-
-        if (self.switcher.get_current_page() == self.review):
-            if (self.spliter_trigger):
-                # Set Spliter (GtkVpan) to pseudo medium
-                self.spliter_trigger = False
-                pseudo_medium = (widget.allocation.height - 70)/2 - 20
-                self.w_tree.get_widget("spliter").set_property('position', 
-                    pseudo_medium)
-            else:
-                self.spliter_trigger = True
-
     def window_keypress_cb(self, widget, event, *args):
         """Key pressed."""
 
