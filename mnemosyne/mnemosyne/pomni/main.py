@@ -143,10 +143,7 @@ class HildonMainWidget(MainWidget):
         mode = 'review'
         if mode not in self.widgets:
             self.activate_mode(mode)
-            #self.component_manager.get_current("ui_controller_review").activate()
             self.component_manager.register(self.widgets[mode])
-            print '>>>', self.widgets[mode], type(self.widgets[mode])
-            #self.ui_controller_review().new_question()
         else:
             self.activate_mode(mode)
 
