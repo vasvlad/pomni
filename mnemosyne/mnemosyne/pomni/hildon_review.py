@@ -95,6 +95,7 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         fact = self.card.fact
         # Delete card
         if self.card and self.card.fact:
+            self.soundmanager.stop()
             ui_controller_main().delete_current_fact()
 
     def edit_card_cb(self, widget):
@@ -106,7 +107,8 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
     def grade_cb(self, widget):
         """ Call grade of answer. """
-
+        
+        self.soundmanager.stop()
         self.grade_answer(int(widget.name[-1]))
 
     def clear(self):
@@ -267,14 +269,14 @@ class RainbowControllerReview(HildonUiControllerReview):
     def update_dialog(self, redraw_all=True):
         """ Update Question and Answer fields. """
         
+        self.soundmanager.play()
         self.update_html_text('question_text')
         #self.show_answer()
 
     def play_sound_cb(self, widget):
         """ Play/stop listening. """
 
-        # It's eq SoundManager.stop
-        self.update_html_text('question_text')
+        self.soundmanager.play()
 
 
 
