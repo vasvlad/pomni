@@ -26,9 +26,7 @@ Hildon UI. Review widgets.
 
 import gettext
 
-from mnemosyne.libmnemosyne.component import Component
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
-
 
 _ = gettext.gettext
 

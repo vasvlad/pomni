@@ -89,7 +89,6 @@ class HildonMainWidget(MainWidget):
             for sig in ("window_state", "window_keypress")]))
 
         self.w_tree = w_tree
-        print 'HildonUI.activate finished', self
 
     def activate_mode(self, mode):
         """Activate mode in lazy way."""
