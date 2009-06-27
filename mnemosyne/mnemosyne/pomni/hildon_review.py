@@ -269,8 +269,8 @@ class RainbowControllerReview(HildonUiControllerReview):
     def update_dialog(self, redraw_all=True):
         """ Update Question and Answer fields. """
         
-        self.soundmanager.play()
-        self.update_html_text('question_text')
+        #self.soundmanager.play()
+        #self.update_html_text('question_text')
         #self.show_answer()
 
     def play_sound_cb(self, widget):

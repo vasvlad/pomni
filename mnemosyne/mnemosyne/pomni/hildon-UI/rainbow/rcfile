@@ -527,6 +527,7 @@ style "snd-button" {
     }
 }
 widget "*.input_mode_snd_button" style "snd-button"
+widget "*.review_mode_snd_button" style "snd-button"
 
 style "input-mode-prev-category-button" {
     GtkButton::focus-line-width = 0
