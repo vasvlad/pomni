@@ -295,14 +295,14 @@ class RainbowControllerInput(HildonUiControllerInput):
     def activate(self, fact = None):
         """ Start input window. """
         
-        self.soundmanager.stop()
+        self.stop_playing()
         self.fact = fact
         self.update = fact is not None
 
         self.update_categories()
         self.clear_widgets()
         if fact: # If enter from Review mode
-            self.soundmanager.stop()
+            self.stop_playing()
             self.card_type = fact.card_type
             self.layout()
             self.set_widgets_data(fact)
@@ -452,7 +452,7 @@ class RainbowControllerInput(HildonUiControllerInput):
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from cardtype column. """
         
-        self.soundmanager.stop()
+        self.stop_playing()
         self.clear_widgets()
         self.show_snd_container()
         self.set_card_type()
@@ -480,7 +480,7 @@ class RainbowControllerInput(HildonUiControllerInput):
                 self.category_name_w.get_text()], True)
             self.clear_widgets()
 
-        self.soundmanager.stop()
+        self.stop_playing()
         self.show_snd_container()
 
     def change_category_cb(self, widget):
@@ -523,7 +523,7 @@ class RainbowControllerInput(HildonUiControllerInput):
             return pixbuf.scale_simple(\
                 new_width, new_height, gtk.gdk.INTERP_BILINEAR)
 
-        self.soundmanager.stop()
+        self.stop_playing()
         self.liststore.clear()
         self.imagedir = config()['imagedir']
         if not os.path.exists(self.imagedir):
@@ -566,7 +566,7 @@ class RainbowControllerInput(HildonUiControllerInput):
     def add_sound_cb(self, widget):
         """ Show sound selection dialog. """
 
-        self.soundmanager.stop()
+        self.stop_playing()
         self.liststore.clear()
         self.sounddir = config()['sounddir']
         if not os.path.exists(self.sounddir):
@@ -587,11 +587,30 @@ class RainbowControllerInput(HildonUiControllerInput):
             ui_controller_main().widget.information_box(\
                 _("There are no files in 'Sounds' directory!"), "OK")
 
+    def stop_playing(self):
+        """ Stop playing audiofile. """
+
+        if self.soundmanager:
+            self.input_mode_snd_button.set_active(False)
+            self.soundmanager.stop()
+
     def preview_sound_in_input_cb(self, widget):
         """ Preview sound in input mode. """
-        start, end = self.question_text_w.get_buffer().get_bounds()
-        text = self.question_text_w.get_buffer().get_text(start, end)
-        self.soundmanager.play(self.soundmanager.parse_fname(text))
+
+        if widget.get_active():
+            start, end = self.question_text_w.get_buffer().get_bounds()
+            text = self.question_text_w.get_buffer().get_text(start, end)
+            if not self.soundmanager:
+                from pomni.sound import SoundPlayer
+                self.soundmanager = SoundPlayer()
+            self.soundmanager.play(self.soundmanager.parse_fname(text), self)
+        else:
+            self.stop_playing()
+
+    def update_indicator(self):
+        """ Set non active state for widget. """
+
+        self.input_mode_snd_button.set_active(False)
 
     def close_media_selection_dialog_cb(self, widget):
         """ Close image selection dialog. """
@@ -619,7 +638,7 @@ class RainbowControllerInput(HildonUiControllerInput):
     def input_to_main_menu_cb(self, widget):
         """ Returns to main menu. """
 
-        self.soundmanager.stop()
+        self.stop_playing()
         self.switcher.set_current_page(self.main_menu)
 
 

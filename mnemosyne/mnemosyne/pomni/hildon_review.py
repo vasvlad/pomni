@@ -96,7 +96,7 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         fact = self.card.fact
         # Delete card
         if self.card and self.card.fact:
-            self.soundmanager.stop()
+            self.stop_playing()
             ui_controller_main().delete_current_fact()
 
     def edit_card_cb(self, widget):
@@ -109,7 +109,7 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
     def grade_cb(self, widget):
         """ Call grade of answer. """
         
-        self.soundmanager.stop()
+        self.stop_playing()
         self.grade_answer(int(widget.name[-1]))
 
     def clear(self):
@@ -119,7 +119,10 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
     def preview_sound_in_review_cb(self, widget):
         """ Paly/stop sound for sound card. """
+        pass
 
+    def stop_playing(self):
+        """ Stop playing audiofile. """
         pass
 
     def review_to_main_menu(self, widget):
@@ -273,7 +276,7 @@ class RainbowControllerReview(HildonUiControllerReview):
 
     def update_dialog(self, redraw_all=True):
         """ Update Question and Answer fields. """
-
+    
         self.update_html_text('question_text')
         self.show_answer()
 
@@ -291,20 +294,46 @@ class RainbowControllerReview(HildonUiControllerReview):
             self.question_container.hide()
             self.review_mode_snd_container.set_size_request(params[2], 16)
             self.review_mode_snd_container.show()
+            self.review_mode_snd_button.set_active(True)
+            self.start_playing(self.sndtext)
         elif "img src=" in text:
             self.question_container.set_size_request(params[2], 260)
             self.show_answer("<html><p align=center style='margin-top:16px;\
                 font-size:20;'>Press to get answer</p></html>")
 
+    def stop_playing(self):
+        """ Stop playing audiofile. """
+
+        if self.soundmanager:
+            self.review_mode_snd_button.set_active(False)
+            self.soundmanager.stop()
+
+    def start_playing(self, text):
+        """ Start playing audiofile. """
+
+        if not self.soundmanager:
+            from pomni.sound import SoundPlayer
+            self.soundmanager = SoundPlayer()
+        self.review_mode_snd_button.set_active(True)
+        self.soundmanager.play(self.soundmanager.parse_fname(text), self)
+
     def preview_sound_in_review_cb(self, widget):
         """ Play/stop listening. """
 
-        self.soundmanager.play(self.soundmanager.parse_fname(self.sndtext))
+        if widget.get_active():
+            self.start_playing(self.sndtext)
+        else:
+            self.stop_playing()
+
+    def update_indicator(self):
+        """ Set non active state for widget. """
+
+        self.review_mode_snd_button.set_active(not self.review_mode_snd_button.get_active())
 
     def review_to_main_menu_cb(self, widget):
         """ Returns to main menu. """
 
-        self.soundmanager.stop()
+        self.stop_playing()
         self.switcher.set_current_page(self.main_menu)
 
 
