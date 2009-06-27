@@ -27,7 +27,6 @@ UI Factory. Creates UI objects
 from mnemosyne.libmnemosyne.component_manager import component_manager
 from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
 from mnemosyne.libmnemosyne.renderers.text import TextRenderer
-from pomni.sound import SoundPlayer
 
 def ui_factory(interface=None):
     """ Create UI(View in terms of MVC) """
@@ -48,7 +47,6 @@ def ui_factory(interface=None):
     
         from pomni.hildon_ui import HildonUI
         component_manager.register("renderer", HtmlHildon())
-        component_manager.register("filter", SoundPlayer())
         return HildonUI()
 
     # add next gui here
