@@ -269,7 +269,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         signals = ["add_card", "input_to_main_menu", "change_card_type",
         "add_picture", "select_item", "close_media_selection_dialog",
         "change_category", "create_new_category", "clear_text","add_sound",
-        "show_add_category_block", "hide_add_category_block"]
+        "show_add_category_block", "hide_add_category_block", "preview_sound"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
@@ -306,7 +306,20 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.layout()
             self.set_widgets_data(fact)
         
+        self.show_snd_container()
         self.switcher.set_current_page(self.input)
+
+    def show_snd_container(self):
+        """ Shows or hides snd container. """
+        
+        start, end = self.question_text_w.get_buffer().get_bounds()
+        text = self.question_text_w.get_buffer().get_text(start, end)
+        if "sound src=" in text:
+            self.input_mode_question_container.hide()
+            self.input_mode_snd_container.show()
+        else:
+            self.input_mode_question_container.show()
+            self.input_mode_snd_container.hide()
 
     def layout (self):
         """ Switches to neccessary input page. It depends on card_type. """
@@ -331,7 +344,6 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.sound_content_button.set_sensitive(\
                 not cardtype_dict[self.card_type.name])
                 
-
     def set_card_type(self):
         """ Set current card type. """
 
@@ -438,7 +450,8 @@ class RainbowControllerInput(HildonUiControllerInput):
 
     def change_card_type_cb(self, widget):
         """ Changes cardtype when user choose it from cardtype column. """
-
+        
+        self.soundmanager.stop()
         self.clear_widgets()
         self.set_card_type()
         self.layout()
@@ -464,7 +477,10 @@ class RainbowControllerInput(HildonUiControllerInput):
             main.create_new_cards(fact_data, self.card_type, 0, [\
                 self.category_name_w.get_text()], True)
             self.clear_widgets()
-                
+
+        self.soundmanager.stop()
+        self.show_snd_container()
+
     def change_category_cb(self, widget):
         """ Change current category. """
 
@@ -505,6 +521,7 @@ class RainbowControllerInput(HildonUiControllerInput):
             return pixbuf.scale_simple(\
                 new_width, new_height, gtk.gdk.INTERP_BILINEAR)
 
+        self.soundmanager.stop()
         self.liststore.clear()
         self.imagedir = config()['imagedir']
         if not os.path.exists(self.imagedir):
@@ -539,12 +556,17 @@ class RainbowControllerInput(HildonUiControllerInput):
             self.liststore.get_iter(item_index), 2)
         item_dirname = self.liststore.get_value(\
             self.liststore.get_iter(item_index), 3)
-        self.question_text_w.get_buffer().set_text("<%s src='%s'>" % \
-            (item_type, os.path.join(item_dirname, item_fname)))
+        question_text = "<%s src='%s'>" % \
+            (item_type, os.path.join(item_dirname, item_fname))
+        self.question_text_w.get_buffer().set_text(question_text)
+        if item_type == "sound":
+            self.sndtext = question_text
+        self.show_snd_container()
     
     def add_sound_cb(self, widget):
         """ Show sound selection dialog. """
 
+        self.soundmanager.stop()
         self.liststore.clear()
         self.sounddir = config()['sounddir']
         if not os.path.exists(self.sounddir):
@@ -564,6 +586,11 @@ class RainbowControllerInput(HildonUiControllerInput):
         else:
             ui_controller_main().widget.information_box(\
                 _("There are no files in 'Sounds' directory!"), "OK")
+
+    def preview_sound_cb(self, widget):
+        """ Preview sound in input mode. """
+
+        self.soundmanager.play(self.soundmanager.parse_fname(self.sndtext))
 
     def close_media_selection_dialog_cb(self, widget):
         """ Close image selection dialog. """
@@ -591,6 +618,7 @@ class RainbowControllerInput(HildonUiControllerInput):
     def input_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
+        self.soundmanager.stop()
         self.switcher.set_current_page(self.main_menu)
 
 
