@@ -516,6 +516,18 @@ style "input-mode-close-add-category-block-button" {
 }
 widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
 
+style "snd-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "sound_preview.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.input_mode_snd_button" style "snd-button"
+
 style "input-mode-prev-category-button" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
