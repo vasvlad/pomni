@@ -200,25 +200,27 @@ class RainbowControllerReview(HildonUiControllerReview):
     def new_question(self, learn_ahead=False):
         """ Show new question. """
 
+        # Disable widgets
         self.grades_table.set_sensitive(False)
+        self.answer_container.set_sensitive(False)
+        self.review_toolbar_delete_card_button.set_sensitive(False)
+        self.review_toolbar_edit_card_button.set_sensitive(False)
+
+        # If database is empty
         if not database().card_count():
             self.manage_containers("")
             self.update_html_text('question_text', clean=True)
             self.update_html_text('answer_text', clean=True)
-            self.answer_container.set_sensitive(False)
-            self.grades_table.set_sensitive(False)
-            self.review_toolbar_delete_card_button.set_sensitive(False)
-            self.grades_table.set_sensitive(False)
             ui_controller_main().widget.information_box(\
                 _("Database is empty!"), "OK")
             return
             
         self.card = scheduler().get_new_question(learn_ahead)
-        self.review_toolbar_delete_card_button.set_sensitive(False)
         
         if self.card:
-            # Resize text and answer fields
+            self.answer_container.set_sensitive(True)
             self.review_toolbar_delete_card_button.set_sensitive(True)
+            self.review_toolbar_edit_card_button.set_sensitive(True)
             question_text = self.update_html_text('question_text')
             self.manage_containers(question_text)
         else:
@@ -226,11 +228,12 @@ class RainbowControllerReview(HildonUiControllerReview):
                   _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
                 self.new_question(True)
             else:
-                ui_controller_main().widget.information_box(\
-                    _("Finished!"), "OK")
+                self.manage_containers("")
                 self.update_html_text('question_text', clean=True)
                 self.update_html_text('answer_text', clean=True)
-                self.answer_container.set_sensitive(False)
+                self.grades_table.set_sensitive(False)
+                ui_controller_main().widget.information_box(\
+                    _("Finished!"), "OK")
         self.grades_table.set_sensitive(False)
 
     def show_answer(self, text=None):
