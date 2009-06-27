@@ -1,15 +1,15 @@
-from mnemosyne.libmnemosyne.filter import Filter
 import re
 import os
 import gst
 
-class SoundPlayer(Filter):
+class SoundPlayer:
     def __init__(self):
-        self.name = "soundmanager"
+        """ Init variables. """
+
         self.fname = ""
+        self.parent = None
         self.player = gst.element_factory_make("playbin", "player")
         self.player.set_property("volume", 8)
-        self.stopped = True
         bus = self.player.get_bus()
         bus.add_signal_watch()
         bus.enable_sync_message_emission()
@@ -18,43 +18,31 @@ class SoundPlayer(Filter):
     def on_message(self, bus, message):
         """ On system message. """
 
-        t = message.type
-        if t == gst.MESSAGE_EOS:
+        mtype = message.type
+        if mtype == gst.MESSAGE_EOS:
             self.player.set_state(gst.STATE_NULL)
-            self.stopped = True
-        elif t == gst.MESSAGE_ERROR:
+            self.parent.update_indicator()
+        elif mtype == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
             print "SoundPlayer:error: %s" % err, debug
 
-    def play(self, fname=None):
+    def play(self, fname, parent):
         """ Play or stop playing. """
 
-        if self.stopped:
-            if fname:
-                self.fname = fname
-            self.player.set_property("uri", "file://" + self.fname)
-            self.player.set_state(gst.STATE_PLAYING)
-            self.stopped = False
-        else:
-            self.stop()
+        self.parent = parent # parens is a class, which call this function
+        self.fname = fname
+        self.player.set_state(gst.STATE_NULL)
+        self.player.set_property("uri", "file://" + self.fname)
+        self.player.set_state(gst.STATE_PLAYING)
 
     def stop(self):
         """ Stop playing. """
 
         self.player.set_state(gst.STATE_NULL)
-        self.stopped = True
 
     def parse_fname(self, text):
         """ Returns filename to play. """
 
         return os.path.abspath(re.search(r"'[^']+'", text).group()[1:-1])
         
-
-    def run(self, text, fact):
-        """ Filter hook. """
-
-        if "sound src=" in text:
-            self.play(self.parse_fname(text))
-        return text
-
