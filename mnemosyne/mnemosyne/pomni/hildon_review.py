@@ -44,10 +44,11 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
         HildonBaseController.__init__(self, w_tree)
         UiControllerReview.__init__(self)
 
-        signals = ["get_answer", "grade", "delete_card", "edit_card", "play_sound"]
+        signals = ["get_answer", "grade", "delete_card", \
+            "edit_card", "preview_sound_in_review", "review_to_main_menu"]
 
-        self.w_tree.signal_autoconnect(\
-            {"review_to_main_menu": self.to_main_menu_cb})
+        #self.w_tree.signal_autoconnect(\
+        #    {"review_to_main_menu": self.to_main_menu_cb})
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
 
@@ -116,10 +117,14 @@ class HildonUiControllerReview(HildonBaseController, UiControllerReview):
 
         self.card = None
 
-    def play_sound_cb(self, widget):
+    def preview_sound_in_review_cb(self, widget):
         """ Paly/stop sound for sound card. """
 
         pass
+
+    def review_to_main_menu(self, widget):
+        pass
+
 
 
 class EternalControllerReview(HildonUiControllerReview):
@@ -195,12 +200,17 @@ class RainbowControllerReview(HildonUiControllerReview):
     def new_question(self, learn_ahead=False):
         """ Show new question. """
 
+        self.grades_table.set_sensitive(False)
         if not database().card_count():
-            ui_controller_main().widget.information_box(\
-                _("Database is empty!"), "OK")
+            self.manage_containers("")
+            self.update_html_text('question_text', clean=True)
+            self.update_html_text('answer_text', clean=True)
             self.answer_container.set_sensitive(False)
             self.grades_table.set_sensitive(False)
             self.review_toolbar_delete_card_button.set_sensitive(False)
+            self.grades_table.set_sensitive(False)
+            ui_controller_main().widget.information_box(\
+                _("Database is empty!"), "OK")
             return
             
         self.card = scheduler().get_new_question(learn_ahead)
@@ -210,15 +220,7 @@ class RainbowControllerReview(HildonUiControllerReview):
             # Resize text and answer fields
             self.review_toolbar_delete_card_button.set_sensitive(True)
             question_text = self.update_html_text('question_text')
-            x,y, width, height, depth = self.question_text.window.get_geometry()
-            if "<img src=" in question_text:
-                self.question_container.set_size_request(width, 260)
-                self.show_answer("<html><p align=center style='margin-top:16px;\
-                    font-size:20;'>Press to get answer</p></html>")
-            else:
-                self.question_container.set_size_request(width, 30)
-                self.show_answer("<html><p align=center style='margin-top:72px;\
-                    font-size:20;'>Press to get answer</p></html>")
+            self.manage_containers(question_text)
         else:
             if not ui_controller_main().widget.question_box(
                   _("Learn ahead of schedule?"), _("No"), _("Yes"), ""):
@@ -234,7 +236,6 @@ class RainbowControllerReview(HildonUiControllerReview):
     def show_answer(self, text=None):
         """ Show card answer. """
 
-        self.answer_container.set_sensitive(True)
         self.update_html_text('answer_text', text)
         self.grades_table.set_sensitive(True)
 
@@ -268,16 +269,39 @@ class RainbowControllerReview(HildonUiControllerReview):
 
     def update_dialog(self, redraw_all=True):
         """ Update Question and Answer fields. """
-        
-        #self.soundmanager.play()
-        #self.update_html_text('question_text')
-        #self.show_answer()
 
-    def play_sound_cb(self, widget):
+        self.update_html_text('question_text')
+        self.show_answer()
+
+    def manage_containers(self, text):
+        """ Shows or hides snd container. """
+
+        self.question_container.show()
+        self.review_mode_snd_container.hide()
+        params = self.question_text.window.get_geometry()
+        self.question_container.set_size_request(params[2], 16)
+        self.show_answer("<html><p align=center style='margin-top:72px;\
+            font-size:20;'>Press to get answer</p></html>")
+        if "sound src=" in text:
+            self.sndtext = text
+            self.question_container.hide()
+            self.review_mode_snd_container.set_size_request(params[2], 16)
+            self.review_mode_snd_container.show()
+        elif "img src=" in text:
+            self.question_container.set_size_request(params[2], 260)
+            self.show_answer("<html><p align=center style='margin-top:16px;\
+                font-size:20;'>Press to get answer</p></html>")
+
+    def preview_sound_in_review_cb(self, widget):
         """ Play/stop listening. """
 
-        self.soundmanager.play()
+        self.soundmanager.play(self.soundmanager.parse_fname(self.sndtext))
 
+    def review_to_main_menu_cb(self, widget):
+        """ Returns to main menu. """
+
+        self.soundmanager.stop()
+        self.switcher.set_current_page(self.main_menu)
 
 
 # Local Variables:
