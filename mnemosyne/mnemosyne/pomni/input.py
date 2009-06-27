@@ -170,7 +170,7 @@ class RainbowInputWidget(UiComponent):
 
         self.categories_liststore.clear()
         categories = dict([(i, name) for (i, name) in \
-            enumerate(database().category_names())])
+            enumerate(self.database().category_names())])
         if categories.values():
             for category in sorted(categories.values()):
                 self.categories_liststore.append([category])
