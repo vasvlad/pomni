@@ -33,8 +33,18 @@ _ = gettext.gettext
 class RainbowReviewWidget(ReviewWidget):
     """Rainbow theme: Review Widget."""
 
-    def activate(self):
+    def __init__(self, component_manager):
+        ReviewWidget.__init__(self, component_manager)
+        self.menu = 0
+        self.switcher = self.main_widget().switcher
         self.w_tree = self.main_widget().w_tree
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) \
+                for sig in ["review_to_main_menu"]]))
+
+
+    def activate(self):
+        print 'review widget: activate'
 
     def enable_edit_current_card(self, enabled):
         print 'enable_edit_current_card'
@@ -86,6 +96,11 @@ class RainbowReviewWidget(ReviewWidget):
 
     def update_status_bar(self, message=None):
         print 'update_status_bar'
+
+    # callbacks
+    def review_to_main_menu_cb(self, widget):
+        """Return to main menu."""
+        self.switcher.set_current_page(self.menu)
 
 
 ################# old design #####################################
