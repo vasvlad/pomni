@@ -36,21 +36,6 @@ from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 _ = gettext.gettext
 
 
-class HildonUiException(Exception):
-    """ Exception hook """
-
-    def __init__(self, w_tree, exception):
-        """Show Warning Window."""
-
-        dialog = w_tree.get_widget("information_dialog")
-        w_tree.get_widget("information_dialog_label").set_text(\
-            '\n' + "  " + exception + "  " + '\n')
-        dialog.run()
-        dialog.hide()
-
-        Exception.__init__(self)
-
-
 class HildonMainWidget(MainWidget):
     """Hildon main widget."""
 
@@ -190,7 +175,8 @@ class HildonMainWidget(MainWidget):
         if not index == -1:
             return caption[:index] + caption[index+1:]
         return caption
-    
+
+
     # Main Widget API
     def information_box(self, message, button_caption='OK'):
         """Create Information message."""
