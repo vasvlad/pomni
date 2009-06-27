@@ -26,7 +26,7 @@ Hildon UI. Menu widgets.
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
-class EternalMenuWidget(UiComponent):
+class RainbowMenuWidget(UiComponent):
 
     review, input, configuration = range(1, 4)
 
