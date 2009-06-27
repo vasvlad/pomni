@@ -269,7 +269,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         signals = ["add_card", "input_to_main_menu", "change_card_type",
         "add_picture", "select_item", "close_media_selection_dialog",
         "change_category", "create_new_category", "clear_text","add_sound",
-        "show_add_category_block", "hide_add_category_block", "preview_sound"]
+        "show_add_category_block", "hide_add_category_block", "preview_sound_in_input"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
         self.cardtypes = {}
@@ -302,6 +302,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.update_categories()
         self.clear_widgets()
         if fact: # If enter from Review mode
+            self.soundmanager.stop()
             self.card_type = fact.card_type
             self.layout()
             self.set_widgets_data(fact)
@@ -453,6 +454,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         
         self.soundmanager.stop()
         self.clear_widgets()
+        self.show_snd_container()
         self.set_card_type()
         self.layout()
 
@@ -559,8 +561,6 @@ class RainbowControllerInput(HildonUiControllerInput):
         question_text = "<%s src='%s'>" % \
             (item_type, os.path.join(item_dirname, item_fname))
         self.question_text_w.get_buffer().set_text(question_text)
-        if item_type == "sound":
-            self.sndtext = question_text
         self.show_snd_container()
     
     def add_sound_cb(self, widget):
@@ -587,10 +587,11 @@ class RainbowControllerInput(HildonUiControllerInput):
             ui_controller_main().widget.information_box(\
                 _("There are no files in 'Sounds' directory!"), "OK")
 
-    def preview_sound_cb(self, widget):
+    def preview_sound_in_input_cb(self, widget):
         """ Preview sound in input mode. """
-
-        self.soundmanager.play(self.soundmanager.parse_fname(self.sndtext))
+        start, end = self.question_text_w.get_buffer().get_bounds()
+        text = self.question_text_w.get_buffer().get_text(start, end)
+        self.soundmanager.play(self.soundmanager.parse_fname(text))
 
     def close_media_selection_dialog_cb(self, widget):
         """ Close image selection dialog. """
@@ -616,7 +617,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         self.input_mode_add_category_block.hide()
 
     def input_to_main_menu_cb(self, widget):
-        """ Return to main menu. """
+        """ Returns to main menu. """
 
         self.soundmanager.stop()
         self.switcher.set_current_page(self.main_menu)
