@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jun 27 18:32:35 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Jun 27 21:41:07 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -308,41 +308,30 @@
                     <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkTable" id="review_mode_snd_container">
-                        <property name="n_columns">10</property>
+                        <property name="n_columns">3</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <widget class="GtkButton" id="review_mode_snd_button">
+                          <widget class="GtkCheckButton" id="review_mode_snd_button">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
                             <property name="response_id">0</property>
+                            <property name="active">True</property>
                             <signal name="clicked" handler="preview_sound_in_review"/>
                             <child>
                               <placeholder/>
                             </child>
                           </widget>
                           <packing>
-                            <property name="left_attach">3</property>
-                            <property name="right_attach">7</property>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="x_options">GTK_EXPAND</property>
                           </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </widget>
                     </child>
@@ -969,16 +958,9 @@
                                     <property name="n_columns">3</property>
                                     <property name="homogeneous">True</property>
                                     <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <placeholder/>
-                                    </child>
-                                    <child>
-                                      <widget class="GtkButton" id="input_mode_snd_button">
+                                      <widget class="GtkCheckButton" id="input_mode_snd_button">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
-                                        <property name="receives_default">True</property>
                                         <property name="response_id">0</property>
                                         <signal name="clicked" handler="preview_sound_in_input"/>
                                         <child>
@@ -988,7 +970,14 @@
                                       <packing>
                                         <property name="left_attach">1</property>
                                         <property name="right_attach">2</property>
+                                        <property name="x_options">GTK_EXPAND</property>
                                       </packing>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                    <child>
+                                      <placeholder/>
                                     </child>
                                   </widget>
                                 </child>

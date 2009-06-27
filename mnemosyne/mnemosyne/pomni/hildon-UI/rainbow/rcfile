@@ -209,7 +209,6 @@ style "grade0" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            #file = "grade0_small.png"
             file = "grade0_big.png"
         }
         image {
@@ -236,7 +235,6 @@ style "grade1" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            #file = "grade1_small.png"
             file = "grade1_big.png"
         }
         image {
@@ -263,7 +261,6 @@ style "grade2" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            #file = "grade2_small.png"
             file = "grade2_big.png"
         }
         image {
@@ -290,7 +287,6 @@ style "grade3" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            #file = "grade3_small.png"
             file = "grade3_big.png"
         }
         image {
@@ -317,7 +313,6 @@ style "grade4" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            #file = "grade4_small.png"
             file = "grade4_big.png"
         }
         image {
@@ -344,7 +339,6 @@ style "grade5" = "grade-button" {
         image {
             function = BOX
             state = NORMAL
-            #file = "grade5_small.png"
             file = "grade5_big.png"
         }
         image {
@@ -403,7 +397,6 @@ style "add-card-button" {
         image {
             function = BOX
 #            state = NORMAL
-#            file = "add_card_small.png"
             file = "add_card_big.png"
             stretch = TRUE
         }
@@ -527,14 +520,59 @@ style "input-mode-close-add-category-block-button" {
 widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
 
 style "snd-button" {
-    GtkButton::focus-line-width = 0
+    GtkCheckButton::indicator-size = 180
+    GtkCheckButton::focus-line-width = 0
     engine "pixmap" {
         image {
-            function = BOX
-            file = "sound_preview.png"
-            stretch = TRUE
+            function = CHECK
+            state = NORMAL
+            shadow = IN
+            file = "sound_preview_stop.png"
+        }
+        image {
+            function = CHECK
+            state = NORMAL
+            shadow = OUT
+            file = "sound_preview_play.png"
+        }
+        image {
+            function = CHECK
+            state = ACTIVE
+            shadow = IN
+            file = "sound_preview_stop.png"
+        }
+        image {
+            function = CHECK
+            state = ACTIVE
+            shadow = OUT
+            file = "sound_preview_play.png"
+        }
+        image {
+            function = CHECK
+            state = PRELIGHT
+            shadow = IN
+            file = "sound_preview_stop.png"
+        }
+        image {
+            function = CHECK
+            state = PRELIGHT
+            shadow = OUT
+            file = "sound_preview_play.png"
         }
     }
+#        image {
+#            function = BOX
+#            state = NORMAL
+#            file = "sound_preview_play.png"
+#            stretch = TRUE
+#        }
+#        image {
+#            function = BOX
+#            state = ACTIVE
+#            file = "sound_preview_stop.png"
+#            stretch = TRUE
+#        }
+#    }
 }
 widget "*.input_mode_snd_button" style "snd-button"
 widget "*.review_mode_snd_button" style "snd-button"
