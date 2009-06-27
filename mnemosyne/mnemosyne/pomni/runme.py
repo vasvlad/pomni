@@ -47,7 +47,7 @@ def parse_commandline(argv):
 
     parser.add_option("-u", "--ui", help="ui type", default="hildon")
     parser.add_option("-d", "--datadir", help="data directory")
-    parser.add_option("-m", "--mode", default="review", help="working mode. "\
+    parser.add_option("-m", "--mode", help="working mode. "\
                       "'main', 'input', 'review' or 'configure'")
 
     return parser.parse_args(argv)
