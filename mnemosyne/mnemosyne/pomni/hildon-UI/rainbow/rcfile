@@ -371,23 +371,28 @@ style "edit-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            #state = NORMAL
-            #file = "edit_card_small.png"
+            state = NORMAL
             file = "edit_card_big.png"
             stretch = TRUE
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "edit_card_big.png"
-#            stretch = TRUE
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "edit_card_big.png"
-#            stretch = TRUE
-#        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "edit_card_big_insensitive.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "edit_card_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "edit_card_big.png"
+            stretch = TRUE
+        }
     }
 }
 widget "*.review_toolbar_edit_card_button" style "edit-card-button"
@@ -423,23 +428,28 @@ style "delete-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "delete_card_small.png"
+            state = NORMAL
             file = "delete_card_big.png"
             stretch = TRUE
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "delete_card_big.png"
-#            stretch = TRUE
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "delete_card_big.png"
-#            stretch = TRUE
-#        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "delete_card_big_insensitive.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "delete_card_big.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "delete_card_big.png"
+            stretch = TRUE
+        }
     }
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
