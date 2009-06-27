@@ -9,7 +9,7 @@ class SoundPlayer(Filter):
         self.fname = ""
         self.player = gst.element_factory_make("playbin", "player")
         self.player.set_property("volume", 8)
-        self.state = "stopped"
+        self.stopped = True
         bus = self.player.get_bus()
         bus.add_signal_watch()
         bus.enable_sync_message_emission()
@@ -21,7 +21,7 @@ class SoundPlayer(Filter):
         t = message.type
         if t == gst.MESSAGE_EOS:
             self.player.set_state(gst.STATE_NULL)
-            self.state = "stopped"
+            self.stopped = True
         elif t == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
@@ -30,12 +30,12 @@ class SoundPlayer(Filter):
     def play(self, fname=None):
         """ Play or stop playing. """
 
-        if self.state == "stopped":
+        if self.stopped:
             if fname:
                 self.fname = fname
             self.player.set_property("uri", "file://" + self.fname)
             self.player.set_state(gst.STATE_PLAYING)
-            self.state = "playing"
+            self.stopped = False
         else:
             self.stop()
 
@@ -43,14 +43,18 @@ class SoundPlayer(Filter):
         """ Stop playing. """
 
         self.player.set_state(gst.STATE_NULL)
-        self.state = "stopped"
-                    
+        self.stopped = True
+
+    def parse_fname(self, text):
+        """ Returns filename to play. """
+
+        return os.path.abspath(re.search(r"'[^']+'", text).group()[1:-1])
+        
+
     def run(self, text, fact):
         """ Filter hook. """
 
         if "sound src=" in text:
-            fname = os.path.abspath(re.search(r"'[^']+'", text).group()[1:-1])
-            self.play(fname)
-            return "Press here to play/stop listening"
+            self.play(self.parse_fname(text))
         return text
 
