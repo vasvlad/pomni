@@ -38,8 +38,9 @@ class HildonUiControllerConfigure(HildonBaseController):
         """Initialization items of config window."""
 
         HildonBaseController.__init__(self, w_tree)
-        signals = ['change_fullscreen', 'change_font_size', \
-            'change_startup_with_review', 'change_theme', 'config_to_main_menu']
+        signals = ["change_fullscreen", "change_font_size", \
+            "change_startup_with_review", "change_theme", \
+            "config_to_main_menu", "change_font_size"]
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         self.modified = False
@@ -53,12 +54,8 @@ class HildonUiControllerConfigure(HildonBaseController):
             self.configuration['fullscreen'])
         self.checkbox_start_in_review_mode.set_active(
             self.configuration['startup_with_review'])
-        self.font_size_slider.set_value(self.configuration['font_size'])
-        self.label_text_size.set_text("Font size: " + \
-            self.font_size_slider.get_value().__int__().__str__())
-        theme = self.configuration['theme_path'].split("/")[-1]
-        self.config_mode_label_theme.set_text("Current theme: " + \
-            theme.capitalize())
+        self.current_size = int(self.configuration['font_size'])
+        self.change_font_size()
         self.config_mode_entry_imagedir.set_text(config()['imagedir'])
         self.config_mode_entry_sounddir.set_text(config()['sounddir'])
         self.switcher.set_current_page(self.config)
@@ -66,30 +63,44 @@ class HildonUiControllerConfigure(HildonBaseController):
     def change_fullscreen_cb(self, widget):
         """ Change Fullscreen parameter. """
 
-        self.modified = True
         self.configuration['fullscreen'] = \
             self.checkbox_fullscreen_mode.get_active()
 
-    def change_font_size_cb(self, widget, param1, param2):
+    def change_font_size_cb(self, widget):
         """ Change Font size parameter. """
 
-        self.modified = True
-        value = self.font_size_slider.get_value()
-        self.configuration['font_size'] = value
-        self.label_text_size.set_text("Font size: " + \
-            value.__int__().__str__())
+        # move to config?
+        min_size = 10
+        max_size = 60
+        if widget.name == "config_mode_decrease_font_size_buttton":
+            if self.current_size > min_size:
+                self.current_size -= 1
+        else:
+            if self.current_size < max_size:
+                self.current_size += 1
+        self.change_font_size()
+
+    def change_font_size(self):
+        """ Changes font size. """
+
+        document = getattr(self, 'font_size_example').document
+        document.clear()
+        document.open_stream('text/html')
+        text = """<html><style type="text/css"> *{font-size:%spx; \
+            text-align:center;}</style><body>Font size example \
+            </body></html>""" % self.current_size
+        document.write_stream(text)
+        document.close_stream()
 
     def change_startup_with_review_cb(self, widget):
         """ Change 'Startup with Review' parameter. """
 
-        self.modified = True
         self.configuration['startup_with_review'] = \
             self.checkbox_start_in_review_mode.get_active()
 
     def change_theme_cb(self, widget):
         """ Change current theme. """
 
-        self.theme_modified = True
         path_list = self.configuration["theme_path"].split("/")
         current_theme = path_list.pop()
         themes = self.configuration["themes"]
@@ -118,8 +129,11 @@ class HildonUiControllerConfigure(HildonBaseController):
             ui_controller_main().widget.information_box(\
                 _("Sound dir does not exist! Select another."), "OK")
             return
-        self.configuration['imagedir'] = self.config_mode_entry_imagedir.get_text()
-        self.configuration['sounddir'] = self.config_mode_entry_sounddir.get_text()
+        self.configuration['imagedir'] = \
+            self.config_mode_entry_imagedir.get_text()
+        self.configuration['sounddir'] = \
+            self.config_mode_entry_sounddir.get_text()
+        self.configuration['font_size'] = self.current_size
         self.configuration.save()
         self.switcher.set_current_page(self.main_menu)
 

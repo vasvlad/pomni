@@ -874,6 +874,8 @@ widget "*.vseparator1" style "vseparator"
 widget "*.vseparator2" style "vseparator"
 widget "*.review_mode_vseparator1" style "vseparator"
 widget "*.review_mode_vseparator2" style "vseparator"
+widget "*.config_mode_vseparator1" style "vseparator"
+widget "*.config_mode_vseparator2" style "vseparator"
 
 style "hseparator" {
     engine "pixmap" {
@@ -905,6 +907,7 @@ widget "*.input_mode_pronun_container" style "input-mode-textview-container"
 widget "*.input_mode_translate_container" style "input-mode-textview-container"
 widget "*.input_mode_cloze_container" style "input-mode-textview-container"
 widget "*.input_mode_new_category_entry_container" style "input-mode-textview-container"
+widget "*.config_mode_font_size_example_container" style "input-mode-textview-container"
 
 style "category-name-container" {
     engine "pixmap" {
@@ -933,7 +936,31 @@ widget "*.category_name_w" style "category-label"
 style "config-textsize-label" {
     font_name = "Nokia Sans Bold Italic 11.0"
 }
-widget "*.label_text_size" style "config-textsize-label"
+#widget "*.label_text_size" style "config-textsize-label"
+
+style "increase-font-size-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "increase_font_size.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_increase_font_size_buttton" style "increase-font-size-button"
+
+style "decrease-font-size-button" {
+    GtkButton::focus-line-width = 0
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "decrease_font_size.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_decrease_font_size_buttton" style "decrease-font-size-button"
 
 style "config-scales" {
     GtkScale::slider-length = 64
@@ -952,7 +979,7 @@ style "config-scales" {
         }
     }
 }
-widget "*.font_size_slider" style "config-scales"
+#widget "*.font_size_slider" style "config-scales"
 
 style "config-checkboxes" {
     font_name = "Nokia Sans Italic 11"
@@ -1002,12 +1029,13 @@ widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
 
 style "config-checkboxes-label" {
-    font_name = "Nokia Sans Italic 11"
+    font_name = "Nokia Sans 12"
 }
-widget "*.checkbox_fullscreen_mode.GtkLabel" style "config-checkboxes"
-widget "*.checkbox_start_in_review_mode.GtkLabel" style "config-checkboxes"
-widget "*.config_mode_label_theme" style "config-checkboxes"
-widget "*.config_mode_label_imagedir" style "config-checkboxes"
+widget "*.checkbox_fullscreen_mode.GtkLabel.*" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode.GtkLabel.*" style "config-checkboxes"
+#widget "*.config_mode_label_theme" style "config-checkboxes"
+widget "*.config_mode_label_imagedir.*" style "config-checkboxes"
+widget "*.config_mode_label_sounddir.*" style "config-checkboxes"
 
 style "config-button-theme" {
     GtkButton::focus-line-width = 0
@@ -1020,7 +1048,7 @@ style "config-button-theme" {
         }
     }
 }
-widget "*.config_mode_button_theme" style "config-button-theme"
+#widget "*.config_mode_button_theme" style "config-button-theme"
 
 style "imagedir-button" {
     GtkButton::focus-line-width = 0
@@ -1034,6 +1062,28 @@ style "imagedir-button" {
     }
 }
 widget "*.config_mode_button_imagedir" style "imagedir-button"
+
+style "textareas" {
+    font_name = "Nokia Sans 20"
+}
+widget "*.config_mode_entry_imagedir" style "textareas"
+widget "*.config_mode_entry_sounddir" style "textareas"
+
+style "textarea-container" {
+    xthickness = 5
+    ythickness = 5
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "textarea.png"
+            border = {12,12,12,12}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.config_mode_imagedir_container" style "textarea-container"
+widget "*.config_mode_sounddir_container" style "textarea-container"
+
 #----------------------------- Config mode ------------------
 
 
