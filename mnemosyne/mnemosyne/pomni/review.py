@@ -40,8 +40,8 @@ class RainbowReviewWidget(ReviewWidget):
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) \
-                for sig in ["review_to_main_menu"]]))
-
+                for sig in ["review_to_main_menu", "get_answer", 
+                    "grade", "delete_card", "edit_card"]]))
 
     def activate(self):
         """Activate review widget."""
@@ -77,7 +77,7 @@ class RainbowReviewWidget(ReviewWidget):
                  '*{font-size:%spx;}' % font_size)
         document.write_stream(text)
         document.close_stream()
- 
+
     def set_answer(self, text):
         print 'set_answer'
         
@@ -102,7 +102,9 @@ class RainbowReviewWidget(ReviewWidget):
         document.close_stream()
 
     def enable_grades(self, enabled): 
-        print 'enable_grades'
+        print 'enable_grades', enabled
+        self.w_tree.get_widget("grades_table").set_sensitive(enabled)
+
     
     def set_default_grade(self, grade):
         print 'set_default_grade'
@@ -123,6 +125,30 @@ class RainbowReviewWidget(ReviewWidget):
     def review_to_main_menu_cb(self, widget):
         """Return to main menu."""
         self.switcher.set_current_page(self.menu)
+
+    def get_answer_cb(self, widget):
+        """ Hook for showing a right answer. """
+
+        self.show_answer()
+
+    def delete_card_cb(self, widget):
+        """ Hook for delete card. """
+
+        # Delete card
+        if self.card and self.card.fact:
+            ui_controller_main().delete_current_fact()
+
+    def edit_card_cb(self, widget):
+        """ Hook for edit card. """
+
+        # Edit card
+        if self.card and self.card.fact:
+            ui_controller_main().edit_current_card()
+
+    def grade_cb(self, widget):
+        """ Call grade of answer. """
+
+        self.grade_answer(int(widget.name[-1]))
 
 
 ################# old design #####################################
