@@ -981,6 +981,13 @@ style "config-scales" {
 }
 #widget "*.font_size_slider" style "config-scales"
 
+style "config-checkboxes2" {
+    GtkCheckButton::indicator-size = 50
+    GtkCheckButton::indicator-spacing = 5
+    GtkCheckButton::focus-line-width = 0
+    engine "pixmap" {}
+}
+
 style "config-checkboxes" {
     font_name = "Nokia Sans Italic 11"
     GtkCheckButton::indicator-size = 50
@@ -1025,8 +1032,10 @@ style "config-checkboxes" {
         }
     }
 }
-widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
-widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+#widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+#widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes2"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes2"
 
 style "config-checkboxes-label" {
     font_name = "Nokia Sans 12"
