@@ -81,9 +81,9 @@ class RainbowInputWidget(UiComponent):
 
         # Create new card
         self.ui_controller_main().create_new_cards(fact_data, 
-            self.card_type, 0, [\
+            self.card_type, -1, [\
             self.categories.get_child().get_text()], True)
-        self.database().save(config()['path'])
+        self.database().save(self.config()['path'])
 
         # clear widgets
         for widget in ("question_box_text", "answer_box_text",
@@ -98,9 +98,11 @@ class RainbowInputWidget(UiComponent):
         cardtypes = dict([(card_type.id, card_type) \
             for card_type in self.card_types()])
        
-        selected_id = (int(self.cardtypes_widget.get_active()) + 1).__str__()
-        print 'cardtypes:', cardtypes, selected_id
-        self.card_type = cardtypes.get(selected_id)
+        selected_id = int(self.cardtypes_widget.get_active())
+        if selected_id == -1:
+            selected_id = 0
+        selected_id += 1
+        self.card_type = cardtypes.get(str(selected_id))
 
         # show prononsiation if needed
         self.w_tree.get_widget("pronun_box").set_property('visible',
@@ -112,9 +114,9 @@ class RainbowInputWidget(UiComponent):
         """ Get data from widgets. """
 
         fact = {}
-        question_widget = self.question_box_text
-        answer_widget = self.answer_box_text
-        pronunciation_widget = self.pronun_box_text
+        question_widget = self.w_tree.get_widget("question_box_text")
+        answer_widget = self.w_tree.get_widget("answer_box_text")
+        pronunciation_widget = self.w_tree.get_widget("pronun_box_text")
         if self.card_type.id == '3':
             widgets = [('f', question_widget), ('t', answer_widget), \
                 ('p', pronunciation_widget)]
