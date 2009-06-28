@@ -44,7 +44,8 @@ class RainbowReviewWidget(ReviewWidget):
 
 
     def activate(self):
-        print 'review widget: activate'
+        """Activate review widget."""
+        self.ui_controller_review().new_question()
 
     def enable_edit_current_card(self, enabled):
         print 'enable_edit_current_card'
@@ -65,8 +66,18 @@ class RainbowReviewWidget(ReviewWidget):
         print 'set_question_label'
         
     def set_question(self, text):
-        print 'set_question'
-        
+        print 'set_question', text
+        document = self.w_tree.get_widget("question_text").document
+        document.clear()
+        document.open_stream('text/html')
+        # Adapting for html
+        if text.startswith('<html>'):
+            font_size = self.config()['font_size']
+            text = text.replace('*{font-size:30px;}',
+                 '*{font-size:%spx;}' % font_size)
+        document.write_stream(text)
+        document.close_stream()
+ 
     def set_answer(self, text):
         print 'set_answer'
         
@@ -78,6 +89,17 @@ class RainbowReviewWidget(ReviewWidget):
 
     def update_show_button(self, text, default, enabled): 
         print 'update_show_button'
+        text = "<html><p align=center style='margin-top:35px; \
+            font-size:16;'>Press to get answer</p></html>"
+        self.w_tree.get_widget("answer_viewport").set_sensitive(True)
+        document = self.w_tree.get_widget("answer_text").document
+        document.clear()
+        document.open_stream('text/html')
+        font_size = self.config()['font_size']
+        text = text.replace('*{font-size:30px;}',
+                  '*{font-size:%spx;}' % font_size)
+        document.write_stream(text)
+        document.close_stream()
 
     def enable_grades(self, enabled): 
         print 'enable_grades'
