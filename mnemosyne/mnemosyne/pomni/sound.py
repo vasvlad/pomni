@@ -20,7 +20,7 @@ class SoundPlayer:
 
         mtype = message.type
         if mtype == gst.MESSAGE_EOS:
-            self.player.set_state(gst.STATE_NULL)
+            self.player.set_state(gst.STATE_PAUSED)
             self.parent.update_indicator()
         elif mtype == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
@@ -32,7 +32,6 @@ class SoundPlayer:
 
         self.parent = parent # parens is a class, which call this function
         self.fname = fname
-        self.player.set_state(gst.STATE_NULL)
         self.player.set_property("uri", "file://" + self.fname)
         self.player.set_state(gst.STATE_PLAYING)
 
