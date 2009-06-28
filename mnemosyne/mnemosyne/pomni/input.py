@@ -46,12 +46,13 @@ class RainbowInputWidget(UiComponent):
         self.w_tree.signal_autoconnect(\
              dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
         
+        self.cardtypes_widget = self.w_tree.get_widget('cardtypes')
         self.categories = self.w_tree.get_widget("categories")
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
         self.init_listboxes()
-        self.layout()
+        #self.layout()
 
         # Turn off hildon autocapitalization
         try:
@@ -95,9 +96,10 @@ class RainbowInputWidget(UiComponent):
 
         # set card types
         cardtypes = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
-        
-        selected_id = (int(self.cardtypes.get_active()) + 1).__str__()
+            for card_type in self.card_types()])
+       
+        selected_id = (int(self.cardtypes_widget.get_active()) + 1).__str__()
+        print 'cardtypes:', cardtypes, selected_id
         self.card_type = cardtypes.get(selected_id)
 
         # show prononsiation if needed
@@ -137,15 +139,14 @@ class RainbowInputWidget(UiComponent):
 
         # Fill Card-types list
         cardtypes = dict([(card_type.id, card_type) \
-            for card_type in card_types()])
-        cardtypes_widget = self.cardtypes
+            for card_type in self.card_types()])
         cardtypes_liststore = gtk.ListStore(str)
         for key in sorted(cardtypes.keys()):
             cardtypes_liststore.append([cardtypes.get(key).name])
-        cardtypes_widget.set_model(cardtypes_liststore)
-        cardtypes_widget.set_text_column(0)
+        self.cardtypes_widget.set_model(cardtypes_liststore)
+        self.cardtypes_widget.set_text_column(0)
         if cardtypes:
-            cardtypes_widget.get_child().set_text(\
+            self.cardtypes_widget.get_child().set_text(\
                 cardtypes.get(sorted(cardtypes.keys())[0]).name)
         self.card_type = cardtypes.get(sorted(cardtypes.keys())[0])
 
@@ -170,7 +171,7 @@ class RainbowInputWidget(UiComponent):
 
         self.categories_liststore.clear()
         categories = dict([(i, name) for (i, name) in \
-            enumerate(self.database().category_names())])
+            enumerate(self.database().tag_names())])
         if categories.values():
             for category in sorted(categories.values()):
                 self.categories_liststore.append([category])
