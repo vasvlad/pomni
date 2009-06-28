@@ -982,7 +982,7 @@ style "config-scales" {
 #widget "*.font_size_slider" style "config-scales"
 
 style "config-checkboxes2" {
-    GtkCheckButton::indicator-size = 50
+    GtkCheckButton::indicator-size = 72
     GtkCheckButton::indicator-spacing = 5
     GtkCheckButton::focus-line-width = 0
     engine "pixmap" {}
