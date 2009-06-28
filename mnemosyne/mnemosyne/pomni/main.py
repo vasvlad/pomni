@@ -86,6 +86,8 @@ class HildonMainWidget(MainWidget):
                                 locals(), [cname])
             widget = getattr(module, cname)(self.component_manager)
             self.widgets[mode] = widget
+            if mode == "review":
+                self.component_manager.register(widget)
 
         widget.activate()
 
@@ -123,13 +125,7 @@ class HildonMainWidget(MainWidget):
 
     def review_(self, widget=None):
         """Activate review mode."""
-
-        mode = 'review'
-        if mode not in self.widgets:
-            self.activate_mode(mode)
-            self.component_manager.register(self.widgets[mode])
-        else:
-            self.activate_mode(mode)
+        self.activate_mode('review')
 
     def exit_(self, widget):
         """Exit from main gtk loop."""
