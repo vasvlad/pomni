@@ -1,9 +1,17 @@
+pomni (0.2.0~beta4) unstable; urgency=low
+
+  * implemented sound support (Max)
+  * redisigned configuration mode (Max)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Mon, 29 Jun 2009 09:28:41 +0300
+
 pomni (0.2.0~beta3) unstable; urgency=low
 
   * new finger friendly layout of input mode (Max)
   * Fixed problem with delete function in input mode (#104, Vlad)
-  * UI changed - grade buttons become vertical
-  * Revined UI design in main, review and input modes
+  * UI changed - grade buttons become vertical (Max)
+  * Revined UI design in main, review and input modes (Max)
+  * implemented pictures support (Max)
 
  -- Ed Bartosh <bartosh@gmail.com>  Sun, 21 Jun 2009 20:36:30 +0300
 
