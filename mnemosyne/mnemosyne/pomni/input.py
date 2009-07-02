@@ -33,6 +33,7 @@ from mnemosyne.libmnemosyne.ui_component import UiComponent
 _ = gettext.gettext
 
 class RainbowInputWidget(UiComponent):
+    """Input mode widget for Rainbow theme."""
     
     menu, review = 0, 1
 
@@ -60,7 +61,8 @@ class RainbowInputWidget(UiComponent):
                            "pronun_box_text"):
                 self.w_tree.get_widget(widget).\
                     set_property("hildon-input-mode", 'full')
-        except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
+        # stock gtk doesn't have hildon properties
+        except (TypeError, AttributeError): 
             pass # so, skip silently
 
 
@@ -157,7 +159,8 @@ class RainbowInputWidget(UiComponent):
         """ Get data from widgets. """
 
         fact = {}
-        for edit_box, fact_key in self.edit_boxes.iteritems():
+        for edit_box, fact_key in \
+                self.w_tree.get_widget("edit_boxes").iteritems():
             start, end = edit_box.get_buffer().get_bounds()
             fact[fact_key] = edit_box.get_buffer().get_text(start, end)
 

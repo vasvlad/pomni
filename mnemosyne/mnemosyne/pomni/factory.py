@@ -28,10 +28,12 @@ from mnemosyne.libmnemosyne import Mnemosyne
 from mnemosyne.libmnemosyne.component import Component
 
 class ConfigHook(Component):
+    """Configuration hook."""
     component_type = 'hook'
     used_for = 'configuration_defaults'
 
     def run(self):
+        """Entry point."""
         for key, value in {\
             "theme_path": "/usr/share/pomni/hildon-UI/rainbow",
             "themes": ['eternal', 'rainbow'],
@@ -62,8 +64,9 @@ def app_factory(interface=None):
                                   "GetTextTranslator"))
         app.components.append(("pomni.renderers", "Html"))
         app.components.append(("pomni.main", "HildonMainWidget"))
-        app.components.append(("mnemosyne.libmnemosyne.ui_components.review_widget",
-                               "ReviewWidget"))
+        app.components.append(\
+            ("mnemosyne.libmnemosyne.ui_components.review_widget",
+             "ReviewWidget"))
 
         return app
 

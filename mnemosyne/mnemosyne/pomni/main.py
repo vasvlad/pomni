@@ -30,7 +30,6 @@ import gtk
 import gtk.glade
 import gtkhtml2
 
-from mnemosyne.libmnemosyne.ui_component import UiComponent
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
@@ -207,7 +206,6 @@ class HildonMainWidget(MainWidget):
         """Start Edit/Update window."""
         print 'run_edit_fact_dialog'
 
-
     def error_box(self, message):
         print 'error_box', message
     
@@ -229,9 +227,6 @@ class HildonMainWidget(MainWidget):
     def run_configuration_dialog(self):
         self.activate_mode('configuration')
 
-    def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        print 'run_edit_fact_dialog'
-    
     def run_card_appearance_dialog(self):
         print 'run_card_appearance_dialog'
 
