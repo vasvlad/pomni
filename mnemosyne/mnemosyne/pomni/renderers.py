@@ -4,7 +4,7 @@
 
 from mnemosyne.libmnemosyne.renderer import Renderer
 
-class HtmlHildon(Renderer):
+class Html(Renderer):
     
     def __init__(self, component_manager):
         Renderer.__init__(self, component_manager)
@@ -44,4 +44,17 @@ class HtmlHildon(Renderer):
             html += "<div id=\"%s\">%s</div>" % (field, s)
         html += "</td></tr></table></body></html>"
         return html
+
+class Text(Renderer):
+    def __init__(self, component_manager):
+        Renderer.__init__(self, component_manager)
+    
+    def render_card_fields(self, fact, fields):
+        txt = ''
+        for field in fields:
+            s = fact[field]
+            for f in self.filters():
+                s = f.run(s, fact)
+            txt += s
+        return txt
 

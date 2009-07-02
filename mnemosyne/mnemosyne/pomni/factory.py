@@ -24,9 +24,6 @@
 UI Factory. Creates UI objects
 """
 
-#from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
-#from mnemosyne.libmnemosyne.renderers.text import TextRenderer
-
 from mnemosyne.libmnemosyne import Mnemosyne
 from mnemosyne.libmnemosyne.component import Component
 
@@ -47,23 +44,23 @@ class ConfigHook(Component):
             self.config().setdefault(key, value)
 
 def app_factory(interface=None):
-    """UI factory. Return main ui object."""
+    """Mnemosyne application factory."""
 
     app = Mnemosyne()
     app.components.append(("pomni.factory", "ConfigHook"))
 
     if interface == 'cmd':
-        from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
+        #from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
 
-        component_manager.register("ui_controller_review",
-                                   CmdUiControllerReview())
-        component_manager.register("renderer", TextRenderer())
-        return CommandlineUI()
+        #component_manager.register("ui_controller_review",
+        #                           CmdUiControllerReview())
+        #component_manager.register("renderer", TextRenderer())
+        raise NotImplementedError('cmd ui has to be redesigned')
 
     if not interface or interface == "hildon":
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
                                   "GetTextTranslator"))
-
+        app.components.append(("pomni.renderers", "Html"))
         app.components.append(("pomni.main", "HildonMainWidget"))
         app.components.append(("mnemosyne.libmnemosyne.ui_components.review_widget",
                                "ReviewWidget"))
