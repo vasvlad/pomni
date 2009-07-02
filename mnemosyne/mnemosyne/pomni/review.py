@@ -54,16 +54,16 @@ class RainbowReviewWidget(ReviewWidget):
         print 'enable_delete_current_card'
         
     def enable_edit_deck(self, enable): 
-        print 'enable_edit_deck'
+        print 'enable_edit_deck', enable
         
     def question_box_visible(self, visible):
-        print 'question_box_visible'
+        print 'question_box_visible', visible
         
     def answer_box_visible(self, visible):
-        print 'answer_box_visible'
+        print 'answer_box_visible', visible
         
     def set_question_label(self, text):
-        print 'set_question_label'
+        print 'set_question_label', text
         
     def set_question(self, text):
         print 'set_question', text
@@ -79,7 +79,17 @@ class RainbowReviewWidget(ReviewWidget):
         document.close_stream()
 
     def set_answer(self, text):
-        print 'set_answer'
+        print 'set_answer', text
+        document = self.w_tree.get_widget('answer_text').document
+        document.clear()
+        document.open_stream('text/html')
+        if text.startswith('<html>'):
+            font_size = self.config()['font_size']
+            text = text.replace('*{font-size:30px;}',
+                             '*{font-size:%spx;}' % font_size)
+        document.write_stream(text)
+        document.close_stream()
+
         
     def clear_question(self): 
         print 'clear_question'
@@ -88,38 +98,39 @@ class RainbowReviewWidget(ReviewWidget):
         print 'clear_answer'
 
     def update_show_button(self, text, default, enabled): 
-        print 'update_show_button'
-        text = "<html><p align=center style='margin-top:35px; \
-            font-size:16;'>Press to get answer</p></html>"
-        self.w_tree.get_widget("answer_viewport").set_sensitive(True)
-        document = self.w_tree.get_widget("answer_text").document
-        document.clear()
-        document.open_stream('text/html')
-        font_size = self.config()['font_size']
-        text = text.replace('*{font-size:30px;}',
-                  '*{font-size:%spx;}' % font_size)
-        document.write_stream(text)
-        document.close_stream()
+        print 'update_show_button', text, default, enabled
+        self.w_tree.get_widget("answer_viewport").set_sensitive(enabled)
+        if enabled:
+            html = "<html><p align=center style='margin-top:35px; \
+                font-size:16;'>Press to %s</p></html>" % text
+            document = self.w_tree.get_widget("answer_text").document
+            document.clear()
+            document.open_stream('text/html')
+            font_size = self.config()['font_size']
+            html = html.replace('*{font-size:30px;}',
+                      '*{font-size:%spx;}' % font_size)
+            document.write_stream(html)
+            document.close_stream()
+
 
     def enable_grades(self, enabled): 
         print 'enable_grades', enabled
         self.w_tree.get_widget("grades_table").set_sensitive(enabled)
 
-    
     def set_default_grade(self, grade):
-        print 'set_default_grade'
+        print 'set_default_grade', grade
         
     def set_grades_title(self, text): 
-        print 'set_grades_title'
+        print 'set_grades_title', text
             
     def set_grade_text(self, grade, text): 
-        print 'set_grade_text'
+        print 'set_grade_text', text
             
     def set_grade_tooltip(self, grade, text): 
-        print 'set_grade_tooltip'
+        print 'set_grade_tooltip', grade, text
 
     def update_status_bar(self, message=None):
-        print 'update_status_bar'
+        print 'update_status_bar', message
 
     # callbacks
     def review_to_main_menu_cb(self, widget):
@@ -128,8 +139,8 @@ class RainbowReviewWidget(ReviewWidget):
 
     def get_answer_cb(self, widget):
         """ Hook for showing a right answer. """
-
-        self.show_answer()
+        print 'get_answer_cb'
+        self.ui_controller_review().show_answer()
 
     def delete_card_cb(self, widget):
         """ Hook for delete card. """
@@ -148,7 +159,8 @@ class RainbowReviewWidget(ReviewWidget):
     def grade_cb(self, widget):
         """ Call grade of answer. """
 
-        self.grade_answer(int(widget.name[-1]))
+        print 'grade_cb', int(widget.name[-1])
+        self.ui_controller_review().grade_answer(int(widget.name[-1]))
 
 
 ################# old design #####################################
@@ -192,14 +204,15 @@ class HildonUiControllerReview():
 
     def show_answer(self):
         """ Show answer in review window """
-        pass
-
+        self.ui_controller_review().show_answer()
 
     def grade_answer(self, grade):
         """ Grade the answer. """
 
-        scheduler().process_answer(self.card, grade)
-        self.new_question()
+        self.ui_controller_review().grade_answer(grade)
+
+        #scheduler().process_answer(self.card, grade)
+        #self.new_question()
 
     # Glade callbacks
 
