@@ -11,9 +11,10 @@ setup(name = "libmnemosyne",
     author = "Peter Bienstman",
     author_email = "Peter.Bienstman@UGent.be",
     license='GPL 2',
-    packages = [ "mnemosyne.libmnemosyne"] + ["mnemosyne.libmnemosyne.%s" % pkg \
-	for pkg in ["card_types", "databases", "file_formats", "filters", "loggers", 
-	"renderers", "schedulers", "ui_controllers_main", "ui_controllers_review"]
+    packages = [ "mnemosyne.libmnemosyne"] + ["mnemosyne.libmnemosyne.%s" \
+        % pkg for pkg in ["card_types", "databases", "file_formats", "filters",
+        "loggers", "plugins", "renderers", "schedulers", "ui_controllers_main",
+        "ui_controllers_review"]
     ],
     package_dir = {'mnemosyne.libmnemosyne': '', 'mnemosyne': 'debian'},
     classifiers = [
