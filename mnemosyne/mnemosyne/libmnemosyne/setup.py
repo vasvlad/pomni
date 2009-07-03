@@ -13,8 +13,8 @@ setup(name = "libmnemosyne",
     license='GPL 2',
     packages = [ "mnemosyne.libmnemosyne"] + ["mnemosyne.libmnemosyne.%s" \
         % pkg for pkg in ["card_types", "databases", "file_formats", "filters",
-        "loggers", "plugins", "renderers", "schedulers", "ui_controllers_main",
-        "ui_controllers_review"]
+        "loggers", "plugins", "renderers", "schedulers", "statistics_pages", 
+        "ui_controllers_main", "ui_controllers_review"]
     ],
     package_dir = {'mnemosyne.libmnemosyne': '', 'mnemosyne': 'debian'},
     classifiers = [
