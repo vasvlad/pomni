@@ -35,13 +35,10 @@ _ = gettext.gettext
 class RainbowInputWidget(UiComponent):
     """Input mode widget for Rainbow theme."""
     
-    menu, review = 0, 1
-
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
-        self.switcher = self.main_widget().switcher
 
         signals = ["add_card", "change_card_type", "input_to_main_menu"]
         self.w_tree.signal_autoconnect(\
@@ -70,7 +67,7 @@ class RainbowInputWidget(UiComponent):
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
-        self.switcher.set_current_page(self.menu)
+        self.main_widget().activate_mode("menu")
 
 
     def add_card_cb(self, widget):

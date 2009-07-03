@@ -35,8 +35,6 @@ class RainbowReviewWidget(ReviewWidget):
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
-        self.menu = 0
-        self.switcher = self.main_widget().switcher
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) \
@@ -135,7 +133,7 @@ class RainbowReviewWidget(ReviewWidget):
     # callbacks
     def review_to_main_menu_cb(self, widget):
         """Return to main menu."""
-        self.switcher.set_current_page(self.menu)
+        self.main_widget().activate_mode("menu")
 
     def get_answer_cb(self, widget):
         """ Hook for showing a right answer. """

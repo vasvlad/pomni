@@ -32,13 +32,10 @@ from mnemosyne.libmnemosyne.ui_component import UiComponent
 class ConfigurationWidget(UiComponent):
     """Hildon Configuration Widget."""
 
-    menu = 0
-
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
-        self.switcher = self.main_widget().switcher
 
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in ('change_fullscreen', 
@@ -119,7 +116,7 @@ class ConfigurationWidget(UiComponent):
         if self.theme_modified:
             self.main_widget().information_box(\
                 _("Restart the program to take effect!"), "OK")
-        self.switcher.set_current_page(self.menu)
+        self.main_widget().activate_mode("menu")
 
 EternalConfigurationWidget = ConfigurationWidget
 RainbowConfigurationWidget = ConfigurationWidget
