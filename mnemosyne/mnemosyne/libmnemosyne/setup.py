@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(name = "libmnemosyne",
     description='Mnemosyne core library',
@@ -11,11 +8,8 @@ setup(name = "libmnemosyne",
     author = "Peter Bienstman",
     author_email = "Peter.Bienstman@UGent.be",
     license='GPL 2',
-    packages = [ "mnemosyne.libmnemosyne"] + ["mnemosyne.libmnemosyne.%s" \
-        % pkg for pkg in ["card_types", "databases", "file_formats", "filters",
-        "loggers", "plugins", "renderers", "schedulers", "statistics_pages", 
-        "ui_compontents", "ui_controllers_main", "ui_controllers_review"]
-    ],
+    packages = [ "mnemosyne.libmnemosyne"] + \
+        ["mnemosyne.libmnemosyne.%s" % pkg for pkg in find_packages()],
     package_dir = {'mnemosyne.libmnemosyne': '', 'mnemosyne': 'debian'},
     classifiers = [
     'Development Status :: 3 - Alpha',
