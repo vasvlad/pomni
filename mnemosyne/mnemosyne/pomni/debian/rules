@@ -30,7 +30,7 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 	$(PYTHON) setup.py install --root=$(PREFIX)
-	cp $(PREFIX)/usr/lib/python2.5/site-packages/pomni/main.py $(PREFIX)/usr/bin/pomni
+	cp $(PREFIX)/usr/lib/python2.5/site-packages/pomni/runme.py $(PREFIX)/usr/bin/pomni
 	#rm $(PREFIX)/usr/lib/python2.5/site-packages/pomni/*.py
 
 binary-indep: build install
