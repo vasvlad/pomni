@@ -145,14 +145,14 @@ class RainbowReviewWidget(ReviewWidget):
 
         # Delete card
         if self.card and self.card.fact:
-            ui_controller_main().delete_current_fact()
+            self.ui_controller_main().delete_current_fact()
 
     def edit_card_cb(self, widget):
         """ Hook for edit card. """
 
         # Edit card
         if self.card and self.card.fact:
-            ui_controller_main().edit_current_card()
+            self.ui_controller_main().edit_current_card()
 
     def grade_cb(self, widget):
         """ Call grade of answer. """
