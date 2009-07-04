@@ -645,7 +645,6 @@ style "vseparator" {
         image {
             function = BOX
             file = "vseparator.png"
-            stretch = TRUE
         }
     }
 }
@@ -884,16 +883,6 @@ widget "*.categories_manager_dialog_button_close" style "question-dialog-button-
 
 
 #----------------------------- General ------------------
-style "main-switcher" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "nothing.png"
-        }
-    }
-}
-widget "*.switcher" style "main-switcher"
-
 # style for scrolls in Image selection dialog
 style "image-selection-dialog-scrollbars" {
     GtkRange::slider-width = 60
