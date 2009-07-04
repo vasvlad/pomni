@@ -41,17 +41,23 @@ class RainbowReviewWidget(ReviewWidget):
             dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in ["review_to_main_menu", "get_answer", "grade", 
                 "delete_card", "edit_card", "preview_sound_in_review"]]))
+
+        # Widgets as attributes
         self.question_container = self.w_tree.get_widget("question_container")
+        self.answer_container = self.w_tree.get_widget("answer_container")
+        self.container_width = self.w_tree.get_widget( \
+            "question_text").window.get_geometry()[2]
+        self.question_text = self.w_tree.get_widget("question_text")
+        self.answer_text = self.w_tree.get_widget("answer_text")
         self.sound_container = self.w_tree.get_widget( \
             "review_mode_snd_container")
         self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
-        self.container_width = self.w_tree.get_widget( \
-            "question_text").window.get_geometry()[2]
+        self.grades_table = self.w_tree.get_widget("grades_table")
 
-    def set_html_text(self, widget_name, text="<html><body> </body></html>"):
+    def set_html_text(self, widget, text="<html><body> </body></html>"):
         """Set text for html widget."""
 
-        document = self.w_tree.get_widget(widget_name).document
+        document = widget.document
         document.clear()
         document.open_stream('text/html')
         document.write_stream(text)
@@ -93,27 +99,27 @@ class RainbowReviewWidget(ReviewWidget):
             else:
                 self.question_container.set_size_request(self.container_width, 16)
             self.question_container.show()
-        self.set_html_text("question_text", text)
+        self.set_html_text(self.question_text, text)
 
     def set_answer(self, text):
         """Set answer."""
 
-        self.set_html_text("answer_text", text)
+        self.set_html_text(self.answer_text, text)
         
     def clear_question(self): 
         """Clear question text."""
 
-        self.set_html_text("question_text")
+        self.set_html_text(self.question_text)
         
     def clear_answer(self):
         """Clear answer text."""
 
-        self.set_html_text("answer_text")
+        self.set_html_text(self.answer_text)
         
     def update_show_button(self, text, default, enabled): 
         """Update show button."""
 
-        self.w_tree.get_widget("answer_container").set_sensitive(enabled)
+        self.answer_container.set_sensitive(enabled)
         if enabled:
             if self.next_is_image_card:
                 margin_top = 20
@@ -121,19 +127,19 @@ class RainbowReviewWidget(ReviewWidget):
                 margin_top = 70
             html = "<html><p align=center style='margin-top:%spx; \
                 font-size:20;'>%s</p></html>" % (margin_top, text)
-            self.set_html_text("answer_text", html)
+            self.set_html_text(self.answer_text, html)
 
     def enable_grades(self, enabled):
         """Enable grades."""
 
-        self.w_tree.get_widget("grades_table").set_sensitive(enabled)
+        self.grades_table.set_sensitive(enabled)
         self.enable_edit_current_card(enabled)
         self.enable_delete_current_card(enabled)
 
     def update_indicator(self):
         """Set non active state for widget."""
 
-        self.w_tree.get_widget("review_mode_snd_button").set_active(False)
+        self.sound_button.set_active(False)
 
     # callbacks
     def preview_sound_in_review_cb(self, widget):
