@@ -299,15 +299,11 @@
               <widget class="GtkVBox" id="vbox7">
                 <property name="visible">True</property>
                 <property name="border_width">10</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <property name="spacing">10</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkVBox" id="vbox8">
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="homogeneous">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkTable" id="review_mode_snd_container">
                         <property name="n_columns">3</property>
@@ -657,9 +653,7 @@
               <widget class="GtkVBox" id="vbox3">
                 <property name="visible">True</property>
                 <property name="border_width">6</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <property name="homogeneous">True</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkHBox" id="input_mode_change_category_block">
                     <property name="visible">True</property>
@@ -967,16 +961,12 @@
                           <widget class="GtkVBox" id="vbox1">
                             <property name="visible">True</property>
                             <property name="border_width">10</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">10</property>
                             <property name="homogeneous">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkVBox" id="vbox2">
                                 <property name="visible">True</property>
-                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                                 <property name="homogeneous">True</property>
-                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                                 <child>
                                   <widget class="GtkTable" id="input_mode_snd_container">
                                     <property name="visible">True</property>
@@ -1072,10 +1062,8 @@
                           <widget class="GtkVBox" id="vbox4">
                             <property name="visible">True</property>
                             <property name="border_width">10</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">10</property>
                             <property name="homogeneous">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkFrame" id="input_mode_foreign_container">
                                 <property name="visible">True</property>
@@ -1166,8 +1154,6 @@
                           <widget class="GtkVBox" id="vbox5">
                             <property name="visible">True</property>
                             <property name="border_width">10</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkFrame" id="input_mode_cloze_container">
                                 <property name="visible">True</property>
@@ -1517,9 +1503,7 @@
                   <widget class="GtkVBox" id="vbox9">
                     <property name="width_request">0</property>
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="spacing">5</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkHBox" id="hbox1">
                         <property name="visible">True</property>
@@ -1572,9 +1556,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox10">
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="spacing">5</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkHBox" id="hbox2">
                         <property name="visible">True</property>
@@ -1660,9 +1642,7 @@
     <child internal-child="vbox">
       <widget class="GtkVBox" id="question_dialog_vbox">
         <property name="visible">True</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <property name="spacing">2</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <child>
           <widget class="GtkLabel" id="question_dialog_label">
             <property name="visible">True</property>
