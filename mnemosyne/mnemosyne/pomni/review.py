@@ -30,17 +30,24 @@ from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 
 _ = gettext.gettext
 
+LARGE_CONTAINER_HEIGHT = 260
+NORMAL_CONTAINER_HEIGHT = 16
+LARGE_HTML_MARGIN = 20
+NORMAL_HTML_MARGIN = 70
+HINT_SIZE = 20
+
 class RainbowReviewWidget(ReviewWidget):
     """Rainbow theme: Review Widget."""
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
-        self.next_is_image_card = False #Image card indicator
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect( \
             dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in ["review_to_main_menu", "get_answer", "grade", 
                 "delete_card", "edit_card", "preview_sound_in_review"]]))
+        self.next_is_image_card = False #Image card indicator
+        self.sndtext = None
 
         # Widgets as attributes
         self.question_container = self.w_tree.get_widget("question_container")
@@ -87,7 +94,8 @@ class RainbowReviewWidget(ReviewWidget):
         if "sound src=" in text:
             self.sndtext = text
             self.question_container.hide()
-            self.sound_container.set_size_request(self.container_width, 16)
+            self.sound_container.set_size_request( \
+                self.container_width, NORMAL_CONTAINER_HEIGHT)
             self.sound_container.show()
             self.sound_button.set_active(True)
             self.main_widget().start_playing(self.sndtext, self)
@@ -95,9 +103,11 @@ class RainbowReviewWidget(ReviewWidget):
             self.sound_container.hide()            
             if "img src=" in text:
                 self.next_is_image_card = True
-                self.question_container.set_size_request(self.container_width, 260)
+                self.question_container.set_size_request( \
+                    self.container_width, LARGE_CONTAINER_HEIGHT)
             else:
-                self.question_container.set_size_request(self.container_width, 16)
+                self.question_container.set_size_request( \
+                    self.container_width, 16)
             self.question_container.show()
         self.set_html_text(self.question_text, text)
 
@@ -122,11 +132,11 @@ class RainbowReviewWidget(ReviewWidget):
         self.answer_container.set_sensitive(enabled)
         if enabled:
             if self.next_is_image_card:
-                margin_top = 20
+                margin_top = LARGE_HTML_MARGIN
             else:
-                margin_top = 70
+                margin_top = NORMAL_HTML_MARGIN
             html = "<html><p align=center style='margin-top:%spx; \
-                font-size:20;'>%s</p></html>" % (margin_top, text)
+                font-size:%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
             self.set_html_text(self.answer_text, html)
 
     def enable_grades(self, enabled):
@@ -177,42 +187,6 @@ class RainbowReviewWidget(ReviewWidget):
 
         self.main_widget().stop_playing()
         self.ui_controller_review().grade_answer(int(widget.name[-1]))
-
-    def set_default_grade(self, grade):
-        #print 'set_default_grade', grade
-        pass
-        
-    def set_grades_title(self, text): 
-        #print 'set_grades_title', text
-        pass
-            
-    def set_grade_text(self, grade, text): 
-        #print 'set_grade_text', text
-        pass
-            
-    def set_grade_tooltip(self, grade, text): 
-        #print 'set_grade_tooltip', grade, text
-        pass
-
-    def update_status_bar(self, message=None):
-        #print 'update_status_bar', message
-        pass
-
-    def enable_edit_deck(self, enable): 
-        #print 'enable_edit_deck', enable
-        pass
-        
-    def question_box_visible(self, visible):
-        #print 'question_box_visible', visible
-        pass
-        
-    def answer_box_visible(self, visible):
-        #print 'answer_box_visible', visible
-        pass
-        
-    def set_question_label(self, text):
-        #print 'set_question_label', text
-        pass
 
 
 
