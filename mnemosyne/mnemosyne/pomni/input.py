@@ -308,7 +308,7 @@ class RainbowInputWidget(UiComponent):
         if self.update: #Update card
             main.update_related_cards(self.fact, fact_data, self.card_type, \
                 [self.w_tree.get_widget("category_name_w").get_text()], None)
-            self.switcher.set_current_page(self.review)
+            self.main_widget().activate_mode("review")
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, -1, \
                 [self.w_tree.get_widget("category_name_w").get_text()], True)
