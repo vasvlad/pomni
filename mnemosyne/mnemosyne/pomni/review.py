@@ -45,6 +45,8 @@ class RainbowReviewWidget(ReviewWidget):
         self.sound_container = self.w_tree.get_widget( \
             "review_mode_snd_container")
         self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
+        self.container_width = self.w_tree.get_widget( \
+            "question_text").window.get_geometry()[2]
 
     def set_html_text(self, widget_name, text="<html><body> </body></html>"):
         """Set text for html widget."""
@@ -75,7 +77,23 @@ class RainbowReviewWidget(ReviewWidget):
     def set_question(self, text):
         """Set question."""
 
-        self.set_html_text("question_text", self.manage_containers(text))
+        self.next_is_image_card = False
+        if "sound src=" in text:
+            self.sndtext = text
+            self.question_container.hide()
+            self.sound_container.set_size_request(self.container_width, 16)
+            self.sound_container.show()
+            self.sound_button.set_active(True)
+            self.main_widget().start_playing(self.sndtext, self)
+        else:
+            self.sound_container.hide()            
+            if "img src=" in text:
+                self.next_is_image_card = True
+                self.question_container.set_size_request(self.container_width, 260)
+            else:
+                self.question_container.set_size_request(self.container_width, 16)
+            self.question_container.show()
+        self.set_html_text("question_text", text)
 
     def set_answer(self, text):
         """Set answer."""
@@ -111,28 +129,6 @@ class RainbowReviewWidget(ReviewWidget):
         self.w_tree.get_widget("grades_table").set_sensitive(enabled)
         self.enable_edit_current_card(enabled)
         self.enable_delete_current_card(enabled)
-
-    def manage_containers(self, text):
-        """Shows or hides snd container."""
-
-        self.next_is_image_card = "img src=" in text
-        params = self.w_tree.get_widget("question_text").window.get_geometry()
-        if "sound src=" in text:
-            self.sndtext = text
-            self.question_container.hide()
-            self.sound_container.set_size_request(params[2], 16)
-            self.sound_container.show()
-            self.sound_button.set_active(True)
-            self.main_widget().start_playing(self.sndtext, self)
-        elif "img src=" in text:
-            self.sound_container.hide()
-            self.question_container.set_size_request(params[2], 260)
-            self.question_container.show()
-        else:
-            self.sound_container.hide()
-            self.question_container.set_size_request(params[2], 16)
-            self.question_container.show()
-        return text
 
     def update_indicator(self):
         """Set non active state for widget."""
