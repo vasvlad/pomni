@@ -41,6 +41,19 @@ class RainbowReviewWidget(ReviewWidget):
             dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in ["review_to_main_menu", "get_answer", "grade", 
                 "delete_card", "edit_card", "preview_sound_in_review"]]))
+        self.question_container = self.w_tree.get_widget("question_container")
+        self.sound_container = self.w_tree.get_widget( \
+            "review_mode_snd_container")
+        self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
+
+    def set_html_text(self, widget_name, text="<html><body> </body></html>"):
+        """Set text for html widget."""
+
+        document = self.w_tree.get_widget(widget_name).document
+        document.clear()
+        document.open_stream('text/html')
+        document.write_stream(text)
+        document.close_stream()
 
     def activate(self, param=None):
         """Activate review widget."""
@@ -62,42 +75,22 @@ class RainbowReviewWidget(ReviewWidget):
     def set_question(self, text):
         """Set question."""
 
-        document = self.w_tree.get_widget("question_text").document
-        document.clear()
-        document.open_stream('text/html')
-        document.write_stream(self.manage_containers(text))
-        document.close_stream()
+        self.set_html_text("question_text", self.manage_containers(text))
 
     def set_answer(self, text):
         """Set answer."""
 
-        document = self.w_tree.get_widget('answer_text').document
-        document.clear()
-        document.open_stream('text/html')
-        if text.startswith('<html>'):
-            font_size = self.config()['font_size']
-            text = text.replace('*{font-size:30px;}',
-                             '*{font-size:%spx;}' % font_size)
-        document.write_stream(text)
-        document.close_stream()
+        self.set_html_text("answer_text", text)
         
     def clear_question(self): 
         """Clear question text."""
 
-        document = self.w_tree.get_widget('question_text').document
-        document.clear()
-        document.open_stream('text/html')
-        document.write_stream('<html><body> </body></html>')
-        document.close_stream()
+        self.set_html_text("question_text")
         
     def clear_answer(self):
         """Clear answer text."""
 
-        document = self.w_tree.get_widget('answer_text').document
-        document.clear()
-        document.open_stream('text/html')
-        document.write_stream('<html><body> </body></html>')
-        document.close_stream()
+        self.set_html_text("answer_text")
         
     def update_show_button(self, text, default, enabled): 
         """Update show button."""
@@ -105,16 +98,12 @@ class RainbowReviewWidget(ReviewWidget):
         self.w_tree.get_widget("answer_container").set_sensitive(enabled)
         if enabled:
             if self.next_is_image_card:
-                html = "<html><p align=center style='margin-top:20px; \
-                    font-size:20;'>%s</p></html>" % text
+                margin_top = 20
             else:
-                html = "<html><p align=center style='margin-top:70px; \
-                    font-size:20;'>%s</p></html>" % text
-            document = self.w_tree.get_widget("answer_text").document
-            document.clear()
-            document.open_stream('text/html')
-            document.write_stream(html)
-            document.close_stream()
+                margin_top = 70
+            html = "<html><p align=center style='margin-top:%spx; \
+                font-size:20;'>%s</p></html>" % (margin_top, text)
+            self.set_html_text("answer_text", html)
 
     def enable_grades(self, enabled):
         """Enable grades."""
@@ -130,27 +119,19 @@ class RainbowReviewWidget(ReviewWidget):
         params = self.w_tree.get_widget("question_text").window.get_geometry()
         if "sound src=" in text:
             self.sndtext = text
-            self.w_tree.get_widget("question_container").hide()
-            self.w_tree.get_widget("review_mode_snd_container"). \
-                set_size_request(params[2], 16)
-            self.w_tree.get_widget("review_mode_snd_container").show()
-            self.w_tree.get_widget("review_mode_snd_button").set_active(True)
+            self.question_container.hide()
+            self.sound_container.set_size_request(params[2], 16)
+            self.sound_container.show()
+            self.sound_button.set_active(True)
             self.main_widget().start_playing(self.sndtext, self)
         elif "img src=" in text:
-            self.w_tree.get_widget("review_mode_snd_container").hide()
-            self.w_tree.get_widget("question_container"). \
-                set_size_request(params[2], 260)
-            self.w_tree.get_widget("question_container").show()
+            self.sound_container.hide()
+            self.question_container.set_size_request(params[2], 260)
+            self.question_container.show()
         else:
-            self.w_tree.get_widget("review_mode_snd_container").hide()
-            self.w_tree.get_widget("question_container"). \
-                set_size_request(params[2], 16)
-            self.w_tree.get_widget("question_container").show()
-            if text.startswith('<html>'):
-                font_size = self.config()['font_size']
-                new_text = text.replace('*{font-size:30px;}',
-                    '*{font-size:%spx;}' % font_size)
-            return new_text
+            self.sound_container.hide()
+            self.question_container.set_size_request(params[2], 16)
+            self.question_container.show()
         return text
 
     def update_indicator(self):
