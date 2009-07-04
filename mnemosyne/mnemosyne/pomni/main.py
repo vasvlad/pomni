@@ -29,18 +29,21 @@ import gettext
 import gtk
 import gtk.glade
 import gtkhtml2
+import urllib
+import urlparse
 
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
 
+htmlOpener = urllib.FancyURLopener()
 
 class HildonMainWidget(MainWidget):
     """Hildon main widget."""
 
     menu, review, input, configuration = range(4)
 
-    def activate(self):
+    def activate(self, param=None):
         """Basic UI setup. 
            Load theme glade file, assign gtk window callbacks.
         """
@@ -73,8 +76,9 @@ class HildonMainWidget(MainWidget):
             for sig in ("window_state", "window_keypress")]))
 
         self.w_tree = w_tree
+        self.soundmanager = None
 
-    def activate_mode(self, mode):
+    def activate_mode(self, mode, param=None):
         """Activate mode in lazy way."""
 
         self.switcher.set_current_page(getattr(self, mode))
@@ -88,7 +92,7 @@ class HildonMainWidget(MainWidget):
             if mode == "review":
                 self.component_manager.register(widget)
 
-        widget.activate()
+        widget.activate(param)
 
     def start(self, mode):
         """UI entry point. Activates specified mode."""
@@ -109,10 +113,24 @@ class HildonMainWidget(MainWidget):
             handler = getattr(self, function_name)
             return handler(args)
 
+    def start_playing(self, text, parent):
+        """Start playing audiofile."""
+
+        if not self.soundmanager:
+            from pomni.sound import SoundPlayer
+            self.soundmanager = SoundPlayer()
+        self.soundmanager.play(self.soundmanager.parse_fname(text), parent)
+
+    def stop_playing(self):
+        """Stop playing audiofile."""
+
+        if self.soundmanager:
+            self.soundmanager.stop()
+
     # modes
     def menu_(self):
         """Activate menu."""
-        self.activate_mode('menu')
+        self.activate_mode('menu', None)
 
     def input_(self, widget=None):
         """Activate input mode through main ui controller."""
@@ -124,7 +142,7 @@ class HildonMainWidget(MainWidget):
 
     def review_(self, widget=None):
         """Activate review mode."""
-        self.activate_mode('review')
+        self.activate_mode('review', None)
 
     def exit_(self, widget):
         """Exit from main gtk loop."""
@@ -155,8 +173,15 @@ class HildonMainWidget(MainWidget):
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
 
+        def request_url(document, url, stream):
+            uri = urlparse.urljoin("", url)
+            f = htmlOpener.open(uri)
+            stream.write(f.read())
+            stream.close()
+
         view = gtkhtml2.View()
         document = gtkhtml2.Document()
+        document.connect('request_url', request_url)
         view.set_document(document)
         view.document = document
         view.show()
@@ -204,7 +229,8 @@ class HildonMainWidget(MainWidget):
 
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
         """Start Edit/Update window."""
-        print 'run_edit_fact_dialog'
+
+        self.activate_mode('input', fact) 
 
     def error_box(self, message):
         print 'error_box', message
@@ -216,16 +242,17 @@ class HildonMainWidget(MainWidget):
         print 'open_file_dialog'
 
     def set_window_title(self, title):
-        print 'set_window_title'
+        #print 'set_window_title'
+        pass
 
     def run_add_cards_dialog(self):
-        self.activate_mode('input')
+        self.activate_mode('input', None)
 
     def run_edit_deck_dialog(self):
         print 'edit_deck_dialog'
     
     def run_configuration_dialog(self):
-        self.activate_mode('configuration')
+        self.activate_mode('configuration', None)
 
     def run_card_appearance_dialog(self):
         print 'run_card_appearance_dialog'
