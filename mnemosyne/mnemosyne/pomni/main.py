@@ -57,9 +57,7 @@ class HildonMainWidget(MainWidget):
         gtk.glade.set_custom_handler(self.custom_handler)
         w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
-        # Set unvisible tabs of switcher
         self.switcher = w_tree.get_widget("switcher")
-        self.switcher.set_property('show_tabs', False)
         self.window = w_tree.get_widget("window")
 
         self.question_flag = False
