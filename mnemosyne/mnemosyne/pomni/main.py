@@ -87,6 +87,7 @@ class HildonMainWidget(MainWidget):
             self.widgets[mode] = widget
             if mode == "review":
                 self.component_manager.register(widget)
+                self.review_controller().reset()
 
         widget.activate()
 
