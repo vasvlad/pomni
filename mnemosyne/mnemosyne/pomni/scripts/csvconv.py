@@ -30,13 +30,8 @@ import os
 import csv
 
 from optparse import OptionParser
-
-from mnemosyne import libmnemosyne
-from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
-from mnemosyne.libmnemosyne.component_manager import database, config
-from mnemosyne.libmnemosyne.component_manager import ui_controller_main
-#from mnemosyne.libmnemosyne.category import Category
-#from mnemosyne.libmnemosyne.fact import Fact
+from mnemosyne.libmnemosyne import Mnemosyne
+from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 class TextOut(object):
     """ Text output """
@@ -50,10 +45,23 @@ class TextOut(object):
         print 'row:', row[0], row[1]
         self.fptr.write("%s\n%s" % (row[0], row[1]))
 
-class MnemosyneOut(object):
+class MnemosyneOut(Mnemosyne, UiComponent):
     """ Output to Mnemosyne Db """
     
     def __init__(self, datadir=None, category=None):
+        
+        Mnemosyne.__init__(self)
+
+        self.components.insert(0, ("mnemosyne.libmnemosyne.translator",
+                                  "GetTextTranslator"))
+        self.components.append(\
+                    ("mnemosyne.libmnemosyne.ui_components.review_widget",
+                     "ReviewWidget"))
+        self.components.append(\
+                    ("mnemosyne.libmnemosyne.ui_components.main_widget",
+                     "MainWidget"))
+
+        self.components.append(("pomni.factory", "ConfigHook"))
         
         if datadir:
             datadir = os.path.abspath(datadir)
@@ -63,10 +71,11 @@ class MnemosyneOut(object):
             datadir = os.path.abspath(os.path.join(os.path.expanduser("~"), 
                         ".pomni"))
 
-        libmnemosyne.initialise(datadir)
 
-        self.card_type = FrontToBack()
-        self.database = database()
+        self.initialise(datadir)
+
+        self.card_type = [ct for ct in self.card_types() \
+                            if ct.name == "Front-to-back only"][0]
         self.saved = False
         
         if not category:
@@ -74,28 +83,26 @@ class MnemosyneOut(object):
         
         self.category = category #Category(category)
 
-        self.controller = ui_controller_main()
-
     def out(self, row):
         """Main entry point. Create mnemosyne card."""
 
         data = {"q": row[0], "a": row[1]}
 
-        self.controller.create_new_cards(data, self.card_type, 0, 
+        self.ui_controller_main().create_new_cards(data, self.card_type, -1, 
                                             [self.category])
 
     def savedb(self):
         """Save the database if not saved yet."""
 
         if not self.saved:
-            self.database.save(config()["path"])
+            self.database().save(self.config()["path"])
             self.saved = True
 
     def __del__(self):
         """Save the database on exit."""
 
         self.savedb()
-        libmnemosyne.finalise()
+        self.finalise()
 
 def parse_commandline(argv):
     """Parse commandline, check options."""

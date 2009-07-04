@@ -36,13 +36,10 @@ _ = gettext.gettext
 class RainbowInputWidget(UiComponent):
     """Input mode widget for Rainbow theme."""
     
-    menu, review, input = range(3)
-
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
-        self.switcher = self.main_widget().switcher
 
         signals = ["add_card", "input_to_main_menu", "change_card_type",
             "add_picture", "select_item", "close_media_selection_dialog",
@@ -77,7 +74,6 @@ class RainbowInputWidget(UiComponent):
     def activate(self, fact=None):
         """Activate input mode."""
 
-        print "input mode: activate"
         self.stop_playing()
         self.fact = fact
         self.update = fact is not None
@@ -91,7 +87,6 @@ class RainbowInputWidget(UiComponent):
             self.set_widgets_data(fact)
 
         self.show_snd_container()
-        self.switcher.set_current_page(self.input)
 
     def show_snd_container(self):
         """ Shows or hides snd container. """
@@ -436,7 +431,7 @@ class RainbowInputWidget(UiComponent):
         """Return to main menu."""
 
         self.main_widget().stop_playing()
-        self.switcher.set_current_page(self.menu)
+        self.main_widget().activate_mode("menu")
 
 # Local Variables:
 # mode: python
