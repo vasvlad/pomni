@@ -36,11 +36,13 @@ class ConfigHook(Component):
         """Entry point."""
         for key, value in {\
             "theme_path": "/usr/share/pomni/hildon-UI/rainbow",
-            "themes": ['eternal', 'rainbow'],
+            "themes": ['rainbow'],
             "fullscreen": True,
             "font_size": 30.0,
             "startup_with_review": False,
             "upload_logs": False,
+            "imagedir": "/home/user/MyDocs/.images",
+            "sounddir": "/home/user/MyDocs/.sounds",
             "times_loaded": 0}.iteritems():
 
             self.config().setdefault(key, value)
