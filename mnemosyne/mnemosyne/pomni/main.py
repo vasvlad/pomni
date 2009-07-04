@@ -213,7 +213,9 @@ class HildonMainWidget(MainWidget):
         """Create Question message."""
         dialog = self.w_tree.get_widget("question_dialog")
         dialog_label = self.w_tree.get_widget("question_dialog_label")
-        dialog_label.set_text('\n' + "  " + question + "  " + '\n')
+        question = question.replace("?", "?\n")
+        question = question.replace(",", ",\n")
+        dialog_label.set_text('\n'  + question)
         result = True
         response = dialog.run()
         if response == -8:
