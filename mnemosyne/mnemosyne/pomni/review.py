@@ -173,7 +173,7 @@ class RainbowReviewWidget(ReviewWidget):
         self.main_widget().stop_playing()
         self.main_widget().activate_mode("menu")
 
-    def get_answer_cb(self, widget):
+    def get_answer_cb(self, widget, event):
         """Hook for showing a right answer."""
 
         self.ui_controller_review().show_answer()
