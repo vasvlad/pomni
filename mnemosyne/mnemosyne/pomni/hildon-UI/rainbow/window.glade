@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Jul  4 14:02:30 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Jul  4 15:21:33 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -15,6 +15,7 @@
     <child>
       <widget class="GtkNotebook" id="switcher">
         <property name="visible">True</property>
+        <property name="show_tabs">False</property>
         <property name="show_border">False</property>
         <property name="tab_border">0</property>
         <property name="tab_hborder">0</property>
@@ -337,17 +338,22 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="question_container">
+                      <widget class="GtkFrame" id="question_container">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="response_id">0</property>
+                        <property name="label_xalign">0</property>
+                        <property name="shadow_type">GTK_SHADOW_NONE</property>
                         <child>
                           <widget class="Custom" id="question_text">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="creation_function">create_gtkhtml</property>
                           </widget>
+                        </child>
+                        <child>
+                          <placeholder/>
+                          <packing>
+                            <property name="type">label_item</property>
+                          </packing>
                         </child>
                       </widget>
                       <packing>
@@ -357,17 +363,22 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="answer_container">
+                  <widget class="GtkFrame" id="answer_container">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="get_answer"/>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">GTK_SHADOW_NONE</property>
                     <child>
                       <widget class="Custom" id="answer_text">
                         <property name="visible">True</property>
                         <property name="creation_function">create_gtkhtml</property>
+                        <signal name="button_press_event" handler="get_answer"/>
                       </widget>
+                    </child>
+                    <child>
+                      <placeholder/>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
@@ -386,6 +397,7 @@
               <widget class="GtkButton" id="review_mode_vseparator1">
                 <property name="width_request">1</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="response_id">0</property>
@@ -405,6 +417,7 @@
               <widget class="GtkButton" id="review_mode_vseparator2">
                 <property name="width_request">1</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="response_id">0</property>
@@ -806,6 +819,7 @@
               <widget class="GtkButton" id="hseparator1">
                 <property name="height_request">1</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="response_id">0</property>
@@ -923,6 +937,7 @@
                   <widget class="GtkButton" id="vseparator2">
                     <property name="width_request">1</property>
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="response_id">0</property>
@@ -1201,6 +1216,7 @@
                   <widget class="GtkButton" id="vseparator1">
                     <property name="width_request">1</property>
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="response_id">0</property>
@@ -1646,6 +1662,7 @@
         <property name="visible">True</property>
         <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <property name="spacing">2</property>
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <child>
           <widget class="GtkLabel" id="question_dialog_label">
             <property name="visible">True</property>

@@ -168,63 +168,35 @@ widget "*.menu_button_exit" style "menu-button-exit"
 
 
 #----------------------------- Review mode ------------------
-style "question-area" {
-    GtkButton::focus-line-width = 0
-    GtkButton::inner-border = {2,2,5,5}
-    engine "pixmap" {
+style "html-container" {
+    xthickness = 5
+    ythickness = 5
+    engine "sapwood" {
         image {
-            function = BOX
+            function = SHADOW
             file = "textarea.png"
-            border = {12,12,12,12}
+            border = {14,14,14,14}
             stretch = TRUE
         }
     }
 }
-widget "*.question_container" style "question-area"
-
-style "answer-container" {
-    GtkButton::focus-line-width = 0
-    GtkButton::inner-border = {2,2,5,5}
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "textarea.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.answer_container" style "answer-container"
+widget "*.question_container" style "html-container"
+widget "*.answer_container" style "html-container"
 
 style "grade-button" {
     GtkButton::focus-line-width = 0
-#    font_name = "Nokia Sans Bold 12"
-#    bg[NORMAL] = "#AAAAAA"
 }
-#widget "*.grade*" style "grade-button"
-#widget "*.grade*.GtkLabel" style "grade-button"
 
 style "grade0" = "grade-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "grade0_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "grade0_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "grade0_big.png"
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "grade0_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade0_big.png"
         }
     }
 }
@@ -234,23 +206,12 @@ style "grade1" = "grade-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "grade1_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "grade1_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "grade1_big.png"
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "grade1_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade1_big.png"
         }
     }
 }
@@ -260,23 +221,12 @@ style "grade2" = "grade-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "grade2_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "grade2_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "grade2_big.png"
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "grade2_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade2_big.png"
         }
     }
 }
@@ -286,23 +236,12 @@ style "grade3" = "grade-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "grade3_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "grade3_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "grade3_big.png"
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "grade3_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade3_big.png"
         }
     }
 }
@@ -312,23 +251,12 @@ style "grade4" = "grade-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "grade4_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "grade4_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "grade4_big.png"
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "grade4_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade4_big.png"
         }
     }
 }
@@ -338,23 +266,12 @@ style "grade5" = "grade-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "grade5_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "grade5_big.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "grade5_big.png"
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "grade5_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade5_big.png"
         }
     }
 }
@@ -365,25 +282,12 @@ style "edit-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "edit_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "edit_card_big_insensitive.png"
             stretch = TRUE
         }
         image {
             function = BOX
-            state = ACTIVE
-            file = "edit_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "edit_card_big.png"
             stretch = TRUE
         }
@@ -396,22 +300,9 @@ style "add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
             file = "add_card_big.png"
             stretch = TRUE
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "add_card_big.png"
-#            stretch = TRUE
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "add_card_big.png"
-#            stretch = TRUE
-#        }
     }
 }
 widget "*.review_toolbar_add_card_button" style "add-card-button"
@@ -421,25 +312,12 @@ style "delete-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "delete_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "delete_card_big_insensitive.png"
             stretch = TRUE
         }
         image {
             function = BOX
-            state = ACTIVE
-            file = "delete_card_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "delete_card_big.png"
             stretch = TRUE
         }
@@ -455,20 +333,8 @@ style "input-mode-add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "input_mode_add_card_small.png"
             file = "input_mode_add_card_big.png"
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "input_mode_add_card_big.png"
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "input_mode_add_card_big.png"
-#        }
     }
 }
 widget "*.input_mode_toolbar_add_card_w" style "input-mode-add-card-button"
@@ -478,20 +344,8 @@ style "input-mode-add-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "input_mode_add_new_category_small.png"
             file = "input_mode_add_new_category_big.png"
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "input_mode_add_new_category_big.png"
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "input_mode_add_new_category_big.png"
-#        }
     }
 }
 widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
@@ -501,20 +355,8 @@ style "input-mode-close-add-category-block-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "input_mode_close_add_category_block_small.png"
             file = "input_mode_close_add_category_block_big.png"
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "input_mode_close_add_category_block_big.png"
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "input_mode_close_add_category_block_big.png"
-#        }
     }
 }
 widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
@@ -560,19 +402,6 @@ style "snd-button" {
             file = "sound_preview_play.png"
         }
     }
-#        image {
-#            function = BOX
-#            state = NORMAL
-#            file = "sound_preview_play.png"
-#            stretch = TRUE
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "sound_preview_stop.png"
-#            stretch = TRUE
-#        }
-#    }
 }
 widget "*.input_mode_snd_button" style "snd-button"
 widget "*.review_mode_snd_button" style "snd-button"
@@ -582,20 +411,8 @@ style "input-mode-prev-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "input_mode_prev_category_small.png"
             file = "input_mode_prev_category_big.png"
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "input_mode_prev_category_big.png"
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "input_mode_prev_category_big.png"
-#        }
     }
 }
 widget "*.input_mode_prev_category_w" style "input-mode-prev-category-button"
@@ -605,20 +422,8 @@ style "input-mode-next-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "input_mode_next_category_small.png"
             file = "input_mode_next_category_big.png"
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "input_mode_next_category_big.png"
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "input_mode_next_category_big.png"
-#        }
     }
 }
 widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
@@ -804,26 +609,13 @@ style "sound-content-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "sound_content_button.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "sound_content_button.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "sound_content_button.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "sound_content_button_insensitive.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            file = "sound_content_button.png"
             stretch = TRUE
         }
     }
@@ -835,26 +627,13 @@ style "picture-content-button" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "picture_content_button.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "picture_content_button.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "picture_content_button.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
             state = INSENSITIVE
             file = "picture_content_button_insensitive.png"
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            file = "picture_content_button.png"
             stretch = TRUE
         }
     }
@@ -862,7 +641,7 @@ style "picture-content-button" {
 widget "*.picture_content_button" style "picture-content-button"
 
 style "vseparator" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "vseparator.png"
@@ -878,7 +657,7 @@ widget "*.config_mode_vseparator1" style "vseparator"
 widget "*.config_mode_vseparator2" style "vseparator"
 
 style "hseparator" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "hseparator.png"
@@ -888,29 +667,17 @@ style "hseparator" {
 }
 widget "*.hseparator1" style "hseparator"
 
-style "input-mode-textview-container" {
-    xthickness = 5
-    ythickness = 5
-    engine "pixmap" {
-        image {
-            function = SHADOW
-            file = "textarea.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.input_mode_answer_container" style "input-mode-textview-container"
-widget "*.input_mode_question_container" style "input-mode-textview-container"
-widget "*.input_mode_foreign_container" style "input-mode-textview-container"
-widget "*.input_mode_pronun_container" style "input-mode-textview-container"
-widget "*.input_mode_translate_container" style "input-mode-textview-container"
-widget "*.input_mode_cloze_container" style "input-mode-textview-container"
-widget "*.input_mode_new_category_entry_container" style "input-mode-textview-container"
-widget "*.config_mode_font_size_example_container" style "input-mode-textview-container"
+widget "*.input_mode_answer_container" style "html-container"
+widget "*.input_mode_question_container" style "html-container"
+widget "*.input_mode_foreign_container" style "html-container"
+widget "*.input_mode_pronun_container" style "html-container"
+widget "*.input_mode_translate_container" style "html-container"
+widget "*.input_mode_cloze_container" style "html-container"
+widget "*.input_mode_new_category_entry_container" style "html-container"
 
 style "category-name-container" {
-    engine "pixmap" {
+    GtkButton::focus-line-width = 0
+    engine "sapwood" {
         image {
             function = BOX
             file = "nothing.png"
@@ -933,11 +700,6 @@ widget "*.category_name_w" style "category-label"
 
 
 #----------------------------- Config mode ------------------
-style "config-textsize-label" {
-    font_name = "Nokia Sans Bold Italic 11.0"
-}
-#widget "*.label_text_size" style "config-textsize-label"
-
 style "increase-font-size-button" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
@@ -962,24 +724,9 @@ style "decrease-font-size-button" {
 }
 widget "*.config_mode_decrease_font_size_buttton" style "decrease-font-size-button"
 
-style "config-scales" {
-    GtkScale::slider-length = 64
-    GtkScale::slider-width = 64
-    GtkScale::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = SLIDER
-            file = "target.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            file = "back_for_scroll.png"
-            stretch = TRUE
-        }
-    }
-}
-#widget "*.font_size_slider" style "config-scales"
+widget "*.config_mode_imagedir_container" style "html-container"
+widget "*.config_mode_sounddir_container" style "html-container"
+widget "*.config_mode_font_size_example_container" style "html-container"
 
 style "config-checkboxes2" {
     GtkCheckButton::indicator-size = 72
@@ -987,6 +734,8 @@ style "config-checkboxes2" {
     GtkCheckButton::focus-line-width = 0
     engine "pixmap" {}
 }
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes2"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes2"
 
 style "config-checkboxes" {
     font_name = "Nokia Sans Italic 11"
@@ -1034,8 +783,6 @@ style "config-checkboxes" {
 }
 #widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 #widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
-widget "*.checkbox_fullscreen_mode" style "config-checkboxes2"
-widget "*.checkbox_start_in_review_mode" style "config-checkboxes2"
 
 style "config-checkboxes-label" {
     font_name = "Nokia Sans 12"
@@ -1059,40 +806,11 @@ style "config-button-theme" {
 }
 #widget "*.config_mode_button_theme" style "config-button-theme"
 
-style "imagedir-button" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "imagedir_button.png"
-            border = {0,0,0,0}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.config_mode_button_imagedir" style "imagedir-button"
-
 style "textareas" {
     font_name = "Nokia Sans 20"
 }
 widget "*.config_mode_entry_imagedir" style "textareas"
 widget "*.config_mode_entry_sounddir" style "textareas"
-
-style "textarea-container" {
-    xthickness = 5
-    ythickness = 5
-    engine "pixmap" {
-        image {
-            function = SHADOW
-            file = "textarea.png"
-            border = {12,12,12,12}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.config_mode_imagedir_container" style "textarea-container"
-widget "*.config_mode_sounddir_container" style "textarea-container"
-
 #----------------------------- Config mode ------------------
 
 
@@ -1136,21 +854,6 @@ style "question-dialog-button-yes" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "dialog_button.png"
-            border = {10,10,10,10}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "dialog_button.png"
-            border = {10,10,10,10}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "dialog_button.png"
             border = {10,10,10,10}
             stretch = TRUE
@@ -1168,21 +871,6 @@ style "question-dialog-button-no" {
     engine "pixmap" {
         image {
             function = BOX
-            state = NORMAL
-            file = "dialog_button.png"
-            border = {10,10,10,10}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "dialog_button.png"
-            border = {10,10,10,10}
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "dialog_button.png"
             border = {10,10,10,10}
             stretch = TRUE
@@ -1200,7 +888,7 @@ style "main-switcher" {
     engine "pixmap" {
         image {
             function = BOX
-            file     = "nothing.png"
+            file = "nothing.png"
         }
     }
 }
@@ -1226,58 +914,14 @@ style "main-window" {
 #class "GtkWindow" style "main-window"
 widget "window" style "main-window"
 
-# Style for "Add picture" button
-style "add-picture-button" {
-    GtkButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            file = "add_picture_small.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            file = "add_picture_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            file = "add_picture_big.png"
-            stretch = TRUE
-        }
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "add_picture_big_insensitive.png"
-            stretch = TRUE
-        }
-    }
-}
-widget "*.input_toolbar_add_picture_button" style "add-picture-button"
-
 # Style for "To Main Menu" button
 style "main-menu-button" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
-#            state = NORMAL
-#            file = "back_small.png"
             file = "back_big.png"
         }
-#        image {
-#            function = BOX
-#            state = PRELIGHT
-#            file = "back_big.png"
-#        }
-#        image {
-#            function = BOX
-#            state = ACTIVE
-#            file = "back_big.png"
-#        }
     }
 }
 widget "*.*main_menu_button" style "main-menu-button"
