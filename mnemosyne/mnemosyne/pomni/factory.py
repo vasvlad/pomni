@@ -69,9 +69,27 @@ def app_factory(interface=None):
         app.components.append(\
             ("mnemosyne.libmnemosyne.ui_components.review_widget",
              "ReviewWidget"))
+
+        # Add necessary components
         app.components.append(\
             ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
 
+        # Remove unused components
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.card_types.map", "MapPlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "ClozePlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.plugins.cramming_plugin", \
+                "CrammingPlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.renderers.html_css", "HtmlCss"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.escape_to_html", "EscapeToHtml"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.expand_paths", "ExpandPaths"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.latex", "Latex"))
         return app
 
     # add next gui here
