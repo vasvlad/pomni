@@ -119,16 +119,16 @@ class ConfigurationWidget(UiComponent):
 
         if self.theme_modified:
             self.main_widget().information_box( \
-                _("Restart the program to take effect!"), "OK")
+                _("Restart the program to take effect!"))
         if not os.path.exists( \
             self.w_tree.get_widget("config_mode_entry_imagedir").get_text()):
             self.main_widget().information_box( \
-                _("Image dir does not exist! Select another."), "OK")
+                _("Image dir does not exist! Select another."))
             return
         if not os.path.exists( \
             self.w_tree.get_widget("config_mode_entry_sounddir").get_text()):
             self.main_widget().information_box( \
-                _("Sound dir does not exist! Select another."), "OK")
+                _("Sound dir does not exist! Select another."))
             return
         self.config()['imagedir'] = \
             self.w_tree.get_widget("config_mode_entry_imagedir").get_text()

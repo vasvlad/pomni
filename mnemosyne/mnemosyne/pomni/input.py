@@ -260,7 +260,7 @@ class RainbowInputWidget(UiComponent):
             self.imagedir = "./images" # on Desktop
             if not os.path.exists(self.imagedir):
                 self.main_widget().information_box(\
-                    _("'Images' directory does not exist!"), "OK")
+                    _("'Images' directory does not exist!"))
                 return
         if os.listdir(self.imagedir):
             self.widgets["MediaDialog"].show()
@@ -272,7 +272,7 @@ class RainbowInputWidget(UiComponent):
                         self.imagedir, resize_image(pixbuf)])
         else:
             self.main_widget().information_box(\
-                _("There are no files in 'Images' directory!"), "OK")
+                _("There are no files in 'Images' directory!"))
 
     def select_item_cb(self, widget):
         """ 
@@ -304,7 +304,7 @@ class RainbowInputWidget(UiComponent):
             self.sounddir = "./sounds" # on Desktop
             if not os.path.exists(self.sounddir):
                 self.main_widget().information_box(\
-                    _("'Sounds' directory does not exist!"), "OK")
+                    _("'Sounds' directory does not exist!"))
                 return     
         if os.listdir(self.sounddir):
             self.widgets["MediaDialog"].show()
@@ -317,7 +317,7 @@ class RainbowInputWidget(UiComponent):
                         self.sounddir, pixbuf])
         else:
             self.main_widget().information_box(\
-                _("There are no files in 'Sounds' directory!"), "OK")
+                _("There are no files in 'Sounds' directory!"))
 
     def add_card_cb(self, widget):
         """Add card to database."""

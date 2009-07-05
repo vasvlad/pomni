@@ -51,8 +51,8 @@ class HildonMainWidget(MainWidget):
         self.widgets = {}
 
         # Load the glade file for current theme
-        self.theme = self.config()["theme_path"].split("/")[-1]
         theme_path = self.config()["theme_path"]
+        self.theme = theme_path.split("/")[-1]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
         w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
@@ -75,6 +75,12 @@ class HildonMainWidget(MainWidget):
 
         self.w_tree = w_tree
         self.soundmanager = None
+        self.question_dialog = self.w_tree.get_widget("question_dialog")
+        self.information_dialog = self.w_tree.get_widget("information_dialog")
+        self.question_dialog_label = self.w_tree.get_widget( \
+            "question_dialog_label")
+        self.information_dialog_label = self.w_tree.get_widget( \
+            "information_dialog_label")
 
     def activate_mode(self, mode, param=None):
         """Activate mode in lazy way."""
@@ -186,30 +192,24 @@ class HildonMainWidget(MainWidget):
         return view
 
     # Main Widget API
-    def information_box(self, message, button_caption='OK'):
-        """Create Information message."""
-        dialog = self.w_tree.get_widget("information_dialog")
-        self.w_tree.get_widget("information_dialog_label").set_text(\
-            '\n' + "  " + message + "  " + '\n')
-        self.w_tree.get_widget("information_dialog_button_ok").set_label(\
-            button_caption)
-        dialog.run()
-        dialog.hide()
+    def information_box(self, message):
+        """Show Information message."""
+
+        self.information_dialog_label.set_text('\n' + message + '\n')
+        self.information_dialog.run()
+        self.information_dialog.hide()
 
 
     def question_box(self, question, option0, option1, option2):
-        """Create Question message."""
-        dialog = self.w_tree.get_widget("question_dialog")
-        dialog_label = self.w_tree.get_widget("question_dialog_label")
-        question = question.replace("?", "?\n")
-        question = question.replace(",", ",\n")
-        dialog_label.set_text('\n'  + question)
-        result = True
-        response = dialog.run()
-        if response == -8:
-            result = False
-        dialog.hide()
-        return result
+        """Show Question message."""
+
+        question = question.replace("?", "?\n").replace(",", ",\n")
+        self.question_dialog_label.set_text('\n'  + question)
+        response = self.question_dialog.run()
+        self.question_dialog.hide()
+        if response == gtk.RESPONSE_YES:
+            return False
+        return True
 
 
     def update_status_bar(self, message=None):
