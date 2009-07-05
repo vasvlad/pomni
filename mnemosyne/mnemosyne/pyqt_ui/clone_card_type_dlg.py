@@ -2,19 +2,17 @@
 # clone_card_type_dlg.py <Peter.Bienstman@UGent.be>
 #
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4 import QtGui
 
-from ui_clone_card_type_dlg import Ui_CloneCardTypeDlg
-from mnemosyne.libmnemosyne.translator import _
 from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.pyqt_ui.ui_clone_card_type_dlg import Ui_CloneCardTypeDlg
 
 
-class CloneCardTypeDlg(QDialog, Ui_CloneCardTypeDlg, Component):
+class CloneCardTypeDlg(QtGui.QDialog, Ui_CloneCardTypeDlg, Component):
 
     def __init__(self, parent, component_manager):
         Component.__init__(self, component_manager)
-        QDialog.__init__(self, parent)
+        QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
         for card_type in self.card_types():
             self.parent_type.addItem(card_type.name)
@@ -28,8 +26,8 @@ class CloneCardTypeDlg(QDialog, Ui_CloneCardTypeDlg, Component):
     def accept(self):
         parent_instance = self.card_types()[self.parent_type.currentIndex()]
         clone_name = unicode(self.name.text())
-        clone = self.ui_controller_main().clone_card_type(\
+        clone = self.controller().clone_card_type(\
             parent_instance, clone_name)
         if not clone:
             return
-        QDialog.accept(self)
+        QtGui.QDialog.accept(self)

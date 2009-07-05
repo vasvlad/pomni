@@ -27,6 +27,7 @@ class TestPlugin(MnemosyneTest):
         self.mnemosyne.components.append(\
             ("mnemosyne.libmnemosyne.ui_components.review_widget", "ReviewWidget"))
         self.mnemosyne.initialise(os.path.abspath("dot_test"))
+        self.review_controller().reset()
         
     @raises(AssertionError)
     def test_1(self):
@@ -60,7 +61,7 @@ class TestPlugin(MnemosyneTest):
         fact_data = {"q": "question",
                      "a": "answer"}
         card_type = self.card_type_by_id("666")
-        self.ui_controller_main().create_new_cards(fact_data, card_type,
+        self.controller().create_new_cards(fact_data, card_type,
                                               grade=-1, tag_names=["default"])
         p.deactivate() # Pops up an information box that this is not possible.
        
@@ -90,7 +91,7 @@ class TestPlugin(MnemosyneTest):
         fact_data = {"q": "question",
                      "a": "answer"}
         card_type = self.card_type_by_id("666")
-        card = self.ui_controller_main().create_new_cards(fact_data, card_type,
+        card = self.controller().create_new_cards(fact_data, card_type,
                                           grade=-1, tag_names=["default"])[0]
         fact = card.fact
         self.database().delete_fact_and_related_data(fact)
@@ -119,7 +120,7 @@ class TestPlugin(MnemosyneTest):
         p = RedPlugin(self.mnemosyne.component_manager)
         p.activate()
         assert self.mnemosyne.component_manager.get_current\
-                    ("card_type_widget", used_for=FrontToBack) != None
+                    ("generic_card_type_widget", used_for=FrontToBack) != None
         p.deactivate()  
         assert self.mnemosyne.component_manager.get_current\
-                    ("card_type_widget", used_for=FrontToBack) == None
+                    ("generic_card_type_widget", used_for=FrontToBack) == None

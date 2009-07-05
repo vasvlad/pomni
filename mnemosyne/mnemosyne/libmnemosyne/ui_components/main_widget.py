@@ -13,15 +13,17 @@ class MainWidget(UiComponent):
     """
 
     component_type = "main_widget"
+
+    instantiate = UiComponent.IMMEDIATELY
     
     def information_box(self, message):
-        pass
+        raise NotImplementedError
             
     def question_box(self, question, option0, option1, option2):
-        pass
+        raise NotImplementedError
     
     def error_box(self, message):
-        pass
+        raise NotImplementedError
 
     def enable_edit_current_card(self, enabled):
         pass
@@ -39,25 +41,4 @@ class MainWidget(UiComponent):
         pass
 
     def set_window_title(self, title):
-        pass
-    
-    def run_add_card_dialog(self):
-        pass
-
-    def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        pass
-    
-    def run_card_appearance_dialog(self):
-        pass
-
-    def run_manage_card_types_dialog(self):
-        pass
-
-    def run_browse_cards_dialog(self):
-        pass
-    
-    def run_configuration_dialog(self):
-        pass
-
-    def run_show_statistics_dialog(self):
         pass

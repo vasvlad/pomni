@@ -2,10 +2,10 @@
 # review_wdgt.py <Peter.Bienstman@UGent.be>
 #
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 
-from ui_review_wdgt import *
 from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.pyqt_ui.ui_review_wdgt import Ui_ReviewWdgt
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 
 
@@ -49,10 +49,10 @@ class ReviewWdgt(QtGui.QWidget, Ui_ReviewWdgt, ReviewWidget):
         parent.statusbar.setSizeGripEnabled(0)
 
     def show_answer(self):
-        self.ui_controller_review().show_answer()
+        self.review_controller().show_answer()
 
     def grade_answer(self, grade):
-        self.ui_controller_review().grade_answer(grade)
+        self.review_controller().grade_answer(grade)
 
     def question_box_visible(self, visible):
         if visible:
@@ -95,7 +95,10 @@ class ReviewWdgt(QtGui.QWidget, Ui_ReviewWdgt, ReviewWidget):
 
     def enable_grades(self, enabled):
         self.grades.setEnabled(enabled)
-
+        
+    def enable_grade(self, grade, enabled):
+        self.grade_buttons.button(grade).setEnabled(enabled)
+        
     def set_default_grade(self, grade):
         if self.auto_focus_grades:
             self.grade_buttons.button(grade).setFocus()
@@ -111,7 +114,7 @@ class ReviewWdgt(QtGui.QWidget, Ui_ReviewWdgt, ReviewWidget):
 
     def update_status_bar(self, message=None):
         non_memorised_count, scheduled_count, active_count = \
-                   self.ui_controller_review().get_counters()
+                   self.review_controller().get_counters()
         self.notmem.setText(_("Not memorised: %d ") % non_memorised_count)
         self.sched.setText(_("Scheduled: %d ") % scheduled_count)
         self.act.setText(_("Active: %d ") % active_count)

@@ -25,26 +25,27 @@ class TestLogging(MnemosyneTest):
             ("test_logging", "MyMainWidget"))
         self.mnemosyne.components.append(\
             ("mnemosyne.libmnemosyne.ui_components.review_widget", "ReviewWidget"))
-        self.mnemosyne.initialise(os.path.abspath("dot_test"))      
+        self.mnemosyne.initialise(os.path.abspath("dot_test"))
+        self.review_controller().reset()
 
     def test_logging(self):
         card_type = self.card_type_by_id("1")
         fact_data = {"q": "1", "a": "a"}
-        card = self.ui_controller_main().create_new_cards(fact_data, card_type,
-                     grade=-1, tag_names=["default"], warn=False)[0]
-        self.ui_controller_review().new_question()
-        self.ui_controller_review().grade_answer(0)
-        self.ui_controller_review().new_question()
-        self.ui_controller_review().grade_answer(1)
-        self.ui_controller_review().grade_answer(4)
+        card = self.controller().create_new_cards(fact_data, card_type,
+                     grade=-1, tag_names=["default"])[0]
+        self.review_controller().new_question()
+        self.review_controller().grade_answer(0)
+        self.review_controller().new_question()
+        self.review_controller().grade_answer(1)
+        self.review_controller().grade_answer(4)
 
         self.mnemosyne.finalise()
         self.restart()
         fact_data = {"q": "2", "a": "a"}
-        card = self.ui_controller_main().create_new_cards(fact_data, card_type,
-                     grade=-1, tag_names=["default"], warn=False)[0]
-        self.ui_controller_review().new_question()        
-        self.ui_controller_main().delete_current_fact()
+        card = self.controller().create_new_cards(fact_data, card_type,
+                     grade=-1, tag_names=["default"])[0]
+        self.review_controller().new_question()        
+        self.controller().delete_current_fact()
 
         self.log().dump_to_txt_log()
 

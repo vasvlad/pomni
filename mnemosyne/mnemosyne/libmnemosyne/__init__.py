@@ -56,9 +56,9 @@ class Mnemosyne(Component):
           "ExpandPaths"),
          ("mnemosyne.libmnemosyne.filters.latex",
           "Latex"),
-         ("mnemosyne.libmnemosyne.ui_controllers_main.default_main_controller",
-          "DefaultMainController"),
-         ("mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller",
+         ("mnemosyne.libmnemosyne.controllers.default_controller",
+          "DefaultController"),
+         ("mnemosyne.libmnemosyne.review_controllers.SM2_controller",
           "SM2Controller"),
          ("mnemosyne.libmnemosyne.card_types.map",
           "MapPlugin"),
@@ -95,9 +95,8 @@ class Mnemosyne(Component):
         self.log().started_program()
         self.log().started_scheduler()
         self.log().loaded_database()
-        # Finally, everything is in place to start the review process.
-        if self.review_widget().instantiate != Component.LATER:
-            self.ui_controller_review().new_question()
+        # Finally, we can activate the main widget.
+        self.main_widget().activate()
 
     def register_components(self):
 
@@ -112,7 +111,7 @@ class Mnemosyne(Component):
         for module_name, class_name in self.components:
             exec("from %s import %s" % (module_name, class_name))
             exec("component = %s" % class_name)
-            if component.instantiate != Component.LATER:
+            if component.instantiate == Component.IMMEDIATELY:
                 component = component(self.component_manager)
             self.component_manager.register(component)
         for plugin_name in self.extra_components_for_plugin:
@@ -129,14 +128,11 @@ class Mnemosyne(Component):
         in the correct order: first config, followed by log.
         
         """
-
-        modules = ["config", "log", "database", "scheduler",
-                   "ui_controller_main", "main_widget"]
-        if self.review_widget().instantiate != Component.LATER:
-            modules.extend(["ui_controller_review", "review_widget"])
-        for module in modules:
+        
+        for component in  ["config", "log", "database", "scheduler",
+                           "controller"]:
             try:
-                self.component_manager.get_current(module).activate()
+                self.component_manager.get_current(component).activate()
             except RuntimeError, e:
                 self.main_widget().error_box(str(e))
 
@@ -196,20 +192,24 @@ class Mnemosyne(Component):
             self.main_widget().error_box(str(e))
             self.main_widget().error_box(_("Creating temporary database."))
             filename = os.path.join(os.path.split(filename)[0], "___TMP___" \
-                                    + database().suffix)
+                                    + self.database().suffix)
             self.database().new(filename)
-        self.ui_controller_main().update_title()
+        self.controller().update_title()
 
     def finalise(self):
         # Saving the config should happen before we deactivate the plugins,
-        # otherwise they are not restored upon reload. Ditto for logging, which
-        # needs to happen before we unload the database.
-        self.log().saved_database()
-        self.log().stopped_program()
+        # otherwise they are not restored upon reload.
         self.config().save()
         user_id = self.config()["user_id"]
+        # We need to log before we unload the database.
+        self.log().saved_database()
+        self.log().stopped_program()
+        # Now deactivate the database, such that deactivating plugins with
+        # card types does not raise an error about card types in use.
+        self.database().deactivate()
+        self.component_manager.unregister(self.database())
+        # Then do the other components.
         self.component_manager.deactivate_all()
         unregister_component_manager(user_id)
         
         
-

@@ -29,7 +29,7 @@ import gtk
 import gtk.glade
 import os
 
-from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.libmnemosyne.ui_components.dialogs import AddCardsDialog
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
@@ -37,11 +37,11 @@ from mnemosyne.libmnemosyne.card_types.cloze import Cloze
 
 _ = gettext.gettext
 
-class RainbowInputWidget(UiComponent):
+class RainbowInputWidget(AddCardsDialog):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
-        UiComponent.__init__(self, component_manager)
+        AddCardsDialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
 
@@ -331,7 +331,7 @@ class RainbowInputWidget(UiComponent):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        main = self.ui_controller_main()
+        main = self.controller()
         if self.update: #Update card
             main.update_related_cards(self.fact, fact_data, self.card_type, \
                 [self.widgets["CurrentCategory"].get_text()], None)

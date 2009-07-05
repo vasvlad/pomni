@@ -2,41 +2,11 @@
 -hang on Spanish translation?
 
 
+-hierarchy in card types ::
+
 -WM test and benchmark
 
--add test for reload card in controller
--convert cloze deletion to front to back (check: cannot deactivate...)
-
--remove clone stuff in update card type
-
--create UI components for other widgets
--way to override generic card type widget, by having two components: generic_card_type_widget
- card type widget
-
--need card.first_answered?
-
 -more tests
-
--gray out button 3-5 on new cards
-
--don't import * for Qt
-
--import full path for ui components
-
--items --> cards in config, upgrade code
-
--get rid of 'revision' (British) in scheduler queue, logger, tips. Use 
- 'repetition' for individual repetition, or 'review' for whole process.
-
--cntrl enter in add and edit instead of clicking ok
-
--move card type by name to core, as well as string for tag list
-
--don't enable ok in converting between card types as long as insufficient info
-
--edit card types hides html tags, check if it survives changing card types
-
-
 
 -move option to always randomise queue to config screen
 -ditto for learn new related cards in same session
@@ -44,8 +14,6 @@
 -hook up config screen
 
 -infrastructure to make it easier to type certain symbols
-
--new icon for browse cards
 
 
 
@@ -55,7 +23,8 @@
  card.py.
 
 
--see if graphical glitch is fixed with latest matplotlib version
+-see if graphical glitch is fixed with latest matplotlib version, reenable
+ remember size
 
 -make distrib
 
@@ -108,6 +77,7 @@
   move latex configuration files?, import user id and config, ...
   item --> card
 
+
 -new translation infrastructure
 -handle deferred translation
 -different translators for different users?
@@ -136,7 +106,7 @@
 -activate cards, belonging to these card types, having any of these tags, but non of these, ro just none of these
 
 
--deck editor
+-card browser
 
 -make sure searching for a single unicode character works
 
@@ -147,6 +117,8 @@
 -don't show inactive card types, but do show inactive tags
 
 -card.in_view needed?
+
+-make card browser remember its size
 
 
 -sync protocol:
@@ -182,7 +154,7 @@ http://www.linuxtopia.org/online_books/programming_books/python_programming/pyth
 -more plugin examples: file format, custom tag, activate all cards,
  last grade filter, always_shuffle?
 
--leech detection (mod 10)
+-leech detection (mod 15)
 
 
 -MVC: http://doc.trolltech.com/qq/qq24-delegates.html
@@ -192,9 +164,8 @@ http://www.linuxtopia.org/online_books/programming_books/python_programming/pyth
 
 -http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/442447?
 
+-grep through TODO's in source code
 
-
--starting with a html statistics widget gives a large size
 
 -alt tabbing gives low res icon.
 
@@ -203,8 +174,6 @@ http://www.linuxtopia.org/online_books/programming_books/python_programming/pyth
 -http://lists.trolltech.com/qt-interest/2008-05/thread00878-0.html
 
 -option to add video
-
--make all subwindows remember their size
 
 -modality of dialogs (mail by Nosai), Qt.WStyle_MinMax | Qt.WStyle_SysMenu))?
 
@@ -221,7 +190,10 @@ http://www.linuxtopia.org/online_books/programming_books/python_programming/pyth
 
 -skritter/cpod interop mail
 
+-bug in Qt: setting default colour to black does not register the colour clicks.
 
+
+-document cntrl enter in edit dialog instead of clicking ok
 
 -tips (both on startup and on use): right click to add cards or sound, comma to 
  separate tag names, :: to separate hierarchies
@@ -231,6 +203,8 @@ http://www.linuxtopia.org/online_books/programming_books/python_programming/pyth
 
 -update tooltips, inform Patrick
 
+pylint:
+	find ./mnemosyne/libmnemosyne/ -name \*.py | while read f ; do echo $f;pylint $f 2>&1|grep ^E:; done
 
 
 
@@ -260,10 +234,9 @@ http://www.linuxtopia.org/online_books/programming_books/python_programming/pyth
 
 -pythoscope? http://pypi.python.org/pypi/pythoscope/0.2.1
 http://pythoscope.org/
--pylint, pyflakes
+-pyflakes?
 
 -hover over extra hanzi information, hanzi statistics
-
 
 -plugin for midi files
 

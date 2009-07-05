@@ -9,9 +9,10 @@ There a three files in that frontend:
 
 * a startup script, which specifies which compoments your frontend wants to activate in libmnemosyne, whether you are running on a device which is resource limited, ... .
 
+* a main widget, which corresponds to the application level widget in the GUI toolkit, and is in charge of showing error dialogs, displaying menus.
+
 * the review widget, where you need to implement a.o. the code to display text in the question window, ... .
 
-* a main window, which in the windows mobile backend is just a container for the review widget, but which in a more advanced client could contain the functionality needed to add cards, edit cards, etc...
 
 To give a better feeling for how the division of labour between your own new GUI code and the GUI independent code in the controllers works, consider this example from the 'add cards' functionality in the PyQt frontend.
 
@@ -19,45 +20,46 @@ When the user activates the menu option or icon to add cards, it will fire up a 
 
     QObject.connect(self.actionAddCards, SIGNAL("activated()"), MainWindow.add_cards)
 
-The implementation of this function is rather trivial, it just calls the ui controller::
+The implementation of this function is rather trivial, it just calls the controller::
 
     def add_cards(self):
-        self.ui_controller_main().add_cards()
+        self.controller().add_cards()
 
 The code above is code you need to implement for your new frontend, but as you can see, it's rather trivial.
 
-The ui_controller_main add cards function looks like this::
+The controller's ``add_cards`` function looks like this::
 
     def add_cards(self):
         self.stopwatch().pause()
-        self.main_widget().run_add_cards_dialog()
-        review_controller = self.ui_controller_review()
+        self.component_manager.get_current("add_cards_dialog")\
+            (self.component_manager).activate()
+        review_controller = self.review_controller()
         review_controller.reload_counters()
-        if review_controller.card == None:
+        if review_controller.card is None:
             review_controller.new_question()
         else:
-            self.review_widget().update_status_bar()
+            review_controller.update_status_bar()
         self.stopwatch().unpause()
 
-This is where the heavy lifting is done, but it's completely UI independent, 
-and there should be no need for you to modify that code.
+This is where the heavy lifting is done, but it's completely UI independent, and there should be no need for you to modify that code.
 
-To enable the controller to do it's actual work, you need to write the 
-callback ``main_widget().run_add_cards_dialog()``, but as you can see, the code 
-you need to write yourself is again rather trivial::
-        
-    def run_add_cards_dialog(self):
-        dlg = AddCardsDlg(self, self.component_manager)
-        dlg.exec_()
+In order for the controller to know where it can find the actual add cards dialog, which for PyQt is called ``AddCardsDlg`` , you need to have that dialog derive from the abstract ``libmnemosyne.ui_components.dialogs.AddCardsDialog``, and provide an activate function, which for the PyQt toolkit is simply::
 
-Inside the ``AddCardsDlg``, there is of course lots of UI specific code, but once 
-the dialog has enough data to create the cards, it simply calls::
+    def activate(self):
+        self.exec_()
 
-    self.ui_controller_main().create_new_cards(fact_data, card_type, grade, cat_names)
+Finally, you need to register the ``AddCardsDlg`` component. That is what the following line does inside the main startup script (which for PyQt is simply called ``mnemosyne``)::
+
+    mnemosyne.components.append(("mnemosyne.pyqt_ui.add_cards_dlg",
+                                 "AddCardsDlg"))
+
+Inside the ``AddCardsDlg``, there is of course lots of UI specific code, but once the dialog has enough data to create the cards, it simply calls::
+
+    self.controller().create_new_cards(fact_data, card_type, grade, cat_names)
 
 So, the ``AddCardsDlg`` should almost entirely consist of GUI dependent code. All the GUI indepedent code to actually create the cards is contained within the ui controller's ``create_new_cards()`` method.
 
-If you feel like you need to override the review or the main ui controller provided by libmnemosyne, please let the developpers know. Either its design is not general enough, or you are trying to work against libmnemosyne rather than with it.
+If you feel like you need to override the review or the main controller provided by libmnemosyne, please let the developpers know. Either its design is not general enough, or you are trying to work against libmnemosyne rather than with it.
 
 Notes:
 

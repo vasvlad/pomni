@@ -2,34 +2,16 @@
 # main_window.py <Peter.Bienstman@UGent.be>
 #
 
-import sys
-import os
-
 from PyQt4 import QtCore, QtGui
 
-from ui_main_window import Ui_MainWindow
-from add_cards_dlg import AddCardsDlg
-from edit_fact_dlg import EditFactDlg
-from card_appearance_dlg import CardAppearanceDlg
-from activate_plugins_dlg import ActivatePluginsDlg
-from cloned_card_types_list_dlg import ClonedCardTypesListDlg
-#from import_dlg import *
-#from export_dlg import *
-#from edit_item_dlg import *
-#from clean_duplicates import *
-from statistics_dlg import *
-#from edit_items_dlg import *
-#from activate_categories_dlg import *
-#from config_dlg import *
-#from product_tour_dlg import *
-#from tip_dlg import *
-#from about_dlg import *
 from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.pyqt_ui.ui_main_window import Ui_MainWindow
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 
 # The folloving is need to determine the location of the translations.
 # TODO: needed?
+import os
 prefix = os.path.dirname(__file__)
 
 
@@ -41,15 +23,22 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, MainWidget):
         self.setupUi(self)
         self.statusbar_widgets = []
 
+    def closeEvent(self, event):
+        self.config()["main_window_size"] = (self.width(), self.height())
+
     def activate(self):
+        width, height = self.config()["main_window_size"]
+        if width:
+            self.resize(width, height)
         self.timer_1 = QtCore.QTimer()
         self.connect(self.timer_1, QtCore.SIGNAL("timeout()"),
-                     self.ui_controller_review().heartbeat)
+                     self.review_controller().heartbeat)
         self.timer_1.start(1000 * 60 * 10)
         self.timer_2 = QtCore.QTimer()
         self.connect(self.timer_2, QtCore.SIGNAL("timeout()"),
-                     self.ui_controller_main().heartbeat)
+                     self.controller().heartbeat)
         self.timer_2.start(1000 * 60 * 60 * 24)
+        self.review_controller().reset()
         
     def add_to_statusbar(self, widget):
         self.statusbar_widgets.append(widget)
@@ -92,61 +81,37 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, MainWidget):
         self.setWindowTitle(title)
 
     def add_cards(self):
-        self.ui_controller_main().add_cards()
+        self.controller().add_cards()
 
     def edit_current_card(self):
-        self.ui_controller_main().edit_current_card()
+        self.controller().edit_current_card()
         
     def delete_current_fact(self):
-        self.ui_controller_main().delete_current_fact()
+        self.controller().delete_current_fact()
         
     def file_new(self):
-        self.ui_controller_main().file_new()
+        self.controller().file_new()
 
     def file_open(self):
-        self.ui_controller_main().file_open()
+        self.controller().file_open()
         
     def file_save(self):
-        self.ui_controller_main().file_save()
+        self.controller().file_save()
         
     def file_save_as(self):
-        self.ui_controller_main().file_save_as()
+        self.controller().file_save_as()
         
     def manage_card_types(self):
-        self.ui_controller_main().manage_card_types()
+        self.controller().manage_card_types()
         
     def card_appearance(self):
-        self.ui_controller_main().card_appearance()
+        self.controller().card_appearance()
         
     def activate_plugins(self):
-        self.ui_controller_main().activate_plugins()
+        self.controller().activate_plugins()
 
     def show_statistics(self):
-        self.ui_controller_main().show_statistics()
-        
-    def run_add_cards_dialog(self):
-        dlg = AddCardsDlg(self, self.component_manager)
-        dlg.exec_()
-
-    def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        dlg = EditFactDlg(fact, self, self.component_manager, allow_cancel)
-        dlg.exec_()
-        
-    def run_manage_card_types_dialog(self):
-        dlg = ClonedCardTypesListDlg(self, self.component_manager)
-        dlg.exec_()
-        
-    def run_card_appearance_dialog(self):
-        dlg = CardAppearanceDlg(self, self.component_manager)
-        dlg.exec_()
-
-    def run_activate_plugins_dialog(self):
-        dlg = ActivatePluginsDlg(self, self.component_manager)
-        dlg.exec_()
-
-    def run_show_statistics_dialog(self):
-        dlg = StatisticsDlg(self, self.component_manager)
-        dlg.exec_()
+        self.controller().show_statistics()
         
     def Import(self):
         stopwatch.pause()
@@ -169,12 +134,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, MainWidget):
         stopwatch.pause()
         dlg = EditCardsDlg(self)
         dlg.exec_()
-        rebuild_revision_queue()
-        if not in_revision_queue(self.card):
+        rebuild_queue()
+        if not in_queue(self.card):
             self.newQuestion()
         else:
-            remove_from_revision_queue(self.card) # It's already being asked.
-        self.ui_controller_review().update_dialog(redraw_all=True)
+            remove_from_queue(self.card) # It's already being asked.
+        self.review_controller().update_dialog(redraw_all=True)
         self.updateDialog()
         stopwatch.unpause()
 
@@ -182,8 +147,8 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, MainWidget):
         stopwatch.pause()
         self.statusbar.message(_("Please wait..."))
         clean_duplicates(self)
-        rebuild_revision_queue()
-        if not in_revision_queue(self.card):
+        rebuild_queue()
+        if not in_queue(self.card):
             self.newQuestion()
         self.updateDialog()
         stopwatch.unpause()
@@ -198,11 +163,11 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, MainWidget):
         stopwatch.pause()
         dlg = ActivateCategoriesDlg(self)
         dlg.exec_()
-        rebuild_revision_queue()
-        if not in_revision_queue(self.card):
+        rebuild_queue()
+        if not in_queue(self.card):
             self.newQuestion()
         else:
-            remove_from_revision_queue(self.card) # It's already being asked.
+            remove_from_queue(self.card) # It's already being asked.
         self.updateDialog()
         stopwatch.unpause()
 
@@ -210,11 +175,11 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, MainWidget):
         stopwatch.pause()
         dlg = ConfigurationDlg(self)
         dlg.exec_loop()
-        rebuild_revision_queue()
-        if not in_revision_queue(self.card):
+        rebuild_queue()
+        if not in_queue(self.card):
             self.newQuestion()
         else:
-            remove_from_revision_queue(self.card) # It's already being asked.
+            remove_from_queue(self.card) # It's already being asked.
         self.updateDialog()
         stopwatch.unpause()
 

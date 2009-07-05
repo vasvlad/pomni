@@ -91,10 +91,17 @@ class HildonMainWidget(MainWidget):
             cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
             module = __import__("pomni.%s" % mode, globals(),
                                 locals(), [cname])
-            widget = getattr(module, cname)(self.component_manager)
-            self.widgets[mode] = widget
+            w_class = getattr(module, cname)
             if mode == "review":
-                self.component_manager.register(widget)
+                self.component_manager.register(w_class)
+                self.review_controller().reset()
+                widget = self.review_controller().widget
+            #if mode == "input":
+            #    self.component_manager.register(w_class)
+            #    widget = self.component_manager.get_current("add_cards_dialog")
+            else:
+                widget = w_class(self.component_manager)
+            self.widgets[mode] = widget
 
         widget.activate(param)
 
@@ -137,12 +144,13 @@ class HildonMainWidget(MainWidget):
         self.activate_mode('menu', None)
 
     def input_(self, widget=None):
-        """Activate input mode through main ui controller."""
-        self.ui_controller_main().add_cards()
+        """Activate input mode."""
+        #self.controller().add_cards()
+        self.activate_mode('input', None)
 
     def configure_(self, widget=None):
         """Activate configure mode through main ui controller."""
-        self.ui_controller_main().configure()
+        self.activate_mode('configuration', None)
 
     def review_(self, widget=None):
         """Activate review mode."""

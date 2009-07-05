@@ -66,9 +66,6 @@ def app_factory(interface=None):
                                   "GetTextTranslator"))
         app.components.append(("pomni.renderers", "Html"))
         app.components.append(("pomni.main", "HildonMainWidget"))
-        app.components.append(\
-            ("mnemosyne.libmnemosyne.ui_components.review_widget",
-             "ReviewWidget"))
 
         # Add necessary components
         app.components.append(\

@@ -3,7 +3,7 @@
 #
 
 from mnemosyne.libmnemosyne.translator import _
-from mnemosyne.libmnemosyne.ui_controller_review import UiControllerReview
+from mnemosyne.libmnemosyne.review_controller import ReviewController
 
 
 # Tooltip texts.  The first index deals with whether we have a card with
@@ -33,19 +33,27 @@ tooltip[1][5] = \
     _("The interval was probably too short.")
 
 
-class SM2Controller(UiControllerReview):
+class SM2Controller(ReviewController):
 
-    def activate(self):
-        self.reset()
-        
     def reset(self):
+
+        """A Plugin can have a new scheduler, a new review controller or both,
+        and in order to avoid running this time consuming code more than once,
+        it is not folded into 'activate'.
+
+        """
+
         self.card = None
         self.state = "EMPTY"
         self.learning_ahead = False
         self.non_memorised_count = None
         self.scheduled_count = None
         self.active_count = None
-        self.scheduler().reset()     
+        self.widget = self.component_manager.get_current("review_widget")\
+                      (self.component_manager)
+        self.widget.activate()
+        self.scheduler().reset()
+        self.new_question() 
 
     def heartbeat(self):
 
@@ -53,11 +61,10 @@ class SM2Controller(UiControllerReview):
         the data gets updated when a new day starts."""
             
         self.reload_counters()
-        self.review_widget().update_status_bar()
+        self.widget.update_status_bar()
         self.scheduler().heartbeat()
-        if not self.card or self.learning_ahead:
+        if self.card is None or self.learning_ahead:
             self.reset()
-            self.new_question()
 
     def new_question(self):
         if not self.active_count:
@@ -67,7 +74,7 @@ class SM2Controller(UiControllerReview):
             self.card = None
         else:
             self.card = self.scheduler().get_next_card(self.learning_ahead)
-            if self.card != None:
+            if self.card is not None:
                 self.state = "SELECT SHOW"
             else:
                 self.state = "SELECT AHEAD"
@@ -97,10 +104,10 @@ class SM2Controller(UiControllerReview):
             self.database().update_card(card_to_grade, repetition_only=True)
             self.database().save()
             self.new_question()     
-        if self.config()["show_intervals"] == "statusbar":
+        if self.config()["show_intervals"] == "status_bar":
             import math
             days = int(math.ceil(interval / (24.0 * 60 * 60)))
-            self.review_widget().update_status_bar(_("Returns in") + " " + \
+            self.widget.update_status_bar(_("Returns in") + " " + \
                   str(interval) + _(" day(s)."))
         
     def next_rep_string(self, days):
@@ -135,11 +142,11 @@ class SM2Controller(UiControllerReview):
     def update_dialog(self, redraw_all=False):
         self.update_qa_area(redraw_all)
         self.update_grades_area()
-        self.review_widget().update_status_bar()
+        self.widget.update_status_bar()
         self.update_menu_bar()
                    
     def update_qa_area(self, redraw_all=False):
-        w = self.review_widget()
+        w = self.widget
         # Hide/show the question and answer boxes.
         if self.state == "SELECT SHOW":
             w.question_box_visible(True)
@@ -155,10 +162,7 @@ class SM2Controller(UiControllerReview):
         # Update question label.
         question_label_text = _("Question: ")
         if self.card is not None:
-            for tag in self.card.tags:
-                if tag.name != _("<default>"):
-                    question_label_text += tag.name + ", "
-            question_label_text = question_label_text[:-2]
+            question_label_text += self.card.tag_string()
         w.set_question_label(question_label_text)
         # Update question content.
         if self.card is None:
@@ -187,18 +191,31 @@ class SM2Controller(UiControllerReview):
         w.update_show_button(text, default, show_enabled)
 
     def update_grades_area(self):
-        w = self.review_widget()
+        w = self.widget
         # Update grade buttons.
         if self.card and self.card.grade < 2:
             i = 0 # Acquisition phase.
             default_grade = 0
+            for grade in [3, 4, 5]:
+                w.enable_grade(grade, False)
         else:
             i = 1 # Retention phase.
             default_grade = 4
+            for grade in [3, 4, 5]:
+                w.enable_grade(grade, True)
         w.enable_grades(self.grades_enabled)
         if self.grades_enabled:
-            w.set_default_grade(default_grade)            
-        # Tooltips and texts for the grade buttons.
+            w.set_default_grade(default_grade)         
+        # Set title for grades box.
+        if self.state == "SELECT GRADE" and \
+               self.config()["show_intervals"] == "buttons":
+            w.set_grades_title(_("Pick days until next repetition:"))
+        else:
+            if self.card and self.card.grade == -1:
+                w.set_grades_title(_("Select initial grade:"))
+            else:
+                w.set_grades_title(_("Grade your answer:"))   
+        # Set tooltips and texts for the grade buttons.
         for grade in range(0,6):
             # Tooltip.
             if self.state == "SELECT GRADE" and \
@@ -216,10 +233,8 @@ class SM2Controller(UiControllerReview):
                self.config()["show_intervals"] == "buttons":
                 w.set_grade_text(grade, str(self.scheduler().process_answer(\
                                             self.card, grade, dry_run=True)))
-                w.set_grades_title(_("Pick days until next repetition:"))
             else:
-                w.set_grade_text(grade, str(grade))
-                w.set_grades_title(_("Grade your answer:"))
+                w.set_grade_text(grade, str(grade))           
 
     def update_menu_bar(self):
         w = self.main_widget()
@@ -235,9 +250,12 @@ class SM2Controller(UiControllerReview):
                 w.enable_edit_current_card(False)
         w.enable_delete_current_card(self.card != None)
         w.enable_browse_cards(self.database().is_loaded())
+        
+    def update_status_bar(self, message=None):
+        self.widget.update_status_bar(message)    
 
     def is_question_showing(self):
-        return self.ui_controller_review().state == "SELECT SHOW"
+        return self.review_controller().state == "SELECT SHOW"
 
     def is_answer_showing(self):
-        return self.ui_controller_review().state == "SELECT GRADE"
+        return self.review_controller().state == "SELECT GRADE"

@@ -22,7 +22,7 @@ As mentioned before, a Fact is linked to a CardType, and each CardType lists
 a set of FactViews.
 
 The actual Cards are generated from the data in Fact using the recipe of a
-certain FactView. A Card also contains all the revision data needed for the
+certain FactView. A Card also contains all the repetition data needed for the
 Scheduler to do its work. Since the question and answers are generated from
 the Fact data each time a Card is shown, related Cards (i.e. Cards with
 different FactViews of the same Fact) are always consistent.
@@ -40,9 +40,10 @@ relative paths to absolute paths, etc ..
 
 In order to make it easier for other GUI frontends to be written, all the logic
 typically needed for GUIs, but that is independent of the actual GUI toolkit
-used, is abstracted in ui controllers. In order to get more flexibility, there 
-are two of them: one related to the review widget, and one to the rest 
-of the program.
+used, is abstracted in controllers. In order to get more flexibility, there 
+are two of them: one related to the review process (which is different for 
+different schedulers), and one related to the rest of the program (which 
+normally won't change).
 
 There is also mechanism for plugins to add new statistical data to the standard
 statistics in an integrated way.
@@ -63,8 +64,8 @@ Contents
     modules/card
     modules/card_type_converter
     modules/renderer
-    modules/ui_controller_main
-    modules/ui_controller_review
+    modules/controller
+    modules/review_controller
     modules/configuration
     modules/database
     modules/file_format

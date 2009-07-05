@@ -1,19 +1,19 @@
 #
-# ui_controller_main.py <Peter.Bienstman@UGent.be>
+# controller.py <Peter.Bienstman@UGent.be>
 #
 
 from mnemosyne.libmnemosyne.component import Component
 
 
-class UiControllerMain(Component):
+class Controller(Component):
 
-    """A collection of logic used by the main Mnemosyne window and some related
-    widgets.  The logic related to the review process is split out in a
-    separated controller class, to allow that to be swapped out easily.
+    """A collection of logic used by the GUI.  The logic related to the
+    review process is split out in a separated controller class, to
+    allow that to be swapped out easily.
 
     """
 
-    component_type = "ui_controller_main"
+    component_type = "controller"
 
     def heartbeat(self):
 
@@ -28,11 +28,11 @@ class UiControllerMain(Component):
         raise NotImplementedError
     
     def create_new_cards(self, fact_data, card_type, grade,
-                         tag_names, warn=True):
+                         tag_names):
         raise NotImplementedError
     
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
-                             new_tag_names, correspondence, warn=True):
+                             new_tag_names, correspondence):
         raise NotImplementedError
 
     def delete_current_fact(self):

@@ -2,19 +2,13 @@
 # review_wdgt_cramming.py <Peter.Bienstman@UGent.be>
 #
 
-import gettext
-_ = gettext.gettext
-
 from PyQt4 import QtGui
 
-from review_wdgt import ReviewWdgt
-
-from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.pyqt_ui.review_wdgt import ReviewWdgt
    
 
 class ReviewWdgtCramming(ReviewWdgt):
-
-    instantiate = Component.WHEN_PLUGIN_ACTIVE
     
     def __init__(self, component_manager):
         ReviewWdgt.__init__(self, component_manager)
@@ -37,7 +31,7 @@ class ReviewWdgtCramming(ReviewWdgt):
 
     def update_status_bar(self, message=None):
         wrong_count, unseen_count, active_count = \
-                   self.ui_controller_review().get_counters()
+                   self.review_controller().get_counters()
         self.wrong.setText(_("Wrong: %d ") % wrong_count)
         self.unseen.setText(_("Unseen: %d ") % unseen_count)
         self.active.setText(_("Active: %d ") % active_count)

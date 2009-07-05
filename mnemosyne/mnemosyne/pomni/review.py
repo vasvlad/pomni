@@ -72,8 +72,8 @@ class RainbowReviewWidget(ReviewWidget):
 
     def activate(self, param=None):
         """Activate review widget."""
-
-        self.ui_controller_review().new_question()
+        #self.review_controller().new_question()
+        pass
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
@@ -167,28 +167,25 @@ class RainbowReviewWidget(ReviewWidget):
         self.main_widget().activate_mode("menu")
 
     def get_answer_cb(self, widget, event):
-        """Hook for showing a right answer."""
-
-        self.ui_controller_review().show_answer()
+        """ Hook for showing a right answer. """
+        self.review_controller().show_answer()
 
     def delete_card_cb(self, widget):
         """Hook for delete card."""
 
         self.main_widget().stop_playing()
-        self.ui_controller_main().delete_current_fact()
+        self.controller().delete_current_fact()
 
     def edit_card_cb(self, widget):
         """Hook for edit card."""
 
-        self.ui_controller_main().edit_current_card()
+        self.controller().edit_current_card()
 
     def grade_cb(self, widget):
         """Call grade of answer."""
 
         self.main_widget().stop_playing()
-        self.ui_controller_review().grade_answer(int(widget.name[-1]))
-
-
+        self.review_controller().grade_answer(int(widget.name[-1]))
 
 
 # Local Variables:

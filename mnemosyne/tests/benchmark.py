@@ -32,7 +32,9 @@ def startup():
         ("mnemosyne.libmnemosyne.loggers.txt_logger",
          "TxtLogger"),          
         ("mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne",
-         "SM2Mnemosyne"),                   
+         "SM2Mnemosyne"),
+        ("mnemosyne.libmnemosyne.stopwatch",
+          "Stopwatch"),
         ("mnemosyne.libmnemosyne.card_types.front_to_back",
          "FrontToBack"),
         ("mnemosyne.libmnemosyne.card_types.both_ways",
@@ -71,39 +73,39 @@ def create_database():
             card_type = mnemosyne.card_type_by_id("1")
         else:
             card_type = mnemosyne.card_type_by_id("2")            
-        card = mnemosyne.ui_controller_main().create_new_cards(\
+        card = mnemosyne.controller().create_new_cards(\
             fact_data, card_type, grade=4, tag_names=["default" + str(i)])[0]
-        card.next_rep -= 1000
+        card.next_rep -= 1000*24*60*60
         mnemosyne.database().update_card(card)
     mnemosyne.database().save(mnemosyne.config()["path"])
     
 def queue():
-    mnemosyne.ui_controller_review().reset()
-    mnemosyne.ui_controller_review().new_question()
+    mnemosyne.review_controller().reset()
+    mnemosyne.review_controller().new_question()
     
 def new_question():
     # Note that this actually also happened in startup().
-    mnemosyne.ui_controller_review().new_question()
+    mnemosyne.review_controller().new_question()
     
 def display():
-    mnemosyne.ui_controller_review().card.question()
+    mnemosyne.review_controller().card.question()
     
 def grade():
     # Note that this will also pull in a new question.
-    mnemosyne.ui_controller_review().grade_answer(0)
+    mnemosyne.review_controller().grade_answer(0)
 
 def grade_only():
     mnemosyne.scheduler().grade_answer(\
-        mnemosyne.ui_controller_review().card, 0)
+        mnemosyne.review_controller().card, 0)
 
 def count_active():
-    mnemosyne.database().active_count()
+    mnemosyne.scheduler().active_count()
 
 def count_scheduled():
-    mnemosyne.database().scheduled_count()
+    mnemosyne.scheduler().scheduled_count()
 
 def count_not_memorised():
-    mnemosyne.database().non_memorised_count()
+    mnemosyne.scheduler().non_memorised_count()
     
 def activate():
     mnemosyne.database().set_cards_active([(mnemosyne.card_type_by_id("1"),
@@ -114,15 +116,15 @@ def finalise():
     mnemosyne.config()["upload_logs"] = False
     mnemosyne.finalise()
 
-tests = ["startup()", "queue()", "new_question()", "display()", "grade_only()",
-         "grade()", "count_active()", "count_scheduled()", "count_not_memorised()"]
+#tests = ["startup()", "create_database()", "queue()", "new_question()", "display()", "grade_only()",
+#         "grade()", "count_active()", "count_scheduled()", "count_not_memorised()"]
 #tests = ["startup()", "new_question()", "display()", "grade()", "activate()",
 #    "finalise()"]
 #tests = ["startup()", "create_database()", "new_question()", "display()",
 #    "grade()", "activate()", "finalise()"]
 tests = ["startup()", "create_database()", "new_question()", "display()",
     "grade()", "finalise()"]
-#tests = ["startup()"]
+tests = ["startup()", "create_database()"]
 
 for test in tests:  
     cProfile.run(test, "mnemosyne_profile." + test.replace("()", ""))

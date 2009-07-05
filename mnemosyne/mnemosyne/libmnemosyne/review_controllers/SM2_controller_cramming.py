@@ -2,7 +2,8 @@
 # SM2_controller_cramming.py <Peter.Bienstman@UGent.be>
 #
 
-from mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller \
+from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.libmnemosyne.review_controllers.SM2_controller \
      import SM2Controller
 from mnemosyne.libmnemosyne.schedulers.cramming import Cramming
 
@@ -23,7 +24,7 @@ class SM2ControllerCramming(SM2Controller):
             self.database().update_card(card_to_grade, repetition_only=True)
             self.database().save()
             self.new_question()
-        self.review_widget().update_status_bar()
+        self.widget.update_status_bar()
         if self.config()["show_intervals"] == "statusbar":
             self.review_widget().update_status_bar(_("Returns in") + " " + \
                   str(interval) + _(" day(s)."))
@@ -40,7 +41,6 @@ class SM2ControllerCramming(SM2Controller):
         pass
     
     def update_grades_area(self):
-        w = self.review_widget()
-        w.enable_grades(self.grades_enabled)
+        self.widget.enable_grades(self.grades_enabled)
         if self.grades_enabled:
-            w.set_default_grade(5)
+            self.widget.set_default_grade(5)
