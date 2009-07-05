@@ -5,6 +5,10 @@
 from mnemosyne.libmnemosyne.renderer import Renderer
 import re
 
+LARGE_HTML_MARGIN = 20
+NORMAL_HTML_MARGIN = 70
+HINT_SIZE = 20
+
 class Html(Renderer):
     
     def __init__(self, component_manager):
@@ -46,6 +50,28 @@ class Html(Renderer):
 
         return re.sub('(.*\{font-size):[0-9]{1,2}(px;\}.*)', '\\1:%d\\2' \
             % self.config()['font_size'], text)
+
+    def render_html(self, widget, text="<html><body> </body></html>"):
+        """Render html text and set it to widget."""
+
+        document = widget.document
+        document.clear()
+        document.open_stream('text/html')
+        document.write_stream(text)
+        document.close_stream()
+
+    def update_show_button(self, widget, text, next_is_image_card):
+        """Render html text for show answer button."""
+
+        if next_is_image_card:
+            margin_top = LARGE_HTML_MARGIN
+        else:
+            margin_top = NORMAL_HTML_MARGIN
+        html = "<html><p align=center style='margin-top:%spx; \
+            font-size:%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
+        self.render_html(widget, html)
+
+
 
 
 class Text(Renderer):

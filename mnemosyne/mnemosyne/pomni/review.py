@@ -32,9 +32,6 @@ _ = gettext.gettext
 
 LARGE_CONTAINER_HEIGHT = 260
 NORMAL_CONTAINER_HEIGHT = 16
-LARGE_HTML_MARGIN = 20
-NORMAL_HTML_MARGIN = 70
-HINT_SIZE = 20
 
 class RainbowReviewWidget(ReviewWidget):
     """Rainbow theme: Review Widget."""
@@ -48,6 +45,7 @@ class RainbowReviewWidget(ReviewWidget):
                 "delete_card", "edit_card", "preview_sound_in_review"]]))
         self.next_is_image_card = False #Image card indicator
         self.sndtext = None
+        self.renderer = self.component_manager.get_current('renderer')
 
         # Widgets as attributes
         self.question_container = self.w_tree.get_widget("question_container")
@@ -60,15 +58,6 @@ class RainbowReviewWidget(ReviewWidget):
             "review_mode_snd_container")
         self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
         self.grades_table = self.w_tree.get_widget("grades_table")
-
-    def set_html_text(self, widget, text="<html><body> </body></html>"):
-        """Set text for html widget."""
-
-        document = widget.document
-        document.clear()
-        document.open_stream('text/html')
-        document.write_stream(text)
-        document.close_stream()
 
     def activate(self, param=None):
         """Activate review widget."""
@@ -109,35 +98,30 @@ class RainbowReviewWidget(ReviewWidget):
                 self.question_container.set_size_request( \
                     self.container_width, 16)
             self.question_container.show()
-        self.set_html_text(self.question_text, text)
+        self.renderer.render_html(self.question_text, text)
 
     def set_answer(self, text):
         """Set answer."""
 
-        self.set_html_text(self.answer_text, text)
+        self.renderer.render_html(self.answer_text, text)
         
     def clear_question(self): 
         """Clear question text."""
 
-        self.set_html_text(self.question_text)
+        self.renderer.render_html(self.question_text)
         
     def clear_answer(self):
         """Clear answer text."""
 
-        self.set_html_text(self.answer_text)
+        self.renderer.render_html(self.answer_text)
         
     def update_show_button(self, text, default, enabled): 
         """Update show button."""
 
         self.answer_container.set_sensitive(enabled)
         if enabled:
-            if self.next_is_image_card:
-                margin_top = LARGE_HTML_MARGIN
-            else:
-                margin_top = NORMAL_HTML_MARGIN
-            html = "<html><p align=center style='margin-top:%spx; \
-                font-size:%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
-            self.set_html_text(self.answer_text, html)
+            self.renderer.update_show_button( \
+                self.answer_text, text, self.next_is_image_card)
 
     def enable_grades(self, enabled):
         """Enable grades."""
@@ -167,7 +151,8 @@ class RainbowReviewWidget(ReviewWidget):
         self.main_widget().activate_mode("menu")
 
     def get_answer_cb(self, widget, event):
-        """ Hook for showing a right answer. """
+        """Hook for showing a right answer."""
+
         self.review_controller().show_answer()
 
     def delete_card_cb(self, widget):
