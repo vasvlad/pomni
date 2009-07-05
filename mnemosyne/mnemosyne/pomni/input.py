@@ -79,7 +79,7 @@ class RainbowInputWidget(UiComponent):
             return # Let the user try again to fill out the missing data.
 
         # Create new card
-        self.ui_controller_main().create_new_cards(fact_data, 
+        self.controller().create_new_cards(fact_data, 
             self.card_type, -1, [\
             self.categories.get_child().get_text()], True)
         self.database().save(self.config()['path'])

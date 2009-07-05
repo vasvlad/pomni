@@ -43,7 +43,8 @@ class RainbowReviewWidget(ReviewWidget):
 
     def activate(self):
         """Activate review widget."""
-        self.ui_controller_review().new_question()
+        #self.review_controller().new_question()
+        pass
 
     def enable_edit_current_card(self, enabled):
         print 'enable_edit_current_card'
@@ -64,7 +65,6 @@ class RainbowReviewWidget(ReviewWidget):
         print 'set_question_label', text
         
     def set_question(self, text):
-        print 'set_question', text
         document = self.w_tree.get_widget("question_text").document
         document.clear()
         document.open_stream('text/html')
@@ -77,7 +77,6 @@ class RainbowReviewWidget(ReviewWidget):
         document.close_stream()
 
     def set_answer(self, text):
-        print 'set_answer', text
         document = self.w_tree.get_widget('answer_text').document
         document.clear()
         document.open_stream('text/html')
@@ -138,27 +137,27 @@ class RainbowReviewWidget(ReviewWidget):
     def get_answer_cb(self, widget):
         """ Hook for showing a right answer. """
         print 'get_answer_cb'
-        self.ui_controller_review().show_answer()
+        self.review_controller().show_answer()
 
     def delete_card_cb(self, widget):
         """ Hook for delete card. """
 
         # Delete card
         if self.card and self.card.fact:
-            self.ui_controller_main().delete_current_fact()
+            self.controller().delete_current_fact()
 
     def edit_card_cb(self, widget):
         """ Hook for edit card. """
 
         # Edit card
         if self.card and self.card.fact:
-            self.ui_controller_main().edit_current_card()
+            self.controller().edit_current_card()
 
     def grade_cb(self, widget):
         """ Call grade of answer. """
 
         print 'grade_cb', int(widget.name[-1])
-        self.ui_controller_review().grade_answer(int(widget.name[-1]))
+        self.review_controller().grade_answer(int(widget.name[-1]))
 
 
 
