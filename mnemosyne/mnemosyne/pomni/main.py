@@ -55,8 +55,6 @@ class HildonMainWidget(MainWidget):
            Load theme glade file, assign gtk window callbacks.
         """
 
-        self.widgets = {}
-
         # Load the glade file for current theme
         theme_path = self.config()["theme_path"]
         self.theme = theme_path.split("/")[-1]
@@ -84,7 +82,6 @@ class HildonMainWidget(MainWidget):
             "information_dialog_label")
 
         self.w_tree = w_tree
-        self.soundmanager = None
 
     def activate_mode(self, mode):
         """Activate mode in lazy way."""
