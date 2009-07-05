@@ -37,7 +37,6 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../")
 
 from optparse import OptionParser
-from mnemosyne.libmnemosyne import Mnemosyne
 from pomni.factory import app_factory
 
 def parse_commandline(argv):
