@@ -199,7 +199,6 @@ class HildonMainWidget(MainWidget):
         self.information_dialog.run()
         self.information_dialog.hide()
 
-
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""
 
@@ -211,44 +210,21 @@ class HildonMainWidget(MainWidget):
             return False
         return True
 
-
-    def update_status_bar(self, message=None):
-        """ Not Implemented """
-        print 'update_status_bar'
-
-
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        """Start Edit/Update window."""
+        """Activate input mode."""
 
         self.activate_mode('input', fact) 
 
-    def error_box(self, message):
-        print 'error_box', message
-    
-    def save_file_dialog(self, path, filter, caption=""):
-        print 'save_file_dialog'
-    
-    def open_file_dialog(self, path, filter, caption=""):
-        print 'open_file_dialog'
-
-    def set_window_title(self, title):
-        #print 'set_window_title'
-        pass
-
     def run_add_cards_dialog(self):
+        """Activate input mode."""
+
         self.activate_mode('input', None)
 
-    def run_edit_deck_dialog(self):
-        print 'edit_deck_dialog'
-    
     def run_configuration_dialog(self):
+        """Activate configuration mode."""
+
         self.activate_mode('configuration', None)
 
-    def run_card_appearance_dialog(self):
-        print 'run_card_appearance_dialog'
-
-    def run_manage_card_types_dialog(self):
-        print 'run_manage_card_types_dialog'
 
 
 # Local Variables:
