@@ -30,8 +30,8 @@ _ = gettext.gettext
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
-class ConfigurationWidget(UiComponent):
-    """Hildon Configuration Widget."""
+class RainbowConfigurationWidget(UiComponent):
+    """Configuration Widget."""
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
@@ -42,8 +42,9 @@ class ConfigurationWidget(UiComponent):
                 ('change_fullscreen', 'change_font_size', 'change_theme',
                 'change_startup_with_review', 'config_to_main_menu')]))
         self.theme_modified = False
+        self.current_size = 0
 
-    def activate(self, param=None):
+    def activate(self):
         """Activate configuration mode."""
 
         self.w_tree.get_widget("checkbox_fullscreen_mode"). \
@@ -136,9 +137,6 @@ class ConfigurationWidget(UiComponent):
             self.w_tree.get_widget("config_mode_entry_sounddir").get_text()
         self.config().save()
         self.main_widget().activate_mode("menu")
-
-EternalConfigurationWidget = ConfigurationWidget
-RainbowConfigurationWidget = ConfigurationWidget
 
 
 # Local Variables:
