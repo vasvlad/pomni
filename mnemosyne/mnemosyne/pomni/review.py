@@ -59,11 +59,6 @@ class RainbowReviewWidget(ReviewWidget):
         self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
         self.grades_table = self.w_tree.get_widget("grades_table")
 
-    def activate(self, param=None):
-        """Activate review widget."""
-        #self.review_controller().new_question()
-        pass
-
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
 

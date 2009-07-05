@@ -207,7 +207,7 @@ class RainbowInputWidget(AddCardsDialog):
         pattern_list = ["Type %s here..." % item for item in ["ANSWER", \
             "QUESTION", "FOREIGN", "PRONUNCIATION", "TRANSLATION", "TEXT"]]
         pattern_list.append("")
-        for _, widget in self.selectors[self.card_type.id]["widgets"]:
+        for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
             start, end = widget.get_buffer().get_bounds()
             if widget.get_buffer().get_text(start, end) in pattern_list:
                 return False
