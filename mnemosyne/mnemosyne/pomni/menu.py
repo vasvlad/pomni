@@ -27,6 +27,7 @@ Hildon UI. Menu widgets.
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 class RainbowMenuWidget(UiComponent):
+    """Main menu widget."""
 
     review, input, configuration = range(1, 4)
 
@@ -40,21 +41,21 @@ class RainbowMenuWidget(UiComponent):
             dict([(mode, getattr(self, mode + "_cb")) \
                 for mode in ["input", "review", "configure", "exit"]]))
 
-    def activate(self, param=None):
-        pass
-
     # callbacks
     def input_cb(self, widget):
         """Return to main menu."""
         self.main_widget().input_()
 
     def review_cb(self, widget):
+        """Go to review mode."""
         self.main_widget().review_()
 
     def configure_cb(self, widget):
+        """Go to configuration mode."""
         self.main_widget().configure_()
 
     def exit_cb(self, widget):
+        """Exit program."""
         self.main_widget().exit_()
 
 
