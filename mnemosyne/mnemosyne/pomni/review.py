@@ -120,7 +120,7 @@ class RainbowReviewWidget(ReviewWidget):
 
         self.answer_container.set_sensitive(enabled)
         if enabled:
-            self.renderer.update_show_button( \
+            self.renderer.render_hint( \
                 self.answer_text, text, self.next_is_image_card)
 
     def enable_grades(self, enabled):

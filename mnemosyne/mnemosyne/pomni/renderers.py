@@ -1,6 +1,27 @@
+#!/usr/bin/python -tt7
+# vim: sw=4 ts=4 expandtab ai
 #
-# html_css.py <Peter.Bienstman@UGent.be>
-# html_maemo.py # Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
+# Pomni. Learning tool based on spaced repetition technique
+#
+# Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License version 2 as published by the
+# Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+# 02110-1301 USA
+
+"""
+Html renderer.
+"""
 
 from mnemosyne.libmnemosyne.renderer import Renderer
 import re
@@ -10,12 +31,15 @@ NORMAL_HTML_MARGIN = 70
 HINT_SIZE = 20
 
 class Html(Renderer):
+    """Hildon Html renderer."""
     
     def __init__(self, component_manager):
         Renderer.__init__(self, component_manager)
         self._css = {} # {card_type: css}
         
     def css(self, card_type):
+        """Creates css."""
+
         if card_type.id not in self._css:
             self._css[card_type.id] = """
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -28,17 +52,21 @@ class Html(Renderer):
         return self._css[card_type.id]
 
     def render_card_fields(self, fact, fields):
+        """Renders cards fileds."""
+
         html = "<html><head>" + self.css(fact.card_type) + \
             "</head><body><table><tr><td>"
         for field in fields:
-            s = fact[field]
-            #for f in self.filters():
-            #    s = f.run(s)
-            html += "<div id=\"%s\">%s</div>" % (field, s)
+            text = fact[field]
+            #for filter in self.filters():
+            #    text = filter.run(text)
+            html += "<div id=\"%s\">%s</div>" % (field, text)
         html += "</td></tr></table></body></html>"
         return self.change_font_size(html)
 
     def render_text(self, text, field_name, card_type):
+        """Renders text card fields."""
+
         html = "<html><head>" + self.css(card_type) + \
             "</head><body><table><tr><td><div id=\"%s\">"
         html += "<div id=\"%s\">%s</div>" % (field_name, text)
@@ -60,7 +88,7 @@ class Html(Renderer):
         document.write_stream(text)
         document.close_stream()
 
-    def update_show_button(self, widget, text, next_is_image_card):
+    def render_hint(self, widget, text, next_is_image_card):
         """Render html text for show answer button."""
 
         if next_is_image_card:
@@ -75,15 +103,19 @@ class Html(Renderer):
 
 
 class Text(Renderer):
+    """Simple text renderer."""
+
     def __init__(self, component_manager):
         Renderer.__init__(self, component_manager)
     
     def render_card_fields(self, fact, fields):
+        """Renders card fields."""
+
         txt = ''
         for field in fields:
-            s = fact[field]
-            for f in self.filters():
-                s = f.run(s, fact)
-            txt += s
+            text = fact[field]
+            for filter in self.filters():
+                text = filter.run(text, fact)
+            txt += text
         return txt
 
