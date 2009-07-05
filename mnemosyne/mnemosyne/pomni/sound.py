@@ -69,7 +69,8 @@ class SoundPlayer:
         self.player.set_state(gst.STATE_NULL)
         self.parent.update_indicator()
 
-    def parse_fname(self, text):
+    @staticmethod
+    def parse_fname(text):
         """Returns filename to play."""
 
         return os.path.abspath(re.search(r"'[^']+'", text).group()[1:-1])
