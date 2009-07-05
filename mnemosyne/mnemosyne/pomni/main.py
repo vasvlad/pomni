@@ -96,9 +96,9 @@ class HildonMainWidget(MainWidget):
                 self.component_manager.register(w_class)
                 self.review_controller().reset()
                 widget = self.review_controller().widget
-            if mode == "input":
-                self.component_manager.register(w_class)
-                widget = self.component_manager.get_current("add_cards_dialog")
+            #if mode == "input":
+            #    self.component_manager.register(w_class)
+            #    widget = self.component_manager.get_current("add_cards_dialog")
             else:
                 widget = w_class(self.component_manager)
             self.widgets[mode] = widget
@@ -144,12 +144,13 @@ class HildonMainWidget(MainWidget):
         self.activate_mode('menu', None)
 
     def input_(self, widget=None):
-        """Activate input mode through main ui controller."""
-        self.controller().add_cards()
+        """Activate input mode."""
+        #self.controller().add_cards()
+        self.activate_mode('input', None)
 
     def configure_(self, widget=None):
         """Activate configure mode through main ui controller."""
-        self.controller().configure()
+        self.activate_mode('configuration', None)
 
     def review_(self, widget=None):
         """Activate review mode."""
