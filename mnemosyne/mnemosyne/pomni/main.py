@@ -28,27 +28,32 @@ import os
 import gettext
 import gtk
 import gtk.glade
-import gtkhtml2
 import urllib
+import gtkhtml2
 import urlparse
 
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
 
-htmlOpener = urllib.FancyURLopener()
-
 class HildonMainWidget(MainWidget):
     """Hildon main widget."""
 
     menu, review, input, configuration = range(4)
 
-    def activate(self, param=None):
+    def __init__(self, component_manager):
+        MainWidget.__init__(self, component_manager)
+        self.switcher = self.question_dialog = self.window = self.w_tree = \
+            self.question_dialog_label = self.information_dialog = \
+            self.information_dialog_label = self.soundmanager = self.theme = \
+            self.fullscreen = None
+        self.widgets = {}
+        self.htmlopener = urllib.FancyURLopener()
+
+    def activate(self):
         """Basic UI setup. 
            Load theme glade file, assign gtk window callbacks.
         """
-
-        self.widgets = {}
 
         # Load the glade file for current theme
         theme_path = self.config()["theme_path"]
@@ -60,13 +65,10 @@ class HildonMainWidget(MainWidget):
         self.switcher = w_tree.get_widget("switcher")
         self.window = w_tree.get_widget("window")
 
-        self.question_flag = False
         # fullscreen mode
-        if self.config()['fullscreen']:
+        self.fullscreen = self.config()['fullscreen']
+        if self.fullscreen:
             self.window.fullscreen()
-            self.fullscreen = True
-        else:
-            self.fullscreen = False
 
         # connect signals to methods
         self.window.connect("delete_event", self.exit_)
@@ -80,9 +82,8 @@ class HildonMainWidget(MainWidget):
             "information_dialog_label")
 
         self.w_tree = w_tree
-        self.soundmanager = None
 
-    def activate_mode(self, mode, param=None):
+    def activate_mode(self, mode):
         """Activate mode in lazy way."""
 
         self.switcher.set_current_page(getattr(self, mode))
@@ -103,7 +104,7 @@ class HildonMainWidget(MainWidget):
                 widget = w_class(self.component_manager)
             self.widgets[mode] = widget
 
-        widget.activate(param)
+        widget.activate()
 
     def start(self, mode):
         """UI entry point. Activates specified mode."""
@@ -141,22 +142,23 @@ class HildonMainWidget(MainWidget):
     # modes
     def menu_(self):
         """Activate menu."""
-        self.activate_mode('menu', None)
+        self.activate_mode('menu')
 
-    def input_(self, widget=None):
+    def input_(self):
         """Activate input mode."""
         #self.controller().add_cards()
-        self.activate_mode('input', None)
+        self.activate_mode('input')
 
-    def configure_(self, widget=None):
+    def configure_(self):
         """Activate configure mode through main ui controller."""
-        self.activate_mode('configuration', None)
+        self.activate_mode('configuration')
 
-    def review_(self, widget=None):
+    def review_(self):
         """Activate review mode."""
-        self.activate_mode('review', None)
+        self.activate_mode('review')
 
-    def exit_(self, widget):
+    @staticmethod
+    def exit_():
         """Exit from main gtk loop."""
         gtk.main_quit()
 
@@ -179,16 +181,16 @@ class HildonMainWidget(MainWidget):
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
-
     # ui helpers
-    @staticmethod
-    def create_gtkhtml(args):
+    def create_gtkhtml(self, args):
         """ Create gtkhtml2 widget """
 
         def request_url(document, url, stream):
+            """Get content from url."""
             uri = urlparse.urljoin("", url)
-            f = htmlOpener.open(uri)
-            stream.write(f.read())
+            fpurl = self.htmlopener.open(uri)
+            stream.write(fpurl.read())
+            fpurl.close()
             stream.close()
 
         view = gtkhtml2.View()
@@ -206,6 +208,11 @@ class HildonMainWidget(MainWidget):
         self.information_dialog_label.set_text('\n' + message + '\n')
         self.information_dialog.run()
         self.information_dialog.hide()
+
+    def error_box(self, message):
+        """Error message."""
+
+        self.information_box(message)
 
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""

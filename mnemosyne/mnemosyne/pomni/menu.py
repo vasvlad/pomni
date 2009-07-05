@@ -27,6 +27,7 @@ Hildon UI. Menu widgets.
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 class RainbowMenuWidget(UiComponent):
+    """Main menu widget."""
 
     review, input, configuration = range(1, 4)
 
@@ -40,91 +41,22 @@ class RainbowMenuWidget(UiComponent):
             dict([(mode, getattr(self, mode + "_cb")) \
                 for mode in ["input", "review", "configure", "exit"]]))
 
-    def activate(self, param=None):
-        pass
-
     # callbacks
     def input_cb(self, widget):
         """Return to main menu."""
-        self.main_widget().input_(widget)
+        self.main_widget().input_()
 
     def review_cb(self, widget):
-        self.main_widget().review_(widget)
+        """Go to review mode."""
+        self.main_widget().review_()
 
     def configure_cb(self, widget):
-        self.main_widget().configure_(widget)
+        """Go to configuration mode."""
+        self.main_widget().configure_()
 
     def exit_cb(self, widget):
-        self.main_widget().exit_(widget)
-
-
-############### old design #############################
-
-class HildonUiControllerMain():
-    """ Hidon Main Controller  """
-
-    def show(self):
-        """ Start base class """
-        self.switcher.set_current_page(self.main_menu)
-
-    def edit_current_card(self):
-        """ Not Implemented Yet """
-
-        pass
-
-    def update_related_cards(self, fact, new_fact_data, new_card_type, \
-                             new_cat_names):
-        """ Not Implemented """
-
-        pass
-
-
-    def file_new(self):
-        """ Not Implemented Yet """
-
-        pass
-
-    def file_open(self):
-        """ Not Implemented Yet """
-
-        pass
-
-    def file_save(self):
-        """ Not Implemented Yet """
-
-        pass
-
-    def file_save_as(self):
-        """ Not Implemented Yet """
-
-        pass
-
-
-
-class EternalControllerMain(HildonUiControllerMain):
-    """ Eternal UI Main Controller """
-
-    def activate(self):
-        self.w_tree.signal_autoconnect({"size_allocate": self.size_allocate_cb})
-        self.spliter_trigger = True
-
-    def size_allocate_cb(self, widget, user_data):
-        """ Checking window size """
-
-        if (self.switcher.get_current_page() == self.review):
-            if (self.spliter_trigger):
-                # Set Spliter (GtkVpan) to pseudo medium
-                self.spliter_trigger = False
-                pseudo_medium = (widget.allocation.height - 70)/2 - 20
-                self.spliter.set_property('position', pseudo_medium)
-            else:
-                self.spliter_trigger = True
-
-class RainbowControllerMain(HildonUiControllerMain):
-    """ Rainbow UI Main Controller """
-
-    def activate(self):
-        pass
+        """Exit program."""
+        self.main_widget().exit_()
 
 
 # Local Variables:
