@@ -338,7 +338,7 @@ class RainbowInputWidget(AddCardsDialog):
             self.main_widget().activate_mode("review")
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, -1, \
-                [self.widgets["CurrentCategory"].get_text()], True)
+                [self.widgets["CurrentCategory"].get_text()])
             self.clear_widgets()
 
         self.main_widget().stop_playing()
