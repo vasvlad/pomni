@@ -29,7 +29,7 @@ import gtk
 import gtk.glade
 import os
 
-from mnemosyne.libmnemosyne.ui_component.dialogs import AddCardsDialog
+from mnemosyne.libmnemosyne.ui_components.dialogs import AddCardsDialog
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
@@ -41,7 +41,7 @@ class RainbowInputWidget(AddCardsDialog):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
-        UiComponent.__init__(self, component_manager)
+        AddCardsDialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
 
