@@ -58,15 +58,48 @@ class RainbowInputWidget(UiComponent):
         iconview_widget.set_model(self.liststore)
         iconview_widget.set_pixbuf_column(4)
         iconview_widget.set_text_column(0)
+
+        # Widgets as attributes
+        self.areas = {# Text areas
+            "cloze": self.w_tree.get_widget("cloze_text_w"),
+            "answer":  self.w_tree.get_widget("answer_text_w"),
+            "foreign": self.w_tree.get_widget("foreign_text_w"),
+            "question": self.w_tree.get_widget("question_text_w"),
+            "translation": self.w_tree.get_widget("translation_text_w"),
+            "pronunciation": self.w_tree.get_widget("pronun_text_w")
+        }
+        self.selectors = {# Card type selectors
+            "Cloze": \
+                self.w_tree.get_widget("cloze_mode_selector_w"),
+            "BothWay": \
+                self.w_tree.get_widget("both_way_mode_selector_w"),
+            "ThreeSided": \
+                self.w_tree.get_widget("three_side_mode_selector_w"),
+            "FrontToBack": \
+                self.w_tree.get_widget("front_to_back_mode_selector_w")
+        }
+        self.containers = {# Containers
+            "sound": self.w_tree.get_widget("input_mode_snd_container"),
+            "question": self.w_tree.get_widget("input_mode_question_container")
+        }
+        self.widgets = {# Other widgets
+            "sound": self.w_tree.get_widget("sound_content_button"),
+            "picture": self.w_tree.get_widget("picture_content_button"),
+            "SoundIndicator": self.w_tree.get_widget("input_mode_snd_button"),
+            "NewCategory": self.w_tree.get_widget("input_mode_new_category_entry"),
+            "CurrentCategory": self.w_tree.get_widget("category_name_w"),
+            "CardTypeSwithcer": self.w_tree.get_widget("card_type_switcher_w")
+        }
+
         self.set_card_type()
         self.layout()
 
         # Turn off hildon autocapitalization
         try:
-            for widget in ("question_box_text", "answer_box_text",
-                           "pronun_box_text"):
-                self.w_tree.get_widget(widget).\
-                    set_property("hildon-input-mode", 'full')
+            for widget in (self.areas["question"], self.areas["answer"], \
+                self.areas["foreign"], self.areas["pronunciation"], \
+                self.areas["cloze"], self.areas["translation"]):
+                widget.set_property("hildon-input-mode", 'full')
         # stock gtk doesn't have hildon properties
         except (TypeError, AttributeError): 
             pass # so, skip silently
@@ -81,7 +114,6 @@ class RainbowInputWidget(UiComponent):
         self.update_categories()
         self.clear_widgets()
         if fact: # If enter from Review mode
-            self.stop_playing()
             self.card_type = fact.card_type
             self.layout()
             self.set_widgets_data(fact)
@@ -91,16 +123,14 @@ class RainbowInputWidget(UiComponent):
     def show_snd_container(self):
         """ Shows or hides snd container. """
                     
-        start, end = self.w_tree.get_widget("question_text_w").\
-            get_buffer().get_bounds()
-        text = self.w_tree.get_widget("question_text_w").get_buffer(). \
-            get_text(start, end)
+        start, end = self.areas["question"].get_buffer().get_bounds()
+        text = self.areas["question"].get_buffer().get_text(start, end)
         if "sound src=" in text:
-            self.w_tree.get_widget("input_mode_question_container").hide()
-            self.w_tree.get_widget("input_mode_snd_container").show()
+            self.containers["question"].hide()
+            self.containers["sound"].show()
         else:
-            self.w_tree.get_widget("input_mode_question_container").show()
-            self.w_tree.get_widget("input_mode_snd_container").hide()
+            self.containers["question"].show()
+            self.containers["sound"].hide()
 
     def layout (self):
         """Switches to neccessary input page. It depends on card_type."""
@@ -113,30 +143,28 @@ class RainbowInputWidget(UiComponent):
             _("Cloze deletion"): 2
             }
             selectors_dict = {
-            _("Front-to-back only"): "front_to_back_mode_selector_w",
-            _("Front-to-back and back-to-front"):"both_way_mode_selector_w", 
-            _("Foreign word with pronunciation"):"three_side_mode_selector_w",
-            _("Cloze deletion"): "cloze_mode_selector_w"
-            }
-            self.w_tree.get_widget("card_type_switcher_w").set_current_page( \
+            _("Front-to-back only"): self.selectors["FrontToBack"],
+            _("Front-to-back and back-to-front"): self.selectors["BothWay"], 
+            _("Foreign word with pronunciation"): self.selectors["ThreeSided"],
+            _("Cloze deletion"): self.selectors["Cloze"]}
+            self.widgets["CardTypeSwithcer"].set_current_page( \
                 cardtype_dict[self.card_type.name])
-            self.w_tree.get_widget(selectors_dict[self.card_type.name]). \
-                set_active(True)
-            self.w_tree.get_widget("picture_content_button").set_sensitive( \
+            selectors_dict[self.card_type.name].set_active(True)
+            self.widgets["picture"].set_sensitive( \
                 not cardtype_dict[self.card_type.name])
-            self.w_tree.get_widget("sound_content_button").set_sensitive( \
+            self.widgets["sound"].set_sensitive( \
                 not cardtype_dict[self.card_type.name])
 
     def set_card_type(self):
         """Set current card type."""
 
         widgets_cardtypes_dict = {
-            "front_to_back_mode_selector_w": _("Front-to-back only"),\
-            "both_way_mode_selector_w": _("Front-to-back and back-to-front"),\
-            "three_side_mode_selector_w": _("Foreign word with pronunciation"),\
-            "cloze_mode_selector_w": _("Cloze deletion")}
-        for widget_name, cardtype_name in widgets_cardtypes_dict.items():
-            widget = self.w_tree.get_widget(widget_name)
+            self.selectors["FrontToBack"]: _("Front-to-back only"),
+            self.selectors["BothWay"]: _("Front-to-back and back-to-front"),
+            self.selectors["ThreeSided"]: _("Foreign word with pronunciation"),
+            self.selectors["Cloze"]: _("Cloze deletion")
+        }
+        for widget, cardtype_name in widgets_cardtypes_dict.items():
             if widget.get_active() == True:
                 for cardtype in self.card_types():
                     if cardtype.name == cardtype_name:
@@ -152,28 +180,24 @@ class RainbowInputWidget(UiComponent):
             if categories.values():
                 for category in sorted(categories.values()):
                     self.categories_list.append(category)
-                self.w_tree.get_widget("category_name_w").set_text( \
+                self.widgets["CurrentCategory"].set_text( \
                     sorted(categories.values())[0])
             else:
                 self.categories_list.append("default category")
-                self.w_tree.get_widget("category_name_w").set_text( \
-                    "default category")
+                self.widgets["CurrentCategory"].set_text("default category")
 
     def check_complete_input(self):
         """Check for non empty fields."""
 
         cardtype_dict = {
-            _("Front-to-back only"): [ \
-                self.w_tree.get_widget("question_text_w"),
-                self.w_tree.get_widget("answer_text_w")],
-            _("Front-to-back and back-to-front"): [ \
-                self.w_tree.get_widget("question_text_w"),
-                self.w_tree.get_widget("answer_text_w")], 
-            _("Foreign word with pronunciation"): [ \
-                self.w_tree.get_widget("foreign_text_w"),
-                self.w_tree.get_widget("pronun_text_w"),
-                self.w_tree.get_widget("translation_text_w")],
-            _("Cloze deletion"): [self.w_tree.get_widget("cloze_text_w")]}
+            _("Front-to-back only"): [self.areas["question"], \
+                self.areas["answer"]],
+            _("Front-to-back and back-to-front"): [self.areas["question"], \
+                self.areas["answer"]], 
+            _("Foreign word with pronunciation"): [self.areas["foreign"], \
+                self.areas["pronunciation"], self.areas["translation"]],
+            _("Cloze deletion"): [self.areas["cloze"]]
+        }
         pattern_list = ["Type %s here..." % item for item in ["ANSWER", \
             "QUESTION", "FOREIGN", "PRONUNCIATION", "TRANSLATION", "TEXT"]]
         pattern_list.append("")
@@ -191,7 +215,7 @@ class RainbowInputWidget(UiComponent):
             direction = -1
         direction = 1
         category_index = self.categories_list.index( \
-            self.w_tree.get_widget("category_name_w").get_text())
+            self.widgets["CurrentCategory"].get_text())
         try:
             new_category = self.categories_list[category_index + direction]
         except IndexError:
@@ -199,17 +223,16 @@ class RainbowInputWidget(UiComponent):
                 new_category = self.categories_list[0]
             else:
                 new_category = self.categories_list[len(self.categories_list)-1]
-        self.w_tree.get_widget("category_name_w").set_text(new_category)
+        self.widgets["CurrentCategory"].set_text(new_category)
 
     def create_new_category_cb(self, widget):
         """Create new category."""
 
-        new_category = self.w_tree.get_widget( \
-            "input_mode_new_category_entry").get_text()
+        new_category = self.widgets["NewCategory"].get_text()
         if new_category:
             self.categories_list.append(new_category)
-            self.w_tree.get_widget("input_mode_new_category_entry").set_text("")
-            self.w_tree.get_widget("category_name_w").set_text(new_category)
+            self.widgets["NewCategory"].set_text("")
+            self.widgets["CurrentCategory"].set_text(new_category)
             self.hide_add_category_block_cb(None)
 
     def add_picture_cb(self, widget):
@@ -263,8 +286,7 @@ class RainbowInputWidget(UiComponent):
             self.liststore.get_iter(item_index), 3)
         question_text = "<%s src='%s'>" % \
             (item_type, os.path.join(item_dirname, item_fname))
-        self.w_tree.get_widget("question_text_w").get_buffer(). \
-            set_text(question_text)
+        self.areas["question"].get_buffer().set_text(question_text)
         self.show_snd_container()
 
     def add_sound_cb(self, widget):
@@ -307,11 +329,11 @@ class RainbowInputWidget(UiComponent):
         main = self.ui_controller_main()
         if self.update: #Update card
             main.update_related_cards(self.fact, fact_data, self.card_type, \
-                [self.w_tree.get_widget("category_name_w").get_text()], None)
+                [self.widgets["CurrentCategory"].get_text()], None)
             self.main_widget().activate_mode("review")
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, -1, \
-                [self.w_tree.get_widget("category_name_w").get_text()], True)
+                [self.widgets["CurrentCategory"].get_text()], True)
             self.clear_widgets()
 
         self.main_widget().stop_playing()
@@ -322,14 +344,14 @@ class RainbowInputWidget(UiComponent):
 
         fact = {}
         if self.card_type.name == _("Foreign word with pronunciation"):
-            widgets = [('f', self.w_tree.get_widget("foreign_text_w")),
-                       ('t', self.w_tree.get_widget("translation_text_w")),
-                       ('p', self.w_tree.get_widget("pronun_text_w"))]
+            widgets = [('f', self.areas["foreign"]), \
+                ('t', self.areas["translation"]), \
+                ('p', self.areas["pronunciation"])]
         elif self.card_type.name ==  _("Cloze deletion"):
-            widgets = [('text', self.w_tree.get_widget("cloze_text_w"))]
+            widgets = [('text', self.areas["cloze"])]
         else:
-            widgets = [('q', self.w_tree.get_widget("question_text_w")),
-                       ('a', self.w_tree.get_widget("answer_text_w"))]
+            widgets = [('q', self.areas["question"]), \
+                ('a', self.areas["answer"])]
         for fact_key, widget in widgets:
             start, end = widget.get_buffer().get_bounds()
             fact[fact_key] = widget.get_buffer().get_text(start, end)
@@ -344,32 +366,28 @@ class RainbowInputWidget(UiComponent):
         """Set widgets data from fact."""
 
         if self.card_type.name == _("Foreign word with pronunciation"):
-            widgets = [('f', self.w_tree.get_widget("foreign_text_w")),
-                       ('t', self.w_tree.get_widget("translation_text_w")),
-                       ('p', self.w_tree.get_widget("pronun_text_w"))]
+            widgets = [('f', self.areas["foreign"]), \
+                ('t', self.areas["translation"]), \
+                ('p', self.areas["pronunciation"])]
         elif self.card_type.name ==  _("Cloze deletion"):
-            widgets = [('text', self.w_tree.get_widget("cloze_text_w"))]
+            widgets = [('text', self.areas["cloze"])]
         else:
-            widgets = [('q', self.w_tree.get_widget("question_text_w")),
-                       ('a', self.w_tree.get_widget("answer_text_w"))]
+            widgets = [('q', self.areas["question"]), \
+                ('a', self.areas["answer"])]
         for fact_key, widget in widgets:
             widget.get_buffer().set_text(fact[fact_key])
 
     def clear_widgets(self):
         """Clear data in widgets."""
 
-        self.w_tree.get_widget("question_text_w").get_buffer().set_text( \
-            "Type QUESTION here...")
-        self.w_tree.get_widget("answer_text_w").get_buffer().set_text( \
-            "Type ANSWER here...")
-        self.w_tree.get_widget("foreign_text_w").get_buffer().set_text( \
-            "Type FOREIGN here...")
-        self.w_tree.get_widget("pronun_text_w").get_buffer().set_text( \
+        self.areas["question"].get_buffer().set_text("Type QUESTION here...")
+        self.areas["answer"].get_buffer().set_text("Type ANSWER here...")
+        self.areas["foreign"].get_buffer().set_text("Type FOREIGN here...")
+        self.areas["pronunciation"].get_buffer().set_text( \
             "Type PRONUNCIATION here...")
-        self.w_tree.get_widget("translation_text_w").get_buffer().set_text( \
-            "Type TRANSLATION here...")
-        self.w_tree.get_widget("cloze_text_w").get_buffer().set_text( \
-            "Type TEXT here...")
+        self.areas["translation"].get_buffer().set_text( \
+        "Type TRANSLATION here...")
+        self.areas["cloze"].get_buffer().set_text("Type TEXT here...")
 
     def change_card_type_cb(self, widget):
         """Changes cardtype when user choose it from cardtype column."""
@@ -384,10 +402,8 @@ class RainbowInputWidget(UiComponent):
         """Preview sound in input mode."""
 
         if widget.get_active():
-            start, end = self.w_tree.get_widget("question_text_w"). \
-                get_buffer().get_bounds()
-            text = self.w_tree.get_widget("question_text_w").get_buffer(). \
-                get_text(start, end)
+            start, end = self.areas["question"].get_buffer().get_bounds()
+            text = self.areas["question"].get_buffer().get_text(start, end)
             self.main_widget().start_playing(text, self)
         else:
             self.main_widget().stop_playing()
@@ -395,7 +411,7 @@ class RainbowInputWidget(UiComponent):
     def update_indicator(self):
         """Set non active state for widget."""
 
-        self.w_tree.get_widget("input_mode_snd_button").set_active(False)
+        self.widgets["SoundIndicator"].set_active(False)
 
     def close_media_selection_dialog_cb(self, widget):
         """Close image selection dialog."""
@@ -425,13 +441,16 @@ class RainbowInputWidget(UiComponent):
         """Stop playing audiofile."""
 
         if self.main_widget().stop_playing():
-            self.w_tree.get_widget("input_mode_snd_button").set_active(False)
+            self.widgets["SoundIndicator"].set_active(False)
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
         self.main_widget().stop_playing()
         self.main_widget().activate_mode("menu")
+
+
+
 
 # Local Variables:
 # mode: python
