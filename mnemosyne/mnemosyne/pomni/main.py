@@ -73,14 +73,14 @@ class HildonMainWidget(MainWidget):
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in ("window_state", "window_keypress")]))
 
+        self.question_dialog = w_tree.get_widget("question_dialog")
+        self.information_dialog = w_tree.get_widget("information_dialog")
+        self.question_dialog_label = w_tree.get_widget("question_dialog_label")
+        self.information_dialog_label = w_tree.get_widget(\
+            "information_dialog_label")
+
         self.w_tree = w_tree
         self.soundmanager = None
-        self.question_dialog = self.w_tree.get_widget("question_dialog")
-        self.information_dialog = self.w_tree.get_widget("information_dialog")
-        self.question_dialog_label = self.w_tree.get_widget( \
-            "question_dialog_label")
-        self.information_dialog_label = self.w_tree.get_widget( \
-            "information_dialog_label")
 
     def activate_mode(self, mode, param=None):
         """Activate mode in lazy way."""
@@ -203,8 +203,8 @@ class HildonMainWidget(MainWidget):
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""
 
-        question = question.replace("?", "?\n").replace(",", ",\n")
-        self.question_dialog_label.set_text('\n'  + question)
+        self.question_dialog_label.set_text( \
+            '\n'  + question.replace("?", "?\n").replace(",", ",\n"))
         response = self.question_dialog.run()
         self.question_dialog.hide()
         if response == gtk.RESPONSE_YES:
