@@ -185,16 +185,6 @@ class HildonMainWidget(MainWidget):
         view.show()
         return view
 
-
-    @staticmethod
-    def clear_label(caption):
-        """Remove &-symbol from caption if exists."""
-        index = caption.find("&")
-        if not index == -1:
-            return caption[:index] + caption[index+1:]
-        return caption
-
-
     # Main Widget API
     def information_box(self, message, button_caption='OK'):
         """Create Information message."""
