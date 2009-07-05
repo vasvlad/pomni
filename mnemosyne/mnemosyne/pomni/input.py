@@ -30,6 +30,10 @@ import gtk.glade
 import os
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
+from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
+from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
+from mnemosyne.libmnemosyne.card_types.cloze import Cloze
 
 _ = gettext.gettext
 
@@ -72,28 +76,6 @@ class RainbowInputWidget(UiComponent):
             "translation": self.w_tree.get_widget("translation_text_w"),
             "pronunciation": self.w_tree.get_widget("pronun_text_w")
         }
-        self.selectors = {# Card type selectors
-            "Cloze": \
-                self.w_tree.get_widget("cloze_mode_selector_w"),
-            "BothWay": \
-                self.w_tree.get_widget("both_way_mode_selector_w"),
-            "ThreeSided": \
-                self.w_tree.get_widget("three_side_mode_selector_w"),
-            "FrontToBack": \
-                self.w_tree.get_widget("front_to_back_mode_selector_w")
-        }
-        self.areas_with_fields = {# Areas with fields grouped by card type id
-            self.selectors["Cloze"].get_label(): \
-                [('text', self.areas["cloze"])],
-            self.selectors["BothWay"].get_label(): \
-                [('q', self.areas["question"]), ('a', self.areas["answer"])],
-            self.selectors["FrontToBack"].get_label(): \
-                [('q', self.areas["question"]), ('a', self.areas["answer"])],
-            self.selectors["ThreeSided"].get_label(): \
-                [('f', self.areas["foreign"]), \
-                ('t', self.areas["translation"]), \
-                ('p', self.areas["pronunciation"])]
-        }
         self.widgets = {# Other widgets
             "CurrentCategory": self.w_tree.get_widget("category_name_w"),
             "SoundButton": self.w_tree.get_widget("sound_content_button"),
@@ -112,8 +94,36 @@ class RainbowInputWidget(UiComponent):
             "AddCategoryBlock": self.w_tree.get_widget(\
                 "input_mode_add_category_block")
         }
+        self.selectors = {# card_id: {"page": page_id, "selector": selector_widget, 
+                          # "widgets": [(field_name:text_area_widget)...]}
+            FrontToBack.id: {
+            "page": 0, 
+            "selector": self.w_tree.get_widget("front_to_back_mode_selector_w"),
+            "widgets": [('q', self.areas["question"]), 
+                        ('a', self.areas["answer"])]
+            },
+            BothWays.id: {
+            "page": 0,
+            "selector": self.w_tree.get_widget("both_way_mode_selector_w"),
+            "widgets": [('q', self.areas["question"]), 
+                        ('a', self.areas["answer"])]
+            },
+            ThreeSided.id: {
+            "page": 1,
+            "selector": self.w_tree.get_widget("three_side_mode_selector_w"),
+            "widgets": [('f', self.areas["foreign"]),
+                        ('t', self.areas["translation"]),
+                        ('p', self.areas["pronunciation"])]
+            },
+            Cloze.id: {
+            "page": 2,
+            "selector": self.w_tree.get_widget("cloze_mode_selector_w"),
+            "widgets": [('text', self.areas["cloze"])]
+            }
+        }
+
         self.set_card_type()
-        self.layout()
+        self.compose_widgets()
 
         # Turn off hildon autocapitalization
         try:
@@ -134,7 +144,7 @@ class RainbowInputWidget(UiComponent):
         self.clear_widgets()
         if fact: # If enter from Review mode
             self.card_type = fact.card_type
-            self.layout()
+            self.compose_widgets()
             self.set_widgets_data(fact)
 
         self.show_snd_container()
@@ -151,32 +161,23 @@ class RainbowInputWidget(UiComponent):
             self.widgets["QuestionContainer"].show()
             self.widgets["SoundContainer"].hide()
 
-    def layout (self):
+    def compose_widgets (self):
         """Switches to neccessary input page. It depends on card_type."""
 
-        if self.card_type.id == self.selectors["BothWay"].get_label():
-            self.widgets["CardTypeSwithcer"].set_current_page( \
-                int(self.selectors["FrontToBack"].get_label()))
-        else:
-            self.widgets["CardTypeSwithcer"].set_current_page( \
-                int(self.card_type.id))
-        for selector in self.selectors.values():
-            if selector.get_label() == self.card_type.id:
-                selector.set_active(True)
-                break
-
-        state = self.card_type.id == self.selectors["BothWay"].get_label() or \
-            self.card_type.id == self.selectors["FrontToBack"].get_label()
+        self.widgets["CardTypeSwithcer"].set_current_page( \
+            self.selectors[self.card_type.id]["page"])
+        self.selectors[self.card_type.id]["selector"].set_active(True)
+        state = self.card_type.id in (BothWays.id, FrontToBack.id)
         self.widgets["PictureButton"].set_sensitive(state)
         self.widgets["SoundButton"].set_sensitive(state)
 
     def set_card_type(self):
         """Set current card type."""
 
-        for selector in self.selectors.values():
-            if selector.get_active() == True:
+        for item in self.selectors.items():
+            if item[1]["selector"].get_active() == True:
                 for cardtype in self.card_types():
-                    if cardtype.id == selector.get_label():
+                    if cardtype.id == item[0]:
                         self.card_type = cardtype
                         return
 
@@ -201,7 +202,7 @@ class RainbowInputWidget(UiComponent):
         pattern_list = ["Type %s here..." % item for item in ["ANSWER", \
             "QUESTION", "FOREIGN", "PRONUNCIATION", "TRANSLATION", "TEXT"]]
         pattern_list.append("")
-        for field, widget in self.areas_with_fields[self.card_type.id]:
+        for field, widget in self.selectors[self.card_type.id]["widgets"]:
             start, end = widget.get_buffer().get_bounds()
             if widget.get_buffer().get_text(start, end) in pattern_list:
                 return False
@@ -342,7 +343,7 @@ class RainbowInputWidget(UiComponent):
         """ Get data from widgets. """
 
         fact = {}
-        for fact_key, widget in self.areas_with_fields[self.card_type.id]:
+        for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
             start, end = widget.get_buffer().get_bounds()
             fact[fact_key] = widget.get_buffer().get_text(start, end)
         if check_for_required:
@@ -354,7 +355,7 @@ class RainbowInputWidget(UiComponent):
     def set_widgets_data(self, fact):
         """Set widgets data from fact."""
 
-        for fact_key, widget in self.areas_with_fields[self.card_type.id]:
+        for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
             widget.get_buffer().set_text(fact[fact_key])
 
     def clear_widgets(self):
@@ -371,7 +372,7 @@ class RainbowInputWidget(UiComponent):
         self.clear_widgets()
         self.show_snd_container()
         self.set_card_type()
-        self.layout()
+        self.compose_widgets()
 
     def preview_sound_in_input_cb(self, widget):
         """Preview sound in input mode."""
