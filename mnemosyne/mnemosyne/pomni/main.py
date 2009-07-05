@@ -88,6 +88,9 @@ class HildonMainWidget(MainWidget):
                 self.component_manager.register(w_class)
                 self.review_controller().reset()
                 widget = self.review_controller().widget
+            if mode == "input":
+                self.component_manager.register(w_class)
+                widget = self.component_manager.get_current("add_cards_dialog")
             else:
                 widget = w_class(self.component_manager)
             self.widgets[mode] = widget

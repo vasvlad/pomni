@@ -28,11 +28,11 @@ import gettext
 import gtk
 import gtk.glade
 
-from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.libmnemosyne.ui_component.dialogs import AddCardsDialog
 
 _ = gettext.gettext
 
-class RainbowInputWidget(UiComponent):
+class RainbowInputWidget(AddCardsDialog):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
