@@ -29,18 +29,21 @@ import gettext
 import gtk
 import gtk.glade
 import gtkhtml2
+import urllib
+import urlparse
 
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
 
+htmlOpener = urllib.FancyURLopener()
 
 class HildonMainWidget(MainWidget):
     """Hildon main widget."""
 
     menu, review, input, configuration = range(4)
 
-    def activate(self):
+    def activate(self, param=None):
         """Basic UI setup. 
            Load theme glade file, assign gtk window callbacks.
         """
@@ -48,15 +51,13 @@ class HildonMainWidget(MainWidget):
         self.widgets = {}
 
         # Load the glade file for current theme
-        self.theme = self.config()["theme_path"].split("/")[-1]
         theme_path = self.config()["theme_path"]
+        self.theme = theme_path.split("/")[-1]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
         gtk.glade.set_custom_handler(self.custom_handler)
         w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
-        # Set unvisible tabs of switcher
         self.switcher = w_tree.get_widget("switcher")
-        self.switcher.set_property('show_tabs', False)
         self.window = w_tree.get_widget("window")
 
         self.question_flag = False
@@ -72,9 +73,16 @@ class HildonMainWidget(MainWidget):
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in ("window_state", "window_keypress")]))
 
-        self.w_tree = w_tree
+        self.question_dialog = w_tree.get_widget("question_dialog")
+        self.information_dialog = w_tree.get_widget("information_dialog")
+        self.question_dialog_label = w_tree.get_widget("question_dialog_label")
+        self.information_dialog_label = w_tree.get_widget(\
+            "information_dialog_label")
 
-    def activate_mode(self, mode):
+        self.w_tree = w_tree
+        self.soundmanager = None
+
+    def activate_mode(self, mode, param=None):
         """Activate mode in lazy way."""
 
         self.switcher.set_current_page(getattr(self, mode))
@@ -95,7 +103,7 @@ class HildonMainWidget(MainWidget):
                 widget = w_class(self.component_manager)
             self.widgets[mode] = widget
 
-        widget.activate()
+        widget.activate(param)
 
     def start(self, mode):
         """UI entry point. Activates specified mode."""
@@ -116,10 +124,24 @@ class HildonMainWidget(MainWidget):
             handler = getattr(self, function_name)
             return handler(args)
 
+    def start_playing(self, text, parent):
+        """Start playing audiofile."""
+
+        if not self.soundmanager:
+            from pomni.sound import SoundPlayer
+            self.soundmanager = SoundPlayer()
+        self.soundmanager.play(self.soundmanager.parse_fname(text), parent)
+
+    def stop_playing(self):
+        """Stop playing audiofile."""
+
+        if self.soundmanager:
+            self.soundmanager.stop()
+
     # modes
     def menu_(self):
         """Activate menu."""
-        self.activate_mode('menu')
+        self.activate_mode('menu', None)
 
     def input_(self, widget=None):
         """Activate input mode through main ui controller."""
@@ -131,7 +153,7 @@ class HildonMainWidget(MainWidget):
 
     def review_(self, widget=None):
         """Activate review mode."""
-        self.activate_mode('review')
+        self.activate_mode('review', None)
 
     def exit_(self, widget):
         """Exit from main gtk loop."""
@@ -162,83 +184,54 @@ class HildonMainWidget(MainWidget):
     def create_gtkhtml(args):
         """ Create gtkhtml2 widget """
 
+        def request_url(document, url, stream):
+            uri = urlparse.urljoin("", url)
+            f = htmlOpener.open(uri)
+            stream.write(f.read())
+            stream.close()
+
         view = gtkhtml2.View()
         document = gtkhtml2.Document()
+        document.connect('request_url', request_url)
         view.set_document(document)
         view.document = document
         view.show()
         return view
 
-
-    @staticmethod
-    def clear_label(caption):
-        """Remove &-symbol from caption if exists."""
-        index = caption.find("&")
-        if not index == -1:
-            return caption[:index] + caption[index+1:]
-        return caption
-
-
     # Main Widget API
-    def information_box(self, message, button_caption='OK'):
-        """Create Information message."""
-        dialog = self.w_tree.get_widget("information_dialog")
-        self.w_tree.get_widget("information_dialog_label").set_text(\
-            '\n' + "  " + message + "  " + '\n')
-        self.w_tree.get_widget("information_dialog_button_ok").set_label(\
-            button_caption)
-        dialog.run()
-        dialog.hide()
+    def information_box(self, message):
+        """Show Information message."""
 
+        self.information_dialog_label.set_text('\n' + message + '\n')
+        self.information_dialog.run()
+        self.information_dialog.hide()
 
     def question_box(self, question, option0, option1, option2):
-        """Create Question message."""
-        dialog = self.w_tree.get_widget("question_dialog")
-        dialog_label = self.w_tree.get_widget("question_dialog_label")
-        dialog_label.set_text('\n' + "  " + question + "  " + '\n')
-        result = True
-        response = dialog.run()
-        if response == -8:
-            result = False
-        dialog.hide()
-        return result
+        """Show Question message."""
 
-
-    def update_status_bar(self, message=None):
-        """ Not Implemented """
-        print 'update_status_bar'
-
+        self.question_dialog_label.set_text( \
+            '\n'  + question.replace("?", "?\n").replace(",", ",\n"))
+        response = self.question_dialog.run()
+        self.question_dialog.hide()
+        if response == gtk.RESPONSE_YES:
+            return False
+        return True
 
     def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        """Start Edit/Update window."""
-        print 'run_edit_fact_dialog'
+        """Activate input mode."""
 
-    def error_box(self, message):
-        print 'error_box', message
-    
-    def save_file_dialog(self, path, filter, caption=""):
-        print 'save_file_dialog'
-    
-    def open_file_dialog(self, path, filter, caption=""):
-        print 'open_file_dialog'
-
-    def set_window_title(self, title):
-        print 'set_window_title'
+        self.activate_mode('input', fact) 
 
     def run_add_cards_dialog(self):
-        self.activate_mode('input')
+        """Activate input mode."""
 
-    def run_edit_deck_dialog(self):
-        print 'edit_deck_dialog'
-    
+        self.activate_mode('input', None)
+
     def run_configuration_dialog(self):
-        self.activate_mode('configuration')
+        """Activate configuration mode."""
 
-    def run_card_appearance_dialog(self):
-        print 'run_card_appearance_dialog'
+        self.activate_mode('configuration', None)
 
-    def run_manage_card_types_dialog(self):
-        print 'run_manage_card_types_dialog'
 
 
 # Local Variables:

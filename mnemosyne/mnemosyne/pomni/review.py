@@ -30,108 +30,140 @@ from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 
 _ = gettext.gettext
 
+LARGE_CONTAINER_HEIGHT = 260
+NORMAL_CONTAINER_HEIGHT = 16
+LARGE_HTML_MARGIN = 20
+NORMAL_HTML_MARGIN = 70
+HINT_SIZE = 20
+
 class RainbowReviewWidget(ReviewWidget):
     """Rainbow theme: Review Widget."""
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
         self.w_tree = self.main_widget().w_tree
-        self.w_tree.signal_autoconnect(\
+        self.w_tree.signal_autoconnect( \
             dict([(sig, getattr(self, sig + "_cb")) \
-                for sig in ["review_to_main_menu", "get_answer", 
-                    "grade", "delete_card", "edit_card"]]))
+                for sig in ["review_to_main_menu", "get_answer", "grade", 
+                "delete_card", "edit_card", "preview_sound_in_review"]]))
+        self.next_is_image_card = False #Image card indicator
+        self.sndtext = None
 
-    def activate(self):
+        # Widgets as attributes
+        self.question_container = self.w_tree.get_widget("question_container")
+        self.answer_container = self.w_tree.get_widget("answer_container")
+        self.container_width = self.w_tree.get_widget( \
+            "question_text").window.get_geometry()[2]
+        self.question_text = self.w_tree.get_widget("question_text")
+        self.answer_text = self.w_tree.get_widget("answer_text")
+        self.sound_container = self.w_tree.get_widget( \
+            "review_mode_snd_container")
+        self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
+        self.grades_table = self.w_tree.get_widget("grades_table")
+
+    def set_html_text(self, widget, text="<html><body> </body></html>"):
+        """Set text for html widget."""
+
+        document = widget.document
+        document.clear()
+        document.open_stream('text/html')
+        document.write_stream(text)
+        document.close_stream()
+
+    def activate(self, param=None):
         """Activate review widget."""
         #self.review_controller().new_question()
         pass
 
     def enable_edit_current_card(self, enabled):
-        print 'enable_edit_current_card'
+        """Enable or disable 'edit card' button."""
+
+        self.w_tree.get_widget("review_toolbar_edit_card_button"). \
+            set_sensitive(enabled)
         
     def enable_delete_current_card(self, enabled):
-        print 'enable_delete_current_card'
-        
-    def enable_edit_deck(self, enable): 
-        print 'enable_edit_deck', enable
-        
-    def question_box_visible(self, visible):
-        print 'question_box_visible', visible
-        
-    def answer_box_visible(self, visible):
-        print 'answer_box_visible', visible
-        
-    def set_question_label(self, text):
-        print 'set_question_label', text
+        """Enable or disable 'delete card' button."""
+
+        self.w_tree.get_widget("review_toolbar_delete_card_button"). \
+            set_sensitive(enabled)
         
     def set_question(self, text):
-        document = self.w_tree.get_widget("question_text").document
-        document.clear()
-        document.open_stream('text/html')
-        # Adapting for html
-        if text.startswith('<html>'):
-            font_size = self.config()['font_size']
-            text = text.replace('*{font-size:30px;}',
-                 '*{font-size:%spx;}' % font_size)
-        document.write_stream(text)
-        document.close_stream()
+        """Set question."""
+
+        self.next_is_image_card = False
+        if "sound src=" in text:
+            self.sndtext = text
+            self.question_container.hide()
+            self.sound_container.set_size_request( \
+                self.container_width, NORMAL_CONTAINER_HEIGHT)
+            self.sound_container.show()
+            self.sound_button.set_active(True)
+            self.main_widget().start_playing(self.sndtext, self)
+        else:
+            self.sound_container.hide()            
+            if "img src=" in text:
+                self.next_is_image_card = True
+                self.question_container.set_size_request( \
+                    self.container_width, LARGE_CONTAINER_HEIGHT)
+            else:
+                self.question_container.set_size_request( \
+                    self.container_width, 16)
+            self.question_container.show()
+        self.set_html_text(self.question_text, text)
 
     def set_answer(self, text):
-        document = self.w_tree.get_widget('answer_text').document
-        document.clear()
-        document.open_stream('text/html')
-        if text.startswith('<html>'):
-            font_size = self.config()['font_size']
-            text = text.replace('*{font-size:30px;}',
-                             '*{font-size:%spx;}' % font_size)
-        document.write_stream(text)
-        document.close_stream()
+        """Set answer."""
 
+        self.set_html_text(self.answer_text, text)
         
     def clear_question(self): 
-        print 'clear_question'
-        
-    def clear_answer(self): 
-        print 'clear_answer'
+        """Clear question text."""
 
+        self.set_html_text(self.question_text)
+        
+    def clear_answer(self):
+        """Clear answer text."""
+
+        self.set_html_text(self.answer_text)
+        
     def update_show_button(self, text, default, enabled): 
-        print 'update_show_button', text, default, enabled
-        self.w_tree.get_widget("answer_viewport").set_sensitive(enabled)
+        """Update show button."""
+
+        self.answer_container.set_sensitive(enabled)
         if enabled:
-            html = "<html><p align=center style='margin-top:35px; \
-                font-size:16;'>Press to %s</p></html>" % text
-            document = self.w_tree.get_widget("answer_text").document
-            document.clear()
-            document.open_stream('text/html')
-            font_size = self.config()['font_size']
-            html = html.replace('*{font-size:30px;}',
-                      '*{font-size:%spx;}' % font_size)
-            document.write_stream(html)
-            document.close_stream()
+            if self.next_is_image_card:
+                margin_top = LARGE_HTML_MARGIN
+            else:
+                margin_top = NORMAL_HTML_MARGIN
+            html = "<html><p align=center style='margin-top:%spx; \
+                font-size:%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
+            self.set_html_text(self.answer_text, html)
 
+    def enable_grades(self, enabled):
+        """Enable grades."""
 
-    def enable_grades(self, enabled): 
-        print 'enable_grades', enabled
-        self.w_tree.get_widget("grades_table").set_sensitive(enabled)
+        self.grades_table.set_sensitive(enabled)
+        self.enable_edit_current_card(enabled)
+        self.enable_delete_current_card(enabled)
 
-    def set_default_grade(self, grade):
-        print 'set_default_grade', grade
-        
-    def set_grades_title(self, text): 
-        print 'set_grades_title', text
-            
-    def set_grade_text(self, grade, text): 
-        print 'set_grade_text', text
-            
-    def set_grade_tooltip(self, grade, text): 
-        print 'set_grade_tooltip', grade, text
+    def update_indicator(self):
+        """Set non active state for widget."""
 
-    def update_status_bar(self, message=None):
-        print 'update_status_bar', message
+        self.sound_button.set_active(False)
 
     # callbacks
+    def preview_sound_in_review_cb(self, widget):
+        """Play/stop listening."""
+
+        if widget.get_active():
+            self.main_widget().start_playing(self.sndtext, self)
+        else:
+            self.main_widget().stop_playing()
+
     def review_to_main_menu_cb(self, widget):
         """Return to main menu."""
+
+        self.main_widget().stop_playing()
         self.main_widget().activate_mode("menu")
 
     def get_answer_cb(self, widget):
@@ -140,25 +172,21 @@ class RainbowReviewWidget(ReviewWidget):
         self.review_controller().show_answer()
 
     def delete_card_cb(self, widget):
-        """ Hook for delete card. """
+        """Hook for delete card."""
 
-        # Delete card
-        if self.card and self.card.fact:
-            self.controller().delete_current_fact()
+        self.main_widget().stop_playing()
+        self.controller().delete_current_fact()
 
     def edit_card_cb(self, widget):
-        """ Hook for edit card. """
+        """Hook for edit card."""
 
-        # Edit card
-        if self.card and self.card.fact:
-            self.controller().edit_current_card()
+        self.controller().edit_current_card()
 
     def grade_cb(self, widget):
-        """ Call grade of answer. """
+        """Call grade of answer."""
 
-        print 'grade_cb', int(widget.name[-1])
+        self.main_widget().stop_playing()
         self.review_controller().grade_answer(int(widget.name[-1]))
-
 
 
 # Local Variables:

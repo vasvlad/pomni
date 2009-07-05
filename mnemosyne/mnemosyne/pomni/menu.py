@@ -40,6 +40,9 @@ class RainbowMenuWidget(UiComponent):
             dict([(mode, getattr(self, mode + "_cb")) \
                 for mode in ["input", "review", "configure", "exit"]]))
 
+    def activate(self, param=None):
+        pass
+
     # callbacks
     def input_cb(self, widget):
         """Return to main menu."""

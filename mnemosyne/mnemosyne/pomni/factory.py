@@ -36,11 +36,13 @@ class ConfigHook(Component):
         """Entry point."""
         for key, value in {\
             "theme_path": "/usr/share/pomni/hildon-UI/rainbow",
-            "themes": ['eternal', 'rainbow'],
+            "themes": ['rainbow'],
             "fullscreen": True,
             "font_size": 30.0,
             "startup_with_review": False,
             "upload_logs": False,
+            "imagedir": "/home/user/MyDocs/.images",
+            "sounddir": "/home/user/MyDocs/.sounds",
             "times_loaded": 0}.iteritems():
 
             self.config().setdefault(key, value)
@@ -65,6 +67,26 @@ def app_factory(interface=None):
         app.components.append(("pomni.renderers", "Html"))
         app.components.append(("pomni.main", "HildonMainWidget"))
 
+        # Add necessary components
+        app.components.append(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
+
+        # Remove unused components
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.card_types.map", "MapPlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "ClozePlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.plugins.cramming_plugin", \
+                "CrammingPlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.renderers.html_css", "HtmlCss"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.escape_to_html", "EscapeToHtml"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.expand_paths", "ExpandPaths"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.latex", "Latex"))
         return app
 
     # add next gui here
