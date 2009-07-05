@@ -69,6 +69,8 @@ def app_factory(interface=None):
         app.components.append(\
             ("mnemosyne.libmnemosyne.ui_components.review_widget",
              "ReviewWidget"))
+        app.components.append(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
 
         return app
 
