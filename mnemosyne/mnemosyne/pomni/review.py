@@ -166,9 +166,8 @@ class RainbowReviewWidget(ReviewWidget):
         self.main_widget().stop_playing()
         self.main_widget().activate_mode("menu")
 
-    def get_answer_cb(self, widget):
+    def get_answer_cb(self, widget, event):
         """ Hook for showing a right answer. """
-        print 'get_answer_cb'
         self.review_controller().show_answer()
 
     def delete_card_cb(self, widget):
