@@ -362,41 +362,40 @@ style "input-mode-close-add-category-block-button" {
 widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
 
 style "snd-button" {
-    GtkCheckButton::indicator-size = 180
-    GtkCheckButton::focus-line-width = 0
+    GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
-            function = CHECK
+            function = BOX
             state = NORMAL
             shadow = IN
             file = "sound_preview_stop.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = NORMAL
             shadow = OUT
             file = "sound_preview_play.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = ACTIVE
             shadow = IN
             file = "sound_preview_stop.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = ACTIVE
             shadow = OUT
             file = "sound_preview_play.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = PRELIGHT
             shadow = IN
             file = "sound_preview_stop.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = PRELIGHT
             shadow = OUT
             file = "sound_preview_play.png"
