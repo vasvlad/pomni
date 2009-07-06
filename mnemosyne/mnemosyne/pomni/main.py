@@ -21,7 +21,7 @@
 #
 
 """
-Hildon UI. Main Widget.
+Main Widget.
 """
 
 import os
@@ -37,8 +37,8 @@ from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
 
-class HildonMainWidget(MainWidget):
-    """Hildon main widget."""
+class MainWdgt(MainWidget):
+    """Main widget class."""
 
     menu, review, input, configuration = range(4)
 
@@ -48,8 +48,8 @@ class HildonMainWidget(MainWidget):
             self.question_dialog_label = self.information_dialog = \
             self.information_dialog_label = self.soundmanager = self.theme = \
             self.fullscreen = None
-        self.widgets = {}
         self.htmlopener = urllib.FancyURLopener()
+        self.widgets = {}
 
     def activate(self):
         """Basic UI setup. 
@@ -89,21 +89,17 @@ class HildonMainWidget(MainWidget):
         self.switcher.set_current_page(getattr(self, mode))
 
     def activate_mode(self, mode):
-        """Activate mode in lazy way."""
+        """Activate review or menu mode in lazy way."""
 
         self.show_mode(mode)
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
-            cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
-            module = __import__("pomni.%s" % mode, globals(),
-                                locals(), [cname])
-            w_class = getattr(module, cname)
             if mode == "review":
-                self.component_manager.register(w_class)
                 self.review_controller().reset()
                 widget = self.review_controller().widget
-            else:
-                widget = w_class(self.component_manager)
+            elif mode == "menu":
+                from pomni.menu import MenuWidget
+                widget = MenuWidget(self.component_manager)
             self.widgets[mode] = widget
 
         widget.activate()
@@ -113,11 +109,9 @@ class HildonMainWidget(MainWidget):
 
         if not mode:
             if self.config()['startup_with_review']:
-                mode = 'review'
+                self.review_()
             else:
-                mode = 'menu'
-
-        getattr(self, mode + '_')()
+                self.menu_()
         gtk.main()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
@@ -137,11 +131,11 @@ class HildonMainWidget(MainWidget):
 
         self.show_mode("input")
         self.controller().add_cards()
-        #self.activate_mode('input')
 
     def configure_(self):
-        """Activate configure mode through main ui controller."""
-        self.activate_mode('configuration')
+        """Activate configure mode through main controller."""
+        self.show_mode("configuration")
+        self.controller().configure()
 
     def review_(self):
         """Activate review mode."""
@@ -214,12 +208,6 @@ class HildonMainWidget(MainWidget):
         if response == gtk.RESPONSE_YES:
             return False
         return True
-
-    def run_configuration_dialog(self):
-        """Activate configuration mode."""
-
-        self.activate_mode('configuration', None)
-
 
 
 # Local Variables:

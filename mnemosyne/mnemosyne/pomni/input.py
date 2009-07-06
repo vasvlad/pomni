@@ -423,7 +423,7 @@ class InputWidget(Dialog):
         """Return to main menu."""
 
         self.main_widget().soundplayer.stop()
-        self.main_widget().activate_mode("menu")
+        self.main_widget().menu_()
 
 class AddCardsWidget(InputWidget, AddCardsDialog):
     """Add new card.""" 

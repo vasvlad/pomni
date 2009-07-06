@@ -26,9 +26,10 @@ Hildon UI. Menu widgets.
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
-class RainbowMenuWidget(UiComponent):
+class MenuWidget(UiComponent):
     """Main menu widget."""
 
+    component_type = "menu_widget"
     review, input, configuration = range(1, 4)
 
     def __init__(self, component_manager):

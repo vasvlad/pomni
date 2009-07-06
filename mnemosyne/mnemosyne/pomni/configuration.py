@@ -28,13 +28,14 @@ import os
 import gettext
 _ = gettext.gettext
 
-from mnemosyne.libmnemosyne.ui_component import UiComponent
+#from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.libmnemosyne.ui_components.dialogs import ConfigurationDialog
 
-class RainbowConfigurationWidget(UiComponent):
+class ConfigurationWidget(ConfigurationDialog):
     """Configuration Widget."""
 
     def __init__(self, component_manager):
-        UiComponent.__init__(self, component_manager)
+        ConfigurationDialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
@@ -136,7 +137,7 @@ class RainbowConfigurationWidget(UiComponent):
         self.config()['sounddir'] = \
             self.w_tree.get_widget("config_mode_entry_sounddir").get_text()
         self.config().save()
-        self.main_widget().activate_mode("menu")
+        self.main_widget().menu_()
 
 
 # Local Variables:

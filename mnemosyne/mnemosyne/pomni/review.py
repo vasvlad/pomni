@@ -33,8 +33,8 @@ _ = gettext.gettext
 LARGE_CONTAINER_HEIGHT = 260
 NORMAL_CONTAINER_HEIGHT = 16
 
-class RainbowReviewWidget(ReviewWidget):
-    """Rainbow theme: Review Widget."""
+class ReviewWdgt(ReviewWidget):
+    """Review Widget."""
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
@@ -143,7 +143,7 @@ class RainbowReviewWidget(ReviewWidget):
         """Return to main menu."""
 
         self.main_widget().soundplayer.stop()
-        self.main_widget().activate_mode("menu")
+        self.main_widget().menu_()
 
     def get_answer_cb(self, widget, event):
         """Hook for showing a right answer."""

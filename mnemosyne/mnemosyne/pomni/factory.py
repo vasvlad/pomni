@@ -65,9 +65,12 @@ def app_factory(interface=None):
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
                                   "GetTextTranslator"))
         app.components.append(("pomni.renderers", "Html"))
-        app.components.append(("pomni.main", "HildonMainWidget"))
+        app.components.append(("pomni.main", "MainWdgt"))
+        app.components.append(("pomni.menu", "MenuWidget"))
+        app.components.append(("pomni.review", "ReviewWdgt"))
         app.components.append(("pomni.input", "AddCardsWidget"))
         app.components.append(("pomni.input", "EditFactWidget"))
+        app.components.append(("pomni.configuration", "ConfigurationWidget"))
 
         # Add necessary components
         app.components.append(\
