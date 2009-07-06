@@ -25,10 +25,10 @@ Hildon UI: Input mode Widgets.
 """
 
 import gettext
-import gtk
-import gtk.glade
 import pango
 import os
+import gtk.gdk
+from gtk import ListStore
 
 from mnemosyne.libmnemosyne.ui_components.dialogs import AddCardsDialog
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
@@ -62,7 +62,7 @@ class RainbowInputWidget(AddCardsDialog):
         self.card_type = None
         self.categories_list = []
         #liststore = [text, type, filename, dirname, pixbuf]
-        self.liststore = gtk.ListStore(str, str, str, str, gtk.gdk.Pixbuf)
+        self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
         iconview_widget = self.w_tree.get_widget("iconview_widget")
         iconview_widget.set_model(self.liststore)
         iconview_widget.set_pixbuf_column(4)
