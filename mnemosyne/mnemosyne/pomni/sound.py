@@ -21,14 +21,14 @@
 #
 
 """
-Sound engine. Based on Gstreamer.
+Sound engines.
 """
 
 import re
 import os
 import gst
 
-class SoundPlayer:
+class GstSoundEngine:
     """Sound engine."""
 
     def __init__(self):
@@ -53,13 +53,13 @@ class SoundPlayer:
         elif mtype == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
-            print "SoundPlayer:error: %s" % err, debug
+            print "GstSoundEngine:error: %s" % err, debug
 
     def play(self, fname, parent):
         """Start playing fname."""
 
         self.parent = parent # parens is a class, which call this function
-        self.fname = fname
+        self.fname = self.parse_fname(fname)
         self.player.set_property("uri", "file://" + self.fname)
         self.player.set_state(gst.STATE_PLAYING)
 
@@ -73,4 +73,24 @@ class SoundPlayer:
         """Returns filename to play."""
 
         return os.path.abspath(re.search(r"'[^']+'", text).group()[1:-1])
-        
+       
+
+class SoundPlayer:
+    """Sound Player Interface."""
+
+    def __init__(self):
+        self.soundengine = None
+
+    def play(self, text, parent):
+        """Start playing."""
+
+        if not self.soundengine:
+            self.soundengine = GstSoundEngine()
+        self.soundengine.play(text, parent)
+
+    def stop(self):
+        """Stop playing."""
+
+        if self.soundengine:
+            self.soundengine.stop()
+
