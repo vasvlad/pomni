@@ -39,24 +39,23 @@ class RainbowConfigurationWidget(UiComponent):
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in 
-                ('change_fullscreen', 'change_font_size', 'change_theme',
+                ('change_fullscreen', 'change_font_size', \
                 'change_startup_with_review', 'config_to_main_menu')]))
-        self.theme_modified = False
-        self.current_size = 0
+        self.conf = self.config()
 
     def activate(self):
         """Activate configuration mode."""
 
         self.w_tree.get_widget("checkbox_fullscreen_mode"). \
-            set_active(self.config()['fullscreen'])
+            set_active(self.conf['fullscreen'])
         self.w_tree.get_widget("checkbox_start_in_review_mode"). \
-            set_active(self.config()['startup_with_review'])
-        self.current_size = int(self.config()['font_size'])
+            set_active(self.conf['startup_with_review'])
+        self.current_size = int(self.conf['font_size'])
         self.change_font_size()
         self.w_tree.get_widget("config_mode_entry_imagedir"). \
-            set_text(self.config()['imagedir'])
+            set_text(self.conf['imagedir'])
         self.w_tree.get_widget("config_mode_entry_sounddir"). \
-            set_text(self.config()['sounddir'])
+            set_text(self.conf['sounddir'])
 
     def change_font_size(self):
         """Changes font size."""
@@ -74,13 +73,13 @@ class RainbowConfigurationWidget(UiComponent):
     def change_fullscreen_cb(self, widget):
         """Change Fullscreen parameter."""
 
-        self.config()['fullscreen'] = \
+        self.conf['fullscreen'] = \
             self.w_tree.get_widget("checkbox_fullscreen_mode").get_active()
 
     def change_startup_with_review_cb(self, widget):
         """Change 'Startup with Review' parameter."""
 
-        self.config()['startup_with_review'] = \
+        self.conf['startup_with_review'] = \
             self.w_tree.get_widget("checkbox_start_in_review_mode").get_active()
 
     def change_font_size_cb(self, widget):
@@ -96,31 +95,11 @@ class RainbowConfigurationWidget(UiComponent):
             if self.current_size < max_size:
                 self.current_size += 1
         self.change_font_size()
-        self.config()['font_size'] = self.current_size
+        self.conf['font_size'] = self.current_size
 
-    def change_theme_cb(self, widget):
-        """Change current theme."""
-
-        self.theme_modified = True
-        path_list = self.config()["theme_path"].split("/")
-        current_theme = path_list.pop()
-        themes = self.config()["themes"]
-        theme_index = themes.index(current_theme)
-        try:
-            new_theme = themes[theme_index + 1]
-        except IndexError:
-            new_theme = themes[0]
-        path_list.append(new_theme)
-        self.config()["theme_path"] = "/".join(path_list)
-        self.w_tree.get_widget("config_mode_label_theme").set_text( \
-            "New theme: " + new_theme.capitalize())
-        
     def config_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
-        if self.theme_modified:
-            self.main_widget().information_box( \
-                _("Restart the program to take effect!"))
         if not os.path.exists( \
             self.w_tree.get_widget("config_mode_entry_imagedir").get_text()):
             self.main_widget().information_box( \
@@ -131,11 +110,11 @@ class RainbowConfigurationWidget(UiComponent):
             self.main_widget().information_box( \
                 _("Sound dir does not exist! Select another."))
             return
-        self.config()['imagedir'] = \
+        self.conf['imagedir'] = \
             self.w_tree.get_widget("config_mode_entry_imagedir").get_text()
-        self.config()['sounddir'] = \
+        self.conf['sounddir'] = \
             self.w_tree.get_widget("config_mode_entry_sounddir").get_text()
-        self.config().save()
+        self.conf.save()
         self.main_widget().activate_mode("menu")
 
 
