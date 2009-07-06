@@ -42,12 +42,12 @@
 
 #----------------------------- Main Menu ------------------
 style "program-name-label" {
-    font_name = "Nokia Sans Italic 10"
+    font_name = "Nokia Sans 14"
 }
 widget "*.program_name_label" style "program-name-label"
 
 style "menu-label" {
-    font_name = "Nokia Sans Bold 12.0"
+    font_name = "Nokia Sans Bold 15"
 }
 widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
@@ -362,41 +362,40 @@ style "input-mode-close-add-category-block-button" {
 widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
 
 style "snd-button" {
-    GtkCheckButton::indicator-size = 180
-    GtkCheckButton::focus-line-width = 0
+    GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
-            function = CHECK
+            function = BOX
             state = NORMAL
             shadow = IN
             file = "sound_preview_stop.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = NORMAL
             shadow = OUT
             file = "sound_preview_play.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = ACTIVE
             shadow = IN
             file = "sound_preview_stop.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = ACTIVE
             shadow = OUT
             file = "sound_preview_play.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = PRELIGHT
             shadow = IN
             file = "sound_preview_stop.png"
         }
         image {
-            function = CHECK
+            function = BOX
             state = PRELIGHT
             shadow = OUT
             file = "sound_preview_play.png"
@@ -686,12 +685,12 @@ style "category-name-container" {
 widget "*.category_name_container" style "category-name-container"
 
 style "entry" {
-    font_name = "Nokia Sans 14"
+    font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_entry" style "entry"
 
 style "category-label" {
-    font_name = "Nokia Sans 11"
+    font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_label" style "category-label"
 widget "*.category_name_w" style "category-label"
@@ -727,83 +726,57 @@ widget "*.config_mode_imagedir_container" style "html-container"
 widget "*.config_mode_sounddir_container" style "html-container"
 widget "*.config_mode_font_size_example_container" style "html-container"
 
-style "config-checkboxes2" {
-    GtkCheckButton::indicator-size = 72
-    GtkCheckButton::indicator-spacing = 5
-    GtkCheckButton::focus-line-width = 0
-    engine "pixmap" {}
-}
-widget "*.checkbox_fullscreen_mode" style "config-checkboxes2"
-widget "*.checkbox_start_in_review_mode" style "config-checkboxes2"
-
 style "config-checkboxes" {
-    font_name = "Nokia Sans Italic 11"
-    GtkCheckButton::indicator-size = 50
-    GtkCheckButton::indicator-spacing = 5
-    GtkCheckButton::focus-line-width = 0
-    engine "pixmap" {
-        image {
-            function = CHECK
-            state = NORMAL
-            shadow = IN
-            file = "checked.png"
-        }
-        image {
-            function = CHECK
-            state = NORMAL
-            shadow = OUT
-            file = "unchecked.png"
-        }
-        image {
-            function = CHECK
-            state = ACTIVE
-            shadow = IN
-            file = "checked.png"
-        }
-        image {
-            function = CHECK
-            state = ACTIVE
-            shadow = OUT
-            file = "unchecked.png"
-        }
-        image {
-            function = CHECK
-            state = PRELIGHT
-            shadow = IN
-            file = "checked.png"
-        }
-        image {
-            function = CHECK
-            state = PRELIGHT
-            shadow = OUT
-            file = "unchecked.png"
-        }
-    }
-}
-#widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
-#widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
-
-style "config-checkboxes-label" {
-    font_name = "Nokia Sans 12"
-}
-widget "*.checkbox_fullscreen_mode.GtkLabel.*" style "config-checkboxes"
-widget "*.checkbox_start_in_review_mode.GtkLabel.*" style "config-checkboxes"
-#widget "*.config_mode_label_theme" style "config-checkboxes"
-widget "*.config_mode_label_imagedir.*" style "config-checkboxes"
-widget "*.config_mode_label_sounddir.*" style "config-checkboxes"
-
-style "config-button-theme" {
     GtkButton::focus-line-width = 0
     engine "pixmap" {
         image {
             function = BOX
-            file = "theme_button.png"
-            border = {0,0,0,0}
-            stretch = TRUE
+            state = NORMAL
+            shadow = IN
+            file = "checked.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "unchecked.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "checked.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "unchecked.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "checked.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "unchecked.png"
         }
     }
 }
-#widget "*.config_mode_button_theme" style "config-button-theme"
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+
+style "config-mode-label" {
+    font_name = "Nokia Sans 17"
+}
+widget "*.config_mode_fullscreen_label" style "config-mode-label"
+widget "*.config_mode_startup_with_review_label" style "config-mode-label"
+widget "*.config_mode_label_imagedir" style "config-mode-label"
+widget "*.config_mode_label_sounddir" style "config-mode-label"
 
 style "textareas" {
     font_name = "Nokia Sans 20"
