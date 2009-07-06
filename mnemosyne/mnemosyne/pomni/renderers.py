@@ -114,8 +114,8 @@ class Text(Renderer):
         txt = ''
         for field in fields:
             text = fact[field]
-            for filter in self.filters():
-                text = filter.run(text, fact)
+            for flt in self.filters():
+                text = flt.run(text, fact)
             txt += text
         return txt
 
