@@ -46,10 +46,11 @@ class HildonMainWidget(MainWidget):
         MainWidget.__init__(self, component_manager)
         self.switcher = self.question_dialog = self.window = self.w_tree = \
             self.question_dialog_label = self.information_dialog = \
-            self.information_dialog_label = self.soundmanager = self.theme = \
+            self.information_dialog_label  = self.theme = \
             self.fullscreen = None
         self.widgets = {}
         self.htmlopener = urllib.FancyURLopener()
+        self.soundplayer = SoundPlayer()
 
     def activate(self):
         """Basic UI setup. 
@@ -83,7 +84,6 @@ class HildonMainWidget(MainWidget):
             "information_dialog_label")
 
         self.w_tree = w_tree
-        self.soundplayer = SoundPlayer()
 
     def activate_mode(self, mode):
         """Activate mode in lazy way."""
