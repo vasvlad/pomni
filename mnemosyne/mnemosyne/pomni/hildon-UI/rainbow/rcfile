@@ -196,7 +196,7 @@ style "grade0" = "grade-button" {
         }
         image {
             function = BOX
-            file = "grade0_big.png"
+            file = "grade0_normal.png"
         }
     }
 }
@@ -211,7 +211,7 @@ style "grade1" = "grade-button" {
         }
         image {
             function = BOX
-            file = "grade1_big.png"
+            file = "grade1_normal.png"
         }
     }
 }
@@ -226,7 +226,7 @@ style "grade2" = "grade-button" {
         }
         image {
             function = BOX
-            file = "grade2_big.png"
+            file = "grade2_normal.png"
         }
     }
 }
@@ -241,7 +241,7 @@ style "grade3" = "grade-button" {
         }
         image {
             function = BOX
-            file = "grade3_big.png"
+            file = "grade3_normal.png"
         }
     }
 }
@@ -256,7 +256,7 @@ style "grade4" = "grade-button" {
         }
         image {
             function = BOX
-            file = "grade4_big.png"
+            file = "grade4_normal.png"
         }
     }
 }
@@ -271,7 +271,7 @@ style "grade5" = "grade-button" {
         }
         image {
             function = BOX
-            file = "grade5_big.png"
+            file = "grade5_normal.png"
         }
     }
 }
@@ -283,12 +283,12 @@ style "edit-card-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "edit_card_big_insensitive.png"
+            file = "edit_card_insensitive.png"
             stretch = TRUE
         }
         image {
             function = BOX
-            file = "edit_card_big.png"
+            file = "edit_card_normal.png"
             stretch = TRUE
         }
     }
@@ -300,7 +300,7 @@ style "add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "add_card_big.png"
+            file = "add_card_normal.png"
             stretch = TRUE
         }
     }
@@ -313,12 +313,12 @@ style "delete-card-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "delete_card_big_insensitive.png"
+            file = "delete_card_insensitive.png"
             stretch = TRUE
         }
         image {
             function = BOX
-            file = "delete_card_big.png"
+            file = "delete_card_normal.png"
             stretch = TRUE
         }
     }
@@ -333,7 +333,7 @@ style "input-mode-add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "input_mode_add_card_big.png"
+            file = "input_mode_add_card_normal.png"
         }
     }
 }
@@ -344,7 +344,7 @@ style "input-mode-add-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "input_mode_add_new_category_big.png"
+            file = "input_mode_add_new_category.png"
         }
     }
 }
@@ -355,7 +355,7 @@ style "input-mode-close-add-category-block-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "input_mode_close_add_category_block_big.png"
+            file = "input_mode_close_add_category_block.png"
         }
     }
 }
@@ -410,7 +410,7 @@ style "input-mode-prev-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "input_mode_prev_category_big.png"
+            file = "input_mode_prev_category.png"
         }
     }
 }
@@ -421,7 +421,7 @@ style "input-mode-next-category-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "input_mode_next_category_big.png"
+            file = "input_mode_next_category.png"
         }
     }
 }
@@ -614,7 +614,7 @@ style "sound-content-button" {
         }
         image {
             function = BOX
-            file = "sound_content_button.png"
+            file = "sound_content_button_normal.png"
             stretch = TRUE
         }
     }
@@ -632,7 +632,7 @@ style "picture-content-button" {
         }
         image {
             function = BOX
-            file = "picture_content_button.png"
+            file = "picture_content_button_normal.png"
             stretch = TRUE
         }
     }
@@ -882,7 +882,7 @@ style "main-menu-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "back_big.png"
+            file = "back.png"
         }
     }
 }
