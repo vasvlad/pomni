@@ -159,6 +159,8 @@ class RainbowReviewWidget(ReviewWidget):
     def edit_card_cb(self, widget):
         """Hook for edit card."""
 
+        self.main_widget().soundplayer.stop()
+        self.main_widget().show_mode("input")
         self.controller().edit_current_card()
 
     def grade_cb(self, widget):

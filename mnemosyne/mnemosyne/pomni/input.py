@@ -29,7 +29,8 @@ import gtk
 import gtk.glade
 import os
 
-from mnemosyne.libmnemosyne.ui_components.dialogs import AddCardsDialog
+from mnemosyne.libmnemosyne.ui_components.dialogs import \
+    Dialog, AddCardsDialog, EditFactDialog
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
@@ -37,11 +38,12 @@ from mnemosyne.libmnemosyne.card_types.cloze import Cloze
 
 _ = gettext.gettext
 
-class RainbowInputWidget(AddCardsDialog):
+class InputWidget(Dialog):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
-        AddCardsDialog.__init__(self, component_manager)
+
+        Dialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
 
@@ -142,19 +144,18 @@ class RainbowInputWidget(AddCardsDialog):
         except (TypeError, AttributeError): 
             pass # so, skip silently
 
-    def activate(self, fact=None):
+    def activate(self):
         """Activate input mode."""
 
         self.main_widget().soundplayer.stop()
-        self.fact = fact
-        self.update = fact is not None
+        self.update = self.fact is not None
         
         self.update_categories()
         self.clear_widgets()
-        if fact: # If enter from Review mode
-            self.card_type = fact.card_type
+        if self.fact: # If enter from Review mode
+            self.card_type = self.fact.card_type
             self.compose_widgets()
-            self.set_widgets_data(fact)
+            self.set_widgets_data(self.fact)
 
         self.show_snd_container()
 
@@ -424,7 +425,16 @@ class RainbowInputWidget(AddCardsDialog):
         self.main_widget().soundplayer.stop()
         self.main_widget().activate_mode("menu")
 
+class AddCardsWidget(InputWidget, AddCardsDialog):
+    """Add new card.""" 
+    def __init__(self, component_manager):
+        InputWidget.__init__(self, component_manager)
 
+class EditFactWidget(InputWidget, EditFactDialog):
+    """Edit current fact."""
+    def __init__(self, fact, component_manager):
+        InputWidget.__init__(self, component_manager)
+        self.fact = fact
 
 
 # Local Variables:

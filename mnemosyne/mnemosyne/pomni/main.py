@@ -85,10 +85,13 @@ class HildonMainWidget(MainWidget):
         self.w_tree = w_tree
         self.soundplayer = SoundPlayer()
 
+    def show_mode(self, mode):
+        self.switcher.set_current_page(getattr(self, mode))
+
     def activate_mode(self, mode):
         """Activate mode in lazy way."""
 
-        self.switcher.set_current_page(getattr(self, mode))
+        self.show_mode(mode)
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             cname = self.theme.capitalize() + '%sWidget' % mode.capitalize()
@@ -99,9 +102,6 @@ class HildonMainWidget(MainWidget):
                 self.component_manager.register(w_class)
                 self.review_controller().reset()
                 widget = self.review_controller().widget
-            #if mode == "input":
-            #    self.component_manager.register(w_class)
-            #    widget = self.component_manager.get_current("add_cards_dialog")
             else:
                 widget = w_class(self.component_manager)
             self.widgets[mode] = widget
@@ -134,8 +134,10 @@ class HildonMainWidget(MainWidget):
 
     def input_(self):
         """Activate input mode."""
-        #self.controller().add_cards()
-        self.activate_mode('input')
+
+        self.show_mode("input")
+        self.controller().add_cards()
+        #self.activate_mode('input')
 
     def configure_(self):
         """Activate configure mode through main ui controller."""
@@ -212,16 +214,6 @@ class HildonMainWidget(MainWidget):
         if response == gtk.RESPONSE_YES:
             return False
         return True
-
-    def run_edit_fact_dialog(self, fact, allow_cancel=True):
-        """Activate input mode."""
-
-        self.activate_mode('input', fact) 
-
-    def run_add_cards_dialog(self):
-        """Activate input mode."""
-
-        self.activate_mode('input', None)
 
     def run_configuration_dialog(self):
         """Activate configuration mode."""

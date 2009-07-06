@@ -66,6 +66,8 @@ def app_factory(interface=None):
                                   "GetTextTranslator"))
         app.components.append(("pomni.renderers", "Html"))
         app.components.append(("pomni.main", "HildonMainWidget"))
+        app.components.append(("pomni.input", "AddCardsWidget"))
+        app.components.append(("pomni.input", "EditFactWidget"))
 
         # Add necessary components
         app.components.append(\
