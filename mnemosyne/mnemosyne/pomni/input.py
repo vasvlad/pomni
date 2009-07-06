@@ -27,6 +27,7 @@ Hildon UI: Input mode Widgets.
 import gettext
 import gtk
 import gtk.glade
+import pango
 import os
 
 from mnemosyne.libmnemosyne.ui_components.dialogs import AddCardsDialog
@@ -76,6 +77,12 @@ class RainbowInputWidget(AddCardsDialog):
             "translation": self.w_tree.get_widget("translation_text_w"),
             "pronunciation": self.w_tree.get_widget("pronun_text_w")
         }
+
+        # Change default font
+        font = pango.FontDescription("Nokia Sans 20")
+        for area in self.areas.values():
+            area.modify_font(font)
+
         self.widgets = {# Other widgets
             "CurrentCategory": self.w_tree.get_widget("category_name_w"),
             "SoundButton": self.w_tree.get_widget("sound_content_button"),
