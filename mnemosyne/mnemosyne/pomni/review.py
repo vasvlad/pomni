@@ -82,7 +82,7 @@ class RainbowReviewWidget(ReviewWidget):
                 self.container_width, NORMAL_CONTAINER_HEIGHT)
             self.sound_container.show()
             self.sound_button.set_active(True)
-            self.main_widget().start_playing(self.sndtext, self)
+            self.main_widget().soundplayer.play(self.sndtext, self)
         else:
             self.sound_container.hide()            
             if "img src=" in text:
@@ -135,14 +135,14 @@ class RainbowReviewWidget(ReviewWidget):
         """Play/stop listening."""
 
         if widget.get_active():
-            self.main_widget().start_playing(self.sndtext, self)
+            self.main_widget().soundplayer.play(self.sndtext, self)
         else:
-            self.main_widget().stop_playing()
+            self.main_widget().soundplayer.stop()
 
     def review_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.main_widget().activate_mode("menu")
 
     def get_answer_cb(self, widget, event):
@@ -153,7 +153,7 @@ class RainbowReviewWidget(ReviewWidget):
     def delete_card_cb(self, widget):
         """Hook for delete card."""
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplp()
         self.controller().delete_current_fact()
 
     def edit_card_cb(self, widget):
@@ -164,7 +164,7 @@ class RainbowReviewWidget(ReviewWidget):
     def grade_cb(self, widget):
         """Call grade of answer."""
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.review_controller().grade_answer(int(widget.name[-1]))
 
 

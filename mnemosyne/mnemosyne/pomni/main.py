@@ -32,6 +32,7 @@ import urllib
 import gtkhtml2
 import urlparse
 
+from pomni.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
@@ -82,6 +83,7 @@ class HildonMainWidget(MainWidget):
             "information_dialog_label")
 
         self.w_tree = w_tree
+        self.soundplayer = SoundPlayer()
 
     def activate_mode(self, mode):
         """Activate mode in lazy way."""
@@ -124,20 +126,6 @@ class HildonMainWidget(MainWidget):
         if glade and widget_name and  hasattr(self, function_name):
             handler = getattr(self, function_name)
             return handler(args)
-
-    def start_playing(self, text, parent):
-        """Start playing audiofile."""
-
-        if not self.soundmanager:
-            from pomni.sound import SoundPlayer
-            self.soundmanager = SoundPlayer()
-        self.soundmanager.play(self.soundmanager.parse_fname(text), parent)
-
-    def stop_playing(self):
-        """Stop playing audiofile."""
-
-        if self.soundmanager:
-            self.soundmanager.stop()
 
     # modes
     def menu_(self):

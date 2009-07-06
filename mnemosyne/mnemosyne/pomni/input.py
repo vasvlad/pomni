@@ -145,7 +145,7 @@ class RainbowInputWidget(AddCardsDialog):
     def activate(self, fact=None):
         """Activate input mode."""
 
-        self.stop_playing()
+        self.main_widget().soundplayer.stop()
         self.fact = fact
         self.update = fact is not None
         
@@ -253,7 +253,7 @@ class RainbowInputWidget(AddCardsDialog):
             return pixbuf.scale_simple(new_width, new_height, \
                 gtk.gdk.INTERP_BILINEAR)
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.liststore.clear()
         self.imagedir = self.config()['imagedir']
         if not os.path.exists(self.imagedir):
@@ -297,7 +297,7 @@ class RainbowInputWidget(AddCardsDialog):
     def add_sound_cb(self, widget):
         """Show sound selection dialog."""
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.liststore.clear()
         self.sounddir = self.config()['sounddir']
         if not os.path.exists(self.sounddir):
@@ -341,7 +341,7 @@ class RainbowInputWidget(AddCardsDialog):
                 [self.widgets["CurrentCategory"].get_text()])
             self.clear_widgets()
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.show_snd_container()
 
     def get_widgets_data(self, check_for_required=True):
@@ -373,7 +373,7 @@ class RainbowInputWidget(AddCardsDialog):
     def change_card_type_cb(self, widget):
         """Changes cardtype when user choose it from cardtype column."""
                 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.clear_widgets()
         self.show_snd_container()
         self.set_card_type(widget)
@@ -385,9 +385,9 @@ class RainbowInputWidget(AddCardsDialog):
         if widget.get_active():
             start, end = self.areas["question"].get_buffer().get_bounds()
             text = self.areas["question"].get_buffer().get_text(start, end)
-            self.main_widget().start_playing(text, self)
+            self.main_widget().soundplayer.play(text, self)
         else:
-            self.main_widget().stop_playing()
+            self.main_widget().soundplayer.stop()
 
     def update_indicator(self):
         """Set non active state for widget."""
@@ -418,16 +418,10 @@ class RainbowInputWidget(AddCardsDialog):
         self.widgets["ChangeCategoryBlock"].show()
         self.widgets["AddCategoryBlock"].hide()
 
-    def stop_playing(self):
-        """Stop playing audiofile."""
-
-        if self.main_widget().stop_playing():
-            self.widgets["SoundIndicator"].set_active(False)
-
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
-        self.main_widget().stop_playing()
+        self.main_widget().soundplayer.stop()
         self.main_widget().activate_mode("menu")
 
 
