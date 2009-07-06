@@ -42,12 +42,12 @@
 
 #----------------------------- Main Menu ------------------
 style "program-name-label" {
-    font_name = "Nokia Sans Italic 10"
+    font_name = "Nokia Sans 14"
 }
 widget "*.program_name_label" style "program-name-label"
 
 style "menu-label" {
-    font_name = "Nokia Sans Bold 12.0"
+    font_name = "Nokia Sans Bold 15"
 }
 widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
@@ -685,12 +685,12 @@ style "category-name-container" {
 widget "*.category_name_container" style "category-name-container"
 
 style "entry" {
-    font_name = "Nokia Sans 14"
+    font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_entry" style "entry"
 
 style "category-label" {
-    font_name = "Nokia Sans 11"
+    font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_label" style "category-label"
 widget "*.category_name_w" style "category-label"
