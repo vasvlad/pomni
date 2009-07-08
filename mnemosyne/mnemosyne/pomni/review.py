@@ -153,7 +153,7 @@ class ReviewWdgt(ReviewWidget):
     def delete_card_cb(self, widget):
         """Hook for delete card."""
 
-        self.main_widget().soundplp()
+        self.main_widget().soundplayer.stop()
         self.controller().delete_current_fact()
 
     def edit_card_cb(self, widget):

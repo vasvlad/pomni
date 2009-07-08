@@ -40,16 +40,17 @@ _ = gettext.gettext
 class MainWdgt(MainWidget):
     """Main widget class."""
 
-    menu, review, input, configuration = range(4)
+    menu, review = 0, 1
 
     def __init__(self, component_manager):
         MainWidget.__init__(self, component_manager)
         self.switcher = self.question_dialog = self.window = self.w_tree = \
             self.question_dialog_label = self.information_dialog = \
-            self.information_dialog_label = self.soundmanager = self.theme = \
+            self.information_dialog_label  = self.theme = \
             self.fullscreen = None
         self.htmlopener = urllib.FancyURLopener()
         self.widgets = {}
+        self.soundplayer = SoundPlayer()
 
     def activate(self):
         """Basic UI setup. 
@@ -83,7 +84,6 @@ class MainWdgt(MainWidget):
             "information_dialog_label")
 
         self.w_tree = w_tree
-        self.soundplayer = SoundPlayer()
 
     def show_mode(self, mode):
         self.switcher.set_current_page(getattr(self, mode))
