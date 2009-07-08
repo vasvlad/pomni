@@ -40,7 +40,7 @@ _ = gettext.gettext
 class MainWdgt(MainWidget):
     """Main widget class."""
 
-    menu, review = 0, 1
+    menu, review, input, configuration = range(4)
 
     def __init__(self, component_manager):
         MainWidget.__init__(self, component_manager)
