@@ -1,3 +1,9 @@
+pomni (0.2.0~beta5) unstable; urgency=low
+
+  * redesigned to satisfy Mnemosyne API and design principles 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 08 Jul 2009 23:09:35 +0300
+
 pomni (0.2.0~beta4) unstable; urgency=low
 
   * implemented sound support (Max)
