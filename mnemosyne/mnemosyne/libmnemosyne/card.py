@@ -46,8 +46,17 @@ class Card(object):
         self.scheduler_data = 0
         self.active = True
         self.in_view = True
-        self.reset_learning_data()
         
+        self.grade = -1
+        self.easiness = -1
+        self.acq_reps = 0
+        self.ret_reps = 0
+        self.lapses = 0
+        self.acq_reps_since_lapse = 0
+        self.ret_reps_since_lapse = 0
+        self.last_rep = -1
+        self.next_rep = -1
+
     def __eq__(self, other):
         return self.id == other.id
 
@@ -80,12 +89,15 @@ class Card(object):
         self.next_rep = -1
 
     def question(self):
+        """Gets card question."""
         return self.fact.card_type.question(self)
 
-    def answer(self):        
+    def answer(self):
+        """Gets card answer."""
         return self.fact.card_type.answer(self)
 
     def tag_string(self):
+        """Gets all tags for this card separated by ','."""
         tag_string = ""
         for tag in self.tags:
             tag_string += tag.name + ", "
