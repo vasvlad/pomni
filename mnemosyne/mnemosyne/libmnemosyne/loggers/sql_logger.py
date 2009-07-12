@@ -32,6 +32,7 @@ class SqlLogger(Logger):
     REPETITION = 18
     ADDED_MEDIA = 19
     DELETED_MEDIA = 20
+    SYNC = 21
                             
     def started_program(self):
         self.database().con.execute(\
@@ -150,6 +151,11 @@ class SqlLogger(Logger):
             "insert into history(event, timestamp, object_id) values(?,?,?)",
             (self.DELETED_MEDIA, int(time.time()),
              filename + "__for__" + fact.id))
+
+    def synchronize(self):
+        self.database().con.execute(\
+            "insert into history(event, timestamp) values(?,?)",
+            (self.SYNC, int(time.time())))
     
     def dump_to_txt_log(self):
         # Open log file and get starting index.
