@@ -25,6 +25,7 @@ Hildon UI. Menu widgets.
 """
 
 from mnemosyne.libmnemosyne.ui_component import UiComponent
+from pomni.sync import Client
 
 class MenuWidget(UiComponent):
     """Main menu widget."""
@@ -40,7 +41,7 @@ class MenuWidget(UiComponent):
 
         self.w_tree.signal_autoconnect(\
             dict([(mode, getattr(self, mode + "_cb")) \
-                for mode in ["input", "review", "configure", "exit"]]))
+                for mode in ["input", "review", "configure", "exit", "sync"]]))
 
     # callbacks
     def input_cb(self, widget):
@@ -50,6 +51,14 @@ class MenuWidget(UiComponent):
     def review_cb(self, widget):
         """Go to review mode."""
         self.main_widget().review_()
+
+    def sync_cb(self, widget):
+        print "sync..."
+        # test HistoryManager on client side
+        client = Client(self.main_widget().database())
+        events = client.get_history()
+        for event in events.items():
+            print event
 
     def configure_cb(self, widget):
         """Go to configuration mode."""
