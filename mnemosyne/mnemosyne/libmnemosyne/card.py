@@ -36,15 +36,15 @@ class Card(object):
     """
 
     def __init__(self, fact, fact_view):
-        print "Card.py: __init__ method"
+        #print "Card.py: __init__ method"
         self.fact = fact
-        print "card.fact =", self.fact
+        #print "card.fact =", self.fact
         self.fact_view = fact_view
-        print "card.fact_view =", self.fact_view
+        #print "card.fact_view =", self.fact_view
         self.id = self.fact.id + "." + self.fact.card_type.id + "." + \
                   self.fact_view.id
-        print "card.id =", self.id
-        print "card.instance =", self
+        #print "card.id =", self.id
+        #print "card.instance =", self
         self._id = None
         self.tags = set()
         self.extra_data = {}
