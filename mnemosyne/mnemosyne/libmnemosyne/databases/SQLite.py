@@ -866,4 +866,20 @@ class SQLite(Database):
     def scheduler_data_count(self, scheduler_data):
         return self.con.execute("""select count() from cards
             where active=1 and scheduler_data=?""",
-            (scheduler_data, )).fetchone()[0]        
+            (scheduler_data, )).fetchone()[0]
+
+    #
+    # Synchronization
+    #
+
+    def get_history_events(self, event_id):
+        items = self.con.execute("""
+            select event, timestamp from history where event=?""", \
+                (event_id,)).fetchall()
+        if not items:
+            return self.con.execute("""
+                select event, timestamp, object_id from history"""
+            ).fetchall()
+        else:
+            return self.con.execute("""select event, timestamp, object_id from 
+                history where timestamp > %s""" % (items[-1][1])).fetchall()
