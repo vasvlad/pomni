@@ -18,9 +18,10 @@ from mnemosyne.libmnemosyne.fact_view import FactView
 from mnemosyne.libmnemosyne.utils import traceback_string
 from mnemosyne.libmnemosyne.utils import mangle, copy_file_to_dir
 from mnemosyne.libmnemosyne.utils import expand_path, contract_path
+from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger
 
 re_src = re.compile(r"""src=\"(.+?)\"""", re.DOTALL | re.IGNORECASE)
-
+SYNC = SqlLogger.SYNC
 
 # Note: all id's beginning with an underscore refer to primary keys in the
 # SQL database. All other id's correspond to the id's used in libmnemosyne.
@@ -872,10 +873,10 @@ class SQLite(Database):
     # Synchronization
     #
 
-    def get_history_events(self, event_id):
+    def get_history_events(self):
         items = self.con.execute("""
             select event, timestamp from history where event=?""", \
-                (event_id,)).fetchall()
+                (SYNC,)).fetchall()
         if not items:
             return self.con.execute("""
                 select event, timestamp, object_id from history"""
