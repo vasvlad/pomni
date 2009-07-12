@@ -506,6 +506,24 @@ class SQLite(Database):
             where _card_id=?""", (_id, )):
             card.tags.add(self.get_tag(cursor["_tag_id"]))
         return card
+
+    def get_card_by_id(self, id):
+        sql_res = self.con.execute("select * from cards where id=?",
+                                   (id, )).fetchone()
+        fact = self.get_fact(sql_res["_fact_id"])
+        for view in fact.card_type.fact_views:
+            if view.id == sql_res["fact_view_id"]:
+                card = Card(fact, view)
+                break
+        for attr in ("id", "_id", "grade", "easiness", "acq_reps", "ret_reps",
+            "lapses", "acq_reps_since_lapse", "ret_reps_since_lapse",
+            "last_rep", "next_rep", "scheduler_data", "active", "in_view"):
+            setattr(card, attr, sql_res[attr])
+        self._get_extra_data(sql_res, card)
+        for cursor in self.con.execute("""select _tag_id from tags_for_card
+            where _card_id=?""", (id, )):
+            card.tags.add(self.get_tag(cursor["_tag_id"]))
+        return card
     
     def update_card(self, card, repetition_only=False):
         self.con.execute("""update cards set _fact_id=?, fact_view_id=?,
