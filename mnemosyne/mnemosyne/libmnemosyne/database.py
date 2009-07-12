@@ -203,3 +203,9 @@ class Database(Component):
 
     def scheduler_data_count(self, scheduler_data):        
         raise NotImplementedError
+
+    # Synchronization
+
+    def get_history_events(self):
+        raise NotImplementedError
+
