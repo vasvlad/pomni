@@ -1,6 +1,7 @@
 from mnemosyne.libmnemosyne.database import Database
 from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger as events
-
+import socket
+import simplejson
 
 class HistoryManager(Database):
     """
@@ -20,51 +21,81 @@ class HistoryManager(Database):
     def get_events(self, events):
         """Returns modified history events."""
 
+        return [{"event":event[0], "time":event[1], "id":event[2], \
+            "side":self.name} for event in events]
+
+    def filter_events(self, events, filter = [None]):
+        """Remove all old events. Save only the new ones."""
+
         result_list = []
-        for event in events:
-            if event[2]: # if id != None
-                result_list.append({"event":event[0], "time":event[1], \
-                    "id":event[2], "side":self.name})
-        #print "get_events: result_list =", result_list
-        return result_list
-
-    def filter_events(self, events):
-        """Remove all old events.Save only the new one."""
-
-        result_dict = {}
+        tmp_dict = {}
         # now dict looks like: { key:[], ... }
         for event in events:
-            result_dict[event["id"]] = []
+            tmp_dict[event["id"]] = []
 
         # now dict looks like: { key:[event1, event2, ...], ...}
         for event in events:
-            result_dict[event["id"]].append(event)
+            tmp_dict[event["id"]].append(event)
 
         # save only last event for every id
-        for key in result_dict:
-            last_event = result_dict[key][0]
-            for event in result_dict[key][:]:
+        for key in tmp_dict:
+            last_event = tmp_dict[key][0]
+            for event in tmp_dict[key][:]:
                 if event["time"] > last_event["time"]:
                     last_event = event
-                result_dict[key].remove(event)
-            result_dict[key] = {"time":last_event["time"], \
-                "event":last_event["event"], "side":last_event["side"]}
+                tmp_dict[key].remove(event)
+            if key not in filter:
+                result_list.append({"id":key, "event":last_event["event"], \
+                    "time": last_event["time"], "side": last_event["side"]})
 
-        #print "filter events: result_dict =", result_dict
-        return result_dict
+        return result_list
 
     def apply(self, event):
-        """Modify appropriate database."""
+        """Modify database on self side."""
 
-        if event["event"] == events.ADDED_CARD:
-            self.add_card(self.other_side.get_card(event["id"]))
+        event_id = event["event"]
+        if event_id == events.ADDED_CARD:
+            card = self.other_side.get_card_by_id(event["id"])
+            self.add_card(card)
+        elif event_id == events.DELETED_CARD:
+            card = self.other_side.get_card_by_id(event["id"])
+            self.delete_card(card)
+        elif event_id == events.UPDATED_CARD:
+            card = self.other_side.get_card_by_id(event["id"])
+            self.update_card(card)
 
 
 
+class Transport:
+    def __init__(self, address, port):
+        self.address = address
+        self.port = port
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-class Transport(HistoryManager):
-    pass
+    def connect(self):
+        """Connects to server."""
 
+        try:
+            self.sock.connect((self.address, self.port))
+            return True
+        except:
+            return False
+
+    def send_command(self, command, data=None):
+        """Send command and associated data to server."""
+
+        if not self.sock:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.connect()
+        self.sock.send(command)
+        if data:
+            self.sock.send(data)
+        return self.parse_JSON(self.sock.makefile('r'))
+
+    def parse_JSON(self, fileobj):
+        """Parses data from socket file object."""
+
+        return simplejson.loads(fileobj.read())
 
 
 
@@ -74,29 +105,33 @@ class Client(HistoryManager):
     def __init__(self, database, transport=None):
         HistoryManager.__init__(self, database, "client")
         self.other_side = transport
-        #self.sync()
 
     def sync(self):
         """Start syncing."""
 
         # get client and server filtered history
-        events = self.hmanager.get_history(\
-            self.other_side.get_events())
-
-        # analize every event and applay it to appropriate side
+        events = self.get_history(self.other_side.send_command("history"))
         for event in events:
-            if event["side"] != self.name:
-                self.apply(event)
-            else:
-                self.other_side.apply(event)
-        
+            print event
+
+        # analize every event and apply it to appropriate side
+        #for event in events:
+        #    if event["side"] != self.name:
+        #        self.apply(event)
+        #    else:
+        #        print "Client send event to Server via Transport..."
+        #        self.other_side.apply(event)
+       
 
 
-
-class Server:
+class Server(HistoryManager):
     """Server class."""
 
     def __init__(self, database, transport=None):
         HistoryManager.__init__(self, database, "server")
         self.other_side = transport
 
+    def handler(self):
+        command, data = self.other_side.receive()
+        if command == "get_card_by_id":
+            card = self.database.get_card_by_id(data)
