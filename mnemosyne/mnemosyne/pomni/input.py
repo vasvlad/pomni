@@ -25,9 +25,10 @@ Hildon UI: Input mode Widgets.
 """
 
 import gettext
-import gtk
-import gtk.glade
+import pango
 import os
+import gtk.gdk
+from gtk import ListStore
 
 from mnemosyne.libmnemosyne.ui_components.dialogs import \
     Dialog, AddCardsDialog, EditFactDialog
@@ -63,7 +64,7 @@ class InputWidget(Dialog):
         self.card_type = None
         self.categories_list = []
         #liststore = [text, type, filename, dirname, pixbuf]
-        self.liststore = gtk.ListStore(str, str, str, str, gtk.gdk.Pixbuf)
+        self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
         iconview_widget = self.w_tree.get_widget("iconview_widget")
         iconview_widget.set_model(self.liststore)
         iconview_widget.set_pixbuf_column(4)
@@ -78,6 +79,12 @@ class InputWidget(Dialog):
             "translation": self.w_tree.get_widget("translation_text_w"),
             "pronunciation": self.w_tree.get_widget("pronun_text_w")
         }
+
+        # Change default font
+        font = pango.FontDescription("Nokia Sans 20")
+        for area in self.areas.values():
+            area.modify_font(font)
+
         self.widgets = {# Other widgets
             "CurrentCategory": self.w_tree.get_widget("category_name_w"),
             "SoundButton": self.w_tree.get_widget("sound_content_button"),
