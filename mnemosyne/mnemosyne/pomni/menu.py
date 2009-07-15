@@ -56,14 +56,14 @@ class MenuWidget(UiComponent):
     def sync_cb(self, widget):
         print "sync..."
         transport = Transport("localhost", 9999)
-        connected = transport.connect()
-        if connected:
-            client = Client(self.main_widget().database(), transport)
-            client.sync()
-        else:
-            self.main_widget().error_box(\
-            "Unable to connect!\naddress:%s\nport:%s" % \
-                (transport.address, transport.port))
+        #connected = transport.connect()
+        #if connected:
+        client = Client(self.main_widget().database(), transport)
+        client.sync()
+        #else:
+        #    self.main_widget().error_box(\
+        #    "Unable to connect!\naddress:%s\nport:%s" % \
+        #        (transport.address, transport.port))
 
     def configure_cb(self, widget):
         """Go to configuration mode."""

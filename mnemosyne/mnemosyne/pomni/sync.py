@@ -2,75 +2,14 @@ from mnemosyne.libmnemosyne.database import Database
 from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger as events
 import socket
 import simplejson
-
-class HistoryManager(Database):
-    """
-    Works with database history table.
-    """
-
-    def __init__(self, database, name):
-        self.database = database
-        self.name = name
-
-    def get_history(self, server_events = []):
-        """Returns filtered history events."""
-
-        return self.filter_events(self.get_events(\
-            self.database.get_history_events()) + server_events)
-
-    def get_events(self, events):
-        """Returns modified history events."""
-
-        return [{"event":event[0], "time":event[1], "id":event[2], \
-            "side":self.name} for event in events]
-
-    def filter_events(self, events, filter = [None]):
-        """Remove all old events. Save only the new ones."""
-
-        result_list = []
-        tmp_dict = {}
-        # now dict looks like: { key:[], ... }
-        for event in events:
-            tmp_dict[event["id"]] = []
-
-        # now dict looks like: { key:[event1, event2, ...], ...}
-        for event in events:
-            tmp_dict[event["id"]].append(event)
-
-        # save only last event for every id
-        for key in tmp_dict:
-            last_event = tmp_dict[key][0]
-            for event in tmp_dict[key][:]:
-                if event["time"] > last_event["time"]:
-                    last_event = event
-                tmp_dict[key].remove(event)
-            if key not in filter:
-                result_list.append({"id":key, "event":last_event["event"], \
-                    "time": last_event["time"], "side": last_event["side"]})
-
-        return result_list
-
-    def apply(self, event):
-        """Modify database on self side."""
-
-        event_id = event["event"]
-        if event_id == events.ADDED_CARD:
-            card = self.other_side.get_card_by_id(event["id"])
-            self.add_card(card)
-        elif event_id == events.DELETED_CARD:
-            card = self.other_side.get_card_by_id(event["id"])
-            self.delete_card(card)
-        elif event_id == events.UPDATED_CARD:
-            card = self.other_side.get_card_by_id(event["id"])
-            self.update_card(card)
-
+from pomni.history_manager import HistoryManager
 
 
 class Transport:
     def __init__(self, address, port):
         self.address = address
         self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def connect(self):
         """Connects to server."""
@@ -84,18 +23,22 @@ class Transport:
     def send_command(self, command, data=None):
         """Send command and associated data to server."""
 
-        if not self.sock:
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.connect()
-        self.sock.send(command)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((self.address, self.port))
+        sock.send(command)
         if data:
-            self.sock.send(data)
-        return self.parse_JSON(self.sock.makefile('r'))
+            sock.send(data)
+        result = self.parse_JSON(sock.makefile('r'))
+        sock.close()
+        return result
 
     def parse_JSON(self, fileobj):
         """Parses data from socket file object."""
 
         return simplejson.loads(fileobj.read())
+
+    def apply(self, event):
+        pass
 
 
 
@@ -111,17 +54,71 @@ class Client(HistoryManager):
 
         # get client and server filtered history
         events = self.get_history(self.other_side.send_command("history"))
-        for event in events:
-            print event
 
         # analize every event and apply it to appropriate side
-        #for event in events:
-        #    if event["side"] != self.name:
-        #        self.apply(event)
-        #    else:
-        #        print "Client send event to Server via Transport..."
-        #        self.other_side.apply(event)
-       
+        for event in events:
+            print event
+            if event["side"] != self.name:
+                self.apply(event)
+            else:
+                self.other_side.apply(event)
+      
+    def apply(self, event):
+        """Update database on self side."""
+
+        event_id = event["event"]
+        if event_id == events.ADDED_CARD:
+            card_fields = self.other_side.send_command('get_card', event['id'])
+            # create card object
+            # self.add_card(card)
+            print "client: adding new card:", card_fields
+        elif event_id == events.DELETED_CARD:
+            #card = self.get_card_by_id(event['id'])
+            #self.delete_card(card)
+            print "client: deleting card with id:", event['id']
+        elif event_id == events.UPDATED_CARD:
+            card_fields = self.other_side.send_command('get_card', event['id'])
+            # create card object
+            # self.update_card(card)
+            print "client: updating card:", card_fields
+        elif event_id == events.ADDED_FACT:
+            fact = self.other_side.send_command('get_fact', event['id'])
+            # self.add_fact(fact)
+            print "client: adding new fact:", fact
+        elif event_id == events.DELETED_FACT:
+            fact = self.other_side.send_command('get_fact', event['id'])
+            # self.delete_fact_and_related_data(fact)
+            print "client: deleting fact:", fact
+        elif event_id == events.UPDATED_FACT:
+            fact = self.other_side.send_command('get_fact', event['id'])
+            # self.update_fact(fact)
+            print "client: updating fact:", fact
+        elif event_id == events.ADDED_TAG:
+            tag = self.other_side.send_command('get_tag', event['id'])
+            # self.add_tag(tag)
+            print "client: adding new tag:", tag
+        elif event_id == events.DELETED_TAG:
+            tag = self.other_side.send_command('get_tag', event['id'])
+            # self.delete_tag(tag)
+            print "client: deleting tag:", tag
+        elif event_id == events.UPDATED_TAG:
+            tag = self.other_side.send_command('get_tag', event['id'])
+            # self.update_tag(tag)
+            print "client: updating tag:", tag
+        elif event_id == events.ADDED_CARD_TYPE:
+            card_type = self.other_side.send_command('get_card_type', event['id'])
+            # self.add_card_type(card_type)
+            print "client: adding new card_type:", card_type
+        elif event_id == events.DELETED_CARD_TYPE:
+            card_type = self.other_side.send_command('get_card_type', event['id'])
+            # self.delete_card_type(card_type)
+            print "client: deleting card_type:", card_type
+        elif event_id == events.UPDATED_CARD_TYPE:
+            card_type = self.other_side.send_command('get_card_type', event['id'])
+            # self.update_card_type(card_type)
+            print "client: updating card_type:", card_type
+            
+        
 
 
 class Server(HistoryManager):
