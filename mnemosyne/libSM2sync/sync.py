@@ -1,3 +1,12 @@
+# vim: sw=4 ts=4 expandtab ai
+#
+# sync.py
+#
+# Max Usachev <maxusachev@gmail.com>, 
+# Ed Bartosh <bartosh@gmail.com>, 
+# Peter Bienstman <Peter.Bienstman@UGent.be>
+
+
 import mnemosyne.version
 
 
@@ -14,23 +23,41 @@ class Sync(object):
         self.url = url
         self.client = self.server = None
 
-    def go(self):
+    def start(self):
+        """Start syncing."""
+
         if self.handshake():
-            self.client.process_history(self.server.get_history(), self.server.id)
-            self.server.process_history(self.client.get_history(), self.client.id)
+            self.client.process_history(self.server.get_history(), \
+                self.server.hw_id)
+            self.server.process_history(self.client.get_history(), \
+                self.client.hw_id)
+            self.done()
         else:
+            #FIXME: make exeption instead of print
             print "error in handshaking"
 
     def connect(self):
+        """Init Server connection."""
+
+        #FIXME: replace "database" by real database
         self.server = Server(self.url, "database")
         self.server.connect()
 
     def handshake(self):
+        """Start handshaking."""
+
         if not self.server:
             self.connect()
         if not self.client:
+            #FIXME: replace "database" by real database
             self.client = Client("database")
         return self.client.handshake(self.server)
+
+    def done(self):
+        """Finish syncing."""
+
+        self.client.done()
+        self.server.done()
             
 
 
@@ -44,7 +71,7 @@ class EventManager:
     def get_events(self):
         pass
 
-    def apply_events(self, event):
+    def apply_event(self, event):
         pass
 
 
@@ -53,33 +80,47 @@ class Client:
     def __init__(self, database):
         self.database = database
         self.eman = None
+        self.hw_id = 'client_hw_id'
+        self.app_name = 'Mnemosyne'
+        self.app_version = mnemosyne.version.version
+        self.protocol_version = PROTOCOL_VERSION
+        self.login = 'mnemosyne'
+        self.password = 'mnemosyne'
+        self.cardtypes = N_SIDED_CARD_TYPE
+        self.extradata = ''
 
     def handshake(self, server):
-        sync_params = self.get_sync_params()
-        if server.login(sync_params['login'], sync_params['password']):
+        """Handshaking with server."""
+
+        if server.login(self.hw_id, self.login, self.password):
             self.eman = EventManager(self.database, server.get_sync_params())
-            server.set_sync_params(sync_params)
+            server.set_sync_params(self.get_sync_params())
             return True
         return False
 
     def get_history(self):
+        """Gets all history events after the last sync."""
+
         return self.eman.get_events()
 
     def process_history(self, events, partnerid):
+        """Process every event and add it to database."""
+
         for event in events:
             self.eman.apply_event(event, partnerid)
 
     def get_sync_params(self):
-        params = {}
-        params['app_name'] = 'Mnemosyne'
-        params['app_version'] = mnemosyne.version.version
-        params['protocol_version'] = PROTOCOL_VERSION
-        params['login'] = 'mnemosyne'
-        params['password'] = 'mnemosyne'
-        params['cardtypes'] = N_SIDED_CARD_TYPE
-        params['extradata'] = ''
-        return params
+        """Gets client specific params."""
+
+        return {'app_name': self.app_name, 'app_ver': self.app_version, \
+            'protocol_ver': self.protocol_version, 'extra': self.extradata, \
+            'cardtypes': self.cardtypes}
+
+    def done(self):
+        """Mark in database that sync was completed successfull."""
+        pass
         
+
 
 
 class Server:
@@ -87,26 +128,42 @@ class Server:
         self.url = url
         self.database = database
         self.eman = EventManager(database)
+        self.hw_id = "server_hw_id"
+        self.app_name = 'Mnemosyne'
+        self.app_version = mnemosyne.version.version
+        self.protocol_version = PROTOCOL_VERSION
+        self.cardtypes = N_SIDED_CARD_TYPE
+        self.upload_media = True
+        self.read_only = False
 
     def connect(self):
+        """Activate server connection."""
         pass
 
     def login(self, login, password):
+        """Check client existence."""
+
         return True
 
     def get_sync_params(self):
-        params = {}
-        params['app_name'] = 'Mnemosyne'
-        params['app_version'] = mnemosyne.version.version
-        params['protocol_version'] = PROTOCOL_VERSION
-        params['cardtypes'] = N_SIDED_CARD_TYPE
-        params['upload_media'] = True
-        params['read_only'] = False
-        return params
+        """Gets server specific params."""
+
+        return {'app_name': self.app_name, 'app_ver': self.app_version, \
+            'protocol_ver': self.protocol_version, 'cardtypes': self.cardtypes,
+            'upload_media': self.upload_media, 'read_only': self.read_only }
 
     def get_history(self):
-        return eman.get_events()
+        """Gets all history events after the last sync."""
+
+        return self.eman.get_events()
 
     def process_history(self, events, partnerid):
+        """Process every event and add it to database."""
+
         for event in events:
             self.eman.apply_event(event, partnerid)
+
+    def done(self):
+        """Mark in database that sync was completed successfull."""
+        pass
+    
