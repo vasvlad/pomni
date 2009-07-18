@@ -30,7 +30,7 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 	$(PYTHON) setup.py install --root=$(PREFIX)
-	cp mnemosyne $(PREFIX)/usr/bin/mnemosyne
+	cp $(PACKAGE) $(PREFIX)/usr/bin/$(PACKAGE)
 	#rm $(PREFIX)/usr/lib/python2.5/site-packages/mnemosyne/maemo_ui/*.py
 
 binary-indep: build install
