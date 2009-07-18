@@ -16,8 +16,8 @@ setup(name=PKG,
     author="Pomni Development team",
     author_email="pomni@googlegroups.com",
     license='GPL 2',
-    packages=["mnemosyne"],
-    package_dir={'mnemosyne': ''},
+    packages=["mnemosyne.maemo_ui"],
+    package_dir={'mnemosyne.maemo_ui': ''},
     data_files = [(os.path.join('share/%s/' % PKG, path), \
         [os.path.join(path, fname) for fname in files]) \
         for path, dirs, files in os.walk('hildon-UI/eternal')] + \
@@ -27,8 +27,8 @@ setup(name=PKG,
        [('share/dbus-1/services', ['maemo/%s.service' % PKG]),
         ('share/applications/hildon', ['maemo/%s.desktop' % PKG]),
         ('share/%s/demo' % PKG, [".%s/default.db" % PKG]),
-        ('share/icons/hicolor/26x26/apps/', ['./maemo/icons/26x26/mnemosyne.png']),
-        ('share/icons/hicolor/64x64/apps/', ['./maemo/icons/64x64/mnemosyne.png'])],
+        ('share/icons/hicolor/26x26/apps/', ['./maemo/icons/26x26/%s.png' % PKG]),
+        ('share/icons/hicolor/64x64/apps/', ['./maemo/icons/64x64/%s.png' % PKG])],
     classifiers=[
     'Development Status :: 3 - Alpha',
     'Environment :: Console',

@@ -61,15 +61,15 @@ class MnemosyneOut(Mnemosyne, UiComponent):
                     ("mnemosyne.libmnemosyne.ui_components.main_widget",
                      "MainWidget"))
 
-        self.components.append(("pomni.factory", "ConfigHook"))
+        self.components.append(("mnemosyne.maemo_ui.factory", "ConfigHook"))
         
         if datadir:
             datadir = os.path.abspath(datadir)
-        elif os.path.exists(os.path.join(os.getcwdu(), ".pomni")):
-            datadir = os.path.abspath(os.path.join(os.getcwdu(), ".pomni"))
+        elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
+            datadir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
         else:
             datadir = os.path.abspath(os.path.join(os.path.expanduser("~"), 
-                        ".pomni"))
+                        ".mnemosyne"))
 
 
         self.initialise(datadir)
