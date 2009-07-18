@@ -1,3 +1,10 @@
+mnemosyne (2.0.0~beta1) unstable; urgency=low
+
+  * rewritten everything according to libmnemosyne design
+  * renamed pomni->mnemosyne
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 18 Jul 2009 14:46:10 +0300
+
 pomni (0.2.0~beta1) unstable; urgency=low
 
   * Implemented input and review modes for 3sided card type (Max)
