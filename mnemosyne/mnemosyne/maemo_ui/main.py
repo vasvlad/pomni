@@ -1,7 +1,7 @@
 #!/usr/bin/python -tt7
 # vim: sw=4 ts=4 expandtab ai
 #
-# Pomni. Learning tool based on spaced repetition technique
+# Mnemosyne. Learning tool based on spaced repetition technique
 #
 # Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
 #
@@ -32,7 +32,7 @@ import urllib
 import gtkhtml2
 import urlparse
 
-from pomni.sound import SoundPlayer
+from maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
@@ -98,7 +98,7 @@ class MainWdgt(MainWidget):
                 self.review_controller().reset()
                 widget = self.review_controller().widget
             elif mode == "menu":
-                from pomni.menu import MenuWidget
+                from maemo_ui.menu import MenuWidget
                 widget = MenuWidget(self.component_manager)
             self.widgets[mode] = widget
 

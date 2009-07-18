@@ -1,7 +1,7 @@
 #!/usr/bin/python -tt
 # vim: sw=4 ts=4 expandtab ai
 #
-# Pomni. Learning tool based on spaced repetition technique
+# Mnemosyne. Learning tool based on spaced repetition technique
 #
 # Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
 #
@@ -35,7 +35,7 @@ class ConfigHook(Component):
     def run(self):
         """Entry point."""
         for key, value in {\
-            "theme_path": "/usr/share/pomni/hildon-UI/rainbow",
+            "theme_path": "/usr/share/mnemosyne/hildon-UI/rainbow",
             "themes": ['rainbow'],
             "fullscreen": True,
             "font_size": 30.0,
@@ -51,10 +51,10 @@ def app_factory(interface=None):
     """Mnemosyne application factory."""
 
     app = Mnemosyne()
-    app.components.append(("pomni.factory", "ConfigHook"))
+    app.components.append(("maemo_ui.factory", "ConfigHook"))
 
     if interface == 'cmd':
-        #from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
+        #from maemo_ui.cmd_ui import CmdUiControllerReview, CommandlineUI
 
         #component_manager.register("ui_controller_review",
         #                           CmdUiControllerReview())
@@ -64,13 +64,13 @@ def app_factory(interface=None):
     if not interface or interface == "hildon":
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
                                   "GetTextTranslator"))
-        app.components.append(("pomni.renderers", "Html"))
-        app.components.append(("pomni.main", "MainWdgt"))
-        app.components.append(("pomni.menu", "MenuWidget"))
-        app.components.append(("pomni.review", "ReviewWdgt"))
-        app.components.append(("pomni.input", "AddCardsWidget"))
-        app.components.append(("pomni.input", "EditFactWidget"))
-        app.components.append(("pomni.configuration", "ConfigurationWidget"))
+        app.components.append(("maemo_ui.renderers", "Html"))
+        app.components.append(("maemo_ui.main", "MainWdgt"))
+        app.components.append(("maemo_ui.menu", "MenuWidget"))
+        app.components.append(("maemo_ui.review", "ReviewWdgt"))
+        app.components.append(("maemo_ui.input", "AddCardsWidget"))
+        app.components.append(("maemo_ui.input", "EditFactWidget"))
+        app.components.append(("maemo_ui.configuration", "ConfigurationWidget"))
 
         # Add necessary components
         app.components.append(\
