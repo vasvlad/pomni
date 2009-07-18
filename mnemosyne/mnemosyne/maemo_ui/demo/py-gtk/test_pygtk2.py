@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.5
 # vim:ts=4:sw=4:expandtab:ai
-# Test for pomni
+# Test for mnemosyne
 """ Version 3 For test only"""
 
 import gtk
@@ -65,7 +65,7 @@ def main():
     """ Main part of program """
     
     window = hildon.Window()
-    window.set_title("Pomni")
+    window.set_title("Mnemosyne")
     window.connect("destroy", gtk.main_quit)
     window.connect("key-press-event", on_key_press)
     window.connect("window-state-event", on_window_state_change)

@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-PKG="pomni"
+PKG="mnemosyne"
 FNAME="default.db"
 USER="user"
 GROUP="users"

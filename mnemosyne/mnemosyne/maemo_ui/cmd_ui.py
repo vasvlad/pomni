@@ -1,7 +1,7 @@
 #!/usr/bin/python -tt
 # vim: sw=4 ts=4 expandtab ai
 #
-# Pomni. Learning tool based on spaced repetition technique
+# Mnemosyne. Learning tool based on spaced repetition technique
 #
 # Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
 #
@@ -48,7 +48,7 @@ class CommandlineUI(cmd.Cmd):
     def __init__(self):
 
         cmd.Cmd.__init__(self)
-        self.prompt = '====== Main =======\nPomni: '
+        self.prompt = '====== Main =======\nMnemosyne: '
         ui_controller_main().widget = self
 
     @staticmethod

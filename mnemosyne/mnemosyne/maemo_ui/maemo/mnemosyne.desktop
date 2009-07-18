@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Version=0.0.8
-Name=Pomni
-Exec=/usr/bin/pomni
+Version=2.0.0
+Name=Mnemosyne
+Exec=/usr/bin/mnemosyne
 Type=Application
-Icon=pomni
+Icon=mnemosyne
 
