@@ -19,10 +19,11 @@ install-system:
 	rm -f -R build
 
 test: install-virtual-env
-	./bin/nosetests
+	./bin/nosetests tests
 
 coverage: install-virtual-env
-	./bin/nosetests --with-coverage --cover-package=mnemosyne.libmnemosyne
+	./bin/nosetests --with-coverage --cover-erase --cover-html --cover-package=mnemosyne.libmnemosyne
+	firefox cover/index.html
 
 profile: install-virtual-env
 	echo "from hotshot import stats" > process_profile.py
@@ -33,6 +34,12 @@ profile: install-virtual-env
 
 benchmark: install-virtual-env
 	./bin/python tests/benchmark.py
+
+wm: install-virtual-env
+	./bin/python mnemosyne/ppygui_ui/ppygui_ui/Mnemosyne\ Mobile.py -d dot_mnemosyne2
+
+docs:
+	cd mnemosyne/libmnemosyne/docs ; make html
 
 windows:
 	rmdir /S /Q dist
@@ -46,10 +53,13 @@ clean:
 	rm -f -R dot_benchmark dist
 	cd mnemosyne/pyqt_ui ; make clean
 	rm -f mnemosyne/*~ mnemosyne/*.pyc
-	rm -f mnemosyne/core/*~ mnemosyne/core/*.pyc
+	rm -f mnemosyne/libmnemosyne/*~ mnemosyne/libmnemosyne/*.pyc
 
 distrib: FORCE
 	make clean
+
+	# Unix.
+
 	cd mnemosyne/pyqt_ui ; make
 
 	mkdir distrib
@@ -58,7 +68,7 @@ distrib: FORCE
 	mkdir distrib/mnemosyne
 	cp mnemosyne/*.py distrib/mnemosyne
 
-	mkdir distrib/mnemosyne/core
+	mkdir distrib/mnemosyne/libmnemosyne
 	cp mnemosyne/core/*.py distrib/mnemosyne/core
 
 	mkdir distrib/mnemosyne/pyqt_ui
@@ -83,5 +93,21 @@ distrib: FORCE
 		mnemosyne-$${V}/*
 
 	V=`python mnemosyne/version.py` && rm -R mnemosyne-$${V}
+
+	# Windows Mobile.
+
+	mkdir distrib
+
+	cp mnemosyne/ppygui_ui/INSTALL Mnemosyne\ Mobile.py distrib
+	mkdir distrib/ppygui_ui
+	cp -r mnemosyne/ppygui_ui/*.py distrib/ppygui_ui
+
+	V=`python mnemosyne/version.py` && mv distrib mnemosyne-WM-$${V}
+
+	V=`python mnemosyne/version.py` && tar cvfz mnemosyne-WM-$${V}.tgz \
+		mnemosyne-WM-$${V}/*
+
+	V=`python mnemosyne/version.py` && rm -R mnemosyne-WM-$${V}	
+
 
 FORCE:

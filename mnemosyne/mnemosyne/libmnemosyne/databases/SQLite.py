@@ -3,24 +3,24 @@
 #
 
 import os
+import re
+import time
 import shutil
 import sqlite3
-from datetime import datetime
 
+from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.libmnemosyne.tag import Tag
 from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.database import Database
-from mnemosyne.libmnemosyne.category import Category
+from mnemosyne.libmnemosyne.card_type import CardType
 from mnemosyne.libmnemosyne.fact_view import FactView
-from mnemosyne.libmnemosyne.start_date import StartDate
-from mnemosyne.libmnemosyne.exceptions import SaveError, LoadError
-from mnemosyne.libmnemosyne.exceptions import PluginError, MissingPluginError
+from mnemosyne.libmnemosyne.utils import traceback_string
+from mnemosyne.libmnemosyne.utils import mangle, copy_file_to_dir
 from mnemosyne.libmnemosyne.utils import expand_path, contract_path
-from mnemosyne.libmnemosyne.component_manager import card_types, scheduler
-from mnemosyne.libmnemosyne.component_manager import card_type_by_id
-from mnemosyne.libmnemosyne.component_manager import component_manager
-from mnemosyne.libmnemosyne.component_manager import config, log, plugins
-from mnemosyne.libmnemosyne.component_manager import ui_controller_review
+
+re_src = re.compile(r"""src=\"(.+?)\"""", re.DOTALL | re.IGNORECASE)
+
 
 # Note: all id's beginning with an underscore refer to primary keys in the
 # SQL database. All other id's correspond to the id's used in libmnemosyne.
@@ -31,434 +31,671 @@ SCHEMA = """
     
     create table facts(
         _id integer primary key,
-        id text unique,
+        id text,
         card_type_id text,
-        creation_date timestamp,
-        modification_date timestamp,
-        needs_sync boolean default 1
+        creation_time integer,
+        modification_time integer,
+        extra_data text default ""
     );
 
     create table data_for_fact(
-        _id integer primary key,
-        _fact_id int,
+        _fact_id integer,
         key text,
         value text
     );
+    create index i_data_for_fact on data_for_fact (_fact_id);
     
     create table cards(
         _id integer primary key,
-        id text unique,
-        _fact_id int,
-        fact_view_id int,
-        grade int,
+        id text,
+        _fact_id integer,
+        fact_view_id text,
+        grade integer,
         easiness real,
-        acq_reps int,
-        ret_reps int,
-        lapses int,
-        acq_reps_since_lapse int,
-        ret_reps_since_lapse int,
-        last_rep real,
-        next_rep real,
-        unseen boolean default 1,
+        acq_reps integer,
+        ret_reps integer,
+        lapses integer,
+        acq_reps_since_lapse integer,
+        ret_reps_since_lapse integer,
+        last_rep integer,
+        next_rep integer,
         extra_data text default "",
-        seen_in_this_session int default 0,
-        needs_sync boolean default 1,
+        scheduler_data integer default 0,
         active boolean default 1,
         in_view boolean default 1
     );
 
-    create table categories(
+    create table tags(
         _id integer primary key,
-        _parent_key int default 0,
-        id text unique,
+        _parent_key integer default 0,
+        id text,
         name text,
-        needs_sync boolean default 1
+        extra_data text default ""
     );
 
-    create table categories_for_card(
-        _id integer primary key,
-        _category_id int,
-        _card_id int
+    create table tags_for_card(
+        _card_id integer,
+        _tag_id integer
     );
+    create index i_tags_for_card on tags_for_card (_card_id);
 
     create table global_variables(
         key text,
         value text
     );
+
+    /* For object_id, we need to store the full ids as opposed to the _ids.
+       When deleting an object, there is no longer a way to get the ids from
+       the _ids, and for robustness and interoperability, we need to send the
+       ids across when syncing.
+    */
+       
+    create table history(
+        _id integer primary key,
+        event integer,
+        timestamp integer,
+        object_id text,
+        grade integer,
+        easiness real,
+        acq_reps integer,
+        ret_reps integer,
+        lapses integer,
+        acq_reps_since_lapse integer,
+        ret_reps_since_lapse integer,
+        scheduled_interval integer,
+        actual_interval integer,
+        new_interval integer,
+        thinking_time integer
+    );
+    create index i_history on history (timestamp);
+
+    /* We track the last _id as opposed to the last timestamp, as importing
+       another database could add history events with earlier dates, but
+       which still need to be synced. */
+    
+    create table partnerships(
+        partner text,
+        _last_history_id integer
+    );
+
+    create table media(
+        filename text,
+        _fact_id integer,
+        last_modified integer
+    );
+
+    /* Here, we store the card types that are created at run time by the user
+       through the GUI, as opposed to those that are instantiated through a
+       plugin. For columns containing lists, dicts, ...  like 'fields',
+       'unique_fields', ... we store the __repr__ representations of the
+       Python objects.
+    */
+
+    create table fact_views(
+        _id integer primary key,
+        id text,
+        name text,
+        q_fields text,
+        a_fields text,
+        required_fields text,
+        a_on_top_of_q boolean default 0,
+        type_answer boolean default 0,
+        extra_data text default ""
+    );
+
+    create table card_types(
+        id text unique,
+        name text,
+        fields text,
+        unique_fields text,
+        keyboard_shortcuts text,
+        extra_data text default ""
+    );
+
+    create table fact_views_for_card_type(
+        _fact_view_id text,
+        card_type_id text
+    );
     
     commit;
 """
 
-
 class SQLite(Database):
+
+    """Note that most of the time, Commiting is done elsewhere, e.g. by
+    calling save in the main controller, in order to have a better control
+    over transaction granularity.
+
+    """
 
     version = "SQL 1.0"
     suffix = ".db"
 
-    def __init__(self):
+    def __init__(self, component_manager):
+        Database.__init__(self, component_manager)
         self._connection = None
         self._path = None # Needed for lazy creation of connection.
-        self.load_failed = False
-        self.start_date = None
+        self.load_failed = True
 
+    #
+    # File operations
+    #
+    
     @property
     def con(self):
         
         """Connection to the database, lazily created."""
 
         if not self._connection:
-            self._connection = sqlite3.connect(self._path,
-                detect_types = sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+            self._connection = sqlite3.connect(self._path, timeout=0.1,
+                               isolation_level="EXCLUSIVE")
             self._connection.row_factory = sqlite3.Row
         return self._connection
 
     def new(self, path):
         if self.is_loaded():
             self.unload()
-        self._path = expand_path(path, config().basedir)
+        self._path = expand_path(path, self.config().basedir)
         if os.path.exists(self._path):
             os.remove(self._path)
-        self.load_failed = False      
-        self.start_date = StartDate()
-        self.con.executescript(SCHEMA) # Create tables.
-        self.con.execute("insert into global_variables(key,value) values(?,?)",
-                        ("start_date", datetime.strftime(self.start_date.start,
-                         "%Y-%m-%d %H:%M:%S")))
-        self.con.execute("insert into global_variables(key,value) values(?,?)",
+        self.load_failed = False
+        # Create tables.
+        self.con.executescript(SCHEMA)
+        self.con.execute("insert into global_variables(key, value) values(?,?)",
                         ("version", self.version))
+        self.con.execute("insert into global_variables(key, value) values(?,?)",
+                        ("times_loaded", 0))
+        self.con.execute("""insert into partnerships(partner, _last_history_id)
+                         values(?,?)""", ("log.txt", 0))
         self.con.commit()
-        config()["path"] = self._path
-        log().new_database()
+        self.config()["path"] = contract_path(self._path, self.config().basedir)
+        # Create media directory.
+        mediadir = self.config().mediadir()
+        if not os.path.exists(mediadir):
+            os.mkdir(mediadir)
+
+    def _find_plugin_for_card_type(self, card_type_id):
+        found = False
+        for plugin in self.plugins():
+            for component in plugin.components:
+                if component.component_type == "card_type" and \
+                    component.id == card_type_id:
+                    found = True
+                    try:
+                        plugin.activate()
+                    except:
+                        self._connection.close()
+                        self._connection = None
+                        self.load_failed = True
+                        raise RuntimeError, _("Error when running plugin:") \
+                            + "\n" + traceback_string()
+        if not found:
+            self._connection.close()
+            self._connection = None
+            self.load_failed = True
+            raise RuntimeError, _("Missing plugin for card type with id:") \
+                + " " + card_type_id
 
     def load(self, path):
-        if self.is_loaded():        
+        if self.is_loaded():
             self.unload()
-        self._path = expand_path(path, config().basedir)
-        try:
-            sql_res = self.con.execute("""select value from global_variables
-                where key=?""", ("start_date", )).fetchone()
-            self.set_start_date(StartDate(datetime.strptime(sql_res["value"],
-                "%Y-%m-%d %H:%M:%S")))
-            self.load_failed = False
-        except:
-            self.load_failed = True
-            raise LoadError
+        self._path = expand_path(path, self.config().basedir)
 
         # Check database version.
-        sql_res = self.con.execute("""select value from global_variables
-            where key=?""", ("version", )).fetchone()
-        if sql_res["value"] != self.version:
-            print "Warning: database version mismatch."
+        try:
+            sql_res = self.con.execute("""select value from global_variables
+                where key=?""", ("version", )).fetchone()
+            self.load_failed = False
+        except sqlite3.OperationalError, e:
+            raise EnvironmentError(str(e))
+        except:
             self.load_failed = True
-            raise LoadError
+            raise RuntimeError, _("Unable to load file.")
+        
+        if sql_res["value"] != self.version:
+            self.load_failed = True
+            raise RuntimeError, \
+                _("Unable to load file: database version mismatch.")
 
         # Vacuum database from time to time.
-        # TODO: skip this on a mobile machine?
-
-        config()["times_loaded"] = config()["times_loaded"] + 1
-        if config()["times_loaded"] % 5 == 0:
-            config()["times_loaded"] = 0
+        sql_res = self.con.execute("""select value from global_variables
+            where key=?""", ("times_loaded", )).fetchone()
+        times_loaded = int(sql_res["value"]) + 1
+        if times_loaded >= 5 and not self.config().resource_limited:
             self.con.execute("vacuum")
+            times_loaded = 0
+        self.con.execute("""update global_variables set value=? where
+            key=?""", (str(times_loaded), "times_loaded"))
 
-        # Deal with clones and plugins, also plugins for parent classes.
+        # Instantiate card types stored in this database.
+        for cursor in self.con.execute("select id from card_types"):
+            id = cursor[0]
+            card_type = self.get_card_type(id)
+            self.component_manager.register(card_type)
+
+        # Identify missing plugins for card types and their parents.       
         plugin_needed = set()
-        clone_needed = []
-        active_id = set(card_type.id for card_type in card_types())
-        for cursor in self.con.execute("select distinct card_type_id from facts"):
+        active_ids = set(card_type.id for card_type in self.card_types())
+        for cursor in self.con.execute("""select distinct card_type_id
+            from facts"""):
             id = cursor[0]
             while "." in id: # Move up one level of the hierarchy.
-                id, child_name = id.rsplit(".", 1)          
-                if id.endswith("_CLONED"):
-                    id = id.replace("_CLONED", "")
-                    clone_needed.append((id, child_name))
-                if id not in active_id:
+                id, child_name = id.rsplit(".", 1)
+                if id not in active_ids:
                     plugin_needed.add(id)
-            if id not in active_id:
+            if id not in active_ids:
                 plugin_needed.add(id)
-        
-        # Activate necessary plugins.
         for card_type_id in plugin_needed:
-            try:
-                for plugin in plugins():
-                    if plugin.provides == "card_type" and \
-                       plugin.id == card_type_id:
-                        plugin.activate()
-                        break
-                else:
-                    self._connection.close()
-                    self._connection = None
-                    self.load_failed = True
-                    raise MissingPluginError(info=card_type_id)
-            except MissingPluginError:
-                raise MissingPluginError(info=card_type_id)
-            except:
-                self._connection.close()
-                self._connection = None
-                self.load_failed = True
-                raise PluginError(stack_trace=True)
-            
-        # Create necessary clones.
-        for parent_type_id, clone_name in clone_needed:
-            parent_instance = card_type_by_id(parent_type_id)
-            parent_instance.clone(clone_name)
-        
-        config()["path"] = contract_path(path, config().basedir)
-        log().loaded_database()
-        for f in component_manager.get_all("function_hook", "after_load"):
+            self._find_plugin_for_card_type(card_type_id)        
+       
+        self.config()["path"] = contract_path(path, self.config().basedir)
+        for f in self.component_manager.get_all("hook", "after_load"):
             f.run()
-
+        # We don't log the database load here, as we prefer to log the start
+        # of the program first.
+        
     def save(self, path=None):
         # Don't erase a database which failed to load.
         if self.load_failed == True:
             return -1
         # Update format.
-        self.con.execute("""update global_variables set value=? where
-            key=?""", (self.version, "version" ))
+        self.con.execute("update global_variables set value=? where key=?",
+                         (self.version, "version" ))
         # Save database and copy it to different location if needed.
         self.con.commit()
         if not path:
             return
-        dest_path = expand_path(path, config().basedir)
+        dest_path = expand_path(path, self.config().basedir)
         if dest_path != self._path:
             shutil.copy(self._path, dest_path)
             self._path = dest_path
-        config()["path"] = contract_path(path, config().basedir)
+        self.config()["path"] = contract_path(path, self.config().basedir)
+        # We don't log every save, as that would result in an event after
+        # every review.
 
     def backup(self):
+        if self.config().resource_limited:
+            return
+        
         # TODO: wait for XML export format.
+        # TODO: skip for resource limited?
         pass
 
     def unload(self):
+        for f in self.component_manager.get_all("hook", "before_unload"):
+            f.run()
+        self.backup()
+        self.log().dump_to_txt_log()
         if self._connection:
-            self._connection.commit()
+            self.save()
             self._connection.close()
             self._connection = None
-            self.load_failed = False
+        self._path = None
+        self.load_failed = True
+        return True
         
     def is_loaded(self):
-        return bool(self._connection)
+        return not self.load_failed
 
-    # Start date.
+    def _repr_extra_data(self, extra_data):
+        if extra_data == {}:
+            return "" # Save space.
+        else:
+            return repr(extra_data)
 
-    def set_start_date(self, start_date_obj):
-        self.start_date = start_date_obj
-        self.con.execute("insert into global_variables(key,value) values(?,?)",
-                        ("start_date", datetime.strftime(self.start_date.start,
-                         "%Y-%m-%d %H:%M:%S")))
+    def _get_extra_data(self, sql_res, obj):
+        if sql_res["extra_data"] == "":
+            obj.extra_data = {}
+        else:
+            obj.extra_data = eval(sql_res["extra_data"])        
 
-    def days_since_start(self):
-        return self.start_date.days_since_start()
+    #
+    # Tags.
+    #
 
-    # Adding, modifying and deleting categories, facts and cards. Commiting is
-    # done by calling save in the main controller, in order to have a better
-    # control over transaction granularity.
-
-    def add_category(self, category):
-        self.con.execute("""insert into categories(name, id, needs_sync)
-            values(?,?,?)""", (category.name, category.id, category.needs_sync))
-        
-    def delete_category(self, category):
-        self.con.execute("delete from categories where id=?",
-            (category.id, ))
-        del category
-        
-    def update_category(self, category):
-        self.con.execute("""update categories set name=?, needs_sync=?
-            where id=?""", (category.name, category.needs_sync, category.id))
-        
-    def get_or_create_category_with_name(self, name):
-        sql_res = self.con.execute("""select *
-            from categories where name=?""", (name, )).fetchone()
+    def get_or_create_tag_with_name(self, name):
+        sql_res = self.con.execute("""select * from tags where name=?""",
+                                   (name, )).fetchone()
         if sql_res:
-            return Category(sql_res["name"], sql_res["id"])
-        category = Category(name)
-        self.add_category(category)
-        return category
+            tag = Tag(sql_res["name"], sql_res["id"])
+            tag._id = sql_res["_id"]
+            self._get_extra_data(sql_res, tag)
+            return tag
+        tag = Tag(name)
+        self.add_tag(tag)
+        return tag
+
+    def add_tag(self, tag):
+        _id = self.con.execute("""insert into tags(name, extra_data, id)
+            values(?,?,?)""", (tag.name,
+            self._repr_extra_data(tag.extra_data), tag.id)).lastrowid
+        tag._id = _id
+        self.log().added_tag(tag)
+
+    def get_tag(self, _id):
+        sql_res = self.con.execute("select * from tags where _id=?",
+                                   (_id, )).fetchone()
+        tag = Tag(sql_res["name"], sql_res["id"])
+        tag._id = _id
+        return tag
     
-    def remove_category_if_unused(self, category):
-        if self.con.execute("""select count() from categories as cat,
-            categories_for_card as cat_c where cat_c._category_id=cat._id and
-            cat.id=?""", (category.id, )).fetchone()[0] == 0:
-            self.delete_category(category)
+    def delete_tag(self, tag):
+        self.con.execute("delete from tags where _id=?", (tag._id,))
+        self.log().deleted_tag(tag)
+        del tag
+        
+    def update_tag(self, tag):
+        self.con.execute("update tags set name=?, extra_data=? where _id=?",
+            (tag.name, self._repr_extra_data(tag.extra_data),
+             tag._id))
+        self.log().updated_tag(tag)
+        
+    def remove_tag_if_unused(self, tag):
+        if self.con.execute("""select count() from tags as cat,
+            tags_for_card as cat_c where cat_c._tag_id=cat._id and
+            cat._id=?""", (tag._id, )).fetchone()[0] == 0:
+            self.delete_tag(tag)
+
+    #
+    # Facts.
+    #
     
     def add_fact(self, fact):
         self.load_failed = False
-        # Add fact to facts and data_for_fact tables.
+        # Add fact to facts table.
         _fact_id = self.con.execute("""insert into facts(id, card_type_id,
-            creation_date, modification_date) values(?,?,?,?)""",
-            (fact.id, fact.card_type.id, fact.creation_date,
-             fact.modification_date)).lastrowid
+            creation_time, modification_time) values(?,?,?,?)""",
+            (fact.id, fact.card_type.id, fact.creation_time,
+             fact.modification_time)).lastrowid
+        fact._id = _fact_id
         # Create data_for_fact.        
         self.con.executemany("""insert into data_for_fact(_fact_id, key, value)
             values(?,?,?)""", ((_fact_id, key, value)
                 for key, value in fact.data.items()))
+        self.log().added_fact(fact)
+        # Process media files.
+        self._process_media(fact)
 
-    def update_fact(self, fact):
-        # Update fact.
-        _fact_id = self.con.execute("select _id from facts where id=?",
-            (fact.id, )).fetchone()[0]
-        self.con.execute("""update facts set id=?, card_type_id=?,
-            creation_date=?, modification_date=? where _id=?""",
-            (fact.id, fact.card_type.id, fact.creation_date,
-             fact.modification_date, _fact_id))
-        # Delete data_for_fact and recreate it.
-        self.con.execute("delete from data_for_fact where _fact_id=?",
-                (_fact_id, ))
-        self.con.executemany("""insert into data_for_fact(_fact_id, key, value)
-            values(?,?,?)""", ((_fact_id, key, value)
-                for key, value in fact.data.items()))
-
-    def add_card(self, card):
-        self.load_failed = False
-        _fact_id = self.con.execute("select _id from facts where id=?",
-            (card.fact.id, )).fetchone()[0]
-        _card_id = self.con.execute("""insert into cards(id, _fact_id,
-            fact_view_id, grade, easiness, acq_reps, ret_reps, lapses,
-            acq_reps_since_lapse, ret_reps_since_lapse, last_rep, next_rep,
-            unseen, extra_data, seen_in_this_session, needs_sync, active,
-            in_view) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (card.id, _fact_id, card.fact_view.id, card.grade, card.easiness,
-            card.acq_reps, card.ret_reps, card.lapses,
-            card.acq_reps_since_lapse, card.ret_reps_since_lapse,
-            card.last_rep, card.next_rep, card.unseen, card.extra_data,
-            card.seen_in_this_session, card.needs_sync, card.active,
-            card.in_view)).lastrowid
-        # Link card to its categories.
-        # The categories themselves have already been created by
-        # default_main_controller calling get_or_create_category_with_name.
-        for cat in card.categories:
-            _category_id = self.con.execute("""select _id from categories
-                where id=?""", (cat.id, )).fetchone()[0]
-            self.con.execute("""insert into categories_for_card(_category_id,
-                _card_id) values(?,?)""", (_category_id, _card_id))
-        log().new_card(card)
-
-    def update_card(self, card):
-        _fact_id = self.con.execute("select _id from facts where id=?",
-            (card.fact.id, )).fetchone()[0]
-        _card_id = self.con.execute("select _id from cards where id=?",
-            (card.id, )).fetchone()[0]
-        self.con.execute("""update cards set _fact_id=?, fact_view_id=?,
-            grade=?, easiness=?, acq_reps=?, ret_reps=?, lapses=?,
-            acq_reps_since_lapse=?, ret_reps_since_lapse=?, last_rep=?,
-            next_rep=?, unseen=?, extra_data=?, seen_in_this_session=?,
-            needs_sync=?, active=?, in_view=? where _id=?""",
-            (_fact_id, card.fact_view.id, card.grade, card.easiness,
-            card.acq_reps, card.ret_reps, card.lapses,
-            card.acq_reps_since_lapse, card.ret_reps_since_lapse,
-            card.last_rep, card.next_rep, card.unseen, card.extra_data,
-            card.seen_in_this_session, card.needs_sync, card.active,
-            card.in_view, _card_id))
-        # Link card to its categories.
-        # The categories themselves have already been created by
-        # default_main_controller calling get_or_create_category_with_name.
-        self.con.execute("delete from categories_for_card where _card_id=?",
-                         (_card_id, ))
-        for cat in card.categories:
-            _category_id = self.con.execute("""select _id from categories
-                where id=?""", (cat.id, )).fetchone()[0]
-            self.con.execute("""insert into categories_for_card(_category_id,
-                _card_id) values(?,?)""", (_category_id, _card_id))            
-
-    def delete_fact_and_related_data(self, fact):
-        for card in self.cards_from_fact(fact):
-            self.delete_card(card)
-        _fact_id = self.con.execute("select _id from facts where id=?",
-            (fact.id, )).fetchone()[0]
-        self.con.execute("delete from facts where _id=?", (_fact_id, ))
-        self.con.execute("delete from data_for_fact where _fact_id=?",
-                         (_fact_id, ))
-        current_card = ui_controller_review().card
-        if current_card and current_card.fact == fact:
-            scheduler().rebuild_queue()
-        del fact
-        
-    def delete_card(self, card):
-        _card_id = self.con.execute("select _id from cards where id=?",
-            (card.id, )).fetchone()[0]
-        self.con.execute("delete from cards where _id=?", (_card_id, ))
-        self.con.execute("delete from categories_for_card where _card_id=?",
-                         (_card_id, ))
-        for cat in card.categories:
-            self.remove_category_if_unused(cat)
-        if ui_controller_review().card == card:
-            scheduler().rebuild_queue()        
-        log().deleted_card(card)
-        del card
-        
-    # Retrieve categories, facts and cards.
-
-    def get_category(self, id):
-        sql_res = self.con.execute("""select *
-            from categories where id=?""", (id, )).fetchone()
-        return Category(sql_res["name"], sql_res["id"])
-        
-    def _get_fact(self, _id):        
+    def get_fact(self, _id):        
         sql_res = self.con.execute("select * from facts where _id=?",
                                    (_id, )).fetchone()
-        if not sql_res:
-            raise RuntimeError("Fact _id=%d not found in the database." % _id) 
         # Create dictionary with fact.data.
         data = dict([(cursor["key"], cursor["value"]) for cursor in
             self.con.execute("select * from data_for_fact where _fact_id=?",
             (_id, ))])
-        # Create fact.
-        fact = Fact(data, card_type_by_id(sql_res["card_type_id"]),
-                    id=sql_res["id"],
-                    creation_date=sql_res["creation_date"])
-        fact.modification_date = sql_res["modification_date"]
-        fact.needs_sync = sql_res["needs_sync"]
+        # Create fact. Note that for the card type, we turn to the component
+        # manager as opposed to this database, as we would otherwise miss the
+        # built-in system card types.
+        fact = Fact(data, self.card_type_by_id(sql_res["card_type_id"]),
+            creation_time=sql_res["creation_time"], id=sql_res["id"])
+        fact._id = sql_res["_id"]
+        fact.modification_time = sql_res["modification_time"]
         return fact
-
-    def get_fact(self, id):
-        _fact_id = self.con.execute("select _id from facts where id=?",
-                                   (id, )).fetchone()[0]
-        return self.get_fact(_fact_id)
     
-    def _get_card(self, sql_res):
-        fact = self._get_fact(sql_res["_fact_id"])
+    def update_fact(self, fact):
+        # Update fact.
+        self.con.execute("""update facts set id=?, card_type_id=?,
+            creation_time=?, modification_time=? where _id=?""",
+            (fact.id, fact.card_type.id, fact.creation_time,
+             fact.modification_time, fact._id))
+        # Delete data_for_fact and recreate it.
+        self.con.execute("delete from data_for_fact where _fact_id=?",
+                (fact._id, ))
+        self.con.executemany("""insert into data_for_fact(_fact_id, key, value)
+            values(?,?,?)""", ((fact._id, key, value)
+                for key, value in fact.data.items()))
+        self.log().updated_fact(fact)
+        # Process media files.
+        self._process_media(fact)        
+
+    def delete_fact_and_related_data(self, fact):
+        for card in self.cards_from_fact(fact):
+            self.delete_card(card)
+        self.con.execute("delete from facts where _id=?", (fact._id, ))
+        self.con.execute("delete from data_for_fact where _fact_id=?",
+                         (fact._id, ))
+        self.log().deleted_fact(fact)
+        # Process media files.
+        fact.data = {}
+        self._process_media(fact)
+        del fact
+
+    #
+    # Cards.
+    #
+    
+    def add_card(self, card):
+        self.load_failed = False
+        _card_id = self.con.execute("""insert into cards(id, _fact_id,
+            fact_view_id, grade, easiness, acq_reps, ret_reps, lapses,
+            acq_reps_since_lapse, ret_reps_since_lapse, last_rep, next_rep,
+            extra_data, scheduler_data, active, in_view)
+            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (card.id, card.fact._id, card.fact_view.id, card.grade,
+            card.easiness, card.acq_reps, card.ret_reps, card.lapses,
+            card.acq_reps_since_lapse, card.ret_reps_since_lapse,
+            card.last_rep, card.next_rep,
+            self._repr_extra_data(card.extra_data),
+            card.scheduler_data, card.active, card.in_view)).lastrowid
+        card._id = _card_id
+        # Link card to its tags. The tags themselves have already been created
+        # by default_main_controller calling get_or_create_tag_with_name.
+        for cat in card.tags:
+            _tag_id = self.con.execute("""select _id from tags
+                where id=?""", (cat.id, )).fetchone()[0]
+            self.con.execute("""insert into tags_for_card(_tag_id,
+                _card_id) values(?,?)""", (_tag_id, _card_id))
+        # Add card is not logged here, but in the controller, to make sure
+        # that the first repetition is logged after the card creation.
+
+    def get_card(self, _id):
+        sql_res = self.con.execute("select * from cards where _id=?",
+                                   (_id, )).fetchone()
+        fact = self.get_fact(sql_res["_fact_id"])
         for view in fact.card_type.fact_views:
             if view.id == sql_res["fact_view_id"]:
                 card = Card(fact, view)
                 break
-        for attr in ("id", "grade", "easiness", "acq_reps", "ret_reps",
+        for attr in ("id", "_id", "grade", "easiness", "acq_reps", "ret_reps",
             "lapses", "acq_reps_since_lapse", "ret_reps_since_lapse",
-            "last_rep", "next_rep", "unseen", "extra_data",
-            "seen_in_this_session", "needs_sync", "active", "in_view"):
+            "last_rep", "next_rep", "scheduler_data", "active", "in_view"):
             setattr(card, attr, sql_res[attr])
-        card.categories = [Category(cursor["name"], cursor["id"]) for cursor in
-            self.con.execute("""select cat.name, cat.id from categories as cat,
-            categories_for_card as cat_c where cat_c._category_id=cat._id and
-            cat_c._card_id=?""", (sql_res["_id"], ))]        
+        self._get_extra_data(sql_res, card)
+        for cursor in self.con.execute("""select _tag_id from tags_for_card
+            where _card_id=?""", (_id, )):
+            card.tags.add(self.get_tag(cursor["_tag_id"]))
         return card
+    
+    def update_card(self, card, repetition_only=False):
+        self.con.execute("""update cards set _fact_id=?, fact_view_id=?,
+            grade=?, easiness=?, acq_reps=?, ret_reps=?, lapses=?,
+            acq_reps_since_lapse=?, ret_reps_since_lapse=?, last_rep=?,
+            next_rep=?, extra_data=?, scheduler_data=?, active=?,
+            in_view=? where _id=?""",
+            (card.fact._id, card.fact_view.id, card.grade, card.easiness,
+            card.acq_reps, card.ret_reps, card.lapses,
+            card.acq_reps_since_lapse, card.ret_reps_since_lapse,
+            card.last_rep, card.next_rep,
+            self._repr_extra_data(card.extra_data),
+            card.scheduler_data, card.active, card.in_view, card._id))
+        if repetition_only:
+            return
+        # Link card to its tags. The tags themselves have already been created
+        # by default_main_controller calling get_or_create_tag_with_name.
+        # Unused tags will also be cleaned up there.
+        self.con.execute("delete from tags_for_card where _card_id=?",
+                         (card._id, ))
+        for cat in card.tags:
+            self.con.execute("""insert into tags_for_card(_tag_id,
+                _card_id) values(?,?)""", (cat._id, card._id))
+        self.log().updated_card(card)
+        
+    def delete_card(self, card):
+        self.con.execute("delete from cards where _id=?", (card._id, ))
+        self.con.execute("delete from tags_for_card where _card_id=?",
+                         (card._id, ))
+        for tag in card.tags:
+            self.remove_tag_if_unused(tag)      
+        self.log().deleted_card(card)
+        del card
 
-    def get_card(self, id):
-        sql_res = self.con.execute("select * from cards where id=?",
-            (id, )).fetchone()
-        return self._get_card(sql_res)
+    #
+    # Fact views.
+    #
 
+    def _add_fact_view(self, fact_view):
+        return self.con.execute("""insert into fact_views(id, name, q_fields,
+            a_fields, required_fields, a_on_top_of_q, type_answer, extra_data)
+            values(?,?,?,?,?,?,?,?)""", (fact_view.id, fact_view.name,
+            repr(fact_view.q_fields), repr(fact_view.a_fields),
+            repr(fact_view.required_fields), fact_view.a_on_top_of_q,
+            fact_view.type_answer, self._repr_extra_data(fact_view.extra_data\
+            ))).lastrowid
+
+    def _get_fact_view(self, _id):
+        sql_res = self.con.execute("select * from fact_views where _id=?",
+                                   (_id, )).fetchone()
+        fact_view = FactView(sql_res["id"], sql_res["name"])
+        for attr in ("q_fields", "a_fields", "required_fields"):
+            setattr(fact_view, attr, eval(sql_res[attr]))
+        for attr in ["a_on_top_of_q", "type_answer"]:
+            setattr(fact_view, attr, sql_res[attr])
+        self._get_extra_data(sql_res, fact_view)
+        return fact_view
+    
+    #
+    # Card types.
+    #
+        
+    def add_card_type(self, card_type):
+        self.con.execute("""insert into card_types(id, name, fields,
+            unique_fields, keyboard_shortcuts, extra_data) values
+            (?,?,?,?,?,?)""", (card_type.id, card_type.name,
+            repr(card_type.fields), repr(card_type.unique_fields),
+            repr(card_type.keyboard_shortcuts),
+            self._repr_extra_data(card_type.extra_data)))
+        for fact_view in card_type.fact_views:
+            _fact_view_id = self._add_fact_view(fact_view)
+            self.con.execute("""insert into fact_views_for_card_type
+                (_fact_view_id, card_type_id) values(?,?)""",
+                (_fact_view_id, card_type.id))
+        self.log().added_card_type(card_type)
+
+    def get_card_type(self, id):
+        if id in self.component_manager.card_type_by_id:
+            return self.component_manager.card_type_by_id[id]
+        parent_id, child_id = "", id
+        if "." in id:
+            parent_id, child_id = id.rsplit(".", 1)
+            parent = self.get_card_type(parent_id)
+        else:
+            parent = CardType(self.component_manager)
+        sql_res = self.con.execute("select * from card_types where id=?",
+                                   (id, )).fetchone()
+        card_type = type(mangle(id), (parent.__class__, ),
+            {"name": sql_res["name"], "id": id})(self.component_manager)
+        for attr in ("fields", "unique_fields", "keyboard_shortcuts"):
+            setattr(card_type, attr, eval(sql_res[attr]))
+        self._get_extra_data(sql_res, card_type)
+        card_type.fact_views = []
+        for cursor in self.con.execute("""select _fact_view_id from
+            fact_views_for_card_type where card_type_id=?""", (id, )):
+            card_type.fact_views.append(self._get_fact_view(\
+                cursor["_fact_view_id"]))
+        return card_type
+        
+    def update_card_type(self, card_type):
+        self.con.execute("""update card_types set name=?, fields=?,
+            unique_fields=?, keyboard_shortcuts=?, extra_data=? where id=?""",
+            (card_type.name, repr(card_type.fields),
+            repr(card_type.unique_fields), repr(card_type.keyboard_shortcuts),
+            self._repr_extra_data(card_type.extra_data), card_type.id))
+        self.con.execute("""delete from fact_views where _id in (select
+            _fact_view_id from fact_views_for_card_type where
+            card_type_id=?)""", (card_type.id, ))
+        self.con.execute("""delete from fact_views_for_card_type where
+            card_type_id=?""", (card_type.id, ))
+        for fact_view in card_type.fact_views:
+            _fact_view_id = self._add_fact_view(fact_view)
+            self.con.execute("""insert into fact_views_for_card_type
+                (_fact_view_id, card_type_id) values(?,?)""",
+                (_fact_view_id, card_type.id))
+        self.log().updated_card_type(card_type)
+
+    def delete_card_type(self, card_type):
+        self.con.execute("""delete from fact_views where _id in (select
+            _fact_view_id from fact_views_for_card_type where
+            card_type_id=?)""", (card_type.id, ))
+        self.con.execute("""delete from fact_views_for_card_type where
+            card_type_id=?""", (card_type.id, ))
+        self.con.execute("delete from card_types where id=?",
+            (card_type.id, ))
+        self.log().deleted_card_type(card_type)
+
+    #
+    # Process media files in fact data.
+    #
+    
+    def _process_media(self, fact):
+        mediadir = self.config().mediadir()
+        # Determine new media files for this fact. Copy them to the media dir
+        # if needed. (The user could have typed in the full path directly
+        # withouh going through the add_img or add_sound callback.)
+        data = "".join(fact.data.values())
+        new_files = set()
+        for match in re_src.finditer(data):
+            filename = match.group(1)
+            if os.path.isabs(filename):
+                filename = copy_file_to_dir(filename, mediadir)
+                for key, value in fact.data.iteritems():
+                    fact.data[key] = value.replace(match.group(1), filename)
+            new_files.add(filename)               
+        # Determine old media files for this fact.
+        old_files = set((cursor["filename"] for cursor in self.con.execute(\
+            "select filename from media where _fact_id=?", (fact._id, ))))
+        # Update the media table and log additions or deletions. We record
+        # the modification date so that we can detect if media files have
+        # been modified outside of Mnemosyne. (Although less robust,
+        # modifaction dates are faster to lookup then calculating a hash,
+        # especially on mobile devices.
+        for filename in old_files - new_files:
+            self.con.execute("""delete from media where filename=?
+                and _fact_id=?""", (filename, fact._id))
+            self.log().deleted_media(filename, fact)
+            # Delete the media file if it's not used by other facts.
+            if self.con.execute("select count() from media where filename=?",
+                                (filename, )).fetchone()[0] == 0:
+                os.remove(os.path.join(mediadir, filename))
+        for filename in new_files - old_files:
+            self.con.execute("""insert into media(filename, _fact_id,
+                last_modified) values(?,?,?)""", (filename, fact._id,
+                os.path.getmtime(os.path.join(mediadir, filename))))
+            self.log().added_media(filename, fact)
+
+    #
     # Activate cards.
+    #
     
-    def set_cards_active(self, card_types_fact_views, categories):
+    def set_cards_active(self, card_types_fact_views, tags):
         return self._turn_on_cards("active", card_types_fact_views,
-                                   categories)
+                                   tags)
     
-    def set_cards_in_view(self, card_types_fact_views, categories):
+    def set_cards_in_view(self, card_types_fact_views, tags):
         return self._turn_on_cards("in_view", card_types_fact_views,
-                                   categories)
+                                   tags)
     
-    def _turn_on_cards(self, attr, card_types_fact_views, categories):
+    def _turn_on_cards(self, attr, card_types_fact_views, tags):
         # Turn off everything.
         self.con.execute("update cards set active=0")
-        # Turn on as soon as there is one active category.
+        # Turn on as soon as there is one active tag.
         command = """update cards set %s=1 where _id in (select cards._id
-            from cards, categories, categories_for_card where
-            categories_for_card._card_id=cards._id and
-            categories_for_card._category_id=categories._id and """ % attr
+            from cards, tags, tags_for_card where
+            tags_for_card._card_id=cards._id and
+            tags_for_card._tag_id=tags._id and """ % attr
         args = []
-        for cat in categories:
-            command += "categories.id=? or "
-            args.append(cat.id)
+        for tag in tags:
+            command += "tags.id=? or "
+            args.append(tag.id)
         command = command.rsplit("or ", 1)[0] + ")"
         self.con.execute(command, args)
         # Turn off inactive card types and views.
@@ -473,19 +710,25 @@ class SQLite(Database):
         command = command.rsplit("and ", 1)[0] + ")"
         self.con.execute(command, args)
 
+    #
     # Queries.
-
-    def category_names(self):
-        return list(cursor[0] for cursor in
-            self.con.execute("select name from categories"))
+    #
+    
+    def tag_names(self):
+        return list(cursor[0] for cursor in \
+            self.con.execute("select name from tags"))
 
     def cards_from_fact(self, fact):
-        _fact_id = self.con.execute("select _id from facts where id=?",
-            (fact.id, )).fetchone()[0]
-        return list(self._get_card(cursor) for cursor in
-            self.con.execute("select * from cards where _fact_id=?",
-                             (_fact_id, )))
+        return list(self.get_card(cursor[0]) for cursor in
+            self.con.execute("select _id from cards where _fact_id=?",
+                             (fact._id, )))
 
+    def count_related_cards_with_next_rep(self, card, next_rep):
+        return self.con.execute("""select count() from cards where
+            next_rep=? and _id<>? and grade>=2 and _id in
+            (select _id from cards where _fact_id=?)""",
+            (next_rep, card._id, card.fact._id)).fetchone()[0]
+    
     def has_fact_with_data(self, fact_data, card_type):
         fact_ids = set()
         for key, value in fact_data.items():
@@ -513,26 +756,21 @@ class SQLite(Database):
 
     def duplicates_for_fact(self, fact):
         duplicates = []
-        sql_res = self.con.execute("select _id from facts where id=?",
-            (fact.id, )).fetchone()
-        if not sql_res:
-            return duplicates
-        _fact_id = sql_res[0]
         for cursor in self.con.execute("""select _id from facts
             where card_type_id=? and not _id=?""",
-            (fact.card_type.id, _fact_id)):
+            (fact.card_type.id, fact._id)):
             data = dict([(cursor2["key"], cursor2["value"]) for cursor2 in \
                 self.con.execute("""select * from data_for_fact where
                 _fact_id=?""", (cursor[0], ))])
             for field in fact.card_type.unique_fields:
                 if data[field] == fact[field]:
-                    duplicates.append(self._get_fact(cursor[0]))
+                    duplicates.append(self.get_fact(cursor[0]))
                     break
         return duplicates
 
     def card_types_in_use(self):
-        return [card_type_by_id(cursor[0]) for cursor in self.con.execute\
-            ("select distinct card_type_id from facts")]
+        return [self.card_type_by_id(cursor[0]) for cursor in \
+            self.con.execute ("select distinct card_type_id from facts")]
 
     def fact_count(self):
         return self.con.execute("select count() from facts").fetchone()[0]
@@ -544,13 +782,10 @@ class SQLite(Database):
         return self.con.execute("""select count() from cards
             where active=1 and grade<2""").fetchone()[0]
 
-    def scheduled_count(self, days=0):
-        
-        """Get number of cards scheduled within 'days' days."""
-
+    def scheduled_count(self, timestamp):
         count = self.con.execute("""select count() from cards
-            where active=1 and grade>=2 and ? >= next_rep - ?""",
-            (self.days_since_start(), days)).fetchone()[0]
+            where active=1 and grade>=2 and ?>=next_rep""",
+            (timestamp,)).fetchone()[0]
         return count
 
     def active_count(self):
@@ -559,12 +794,16 @@ class SQLite(Database):
 
     def average_easiness(self):
         average = self.con.execute("""select sum(easiness)/count()
-            from cards where active=1""").fetchone()[0]
+            from cards where easiness>0""").fetchone()[0]
         if average:
             return average
         else:
             return 2.5
 
+    #
+    # Card queries used by the scheduler.
+    #
+    
     def _parse_sort_key(self, sort_key):
         if sort_key == "":
             return "_id"
@@ -574,34 +813,57 @@ class SQLite(Database):
             return "next_rep - last_rep"
         return sort_key
 
-    def cards_due_for_ret_rep(self, sort_key="", limit=-1):
+    def cards_due_for_ret_rep(self, timestamp, sort_key="", limit=-1):
         sort_key = self._parse_sort_key(sort_key)
-        return (self._get_card(cursor) for cursor in self.con.execute( \
-            """select * from cards where active=1 and grade>=2 and
-            ? >= next_rep order by %s limit ?""" % sort_key,
-            (self.start_date.days_since_start(), limit )))
+        return ((cursor[0], cursor[1]) for cursor in self.con.execute("""
+            select _id, _fact_id from cards where
+            active=1 and grade>=2 and ?>=next_rep order by ? limit ?""",
+            (timestamp, sort_key, limit)))
 
     def cards_due_for_final_review(self, grade, sort_key="", limit=-1):
         sort_key = self._parse_sort_key(sort_key)
-        return (self._get_card(cursor) for cursor in self.con.execute( \
-            """select * from cards where grade=? and lapses>0
-            order by %s limit ?""" % sort_key, (grade, limit )))
+        return ((cursor[0], cursor[1]) for cursor in self.con.execute("""
+            select _id, _fact_id from cards where
+            active=1 and grade=? and lapses>0 order by ? limit ?""",
+            (grade, sort_key, limit)))
 
     def cards_new_memorising(self, grade, sort_key="", limit=-1):
         sort_key = self._parse_sort_key(sort_key)
-        return (self._get_card(cursor) for cursor in self.con.execute( \
-            """select * from cards where active=1 and grade=? and
-            lapses=0 and unseen=0 order by %s limit ?""" % sort_key, (grade, limit )))
+        return ((cursor[0], cursor[1]) for cursor in self.con.execute("""
+            select _id, _fact_id from cards where
+            active=1 and grade=? and lapses=0 order by ? limit ?""",
+            (grade, sort_key, limit)))
     
     def cards_unseen(self, sort_key="", limit=-1):
         sort_key = self._parse_sort_key(sort_key)      
-        return (self._get_card(cursor) for cursor in self.con.execute( \
-            """select * from cards where active=1 and unseen=1
-            order by %s limit ?""" % sort_key, (limit,)))
+        return ((cursor[0], cursor[1]) for cursor in self.con.execute("""
+            select _id, _fact_id from cards where
+            active=1 and grade=-1 order by ? limit ?""",
+            (sort_key, limit)))
     
-    def cards_learn_ahead(self, sort_key="", limit=-1):
+    def cards_learn_ahead(self, timestamp, sort_key="", limit=-1):
         sort_key = self._parse_sort_key(sort_key)
-        return (self._get_card(cursor) for cursor in self.con.execute( \
-            """select * from cards where active=1 and grade>=2 and
-            ? < next_rep order by %s limit ?""" % sort_key,
-            (self.start_date.days_since_start(), limit)))
+        return ((cursor[0], cursor[1]) for cursor in self.con.execute("""
+            select _id, _fact_id from cards where
+            active=1 and grade>=2 and ?<next_rep order by ? limit ?""",
+            (timestamp, sort_key, limit)))
+
+    #
+    # Extra commands for custom schedulers.
+    #
+    
+    def set_scheduler_data(self, scheduler_data):
+        self.con.execute("update cards set scheduler_data=?",
+            (scheduler_data, ))
+
+    def cards_with_scheduler_data(self, scheduler_data, sort_key="", limit=-1):
+        sort_key = self._parse_sort_key(sort_key)
+        return ((cursor[0], cursor[1]) for cursor in self.con.execute("""
+            select _id, _fact_id from cards where
+            active=1 and scheduler_data=? order by ? limit ?""",
+            (scheduler_data, sort_key, limit)))
+
+    def scheduler_data_count(self, scheduler_data):
+        return self.con.execute("""select count() from cards
+            where active=1 and scheduler_data=?""",
+            (scheduler_data, )).fetchone()[0]        

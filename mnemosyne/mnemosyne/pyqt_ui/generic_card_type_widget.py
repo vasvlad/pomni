@@ -2,63 +2,61 @@
 # generic_card_type_widget.py <Peter.Bienstman@UGent.be>
 #
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4 import QtCore, QtGui
 
 from mnemosyne.pyqt_ui.qtextedit2 import QTextEdit2
-from mnemosyne.libmnemosyne.component_manager import config
+from mnemosyne.libmnemosyne.ui_components.card_type_widget \
+     import GenericCardTypeWidget
 
 
-class GenericCardTypeWdgt(QWidget):
+class GenericCardTypeWdgt(QtGui.QWidget, GenericCardTypeWidget):
 
-    def __init__(self, card_type, prefill_data=None, parent=None):
-        QWidget.__init__(self, parent)
+    def __init__(self, card_type, parent, component_manager):
+        QtGui.QWidget.__init__(self, parent)
+        GenericCardTypeWidget.__init__(self, component_manager)
         self.card_type = card_type
-        self.hboxlayout = QHBoxLayout(self)
+        self.hboxlayout = QtGui.QHBoxLayout(self)
         self.hboxlayout.setMargin(0)
-        self.vboxlayout = QVBoxLayout()
+        self.vboxlayout = QtGui.QVBoxLayout()
         self.edit_boxes = {}
         self.top_edit_box = None
         for fact_key, fact_key_name in self.card_type.fields:
-            self.vboxlayout.addWidget(QLabel(fact_key_name + ":", self))
+            self.vboxlayout.addWidget(QtGui.QLabel(fact_key_name + ":", self))
             t = QTextEdit2(self)
             t.setTabChangesFocus(True)
             t.setUndoRedoEnabled(True)
             t.setReadOnly(False)
             try:
-                colour = config()["font_colour"][card_type.id][fact_key]
-                t.setTextColor(QColor(colour))
+                colour = self.config()["font_colour"][card_type.id][fact_key]
+                t.setTextColor(QtGui.QColor(colour))
             except:
                 pass
             try:
-                colour = config()["background_colour"][card_type.id]
-                p = QPalette()
-                p.setColor(QPalette.Active, QPalette.Base, QColor(colour))
+                colour = self.config()["background_colour"][card_type.id]
+                p = QtGui.QPalette()
+                p.setColor(QtGui.QPalette.Active, QtGui.QPalette.Base,
+                           QtGui.QColor(colour))
                 t.setPalette(p)
             except:
                 pass
             try:
-                font_string = config()["font"][card_type.id][fact_key]
-                font = QFont()
+                font_string = self.config()["font"][card_type.id][fact_key]
+                font = QtGui.QFont()
                 font.fromString(font_string)
                 t.setCurrentFont(font)
             except:
                 pass            
             if len(self.card_type.fields) > 2:
-                t.setMinimumSize(QSize(0,60))
+                t.setMinimumSize(QtCore.QSize(0,60))
             else:
-                t.setMinimumSize(QSize(0,106))
+                t.setMinimumSize(QtCore.QSize(0,106))
             self.vboxlayout.addWidget(t)
             self.edit_boxes[t] = fact_key
             if not self.top_edit_box:
                 self.top_edit_box = t
-            self.connect(t, SIGNAL("textChanged()"), self.text_changed)
-        if prefill_data:
-            for edit_box, fact_key in self.edit_boxes.iteritems():
-                if fact_key in prefill_data.keys():
-                    edit_box.setText(prefill_data[fact_key])
+            self.connect(t, QtCore.SIGNAL("textChanged()"), self.text_changed)
         self.hboxlayout.addLayout(self.vboxlayout)
-        self.resize(QSize(QRect(0,0,325,264).size()).\
+        self.resize(QtCore.QSize(QtCore.QRect(0,0,325,264).size()).\
                     expandedTo(self.minimumSizeHint()))
 
     def contains_data(self):
@@ -67,27 +65,22 @@ class GenericCardTypeWdgt(QWidget):
                 return True
         return False
 
-    def get_data(self, check_for_required=True):
-        fact = {}
+    def get_data(self):
+        fact_data = {}
         for edit_box, fact_key in self.edit_boxes.iteritems():
-            fact[fact_key] = unicode(edit_box.document().toPlainText())
-        if not check_for_required:
-            return fact
-        for required in self.card_type.required_fields():
-            if not fact[required]:
-                raise ValueError
-        return fact
+            fact_data[fact_key] = unicode(edit_box.document().toPlainText())
+        return fact_data
 
-    def text_changed(self):
-        data = None
-        try:
-            data = self.get_data()
-        except ValueError:
-            complete = False
-        complete = self.card_type.validate_data(data)
-        self.parent().is_complete(complete)
+    def set_data(self, data):
+        if data:
+            for edit_box, fact_key in self.edit_boxes.iteritems():
+                if fact_key in data.keys():
+                    edit_box.setPlainText(data[fact_key])
 
     def clear(self):
         for edit_box in self.edit_boxes:
             edit_box.setText("")
         self.top_edit_box.setFocus()
+    
+    def text_changed(self):
+        self.parent().set_valid(self.card_type.is_data_valid(self.get_data()))

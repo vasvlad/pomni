@@ -1,60 +1,44 @@
--update changelog
-
--announce new translations on website (Esperanto, Danish)
-
--allow non-unicode filenames: encode/decode in expand/contract path?
+-Hungarian translation by bkil (announce on website)
+-hang on Spanish translation?
 
 
-* Mnemosyne 2.0:
+-hierarchy in card types ::
 
--opmised scheduler
+-WM test and benchmark
 
--review, document, test set_inial_grade, also in context of card type
- convertors, create_related_cards in card_type and cloze
-
--use grade -1 for unseen?
-
--don't review same card twice in a row
-
--get rid of start date (save it in global variables)
-
--rebuild queue automatically after roll-over time?
+-more tests
 
 -move option to always randomise queue to config screen
+-ditto for learn new related cards in same session
 
--adding new cards while in 'learn ahead of schedule' should break out of
- learning ahead
+-hook up config screen
 
--don't click learn ahead of schedule everytime
+-infrastructure to make it easier to type certain symbols
 
--update card docstrings
+
 
 -add 'update_card_active' (or something like that) to be called when
  adding cards or editing a card, so that 'active' is set correctly.
  Make the mechanism customisible with hooks, and document this in 
  card.py.
 
--sql query for statistics
 
+-see if graphical glitch is fixed with latest matplotlib version, reenable
+ remember size
 
--cramming scheduler
+-make distrib
 
 -warn when importing card type with duplicate id
 
--write more tests
 
--don't import * for Qt
-
-
--after creating new cards, update active status
-
--make categories a set?
 
 -import
 
--on import, activate plugins, created inherited types necessary
+-on import, activate plugins, created inherited types necessary, reload counters
 
 -on import don't add cards for which card type is not present
+
+-import: duplicate check, ignore duplicates in answers
 
 -don't change card id on import from old files
 
@@ -62,160 +46,237 @@
 
 -warn when not importing a duplicate card
 
--save after import
+-save after import, close blueprint
 
--backup after unloading, not after exiting
+-make sure we log new card creation on import
 
+-move media to media dir
 
--'teacher mode' on export, which allows pupils to update previously imported
- cards, as opposed to adding new cards. Implemented through id's of the form
- T.<fixed card id for all pupils>.<pupil user id>?
-
-
--hang on spanish/german Qt translation?
-
-
--need to store parent of category?
-
-
--detect wrong current date (last review in the future or way past)
+-reset learning ahead queue after import
 
 -xml import tests (wcu, memaid, plconv)
-
--improve sphinxdocs: autoclass='both', document module members
-
-
-
--run convert to html after adding/modifying card?
-
--pregenerate q and a on mobile devices?
-
--test uploading of logs
-
--make sure card type ids are unique?
-
--show latex errors in GUI?
-
-
-
-
--download media files when giving URL? Store media inside database? Copy 
- it to .mnemosyne by default?
-
--adding a picture under Windows screws up / and \, and case
-
--ghost out 3.4 and 5 for unlearned cards?
-
--easier function to do tag detection in plugin
-
--make sure searching for a single unicode character works
-
--test sound
-
--qsortfilter proxy
-
--move 'card type by name' to different place?
-
-
--MVC: http://doc.trolltech.com/qq/qq24-delegates.html
- 
--upgrade from 1.x to 2.0 migration code: convert deck,
-  move latex configuration files?, import user id and config, ...
-
-
--renamed default data dir on Windows?
-
--http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/442447?
-
--modality of dialogs (mail by Nosai), Qt.WStyle_MinMax | Qt.WStyle_SysMenu))?
-
--change file suffix when changing export format
-
--basic graphical statistics
-
--import: duplicate check, ignore duplicates in answers
-
--checkbox to include inactive cards in statistics?
-
--alt tabbing gives low res icon.
-
--http://www.phon.ucl.ac.uk/home/mark/audio/play.htm
-
--make all subwindows remember their size
-
--make file handling more robust, detect all errors (see mail by
- OldGrantonian)
-
--test Python 3.0 compliance
-
--button to go to next card in the list
-
--logfile 0.6 at pypi?
-
--plugin for midi files
-
--'tooltips' during use: relative path when adding pictures or sound.
-
--comment/tip about not having to do all your scheduled revisions in
- one sitting
-
--reenable datadir in setup.py
-
--make filters more efficients by using regex instead of loops.
 
 -detect and mark inverses on import
 
 -update XML import/export to new database format
 
--autosave
+-option to add tags on import
 
--teacher mode?
+-routines to do mass adding, don't save everytime, cache average easiness
 
--make really sure the same question isn't asked twice in a row
+-'teacher mode' on export, which allows pupils to update previously imported
+ cards, as opposed to adding new cards. Implemented through id's of the form
+ T.<fixed card id for all pupils>.<pupil user id>?
 
--bug in Qt? : shortcuts don't change back after changing 'show answer'
- button text
+-when resetting learning data on export, can we export facts only? Tags are on
+ a per card basis.
 
--bug in Qt? : spaces around images are not respected.
+-don't recreate text logs upon import
+ 
+-upgrade from 1.x to 2.0 migration code: convert deck,
+  move latex configuration files?, import user id and config, ...
+  item --> card
 
--cntrl enter in add and edit instead of clicking ok
 
--template for cards?
+-new translation infrastructure
+-handle deferred translation
+-different translators for different users?
 
--language specific card types (arabic, japanese, integrated dictionary lookup,
- http://lost-theory.org/ocrat/)
 
--hierarchical categories
+-corrupt icon
 
--advanced deck manager, with tree view, drag and drop to change categories,
- count of cards/facts... Option to show only related cards.
 
--make 'search' behave as a filter
 
--test: make <a> links clickable / animated GIFs
+-do review_controller.rebuild_queue, reload counter after edit deck, clean duplicates, 
+ activate cards, configuration 
 
--update old plugins
+-backup after unloading, not after exiting
 
--save category state
+-have hierarchy in plugin names
+
+
+-adding a picture under Windows screws up / and \, and case
+
+-need to store parent of tag?
+
+
+-test uploading of logs, also in rollover
+
+
+-activate cards, belonging to these card types, having any of these tags, but non of these, ro just none of these
+
+
+-card browser
+
+-make sure searching for a single unicode character works
+
+-qsortfilter proxy
+
+-show number of cards selected
+
+-don't show inactive card types, but do show inactive tags
+
+-card.in_view needed?
+
+-make card browser remember its size
+
+
+-sync protocol:
+-deck name
+-import
+-server can report can refuse large files
+-streaming compression
+http://www.linuxtopia.org/online_books/programming_books/python_programming/python_ch33s08.html
+-be sure to truncate time to int if it comes from other SRS systems
+-make sure active gets updated too
+-activating cards
+-make sure to convert int(time.time()) to integer
+-make sure all events make it to the sync protocol + formats
+
+-better mechanism to have different renderers
+
+-abstract statistics queries to database?
+
+
+-time WM: history in same DB?
+
+-check for related cards on same day could fail if minute level scheduler is used in the meantime
+ (update comment in scheduler too)
+
+
+-ampersand mnemonics everywhere
+
+
+-partial implementation of type answer (none/all/special tag? Db Attribute? Button?)
+-draw answer, make configurable by card type
+
+
+-more plugin examples: file format, custom tag, activate all cards,
+ last grade filter, always_shuffle?
+
+-leech detection (mod 15)
+
+
+-MVC: http://doc.trolltech.com/qq/qq24-delegates.html
+
+
+-update ohloh?
+
+-http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/442447?
+
+-grep through TODO's in source code
+
+
+-alt tabbing gives low res icon.
+
+-add media player controls:
+-http://www.phon.ucl.ac.uk/home/mark/audio/play.htm
+-http://lists.trolltech.com/qt-interest/2008-05/thread00878-0.html
+
+-option to add video
+
+-modality of dialogs (mail by Nosai), Qt.WStyle_MinMax | Qt.WStyle_SysMenu))?
+
+-allow edit current card and add card to be open at the same time?
+
+-make file handling more robust, detect all errors (see mail by
+ OldGrantonian)
+
+-reenable datadir in setup.py
+
+-make filters more efficients by using regex instead of loops.
+
+-easier function to do tag detection in plugin
+
+-skritter/cpod interop mail
+
+-bug in Qt: setting default colour to black does not register the colour clicks.
+
+
+-document cntrl enter in edit dialog instead of clicking ok
 
 -tips (both on startup and on use): right click to add cards or sound, comma to 
- separate cat names, : to separate hierarchies
+ separate tag names, :: to separate hierarchies
 
--http://labs.trolltech.com/blogs/2009/03/12/wysiwyg-html-editor/
+-comment/tip about not having to do all your scheduled repetitions in
+ one sitting
+
+-update tooltips, inform Patrick
+
+pylint:
+	find ./mnemosyne/libmnemosyne/ -name \*.py | while read f ; do echo $f;pylint $f 2>&1|grep ^E:; done
+
+
 
 -Contributors: Konrad Wojas, Laurent Mauron, Ed Bartosh, Mike Appleby
 
 
--pythoscope? http://pypi.python.org/pypi/pythoscope/0.2.1
-http://pythoscope.org/
--pylint, pyflakes
-
 
 * After 2.0:
 
--three sided export?
+-website redesign? like http://hanzim.com/download.php
 
--option to type right answer
+-add days since last rep / until next rep to statistics
+
+-don't activate plugins until after clicking ok
+
+-respect font in fact editor
+
+-card type with prefilled fields
+
+-detect wrong current date (last review in the future or way past)
+
+-improve sphinxdocs: autoclass='both', document module members
+
+-show latex errors in GUI?
+
+-checkbox to include inactive cards in statistics?
+
+-pythoscope? http://pypi.python.org/pypi/pythoscope/0.2.1
+http://pythoscope.org/
+-pyflakes?
+
+-hover over extra hanzi information, hanzi statistics
+
+-plugin for midi files
+
+-chinese pod plugin
+
+-"reschedule" cheating plugin
+
+
+Multiuser statistics analysis:
+
+-card: 'old_log_format', Boolean) : only needed during upgrade in memory, 
+or persistent for the full server
+-break out card ids to a different table and use _id as well
+-more times from a later start date to save space?
+-sql: insert or ignore statement, faster if adding same data twice is no problem
+
+
+Windows Mobile client:
+
+If your phone has a touchscreen use the pocket pc version. Otherwise try the smartphone version. 
+
+-better way of making default actions visible? Call layout()?
+-hook up scheduler rollover
+-cramming widget, cache counters
+-implement hide question
+-icon
+-more complete question box implementation
+-installer
+-set basedir in registry key
+-install only pyc files
+-mark card
+-play around with MW5torage for easier sync and document this if it works.
+-button color
+
+
+-download media files when giving URL
+
+-also allow import compressed backup files from within Mnemosyne
+
+-three sided export?
 
 -synonym handling plugin?
 
@@ -223,40 +284,29 @@ http://pythoscope.org/
 
 -add 'add card' option to deck manager?
 
--template expansion (disable add-vice-versa) ( both {../..} and {}..{})
-
--mnemosyne analysis as plugin
-
--remap keys as plugin
-
 -active alert as plugin
 
--card type with prefilled fields
 
 -zooming picture instead of scrollbars?
+ 
+-animated strokes: http://lost-theory.org/ocrat/
 
-
-* Memosyne analysis: Add-on package to do full custom statistical
-analysis on the entire history of your learning process.
-Status: initial code written, but clean up needed.
-
--add to svn
--document
--release
--research section on web site
+-congratulations screen
 
 
 * Miscellaneous:
 
+-change file suffix when changing export format
+
+-button after opening fact editor in edit deck to go to next card in the list
+
 -sound recorder
 
--smarter sorting. See suggestios by larryrenslow
+-store _fact_ids_learned in config, such that they persist over sessions?
 
 -auto identifying similar cards
 
 -unify number shortcuts (with and without Ctrl)
-
--pop-up of context info
 
 -forward / backward when previewing cards in the database
 
@@ -279,7 +329,7 @@ Status: initial code written, but clean up needed.
 
 -undo last grade + keyboard shortcut
 
--better sound replay support, through clicking on an icon
+-http://labs.trolltech.com/blogs/2009/03/12/wysiwyg-html-editor/
 
 -integrate Mnemosyne analysis, advanced statistics, history,
  forgetting index, histogram of grades and intervals... (look at graphs
@@ -293,8 +343,6 @@ Status: initial code written, but clean up needed.
 
 -DTD for xml format
 
--priorities for categories?
-
 -determine import / export file type based on suffix
  (i.e. remove file format field)? Probably not possible, as
  file dialogs only return filenames, not the chosen filter type.
@@ -303,22 +351,8 @@ Status: initial code written, but clean up needed.
 
 -hints? separate mnemonics?
 
--swac plugin
+-swac plugin, smart.fm
 
 -corner case: If M > 0 and k < 0 then (a,b) is a local maximum
 If M > 0 and k > 0 then (a,b) is a local minimum: eats < ... >
-
-
-
-* Plasma widget:
-
--Check Unicode
-
--set fonts, left align
-
--Allow clicking anywhere in the status window, rather than just on the
- text.
-
--Automatic detection of PyQt executable exit (bug in Superkaramba).
-
 

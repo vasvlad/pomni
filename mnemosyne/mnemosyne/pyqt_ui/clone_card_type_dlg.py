@@ -2,27 +2,20 @@
 # clone_card_type_dlg.py <Peter.Bienstman@UGent.be>
 #
 
-import gettext
-_ = gettext.gettext
+from PyQt4 import QtGui
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
-from ui_clone_card_type_dlg import Ui_CloneCardTypeDlg
-
-from mnemosyne.libmnemosyne.component_manager import card_types
+from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.pyqt_ui.ui_clone_card_type_dlg import Ui_CloneCardTypeDlg
 
 
-class CloneCardTypeDlg(QDialog, Ui_CloneCardTypeDlg):
+class CloneCardTypeDlg(QtGui.QDialog, Ui_CloneCardTypeDlg, Component):
 
-    def __init__(self, parent=None):
-        QDialog.__init__(self, parent)
+    def __init__(self, parent, component_manager):
+        Component.__init__(self, component_manager)
+        QtGui.QDialog.__init__(self, parent)
         self.setupUi(self)
-        self.card_types = []
-        for card_type in card_types():
-            if not card_type.is_clone:
-                self.parent_type.addItem(card_type.name)
-                self.card_types.append(card_type)
+        for card_type in self.card_types():
+            self.parent_type.addItem(card_type.name)
 
     def name_changed(self):
         if not self.name.text():
@@ -31,12 +24,10 @@ class CloneCardTypeDlg(QDialog, Ui_CloneCardTypeDlg):
             self.OK_button.setEnabled(True)
 
     def accept(self):
-        parent_instance = self.card_types[self.parent_type.currentIndex()]
+        parent_instance = self.card_types()[self.parent_type.currentIndex()]
         clone_name = unicode(self.name.text())
-        try:
-            parent_instance.clone(clone_name)
-        except NameError:
-            QMessageBox.critical(None, _("Mnemosyne"),
-                                 _("This name is already in use."))
-            return     
-        QDialog.accept(self)
+        clone = self.controller().clone_card_type(\
+            parent_instance, clone_name)
+        if not clone:
+            return
+        QtGui.QDialog.accept(self)

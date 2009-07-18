@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/python -tt7
 # vim: sw=4 ts=4 expandtab ai
 #
 # Pomni. Learning tool based on spaced repetition technique
@@ -21,113 +21,198 @@
 #
 
 """
-Main
+Main Widget.
 """
 
-if __name__ != "__main__":
-    raise ImportError("Don't import this! "\
-                      "This program is supposed to be run from command line")
-
-import sys
 import os
+import gettext
+import gtk
+import gtk.glade
+import urllib
+import gtkhtml2
+import urlparse
 
-# add mnemosyne directory to Python path in debug mode
-if os.path.basename(sys.argv[0]).endswith("debug"):
-    sys.path.insert(0, "../../")
-    sys.path.insert(0, "../")
+from pomni.sound import SoundPlayer
+from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
-from optparse import OptionParser
+_ = gettext.gettext
 
-from mnemosyne.libmnemosyne.component_manager import database, config
+class MainWdgt(MainWidget):
+    """Main widget class."""
 
-from pomni.factory import ui_factory
+    menu, review, input, configuration = range(4)
 
-def parse_commandline(argv):
-    """ Parse commandline, check options """
+    def __init__(self, component_manager):
+        MainWidget.__init__(self, component_manager)
+        self.switcher = self.question_dialog = self.window = self.w_tree = \
+            self.question_dialog_label = self.information_dialog = \
+            self.information_dialog_label  = self.theme = \
+            self.fullscreen = None
+        self.htmlopener = urllib.FancyURLopener()
+        self.widgets = {}
+        self.soundplayer = SoundPlayer()
 
-    parser = OptionParser(usage = "%prog [options]")
+    def activate(self):
+        """Basic UI setup. 
+           Load theme glade file, assign gtk window callbacks.
+        """
 
-    parser.add_option("-u", "--ui", help="ui type", default="hildon")
-    parser.add_option("-d", "--datadir", help="data directory")
-    parser.add_option("-m", "--mode", help="working mode. "\
-                      "'main', 'input', 'review' or 'configure'")
+        # Load the glade file for current theme
+        theme_path = self.config()["theme_path"]
+        self.theme = theme_path.split("/")[-1]
+        gtk.rc_parse(os.path.join(theme_path, "rcfile"))
+        gtk.glade.set_custom_handler(self.custom_handler)
+        w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
 
-    return parser.parse_args(argv)
+        self.switcher = w_tree.get_widget("switcher")
+        self.window = w_tree.get_widget("window")
 
-def initialise(basedir):
-    """Custom initialise.
-    Faster replacement for libmnemosyne.initialise
-    """
-    from mnemosyne.libmnemosyne.component_manager import component_manager
-    from mnemosyne.libmnemosyne import initialise_new_empty_database
+        # fullscreen mode
+        self.fullscreen = self.config()['fullscreen']
+        if self.fullscreen:
+            self.window.fullscreen()
 
-    # Configuration.
-    from mnemosyne.libmnemosyne.configuration import Configuration
-    component_manager.register("config", Configuration())
-    
-    # Logger.
-    from mnemosyne.libmnemosyne.loggers.txt_logger import TxtLogger
-    component_manager.register("log", TxtLogger())   
-    
-    # Database.
-    from mnemosyne.libmnemosyne.databases.SQLite import SQLite
-    component_manager.register("database", SQLite())
+        # connect signals to methods
+        self.window.connect("delete_event", self.exit_)
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in ("window_state", "window_keypress")]))
 
-    # Scheduler.
-    from mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne import SM2Mnemosyne
-    component_manager.register("scheduler", SM2Mnemosyne())
-    
-    # Card types.
-    from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
-    component_manager.register("card_type", FrontToBack())
-    from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
-    component_manager.register("card_type", BothWays())
-    from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
-    component_manager.register("card_type", ThreeSided())
-    from mnemosyne.libmnemosyne.card_types.cloze import Cloze
-    component_manager.register("card_type", Cloze())
+        self.question_dialog = w_tree.get_widget("question_dialog")
+        self.information_dialog = w_tree.get_widget("information_dialog")
+        self.question_dialog_label = w_tree.get_widget("question_dialog_label")
+        self.information_dialog_label = w_tree.get_widget(\
+            "information_dialog_label")
 
-    config().initialise(basedir)
-    initialise_new_empty_database()
+        self.w_tree = w_tree
 
-def main(argv):
-    """ Main """
+    def show_mode(self, mode):
+        self.switcher.set_current_page(getattr(self, mode))
 
-    opts, argv = parse_commandline(argv)
+    def activate_mode(self, mode):
+        """Activate review or menu mode in lazy way."""
 
-    if opts.datadir:
-        basedir = os.path.abspath(opts.datadir)
-    elif "MYDOCSDIR" in os.environ and os.path.exists(os.path.join(\
-            os.environ["MYDOCSDIR"], ".documents")):
-        basedir = os.path.join(os.environ['MYDOCSDIR'], ".documents/pomni")
-    elif os.path.exists(os.path.join(os.getcwdu(), ".pomni")):
-        basedir = os.path.abspath(os.path.join(os.getcwdu(), ".pomni"))
-    else:
-        basedir = os.path.join(os.environ['HOME'], ".pomni")
+        self.show_mode(mode)
+        widget = self.widgets.get(mode, None)
+        if not widget: # lazy widget creation
+            if mode == "review":
+                self.review_controller().reset()
+                widget = self.review_controller().widget
+            elif mode == "menu":
+                from pomni.menu import MenuWidget
+                widget = MenuWidget(self.component_manager)
+            self.widgets[mode] = widget
 
-    initialise(basedir)
+        widget.activate()
 
-    cdatabase = database()
-    db_name = os.path.join(basedir, config()['path'])
+    def start(self, mode):
+        """UI entry point. Activates specified mode."""
 
-    if os.path.exists(db_name):
-        cdatabase.load(db_name)
+        if not mode:
+            if self.config()['startup_with_review']:
+                self.review_()
+            else:
+                self.menu_()
+        gtk.main()
 
-    if not opts.mode:
-        if config()['startup_with_review']: 
-            opts.mode = 'review'
-        else:
-            opts.mode = 'main'
+    def custom_handler(self, glade, function_name, widget_name, *args):
+        """Hook for custom widgets."""
 
-    return ui_factory(opts.ui).start(opts.mode)
+        if glade and widget_name and  hasattr(self, function_name):
+            handler = getattr(self, function_name)
+            return handler(args)
 
-if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    # modes
+    def menu_(self):
+        """Activate menu."""
+        self.activate_mode('menu')
+
+    def input_(self):
+        """Activate input mode."""
+
+        self.show_mode("input")
+        self.controller().add_cards()
+
+    def configure_(self):
+        """Activate configure mode through main controller."""
+        self.show_mode("configuration")
+        self.controller().configure()
+
+    def review_(self):
+        """Activate review mode."""
+        self.activate_mode('review')
+
+    @staticmethod
+    def exit_():
+        """Exit from main gtk loop."""
+        gtk.main_quit()
+
+    # gtk window callbacks
+    def window_keypress_cb(self, widget, event, *args):
+        """Key pressed."""
+
+        if event.keyval == gtk.keysyms.F6:
+            # The "Full screen" hardware key has been pressed
+            if self.fullscreen:
+                self.window.unfullscreen()
+            else:
+                self.window.fullscreen()
+            self.fullscreen = not self.fullscreen
+
+
+    def window_state_cb(self, widget, event):
+        """Checking window state."""
+
+        self.fullscreen = bool(event.new_window_state & \
+            gtk.gdk.WINDOW_STATE_FULLSCREEN)
+
+    # ui helpers
+    def create_gtkhtml(self, args):
+        """ Create gtkhtml2 widget """
+
+        def request_url(document, url, stream):
+            """Get content from url."""
+            uri = urlparse.urljoin("", url)
+            fpurl = self.htmlopener.open(uri)
+            stream.write(fpurl.read())
+            fpurl.close()
+            stream.close()
+
+        view = gtkhtml2.View()
+        document = gtkhtml2.Document()
+        document.connect('request_url', request_url)
+        view.set_document(document)
+        view.document = document
+        view.show()
+        return view
+
+    # Main Widget API
+    def information_box(self, message):
+        """Show Information message."""
+
+        self.information_dialog_label.set_text('\n' + message + '\n')
+        self.information_dialog.run()
+        self.information_dialog.hide()
+
+    def error_box(self, message):
+        """Error message."""
+
+        self.information_box(message)
+
+    def question_box(self, question, option0, option1, option2):
+        """Show Question message."""
+
+        self.question_dialog_label.set_text( \
+            '\n'  + question.replace("?", "?\n").replace(",", ",\n"))
+        response = self.question_dialog.run()
+        self.question_dialog.hide()
+        if response == gtk.RESPONSE_YES:
+            return False
+        return True
 
 
 # Local Variables:
 # mode: python
 # py-indent-offset: 4
-# indent-tabs-mode: nil
-# tab-width: 4
+# indent-tabs-mode nil
+# tab-width 4
 # End:

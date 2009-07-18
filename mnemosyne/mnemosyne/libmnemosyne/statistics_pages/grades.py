@@ -1,0 +1,42 @@
+#
+# grades.py <Peter.Bienstman@UGent.be>
+#
+
+from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.libmnemosyne.utils import numeric_string_cmp
+from mnemosyne.libmnemosyne.statistics_page import PlotStatisticsPage
+
+
+class Grades(PlotStatisticsPage):
+
+    name = _("Grades")
+    
+    ALL_CARDS = -1
+
+    def __init__(self, component_manager):
+        PlotStatisticsPage.__init__(self, component_manager)
+        self.variants = [(self.ALL_CARDS, _("All cards"))]
+        tags = []
+        for cursor in self.database().con.execute(\
+            "select _id, name from tags"):
+            tags.append((cursor[0], cursor[1]))
+        tags.sort(key=lambda x: x[1], cmp=numeric_string_cmp)
+        for id, name in tags:
+            self.variants.append((id, name))
+        
+    def prepare_statistics(self, variant):
+        self.x = range(-1, 6)
+        self.y = [] # Don't forget to reset this after variant change.
+        if variant == self.ALL_CARDS:
+            for grade in self.x:
+                self.y.append(self.database().con.execute(\
+                    "select count() from cards where grade=? and active=1",
+                     (grade, )).fetchone()[0])   
+        else:
+            for grade in self.x:
+                self.y.append(self.database().con.execute(\
+                    """select count() from cards, tags_for_card where
+                    tags_for_card._card_id=cards._id and cards.active=1
+                    and tags_for_card._tag_id=? and grade=?""",
+                    (variant, grade)).fetchone()[0])
+

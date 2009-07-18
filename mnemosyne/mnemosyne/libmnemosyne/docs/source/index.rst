@@ -22,7 +22,7 @@ As mentioned before, a Fact is linked to a CardType, and each CardType lists
 a set of FactViews.
 
 The actual Cards are generated from the data in Fact using the recipe of a
-certain FactView. A Card also contains all the revision data needed for the
+certain FactView. A Card also contains all the repetition data needed for the
 Scheduler to do its work. Since the question and answers are generated from
 the Fact data each time a Card is shown, related Cards (i.e. Cards with
 different FactViews of the same Fact) are always consistent.
@@ -31,42 +31,54 @@ The actual displaying of the data in a Card is handled by a Renderer. The
 default Renderer takes the fields from the Fact, adds them into a html template
 and applies a CSS for formatting.
 
+At several points in the program, plugin writers can hook in their code using
+the Hook mechanism.
+
 Before the data is passed to the Renderer, Filters can be applied to it. This
 is an extra level of flexibility, and can be used to generate LaTeX, convert
 relative paths to absolute paths, etc ..
 
 In order to make it easier for other GUI frontends to be written, all the logic
 typically needed for GUIs, but that is independent of the actual GUI toolkit
-used, is abstracted in ui controllers. In order to get more flexibility, there 
-are two of them: one related to the review widget, and one to the rest 
-of the program.
+used, is abstracted in controllers. In order to get more flexibility, there 
+are two of them: one related to the review process (which is different for 
+different schedulers), and one related to the rest of the program (which 
+normally won't change).
 
-Modules
-=======
+There is also mechanism for plugins to add new statistical data to the standard
+statistics in an integrated way.
+
+
+Contents
+========
 
 .. toctree::
     :maxdepth: 2
-    
+
+    modules/component    
     modules/component_manager
     modules/fact
     modules/fact_view
+    modules/tag   
     modules/card_type
-    modules/card  
+    modules/card
+    modules/card_type_converter
     modules/renderer
-    modules/ui_controller_main
-    modules/ui_controller_review
-    modules/review_widget
-    modules/category
+    modules/controller
+    modules/review_controller
     modules/configuration
     modules/database
     modules/file_format
     modules/filter
-    modules/function_hook
+    modules/hook
     modules/log_uploader
     modules/logger
     modules/plugin
     modules/scheduler
     modules/stopwatch
+    modules/statistics_page
+
+    modules/how_to_write_a_new_frontend
     
      
 Indices and tables

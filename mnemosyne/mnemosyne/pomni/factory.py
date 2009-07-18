@@ -24,33 +24,78 @@
 UI Factory. Creates UI objects
 """
 
-from mnemosyne.libmnemosyne.component_manager import component_manager
-from mnemosyne.libmnemosyne.renderers.html_hildon import HtmlHildon
-from mnemosyne.libmnemosyne.renderers.text import TextRenderer
+from mnemosyne.libmnemosyne import Mnemosyne
+from mnemosyne.libmnemosyne.component import Component
 
-def ui_factory(interface=None):
-    """ Create UI(View in terms of MVC) """
+class ConfigHook(Component):
+    """Configuration hook."""
+    component_type = 'hook'
+    used_for = 'configuration_defaults'
 
-    from mnemosyne.libmnemosyne.ui_controllers_main.default_main_controller \
-                                               import DefaultMainController
-    component_manager.register("ui_controller_main", DefaultMainController())
+    def run(self):
+        """Entry point."""
+        for key, value in {\
+            "theme_path": "/usr/share/pomni/hildon-UI/rainbow",
+            "themes": ['rainbow'],
+            "fullscreen": True,
+            "font_size": 30.0,
+            "startup_with_review": False,
+            "upload_logs": False,
+            "imagedir": "/home/user/MyDocs/.images",
+            "sounddir": "/home/user/MyDocs/.sounds",
+            "times_loaded": 0}.iteritems():
+
+            self.config().setdefault(key, value)
+
+def app_factory(interface=None):
+    """Mnemosyne application factory."""
+
+    app = Mnemosyne()
+    app.components.append(("pomni.factory", "ConfigHook"))
 
     if interface == 'cmd':
-        from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
+        #from pomni.cmd_ui import CmdUiControllerReview, CommandlineUI
 
-        component_manager.register("ui_controller_review",
-                                   CmdUiControllerReview())
-        component_manager.register("renderer", TextRenderer())
-        return CommandlineUI()
+        #component_manager.register("ui_controller_review",
+        #                           CmdUiControllerReview())
+        #component_manager.register("renderer", TextRenderer())
+        raise NotImplementedError('cmd ui has to be redesigned')
 
     if not interface or interface == "hildon":
-    
-        from pomni.hildon_ui import HildonUI
-        component_manager.register("renderer", HtmlHildon())
-        return HildonUI()
+        app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
+                                  "GetTextTranslator"))
+        app.components.append(("pomni.renderers", "Html"))
+        app.components.append(("pomni.main", "MainWdgt"))
+        app.components.append(("pomni.menu", "MenuWidget"))
+        app.components.append(("pomni.review", "ReviewWdgt"))
+        app.components.append(("pomni.input", "AddCardsWidget"))
+        app.components.append(("pomni.input", "EditFactWidget"))
+        app.components.append(("pomni.configuration", "ConfigurationWidget"))
+
+        # Add necessary components
+        app.components.append(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
+
+        # Remove unused components
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.card_types.map", "MapPlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "ClozePlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.plugins.cramming_plugin", \
+                "CrammingPlugin"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.renderers.html_css", "HtmlCss"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.escape_to_html", "EscapeToHtml"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.expand_paths", "ExpandPaths"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.latex", "Latex"))
+        return app
 
     # add next gui here
-    raise ValueError("No idea how to create %s UI" % interface)
+    raise ValueError("No idea how to create %s app" % interface)
 
 
 # Local Variables:

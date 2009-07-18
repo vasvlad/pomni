@@ -2,9 +2,7 @@
 # three_sided.py <Peter.Bienstman@UGent.be>
 #
 
-import gettext
-_ = gettext.gettext
-
+from mnemosyne.libmnemosyne.translator import _
 from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.card_type import CardType
 from mnemosyne.libmnemosyne.fact_view import FactView
@@ -15,36 +13,38 @@ class ThreeSided(CardType):
     
     id = "3"
     name = _("Foreign word with pronunciation")
-            
-    def __init__(self, language_name=""):
-        CardType.__init__(self)
 
-        # List and name the keys.
-        self.fields.append(("f", _("Foreign word")))
-        self.fields.append(("p", _("Pronunciation")))
-        self.fields.append(("t", _("Translation")))
+    # List and name the keys.
+    fields = [("f", _("Foreign word")),
+              ("p", _("Pronunciation")),
+              ("t", _("Translation"))]
 
-        # Recognition.
-        v = FactView(1, _("Recognition"))
-        v.q_fields = ["f"]
-        v.a_fields = ["p", "t"]
-        v.required_fields = ["f"]
-        self.fact_views.append(v)
+    # Recognition.
+    v1 = FactView("1", _("Recognition"))
+    v1.q_fields = ["f"]
+    v1.a_fields = ["p", "t"]
+    v1.required_fields = ["f"]
 
-        # Production.
-        v = FactView(2, _("Production"))
-        v.q_fields = ["t"]
-        v.a_fields = ["f", "p"]
-        v.required_fields = ["t"]
-        self.fact_views.append(v)
+    # Production.
+    v2 = FactView("2", _("Production"))
+    v2.q_fields = ["t"]
+    v2.a_fields = ["f", "p"]
+    v2.required_fields = ["t"]
     
-        # The foreign word field needs to be unique. As for duplicates is the
-        # answer field, these are better handled through a synonym detection 
-        # plugin.
-        self.unique_fields = ["f"]
+    fact_views = [v1, v2]
 
+    # The foreign word field needs to be unique. As for duplicates in the
+    # answer field, these are better handled through a synonym detection 
+    # plugin.
+    unique_fields = ["f"]
+
+
+from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
+from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 
 class FrontToBackToThreeSided(CardTypeConverter):
+
+    used_for = (FrontToBack, ThreeSided)
 
     def convert(self, cards, old_card_type, new_card_type, correspondence):
         # Update front-to-back view to corresponding view in new type.
@@ -63,6 +63,8 @@ class FrontToBackToThreeSided(CardTypeConverter):
 
 class BothWaysToThreeSided(CardTypeConverter):
 
+    used_for = (BothWays, ThreeSided)
+
     def convert(self, cards, old_card_type, new_card_type, correspondence):
         for card in cards:
             if card.fact_view == old_card_type.fact_views[0]:
@@ -80,6 +82,8 @@ class BothWaysToThreeSided(CardTypeConverter):
 
 
 class ThreeSidedToFrontToBack(CardTypeConverter):
+
+    used_for = (ThreeSided, FrontToBack)
 
     def convert(self, cards, old_card_type, new_card_type, correspondence):
         new_cards, updated_cards, deleted_cards = [], [], []
@@ -100,6 +104,8 @@ class ThreeSidedToFrontToBack(CardTypeConverter):
 
 
 class ThreeSidedToBothWays(CardTypeConverter):
+
+    used_for = (ThreeSided, BothWays)
 
     def convert(self, cards, old_card_type, new_card_type, correspondence):
         for card in cards:

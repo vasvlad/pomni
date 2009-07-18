@@ -39,11 +39,11 @@ class FileFormat(object):
     #
     ##########################################################################
 
-    def do_import(self, filename, default_cat_name,
+    def do_import(self, filename, default_tag_name,
                   reset_learning_data=False):
         raise NotImplementedError
 
-    def do_export(self, filename, default_cat_name,
+    def do_export(self, filename, default_tag_name,
                   reset_learning_data=False):
         raise NotImplementedError    
 
@@ -119,10 +119,10 @@ def unanonymise_id(card):
 #
 ##############################################################################
 
-def import_file(filename, fformat_name, default_cat_name,
+def import_file(filename, fformat_name, default_tag_name,
                 reset_learning_data=False):
 
-    global load_failed, revision_queue, anon_to_id
+    global load_failed, queue, anon_to_id
 
     # If no database is active, create one.
 
@@ -131,7 +131,7 @@ def import_file(filename, fformat_name, default_cat_name,
 
     # Call import function according to file format name.
 
-    default_cat = get_category_by_name(default_cat_name)
+    default_tag = get_tag_by_name(default_cat_name)
     fformat = get_file_format_from_name(fformat_name)
     imported_cards = fformat.import_function(filename, default_cat,
                                              reset_learning_data)
@@ -150,11 +150,11 @@ def import_file(filename, fformat_name, default_cat_name,
         else:
             cards.append(card)
             if card.is_due_for_retention_rep():
-                revision_queue[0:0] = [card]
+                queue[0:0] = [card]
             log().imported_card(card) 
     # Clean up.
 
-    remove_category_if_unused(default_cat)
+    remove_tag_if_unused(default_tag)
 
     load_failed = False
 
