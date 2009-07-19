@@ -8,7 +8,9 @@
 
 
 import mnemosyne.version
-
+import cgi
+from wsgiref.simple_server import make_server
+from xml.etree import ElementTree
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
@@ -62,7 +64,7 @@ class Sync(object):
 
 
 class EventManager:
-    def __init__(self, database):
+    def __init__(self, database, params=None):
         self.database = database
 
     def set_sync_params(self, params):
@@ -122,6 +124,52 @@ class Client:
         
 
 
+class HttpWrapper:
+    DEFAULT_MIME = "xml/text"
+
+    def __init__(self, service):
+        self.service = service
+        self.httpd = make_server('', 9999, self.wsgi_app)
+        self.httpd.serve_forever()
+
+    def get_method(self, environ, service):
+        """
+        Checks for method existence in service
+        and checks for right request params.
+        """
+
+        def compare_args(list1, list2):
+            """Compares two lists or tuples."""
+            for item in list1:
+                if not item in list2:
+                    return False
+            return True
+
+        method = (environ['REQUEST_METHOD'] + \
+            '_'.join(environ['PATH_INFO'].split('/'))).lower()
+        if hasattr(service, method) and callable(getattr(service, method)):
+            args = cgi.parse_qs(environ['QUERY_STRING'])
+            args = dict([(key, value[0]) for key, value in args.iteritems()])
+            if getattr(service, method).func_code.co_argcount-1 == len(args) \
+                and compare_args(args.keys(), getattr(service, method). \
+                    func_code.co_varnames):                
+                return '200 OK', self.DEFAULT_MIME, method, args
+            else:
+                return '400 Bad Request', "text/plain", None, None
+        else:
+            return '404 Not Found', "text/plain", None, None
+
+    def wsgi_app(self, environ, start_response):
+        """Simple Server wsgi application."""
+        status, mime, method, args = self.get_method(environ, self.service)
+        headers = [('Content-type', mime)]
+        start_response(status, headers)
+        if method:
+            return getattr(self.service, method)(**args)
+        else:
+            return status
+
+
 
 class Server:
     def __init__(self, url, database):
@@ -138,7 +186,7 @@ class Server:
 
     def connect(self):
         """Activate server connection."""
-        pass
+        print "starting server"
 
     def login(self, login, password):
         """Check client existence."""
@@ -152,10 +200,26 @@ class Server:
             'protocol_ver': self.protocol_version, 'cardtypes': self.cardtypes,
             'upload_media': self.upload_media, 'read_only': self.read_only }
 
-    def get_history(self):
+    def get_sync_history(self, param1, param2):
         """Gets all history events after the last sync."""
 
-        return self.eman.get_events()
+        print "param1 =", param1
+        print "param2 =", param2
+        #return self.eman.get_events()
+        data = [{'time': '111', 'event': '1', 'text': "text1"},
+                {'time': '222', 'event': '2', 'text': "text2"},
+                {'time': '333', 'event': '3', 'text': "text3"}]
+        history = ElementTree.Element("history")
+        for i in data:
+            item = ElementTree.SubElement(history, "item")
+            time = ElementTree.SubElement(item, "time")
+            time.text = i['time']
+            event = ElementTree.SubElement(item, "event")
+            event.text = i['event']
+            text = ElementTree.SubElement(item, "text")
+            text.text = i['time']
+
+        return ElementTree.tostring(history)
 
     def process_history(self, events, partnerid):
         """Process every event and add it to database."""
@@ -166,4 +230,4 @@ class Server:
     def done(self):
         """Mark in database that sync was completed successfull."""
         pass
-    
+   
