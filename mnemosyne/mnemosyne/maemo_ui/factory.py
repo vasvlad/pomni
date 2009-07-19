@@ -51,7 +51,7 @@ def app_factory(interface=None):
     """Mnemosyne application factory."""
 
     app = Mnemosyne()
-    app.components.append(("maemo_ui.factory", "ConfigHook"))
+    app.components.append(("mnemosyne.maemo_ui.factory", "ConfigHook"))
 
     if interface == 'cmd':
         #from maemo_ui.cmd_ui import CmdUiControllerReview, CommandlineUI
@@ -64,13 +64,14 @@ def app_factory(interface=None):
     if not interface or interface == "hildon":
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
                                   "GetTextTranslator"))
-        app.components.append(("maemo_ui.renderers", "Html"))
-        app.components.append(("maemo_ui.main", "MainWdgt"))
-        app.components.append(("maemo_ui.menu", "MenuWidget"))
-        app.components.append(("maemo_ui.review", "ReviewWdgt"))
-        app.components.append(("maemo_ui.input", "AddCardsWidget"))
-        app.components.append(("maemo_ui.input", "EditFactWidget"))
-        app.components.append(("maemo_ui.configuration", "ConfigurationWidget"))
+        app.components.append(("mnemosyne.maemo_ui.renderers", "Html"))
+        app.components.append(("mnemosyne.maemo_ui.main", "MainWdgt"))
+        app.components.append(("mnemosyne.maemo_ui.menu", "MenuWidget"))
+        app.components.append(("mnemosyne.maemo_ui.review", "ReviewWdgt"))
+        app.components.append(("mnemosyne.maemo_ui.input", "AddCardsWidget"))
+        app.components.append(("mnemosyne.maemo_ui.input", "EditFactWidget"))
+        app.components.append(("mnemosyne.maemo_ui.configuration", 
+                                "ConfigurationWidget"))
 
         # Add necessary components
         app.components.append(\

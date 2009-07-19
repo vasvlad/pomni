@@ -37,7 +37,7 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../")
 
 from optparse import OptionParser
-from maemo_ui.factory import app_factory
+from mnemosyne.maemo_ui.factory import app_factory
 
 def parse_commandline(argv):
     """ Parse commandline, check options """

@@ -32,7 +32,7 @@ import urllib
 import gtkhtml2
 import urlparse
 
-from maemo_ui.sound import SoundPlayer
+from mnemosyne.maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 _ = gettext.gettext
@@ -98,7 +98,7 @@ class MainWdgt(MainWidget):
                 self.review_controller().reset()
                 widget = self.review_controller().widget
             elif mode == "menu":
-                from maemo_ui.menu import MenuWidget
+                from mnemosyne.maemo_ui.menu import MenuWidget
                 widget = MenuWidget(self.component_manager)
             self.widgets[mode] = widget
 
