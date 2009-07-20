@@ -86,7 +86,7 @@ class EventManager:
             event = {'event': item[0], 'time': item[1], 'id': item[2]}
             history += "<item>%s</item>" % self.create_event_element(event)
         history += "</history>"
-        print history
+        #print history
 
     def create_event_element(self, event):
         """Creates xml representation of event."""
@@ -123,13 +123,14 @@ class EventManager:
 
     def create_card_element(self, event):
         """XML elemrnt for *.card events."""
-        #card = self.database.get_card_by_id(event['id'])
+        card = self.database.get_card_by_id(event['id'])
         return '<event>%s</event><id>%s</id><cardtype_id>%s</cardtype_id>'\
             '<tags>%s</tags><grade>%s</grade><easiness>%s</easiness><lastrep>'\
             '%s</lastrep><nextrep>%s</nextrep><factid>%s</factid><factviewid>'\
-            '%s</factviewid><time>%s</time>' % (event['event'], 'id', \
-            'cardtypeid', 'tag1, tag2', 'grade', 'easiness', 'lastrep', \
-            'nextrep', 'factid', 'factviewid', 'time')
+            '%s</factviewid><time>%s</time>' % (event['event'], card.id, \
+            card.fact.card_type.id, ','.join(card.tags), card.grade, \
+            card.easiness, card.last_rep, card.next_rep, card.fact.id, \
+            card.fact_view.id, event['time'])
 
     def create_card_type_element(self, event):
         #cardtype = self.database.get_cardtype_by_id(event['id'])
