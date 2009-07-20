@@ -1,5 +1,6 @@
 Source: mnemosyne
 Section: user/education
+Priority: optional
 Maintainer: Ed Bartosh <bartosh@gmail.com>
 Build-Depends: debhelper (>= 5), python2.5, python-setuptools
 Standards-Version: 3.8.0
