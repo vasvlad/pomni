@@ -1,32 +1,28 @@
 import sys
 sys.path.insert(0, '../../')
-from libSM2sync.sync import Sync
-from libSM2sync.sync import Server
-from libSM2sync.sync import EventManager
+from libSM2sync.server import Server
+from libSM2sync.server import WSGI
 from libSM2sync.client import Client
-from libSM2sync.client import HttpService
-from libSM2sync.sync import WSGI
+from libSM2sync.client import HttpTransport
 
 def main(argv):
     """Main."""
 
-    #sync = Sync(url=argv[1])
-    #sync.start()
-    #server = Server("url", "database")
-    #http = HttpWrapper(server)
-    mode = argv[1]
-    if mode == "server":
-        transport = WSGI("localhost:9999")
-        server = Server(transport, "database")
-        server.start()
-    elif mode == "client":
-        transport = HttpService("localhost:9999")
-        client = Client(transport)
-        client.process_server_history()
+    if len(argv) < 3:
+        print "USAGE: %s MODE HOST:PORT" % argv[0]
     else:
-        print "unknown mode"
-
-
+        mode = argv[1]
+        uri = argv[2]
+        if mode == "server":
+            transport = WSGI(uri)
+            server = Server(transport, "database")
+            server.start()
+        elif mode == "client":
+            transport = HttpTransport(uri)
+            client = Client(transport, "database")
+            client.start()
+        else:
+            print "unknown mode"
 
 
 if __name__ == "__main__":
