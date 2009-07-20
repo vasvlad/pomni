@@ -116,21 +116,30 @@ class EventManager:
 
     def create_fact_element(self, event):
         """XML element for *_fact events."""
-        #fact = self.database.get_fact_by_id(event['id'])
-        return '<event>%s</event><cardtype_id>%s</cardtype_id>'\
+        fact = self.database.get_fact_by_id(event['id'])
+        factdata = ''
+        for key, value in fact.data.items():
+            factdata += "<%s>%s</%s>" % (key, value, key)
+        element =  '<event>%s</event><cardtype_id>%s</cardtype_id>'\
             '<time>%s</time><fact_data>%s</fact_data>' % (event['event'], \
-            'cardtype_id', 'time', 'factdata')
+            fact.card_type.id, event['time'], factdata)
+        print '*' * 20
+        print element
+        return element
 
     def create_card_element(self, event):
-        """XML elemrnt for *.card events."""
+        """XML element for *.card events."""
         card = self.database.get_card_by_id(event['id'])
-        return '<event>%s</event><id>%s</id><cardtype_id>%s</cardtype_id>'\
+        element =  '<event>%s</event><id>%s</id><cardtype_id>%s</cardtype_id>'\
             '<tags>%s</tags><grade>%s</grade><easiness>%s</easiness><lastrep>'\
             '%s</lastrep><nextrep>%s</nextrep><factid>%s</factid><factviewid>'\
-            '%s</factviewid><time>%s</time>' % (event['event'], card.id, \
-            card.fact.card_type.id, ','.join(card.tags), card.grade, \
-            card.easiness, card.last_rep, card.next_rep, card.fact.id, \
-            card.fact_view.id, event['time'])
+            '%s</factviewid><time>%s</time>' % (event['event'], card.id,
+            card.fact.card_type.id, ','.join([item.name for item in card.tags]),
+            card.grade, card.easiness, card.last_rep, card.next_rep,
+            card.fact.id, card.fact_view.id, event['time'])
+        print '*' * 20
+        print element
+        return element
 
     def create_card_type_element(self, event):
         #cardtype = self.database.get_cardtype_by_id(event['id'])
