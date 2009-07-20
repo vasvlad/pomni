@@ -14,6 +14,7 @@ from wsgiref.simple_server import make_server
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element, SubElement
 import httplib, urllib
+from urlparse import urlparse
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
@@ -80,60 +81,66 @@ class EventManager:
 
     def get_events(self):
         """Creates history in XML."""
-        events = self.database.get_history_events()
-        history = Element("history")
-        for item in events:
+        history = "<history>"
+        for item in self.database.get_history_events():
             event = {'event': item[0], 'time': item[1], 'id': item[2]}
-            subelement = SubElement(history, "event")
-            event_id = SubElement(subelement, "event_id")
-            event_id.text = event['event'].__str__()
-            self.create_event_element(event, subelement)
-        #return ElementTree.tostring(history)
-        print ElementTree.tostring(history)
+            history += "<item>%s</item>" % self.create_event_element(event)
+        history += "</history>"
+        print history
 
-    def create_event_element(self, event, subelement):
+    def create_event_element(self, event):
         """Creates xml representation of event."""
         event_id = event['event']
         if event_id == events.ADDED_TAG or event_id == events.UPDATED_TAG \
             or event_id == events.DELETED_TAG:
-            return self.create_tag_element(event, subelement)
+            return self.create_tag_element(event)
         elif event_id == events.ADDED_FACT or event_id == events.UPDATED_FACT \
             or event_id == events.DELETED_FACT:
-            return self.create_fact_element(event, subelement)
+            return self.create_fact_element(event)
         elif event_id == events.ADDED_CARD or event_id == events.UPDATED_CARD \
             or event_id == events.DELETED_CARD:
-            return self.create_card_element(event, subelement)
+            return self.create_card_element(event)
         elif event_id == events.ADDED_CARD_TYPE or event_id == events.UPDATED_CARD_TYPE \
             or event_id == events.DELETED_CARD_TYPE:
-            return self.create_card_type_element(event, subelement)
+            return self.create_card_type_element(event)
+        elif event_id == events.REPETITION:
+            return self.create_repetition_element(event)
+        else:
+            return "<event>unknown</event>"
 
-    def create_tag_element(self, event, element):
+    def create_tag_element(self, event):
         """XML element for *_tag events."""
-        tag = self.database.get_tag_by_id(event['id'])
-        tag_id = SubElement(element, 'id')
-        tag_id.text = tag['id']
-        tag_name = SubElement(element, 'name')
-        tag_name.text = tag['name']
-        tag_timestamp = SubElement(element, 'timestamp')
-        tag_timestamp.text = tag['timestamp']
+        #tag = self.database.get_tag_by_id(event['id'])
+        return '<event>%s</event><id>%s</id><name>%s</name><time>%s</time>'\
+            % (event['event'], 'id', 'name', 'time')
 
-    def create_fact_element(self, event, element):
+    def create_fact_element(self, event):
         """XML element for *_fact events."""
-        fact = self.database.get_fact_by_id(event['id'])
-        fact_card_type_id = SubElement(element, 'card_type_id')
-        fact_card_type_id.text = fact['card_type_id']
-        #fact_data = ...
-        fact_timestamp = Subelement(element, 'timestamp')
-        fact_timestamp.text = fact['timestamp']
+        #fact = self.database.get_fact_by_id(event['id'])
+        return '<event>%s</event><cardtype_id>%s</cardtype_id>'\
+            '<time>%s</time><fact_data>%s</fact_data>' % (event['event'], \
+            'cardtype_id', 'time', 'factdata')
 
-    def create_card_element(self, event, element):
+    def create_card_element(self, event):
         """XML elemrnt for *.card events."""
-        event_id = SubElement(element, "event_id")
-        event_id.text = event['event'].__str__()
+        #card = self.database.get_card_by_id(event['id'])
+        return '<event>%s</event><id>%s</id><cardtype_id>%s</cardtype_id>'\
+            '<tags>%s</tags><grade>%s</grade><easiness>%s</easiness><lastrep>'\
+            '%s</lastrep><nextrep>%s</nextrep><factid>%s</factid><factviewid>'\
+            '%s</factviewid><time>%s</time>' % (event['event'], 'id', \
+            'cardtypeid', 'tag1, tag2', 'grade', 'easiness', 'lastrep', \
+            'nextrep', 'factid', 'factviewid', 'time')
 
-    def create_card_type_element(self, event, element):
-        event_id = SubElement(element, "event_id")
-        event_id.text = event['event'].__str__()
+    def create_card_type_element(self, event):
+        #cardtype = self.database.get_cardtype_by_id(event['id'])
+        return '<event>%s</event><id>%s</id>' % (event['event'], event['id'])
+
+    def create_repetition_element(self, event):
+        #card = self.database.get_card_by_id(event['id'])
+        return '<event>%s</event><id>%s</id><grade>%s</grade><easiness>%s'\
+            '</easiness><newinterval>%s</newinterval><thinkingtime>%s'\
+            '</thinkingtime><time>%s</time>' % (event['event'], 'id',\
+            'grade', 'easiness', 'newinterval', 'thinkingtime', 'time')
 
     def apply_event(self, event):
         print "EventManager:apply_event()"
@@ -144,9 +151,14 @@ class EventManager:
 class WSGI:
     DEFAULT_MIME = "xml/text"
 
+    def __init__(self, uri):
+        params = urlparse(uri)
+        self.host = params.scheme
+        self.port = int(params.path)
+
     def start(self, service):
         self.service = service
-        self.httpd = make_server('', 9999, self.wsgi_app)
+        self.httpd = make_server(self.host, self.port, self.wsgi_app)
         print "starting server..."
         self.httpd.serve_forever()
 
@@ -190,9 +202,8 @@ class WSGI:
 
 
 class Server:
-    def __init__(self, transport, url, database):
+    def __init__(self, transport, database):
         self.transport = transport
-        self.url = url
         self.database = database
         self.eman = EventManager(database)
         self.hw_id = "server_hw_id"
