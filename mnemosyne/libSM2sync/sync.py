@@ -9,8 +9,11 @@
 
 import mnemosyne.version
 import cgi
+from time import sleep
 from wsgiref.simple_server import make_server
 from xml.etree import ElementTree
+from xml.etree.ElementTree import Element, SubElement
+import httplib, urllib
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
@@ -28,12 +31,13 @@ class Sync(object):
     def start(self):
         """Start syncing."""
 
+        print "Sync:start"
         if self.handshake():
-            self.client.process_history(self.server.get_history(), \
+            self.client.process_history(self.get_server_history(), \
                 self.server.hw_id)
-            self.server.process_history(self.client.get_history(), \
-                self.client.hw_id)
-            self.done()
+            #self.server.process_history(self.client.get_history(), \
+            #    self.client.hw_id)
+            #self.done()
         else:
             #FIXME: make exeption instead of print
             print "error in handshaking"
@@ -41,13 +45,16 @@ class Sync(object):
     def connect(self):
         """Init Server connection."""
 
+        print "Sync:connect"
         #FIXME: replace "database" by real database
-        self.server = Server(self.url, "database")
-        self.server.connect()
+        transport = WSGI()
+        self.server = Server(transport, self.url, "database")
+        self.server.start()
 
     def handshake(self):
         """Start handshaking."""
 
+        print "Sync:handshake"
         if not self.server:
             self.connect()
         if not self.client:
@@ -62,74 +69,85 @@ class Sync(object):
         self.server.done()
             
 
-
+from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger as events
 class EventManager:
-    def __init__(self, database, params=None):
+    def __init__(self, database):
         self.database = database
 
     def set_sync_params(self, params):
-        pass
+        pass 
 
     def get_events(self):
-        pass
+        """Creates history in XML."""
+        events = self.database.get_history_events()
+        history = Element("history")
+        for item in events:
+            event = {'event': item[0], 'time': item[1], 'id': item[2]}
+            subelement = SubElement(history, "event")
+            event_id = SubElement(subelement, "event_id")
+            event_id.text = event['event'].__str__()
+            self.create_event_element(event, subelement)
+        #return ElementTree.tostring(history)
+        print ElementTree.tostring(history)
+
+    def create_event_element(self, event, subelement):
+        """Creates xml representation of event."""
+        event_id = event['event']
+        if event_id == events.ADDED_TAG or event_id == events.UPDATED_TAG \
+            or event_id == events.DELETED_TAG:
+            return self.create_tag_element(event, subelement)
+        elif event_id == events.ADDED_FACT or event_id == events.UPDATED_FACT \
+            or event_id == events.DELETED_FACT:
+            return self.create_fact_element(event, subelement)
+        elif event_id == events.ADDED_CARD or event_id == events.UPDATED_CARD \
+            or event_id == events.DELETED_CARD:
+            return self.create_card_element(event, subelement)
+        elif event_id == events.ADDED_CARD_TYPE or event_id == events.UPDATED_CARD_TYPE \
+            or event_id == events.DELETED_CARD_TYPE:
+            return self.create_card_type_element(event, subelement)
+
+    def create_tag_element(self, event, element):
+        """XML element for *_tag events."""
+        tag = self.database.get_tag_by_id(event['id'])
+        tag_id = SubElement(element, 'id')
+        tag_id.text = tag['id']
+        tag_name = SubElement(element, 'name')
+        tag_name.text = tag['name']
+        tag_timestamp = SubElement(element, 'timestamp')
+        tag_timestamp.text = tag['timestamp']
+
+    def create_fact_element(self, event, element):
+        """XML element for *_fact events."""
+        fact = self.database.get_fact_by_id(event['id'])
+        fact_card_type_id = SubElement(element, 'card_type_id')
+        fact_card_type_id.text = fact['card_type_id']
+        #fact_data = ...
+        fact_timestamp = Subelement(element, 'timestamp')
+        fact_timestamp.text = fact['timestamp']
+
+    def create_card_element(self, event, element):
+        """XML elemrnt for *.card events."""
+        event_id = SubElement(element, "event_id")
+        event_id.text = event['event'].__str__()
+
+    def create_card_type_element(self, event, element):
+        event_id = SubElement(element, "event_id")
+        event_id.text = event['event'].__str__()
 
     def apply_event(self, event):
-        pass
+        print "EventManager:apply_event()"
+        print event
 
 
 
-class Client:
-    def __init__(self, database):
-        self.database = database
-        self.eman = None
-        self.hw_id = 'client_hw_id'
-        self.app_name = 'Mnemosyne'
-        self.app_version = mnemosyne.version.version
-        self.protocol_version = PROTOCOL_VERSION
-        self.login = 'mnemosyne'
-        self.password = 'mnemosyne'
-        self.cardtypes = N_SIDED_CARD_TYPE
-        self.extradata = ''
-
-    def handshake(self, server):
-        """Handshaking with server."""
-
-        if server.login(self.hw_id, self.login, self.password):
-            self.eman = EventManager(self.database, server.get_sync_params())
-            server.set_sync_params(self.get_sync_params())
-            return True
-        return False
-
-    def get_history(self):
-        """Gets all history events after the last sync."""
-
-        return self.eman.get_events()
-
-    def process_history(self, events, partnerid):
-        """Process every event and add it to database."""
-
-        for event in events:
-            self.eman.apply_event(event, partnerid)
-
-    def get_sync_params(self):
-        """Gets client specific params."""
-
-        return {'app_name': self.app_name, 'app_ver': self.app_version, \
-            'protocol_ver': self.protocol_version, 'extra': self.extradata, \
-            'cardtypes': self.cardtypes}
-
-    def done(self):
-        """Mark in database that sync was completed successfull."""
-        pass
-        
-
-
-class HttpWrapper:
+class WSGI:
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self, service):
+    def start(self, service):
         self.service = service
         self.httpd = make_server('', 9999, self.wsgi_app)
+        print "starting server..."
         self.httpd.serve_forever()
 
     def get_method(self, environ, service):
@@ -172,7 +190,8 @@ class HttpWrapper:
 
 
 class Server:
-    def __init__(self, url, database):
+    def __init__(self, transport, url, database):
+        self.transport = transport
         self.url = url
         self.database = database
         self.eman = EventManager(database)
@@ -184,9 +203,9 @@ class Server:
         self.upload_media = True
         self.read_only = False
 
-    def connect(self):
-        """Activate server connection."""
-        print "starting server"
+    def start(self):
+        """Activate server."""
+        self.transport.start(self)
 
     def login(self, login, password):
         """Check client existence."""
@@ -200,26 +219,28 @@ class Server:
             'protocol_ver': self.protocol_version, 'cardtypes': self.cardtypes,
             'upload_media': self.upload_media, 'read_only': self.read_only }
 
-    def get_sync_history(self, param1, param2):
+    def get_sync_history(self):
         """Gets all history events after the last sync."""
-
-        print "param1 =", param1
-        print "param2 =", param2
+        print "Server:get_sync_history"
+        #print "param1 =", param1
+        #print "param2 =", param2
         #return self.eman.get_events()
         data = [{'time': '111', 'event': '1', 'text': "text1"},
                 {'time': '222', 'event': '2', 'text': "text2"},
                 {'time': '333', 'event': '3', 'text': "text3"}]
-        history = ElementTree.Element("history")
+        # FIXME: make this lazy
+        yield "<history>"
         for i in data:
-            item = ElementTree.SubElement(history, "item")
+            item = ElementTree.Element("item")
             time = ElementTree.SubElement(item, "time")
             time.text = i['time']
             event = ElementTree.SubElement(item, "event")
             event.text = i['event']
             text = ElementTree.SubElement(item, "text")
             text.text = i['time']
-
-        return ElementTree.tostring(history)
+            yield ElementTree.tostring(item)
+            #sleep(2)
+        yield "</history>"
 
     def process_history(self, events, partnerid):
         """Process every event and add it to database."""
