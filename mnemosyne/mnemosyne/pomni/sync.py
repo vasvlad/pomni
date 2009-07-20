@@ -16,8 +16,8 @@ def main(argv):
     #http = HttpWrapper(server)
     mode = argv[1]
     if mode == "server":
-        transport = WSGI()
-        server = Server(transport, "url", "database")
+        transport = WSGI("localhost:9999")
+        server = Server(transport, "database")
         server.start()
     elif mode == "client":
         transport = HttpService("localhost:9999")
