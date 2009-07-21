@@ -11,6 +11,7 @@ import mnemosyne.version
 import cgi
 from wsgiref.simple_server import make_server
 from urlparse import urlparse
+from xml.etree import ElementTree
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
@@ -76,6 +77,7 @@ class EventManager:
 
     def get_history(self):
         """Creates history in XML."""
+        
         history = "<history>"
         for item in self.database.get_history_events():
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
@@ -86,6 +88,7 @@ class EventManager:
 
     def create_event_element(self, event):
         """Creates xml representation of event."""
+
         event_id = event['event']
         if event_id == events.ADDED_TAG or event_id == events.UPDATED_TAG \
             or event_id == events.DELETED_TAG:
@@ -107,6 +110,7 @@ class EventManager:
 
     def create_tag_element(self, event):
         """XML element for *_tag events."""
+
         tag = self.database.get_tag_by_id(event['id'])
         return '<item><event>%s</event><id>%s</id><name>%s</name><time>%s' \
             '</time></item>' % (event['event'], event['id'], tag.name,
@@ -114,6 +118,7 @@ class EventManager:
 
     def create_fact_element(self, event):
         """XML element for *_fact events."""
+
         fact = self.database.get_fact_by_id(event['id'])
         factdata = ''
         for key, value in fact.data.items():
@@ -123,31 +128,40 @@ class EventManager:
             (event['event'], fact.card_type.id, event['time'], factdata)
 
     def create_card_element(self, event):
-        """XML element for *.card events."""
+        """XML element for *_card events."""
+
         card = self.database.get_card_by_id(event['id'])
         return '<item><event>%s</event><id>%s</id><cardtype_id>%s' \
             '</cardtype_id><tags>%s</tags><grade>%s</grade><easiness>%s' \
             '</easiness><lastrep>%s</lastrep><nextrep>%s</nextrep><factid>' \
-            '%s</factid><factviewid>%s</factviewid><time>%s</time></event>' \
-            '</item>' % (event['event'], card.id, card.fact.card_type.id, \
+            '%s</factid><factviewid>%s</factviewid><time>%s</time></item>' \
+            % (event['event'], card.id, card.fact.card_type.id, \
             ','.join([item.name for item in card.tags]), card.grade, \
             card.easiness, card.last_rep, card.next_rep, card.fact.id, \
             card.fact_view.id, event['time'])
-
+        
     def create_card_type_element(self, event):
+        """XML element for *_card_type events."""
+
         #cardtype = self.database.get_cardtype(event['id'])
         return '<item><event>%s</event><id>%s</id></item>' % \
             (event['event'], event['id'])
 
     def create_repetition_element(self, event):
+        """XML elemnt for repetition event."""
+
         card = self.database.get_card_by_id(event['id'])
-        return '<item/><event>%s</event><id>%s</id><grade>%s</grade><easiness>'\
+        return '<item><event>%s</event><id>%s</id><grade>%s</grade><easiness>'\
             '%s</easiness><newinterval>%s</newinterval><thinkingtime>%s' \
             '</thinkingtime><time>%s</time></item>' % (event['event'], card.id,\
             card.grade, card.easiness, event['interval'], event['thinking'],\
             event['time'])
 
-    def apply_event(self, event):
-        print "EventManager:apply_event()"
-        print event
+    def parse_history(self, history):
+        """Parses XML history."""
+
+
+    def apply_history(self, history):
+        history = ElementTree.fromstring(history)
+        print history
 
