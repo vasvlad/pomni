@@ -379,6 +379,10 @@ class SQLite(Database):
         tag = Tag(sql_res["name"], sql_res["id"])
         tag._id = _id
         return tag
+
+    def get_tag_by_id(self, id):
+        return self.get_tag(self.con.execute(\
+            "select _id from tags where id=?", (id,)).fetchone()["_id"])
     
     def delete_tag(self, tag):
         self.con.execute("delete from tags where _id=?", (tag._id,))
@@ -434,9 +438,8 @@ class SQLite(Database):
         return fact
     
     def get_fact_by_id(self, id):        
-        sql_res = self.con.execute("select * from facts where id=?",
-                                   (id, )).fetchone()
-        return self.get_fact(sql_res["_id"])
+        return self.get_fact(self.con.execute(\
+            "select _id from facts where id=?", (id, )).fetchone()["_id"])
 
     def update_fact(self, fact):
         # Update fact.
@@ -513,9 +516,8 @@ class SQLite(Database):
         return card
 
     def get_card_by_id(self, id):
-        sql_res = self.con.execute("select * from cards where id=?",
-                                   (id, )).fetchone()
-        return self.get_card(sql_res["_id"])
+        return self.get_card(self.con.execute(\
+            "select _id from cards where id=?", (id, )).fetchone()["_id"])
     
     def update_card(self, card, repetition_only=False):
         self.con.execute("""update cards set _fact_id=?, fact_view_id=?,
@@ -573,6 +575,7 @@ class SQLite(Database):
             setattr(fact_view, attr, sql_res[attr])
         self._get_extra_data(sql_res, fact_view)
         return fact_view
+
     
     #
     # Card types.
@@ -614,7 +617,7 @@ class SQLite(Database):
             card_type.fact_views.append(self._get_fact_view(\
                 cursor["_fact_view_id"]))
         return card_type
-        
+
     def update_card_type(self, card_type):
         self.con.execute("""update card_types set name=?, fields=?,
             unique_fields=?, keyboard_shortcuts=?, extra_data=? where id=?""",
@@ -888,9 +891,9 @@ class SQLite(Database):
             select event, timestamp from history where event=?""", \
                 (SYNC,)).fetchall()
         if not items:
-            return self.con.execute("""
-                select event, timestamp, object_id from history"""
-            ).fetchall()
+            return self.con.execute("""select event, timestamp, object_id, \
+                new_interval, thinking_time from history""").fetchall()
         else:
-            return self.con.execute("""select event, timestamp, object_id from 
-                history where timestamp > %s""" % (items[-1][1])).fetchall()
+            return self.con.execute("""select event, timestamp, object_id, \
+                new_interval, thinking_time from history where timestamp > %s \
+                """ % (items[-1][1])).fetchall()
