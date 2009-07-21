@@ -25,9 +25,13 @@ def main(argv):
             server.start()
             app.finalise()
         elif mode == "client":
+            app = app_factory()
+            app.initialise(os.path.abspath(os.path.join(os.getcwdu(), "testdb")))
+            database = app.database()
             transport = HttpTransport(uri)
-            client = Client(transport, "database")
+            client = Client(transport, database)
             client.start()
+            app.finalise()
         else:
             print "unknown mode"
 
