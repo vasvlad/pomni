@@ -78,8 +78,9 @@ class EventManager:
         """Creates history in XML."""
         history = "<history>"
         for item in self.database.get_history_events():
-            event = {'event': item[0], 'time': item[1], 'id': item[2]}
-            history += "<item>%s</item>" % self.create_event_element(event)
+            event = {'event': item[0], 'time': item[1], 'id': item[2], \
+                'interval': item[3], 'thinking': item[4]}
+            history += self.create_event_element(event).__str__()
         history += "</history>"
         return history
 
@@ -95,19 +96,21 @@ class EventManager:
         elif event_id == events.ADDED_CARD or event_id == events.UPDATED_CARD \
             or event_id == events.DELETED_CARD:
             return self.create_card_element(event)
-        elif event_id == events.ADDED_CARD_TYPE or event_id == events.UPDATED_CARD_TYPE \
-            or event_id == events.DELETED_CARD_TYPE:
+        elif event_id == events.ADDED_CARD_TYPE or \
+            event_id == events.UPDATED_CARD_TYPE or \
+            event_id == events.DELETED_CARD_TYPE:
             return self.create_card_type_element(event)
         elif event_id == events.REPETITION:
             return self.create_repetition_element(event)
         else:
-            return "<event>unknown</event>"
+            return ''
 
     def create_tag_element(self, event):
         """XML element for *_tag events."""
         tag = self.database.get_tag_by_id(event['id'])
-        return '<event>%s</event><id>%s</id><name>%s</name><time>%s</time>'\
-            % (event['event'], event['id'], tag.name, event['time'])
+        return '<item><event>%s</event><id>%s</id><name>%s</name><time>%s' \
+            '</time></item>' % (event['event'], event['id'], tag.name,
+            event['time'])
 
     def create_fact_element(self, event):
         """XML element for *_fact events."""
@@ -115,31 +118,34 @@ class EventManager:
         factdata = ''
         for key, value in fact.data.items():
             factdata += "<%s>%s</%s>" % (key, value, key)
-        return '<event>%s</event><cardtype_id>%s</cardtype_id>'\
-            '<time>%s</time><fact_data>%s</fact_data>' % (event['event'], \
-            fact.card_type.id, event['time'], factdata)
+        return '<item><event>%s</event><cardtype_id>%s</cardtype_id>' \
+            '<time>%s</time><fact_data>%s</fact_data></item>' % \
+            (event['event'], fact.card_type.id, event['time'], factdata)
 
     def create_card_element(self, event):
         """XML element for *.card events."""
         card = self.database.get_card_by_id(event['id'])
-        return '<event>%s</event><id>%s</id><cardtype_id>%s</cardtype_id>'\
-            '<tags>%s</tags><grade>%s</grade><easiness>%s</easiness><lastrep>'\
-            '%s</lastrep><nextrep>%s</nextrep><factid>%s</factid><factviewid>'\
-            '%s</factviewid><time>%s</time>' % (event['event'], card.id,
-            card.fact.card_type.id, ','.join([item.name for item in card.tags]),
-            card.grade, card.easiness, card.last_rep, card.next_rep,
-            card.fact.id, card.fact_view.id, event['time'])
+        return '<item><event>%s</event><id>%s</id><cardtype_id>%s' \
+            '</cardtype_id><tags>%s</tags><grade>%s</grade><easiness>%s' \
+            '</easiness><lastrep>%s</lastrep><nextrep>%s</nextrep><factid>' \
+            '%s</factid><factviewid>%s</factviewid><time>%s</time></event>' \
+            '</item>' % (event['event'], card.id, card.fact.card_type.id, \
+            ','.join([item.name for item in card.tags]), card.grade, \
+            card.easiness, card.last_rep, card.next_rep, card.fact.id, \
+            card.fact_view.id, event['time'])
 
     def create_card_type_element(self, event):
-        #cardtype = self.database.get_cardtype_by_id(event['id'])
-        return '<event>%s</event><id>%s</id>' % (event['event'], event['id'])
+        #cardtype = self.database.get_cardtype(event['id'])
+        return '<item><event>%s</event><id>%s</id></item>' % \
+            (event['event'], event['id'])
 
     def create_repetition_element(self, event):
-        #card = self.database.get_card_by_id(event['id'])
-        return '<event>%s</event><id>%s</id><grade>%s</grade><easiness>%s'\
-            '</easiness><newinterval>%s</newinterval><thinkingtime>%s'\
-            '</thinkingtime><time>%s</time>' % (event['event'], 'id',\
-            'grade', 'easiness', 'newinterval', 'thinkingtime', 'time')
+        card = self.database.get_card_by_id(event['id'])
+        return '<item/><event>%s</event><id>%s</id><grade>%s</grade><easiness>'\
+            '%s</easiness><newinterval>%s</newinterval><thinkingtime>%s' \
+            '</thinkingtime><time>%s</time></item>' % (event['event'], card.id,\
+            card.grade, card.easiness, event['interval'], event['thinking'],\
+            event['time'])
 
     def apply_event(self, event):
         print "EventManager:apply_event()"
