@@ -1,13 +1,16 @@
-from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
-from sync import EventManager
 import mnemosyne.version
-import httplib, urlparse, urllib
-from xml.etree.cElementTree import iterparse
-from xml.etree.ElementTree import parse
+import httplib
+from urlparse import urlparse
+from sync import EventManager
+from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
+
 
 class Client:
-    def __init__(self, transport):
-        self.database = "database"
+    """Base client class for syncing."""
+
+    def __init__(self, transport, database):
+        self.transport = transport
+        self.eman = EventManager(database)
         self.hw_id = 'client_hw_id'
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
@@ -16,8 +19,17 @@ class Client:
         self.password = 'mnemosyne'
         self.cardtypes = N_SIDED_CARD_TYPE
         self.extradata = ''
-        self.eman = EventManager(self.database)
-        self.transport = transport
+
+    def start(self):
+        """Start syncing."""
+        
+        print "getting server history..."
+        server_history = self.transport.get_history()
+        print "applying server history to self..."
+        self.eman.apply_history(server_history)
+        # print "getting client history..."
+        # client_history = self.eman.get_history()
+        # print "sending client history..."
 
     def handshake(self, server):
         """Handshaking with server."""
@@ -32,15 +44,8 @@ class Client:
     def get_history(self):
         """Gets all client history events after the last sync."""
 
-        return self.eman.get_events()
+        return self.eman.get_history()
 
-    def parse_server_history(self, fileobj):
-        """Parses xml history to single events."""
-        context = iterparse(fileobj)
-        for event, element in context:
-            return (event, element)
-            #    #return "1"
-    
     def process_server_history(self):
         """Gets history from server and process it."""
 
@@ -61,19 +66,21 @@ class Client:
     def done(self):
         """Mark in database that sync was completed successfull."""
         pass
-        
+       
 
-class HttpService:
-    """Http service for client."""
+
+class HttpTransport:
+    """Http transport for client."""
 
     def __init__(self, uri):
-        params = urlparse.urlparse(uri)
+        params = urlparse(uri)
         self.host = params.scheme
         self.port = params.path
-        print "httpservice: host = %s, port = %s" % (self.host, self.port)
+        print "HttpTransport: HSOT:%s, PORT:%s" % (self.host, self.port)
 
     def get_history(self):
-        print "httpservice:get_history()"
+        """Gets history from Server."""
+
         conn = httplib.HTTPConnection(self.host, self.port)
         conn.request('GET', '/sync/history')
         return conn.getresponse().read()

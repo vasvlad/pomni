@@ -101,7 +101,7 @@ class Server:
     def get_sync_history(self):
         """Gets all history events after the last sync."""
 
-        print self.eman.get_history()
+        return self.eman.get_history()
 
     def process_history(self, events, partnerid):
         """Process every event and add it to database."""
