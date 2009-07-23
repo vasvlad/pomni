@@ -72,7 +72,7 @@ class Server:
 
     def __init__(self, transport, database):
         self.transport = transport
-        self.eman = EventManager(database)
+        self.eman = EventManager(database, None)
         self.hw_id = "server_hw_id"
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version

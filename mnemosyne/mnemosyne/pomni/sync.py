@@ -29,7 +29,7 @@ def main(argv):
             app.initialise(os.path.abspath(os.path.join(os.getcwdu(), "testdb")))
             database = app.database()
             transport = HttpTransport(uri)
-            client = Client(transport, database)
+            client = Client(transport, database, app.controller())
             client.start()
             app.finalise()
         else:

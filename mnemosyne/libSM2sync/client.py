@@ -8,9 +8,9 @@ from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
 class Client:
     """Base client class for syncing."""
 
-    def __init__(self, transport, database):
+    def __init__(self, transport, database, controller):
         self.transport = transport
-        self.eman = EventManager(database)
+        self.eman = EventManager(database, controller)
         self.hw_id = 'client_hw_id'
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
