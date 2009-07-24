@@ -87,10 +87,10 @@ class EventManager:
         history = "<history>"
         for item in self.database.get_history_events():
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
-                'interval': item[3], 'thinking': item[4]}
+                's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
+                't_time': item[6]}
             history += self.create_event_element(event).__str__()
         history += "</history>"
-        print history
         return history
 
     def create_event_element(self, event):
@@ -99,28 +99,27 @@ class EventManager:
         event_id = event['event']
         if event_id == events.ADDED_TAG or event_id == events.UPDATED_TAG \
             or event_id == events.DELETED_TAG:
-            return self.create_tag_element(event)
+            return self.create_tag_xml_element(event)
         elif event_id == events.ADDED_FACT or event_id == events.UPDATED_FACT \
             or event_id == events.DELETED_FACT:
-            return self.create_fact_element(event)
+            return self.create_fact_xml_element(event)
         elif event_id == events.ADDED_CARD or event_id == events.UPDATED_CARD \
             or event_id == events.DELETED_CARD:
-            return self.create_card_element(event)
+            return self.create_card_xml_element(event)
         elif event_id == events.ADDED_CARD_TYPE or \
             event_id == events.UPDATED_CARD_TYPE or \
-            event_id == events.DELETED_CARD_TYPE:
-            return self.create_card_type_element(event)
-        elif event_id == events.REPETITION:
-            return self.create_repetition_element(event)
+            event_id == events.DELETED_CARD_TYPE or \
+            event_id == events.REPETITION:
+            return self.create_card_xml_element(event)
         else:
             return ''   # No need XML for others events. ?
 
-    def create_tag_element(self, event):
+    def create_tag_xml_element(self, event):
         tag = self.database.get_tag_by_id(event['id'])
         return "<tag ev='%s' id='%s' name='%s'/>" % \
             (event['event'], tag.id, tag.name)
 
-    def create_fact_element(self, event):
+    def create_fact_xml_element(self, event):
         fact = self.database.get_fact_by_id(event['id'])
         dkeys = ','.join(["%s" % key for key,val in fact.data.items()])
         dvalues = ' '.join(["dv%s='%s'" % (num, fact.data.values()[num]) \
@@ -129,42 +128,92 @@ class EventManager:
             (event['event'], fact.id, fact.card_type.id, dkeys, dvalues, \
             event['time'])
 
-    def create_card_element(self, event):
+    def create_card_xml_element(self, event):
         card = self.database.get_card_by_id(event['id'])
         return "<card ev='%s' id='%s' ctid='%s' fid='%s' fvid='%s'" \
-            " tags='%s' gr='%s' e='%s' lr='%s' nr='%s' tm='%s'/>" % \
-            (event['event'], card.id, card.fact.card_type.id, card.fact.id, \
-            card.fact_view.id, ','.join([item.name for item in card.tags]), \
-            card.grade, card.easiness, card.last_rep, card.next_rep, \
-            event['time'])
+            " tags='%s' gr='%s' e='%s' lr='%s' nr='%s' sint='%s' aint='%s'" \
+            " nint='%s' ttm='%s' tm='%s'/>" % (event['event'], card.id, \
+            card.fact.card_type.id, card.fact.id, card.fact_view.id, \
+            ','.join([item.name for item in card.tags]), card.grade, \
+            card.easiness, card.last_rep, card.next_rep, event['s_int'], \
+            event['a_int'], event['n_int'], event['t_time'], event['time'])
         
-    def create_card_type_element(self, event):
-        cardtype = self.database.get_cardtype(event['id'])
+    def create_card_type_xml_element(self, event):
+        cardtype = self.database.get_card_type(event['id'])
         fields = [key for key,value in cardtype.fields]
         return "<ctype ev='%s' id='%s' name='%s' f='%s' uf='%s' ks='%s'" \
             " edata='%s'/>" % (event['event'], cardtype.id, cardtype.name, \
             ','.join(fields), ','.join(cardtype.unique_fields), '', '')
 
-    def create_repetition_element(self, event):
-        card = self.database.get_card_by_id(event['id'])
-        return "<rep ev='%s' id='%s' gr='%s' e='%s' nint='%s' thtm='%s'" \
-            " tm='%s'/>" % (event['event'], card.id, card.grade, card.easiness,\
-            event['interval'], event['thinking'], event['time'])
+    def create_object_from_xml(self, item):
+        class DictClass(dict):
+            pass
+        obj_type = item.tag
+        if obj_type == 'fact':
+            dkeys = item.get('dk').split(',')
+            dvals = [item.get("dv%s" % num) for num in range(len(dkeys))]
+            fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
+            card_type = self.database.get_card_type(item.get('ctid'))
+            creation_time = int(item.get('tm'))
+            fact_id = item.get('id')
+            return Fact(fact_data, card_type, creation_time, fact_id)
+        elif obj_type == 'card':
+            card = DictClass()
+            card.id = item.get('id')
+            card.fact_view = DictClass()
+            card.fact_view.id = item.get('fvid')
+            card.fact = self.database.get_fact_by_id(item.get('fid'))
+            card.tags = set(self.database.get_or_create_tag_with_name(tag_name) \
+                for tag_name in item.get('tags').split(','))
+            card.grade = int(item.get('gr'))
+            card.easiness = float(item.get('e'))
+            card.acq_reps, card.ret_reps = 0, 0
+            card.lapses = 0
+            card.acq_reps_since_lapse, card.ret_reps_since_lapse = 0, 0
+            card.last_rep = int(item.get('lr'))
+            card.next_rep = int(item.get('nr'))
+            card.extra_data = 0
+            card.scheduler_data = 0
+            card.active, card.in_view = True, True
+            #for repetition event
+            try:
+                card.scheduled_interval = int(item.get('sint'))
+            except ValueError:
+                card.scheduled_interval = ''
+            try:
+                card.actual_interval = int(item.get('aint'))
+            except ValueError:
+                card.actual_interval = ''
+            try:
+                card.new_interval = int(item.get('nint'))
+            except:
+                card.new_interval = ''
+            try:
+                card.thinking_time = int(item.get('ttm'))
+            except:
+                card.thinking_time = ''
+            return card
+        elif obj_type == 'tag':
+            return Tag(item.get('name'), item.get('id'))
+        elif obj_type == 'ctype':
+            cardtype = DictClass()
+            cardtype.id = item.get('id')
+            cardtype.name = item.get('name')
+            cardtype.fields = item.get('f').split(',')
+            cardtype.unique_fields = item.get('uf').split(',')
+            cardtype.keyboard_shortcuts, cardtype.extra_data = {}, {}
+            return cardtype
 
-    #FIXME: this is modified add_new_cards function from default_controller
-    def add_card(self, fact, card_type, grade, tags):
-        pass
 
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
         for child in ElementTree.fromstring(history).getchildren():
             event = int(child.get('ev'))
-            """
             obj = self.create_object_from_xml(child)
             if event == events.ADDED_FACT:
-                if not self.database.has_fact_with_data(obj.data, \
-                    obj.card_type):
+                if not self.database.has_fact_with_data(\
+                    obj.data, obj.card_type):
                     self.database.add_fact(obj)
             elif event == events.UPDATED_FACT:
                 self.database.update_fact(obj)
@@ -178,53 +227,13 @@ class EventManager:
             elif event == events.DELETED_TAG:
                 self.database.delete_tag(obj)
             elif event == events.ADDED_CARD:
-                #FIXME
-                self.add_card(obj.fact, obj.fact.card_type, obj.grade, obj.tags)
+                if not self.database.get_card_by_id(obj.id):
+                    self.database.add_card(obj)
             elif event == events.UPDATED_CARD:
-                # FIXME
-                print "apdating card"
+                self.database.update_card(obj)
             elif event == events.DELETED_CARD:
                 self.database.delete_card(obj)
             elif event == events.REPETITION:
-                print "repetition"
-            """
-
-    def create_object_from_xml(self, item):
-        """Creates real object from XML Element."""
-        
-        obj_type = item.tag
-        if obj_type == 'fact':
-            card_type = self.database.get_card_type(item.get('ctid'))
-            dkeys = item.get('dk').split(',')
-            dvalues = []
-            for num in len(dkeys):
-                dvalues.append(item.get("dv%s" % num))
-            fact_data = dict([(key, value) for key, value in dkeys,dvalues])
-            print "create_fact_from_xml, fact_data=", fact_data
-            creation_time = item.get('tm')
-            fact_id = item.get('id')
-            return Fact(fact_data, card_type, creation_time, fact_id)
-        elif obj_type == 'card':
-            class DictClass(dict):
-                pass
-            card = DictClass()
-            card.id = item.get('id')
-            card_type = DictClass()
-            card_type.id = item.get('ctid')
-            card.fact = self.database.get_fact_by_id(item.get('fid'))
-            card.tags = set(self.database.get_or_create_tag_with_name(tag_name) \
-                for tag_name in item.get('tags').split(','))
-            card.grade = int(item.get('gr'))
-            card.easiness = int(item.get('e'))
-            card.last_rep = int(item.get('lr'))
-            card.next_rep = int(item.get('nr'))
-            return card
-        elif obj_type == 'tag':
-            return Tag(item.get('name'), item.get('id'))
-        elif obj_type == 'ctype':
-            print "parsing cardtype from xml"
-        elif obj_type == 'rep':
-            print 'repetition'
-        return ""
-
+                self.database.repetition(obj, obj.scheduled_interval, \
+                    obj.actual_interval, obj.new_interval, obj.thinking_time)
 
