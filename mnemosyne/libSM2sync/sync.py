@@ -90,6 +90,7 @@ class EventManager:
                 'interval': item[3], 'thinking': item[4]}
             history += self.create_event_element(event).__str__()
         history += "</history>"
+        print history
         return history
 
     def create_event_element(self, event):
@@ -115,100 +116,55 @@ class EventManager:
             return ''   # No need XML for others events. ?
 
     def create_tag_element(self, event):
-        """Creates XML element for *_tag events."""
-
         tag = self.database.get_tag_by_id(event['id'])
-        return '<item><type>tag</type><event>%s</event><id>%s</id><name>%s' \
-            '</name><time>%s</time></item>' % (event['event'], event['id'], \
-            tag.name, event['time'])
+        return "<tag ev='%s' id='%s' name='%s'/>" % \
+            (event['event'], tag.id, tag.name)
 
     def create_fact_element(self, event):
-        """Creates XML element for *_fact events."""
-
         fact = self.database.get_fact_by_id(event['id'])
-        factdata = ''
-        for key, value in fact.data.items():
-            factdata += "<%s>%s</%s>" % (key, value, key)
-        return '<item><type>fact</type><event>%s</event><cardtype_id>%s' \
-            '</cardtype_id><time>%s</time><fact_data>%s</fact_data><id>' \
-            '%s</id></item>' % (event['event'], fact.card_type.id, \
-            event['time'], factdata, fact.id)
+        dkeys = ','.join(["%s" % key for key,val in fact.data.items()])
+        dvalues = ' '.join(["dv%s='%s'" % (num, fact.data.values()[num]) \
+            for num in range(len(fact.data))])
+        return "<fact ev='%s' id='%s' ctid='%s' dk='%s' %s tm='%s'/>" % \
+            (event['event'], fact.id, fact.card_type.id, dkeys, dvalues, \
+            event['time'])
 
     def create_card_element(self, event):
-        """Creates XML element for *_card events."""
-
         card = self.database.get_card_by_id(event['id'])
-        return '<item><type>card</type><event>%s</event><id>%s</id>' \
-            '<cardtype_id>%s</cardtype_id><tags>%s</tags><grade>%s</grade>' \
-            '<easiness>%s</easiness><lastrep>%s</lastrep><nextrep>%s' \
-            '</nextrep><factid>%s</factid><factviewid>%s</factviewid><time>' \
-            '%s</time></item>' % (event['event'], card.id, \
-            card.fact.card_type.id, ','.join([item.name for item in card.tags]),
+        return "<card ev='%s' id='%s' ctid='%s' fid='%s' fvid='%s'" \
+            " tags='%s' gr='%s' e='%s' lr='%s' nr='%s' tm='%s'/>" % \
+            (event['event'], card.id, card.fact.card_type.id, card.fact.id, \
+            card.fact_view.id, ','.join([item.name for item in card.tags]), \
             card.grade, card.easiness, card.last_rep, card.next_rep, \
-            card.fact.id, card.fact_view.id, event['time'])
+            event['time'])
         
     def create_card_type_element(self, event):
-        """Creates XML element for *_card_type events."""
-
-        #cardtype = self.database.get_cardtype(event['id'])
-        return '<item><type>cardtype</type><event>%s</event><id>%s</id>' \
-        '</item>' % (event['event'], event['id'])
+        cardtype = self.database.get_cardtype(event['id'])
+        fields = [key for key,value in cardtype.fields]
+        return "<ctype ev='%s' id='%s' name='%s' f='%s' uf='%s' ks='%s'" \
+            " edata='%s'/>" % (event['event'], cardtype.id, cardtype.name, \
+            ','.join(fields), ','.join(cardtype.unique_fields), '', '')
 
     def create_repetition_element(self, event):
-        """Creates XML element for repetition event."""
-
         card = self.database.get_card_by_id(event['id'])
-        return '<item><type>repetition</type><event>%s</event><id>%s</id>' \
-            '<grade>%s</grade><easiness>%s</easiness><newinterval>%s' \
-            '</newinterval><thinkingtime>%s</thinkingtime><time>%s</time>' \
-            '</item>' % (event['event'], card.id, card.grade, card.easiness, \
+        return "<rep ev='%s' id='%s' gr='%s' e='%s' nint='%s' thtm='%s'" \
+            " tm='%s'/>" % (event['event'], card.id, card.grade, card.easiness,\
             event['interval'], event['thinking'], event['time'])
 
     #FIXME: this is modified add_new_cards function from default_controller
     def add_card(self, fact, card_type, grade, tags):
-        if grade in [0,1]:
-            raise AttributeError, "Use -1 as grade for unlearned cards."
-        db = self.database
-        duplicates = db.duplicates_for_fact(fact)
-        #db.add_fact(fact)
-        for card in card_type.create_related_cards(fact):
-            if grade >= 2:
-                #self.scheduler().set_initial_grade(card, grade)
-                print 'sheduling'
-            db.add_card(card)  
-        merged_fact_data = copy.copy(fact.data)
-        for duplicate in duplicates:
-            for key in fact_data:
-                if key not in card_type.required_fields():
-                    merged_fact_data[key] += " / " + duplicate[key]
-            db.delete_fact_and_related_data(duplicate)
-        #fact.data = merged_fact_data
-        #self.component_manager.get_current("edit_fact_dialog")\
-        #  (fact, self.component_manager, allow_cancel=False).activate()
-        #return
-        #db.add_fact(fact)
-        #cards = []
-        #for card in card_type.create_related_cards(fact):
-        #    #self.log().added_card(card)
-        #    #if grade >= 2:
-        #    #    self.scheduler().set_initial_grade(card, grade)
-        #    card.tags = tags
-        #    db.add_card(card)
-        #    cards.append(card)
-        db.save()
-        #if self.review_controller().learning_ahead == True:
-        #    self.review_controller().reset()
-        #return cards # For testability.
+        pass
 
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
-        for element in ElementTree.fromstring(history).findall('item'):
-            event = int(element.find('event').text)
-            obj = self.create_object_from_xml(element)
+        for child in ElementTree.fromstring(history).getchildren():
+            event = int(child.get('ev'))
+            """
+            obj = self.create_object_from_xml(child)
             if event == events.ADDED_FACT:
-                if not self.database.has_fact_with_data(\
-                    obj.data, obj.card_type):
+                if not self.database.has_fact_with_data(obj.data, \
+                    obj.card_type):
                     self.database.add_fact(obj)
             elif event == events.UPDATED_FACT:
                 self.database.update_fact(obj)
@@ -231,34 +187,43 @@ class EventManager:
                 self.database.delete_card(obj)
             elif event == events.REPETITION:
                 print "repetition"
+            """
 
     def create_object_from_xml(self, item):
         """Creates real object from XML Element."""
         
-        obj_type = item.find('type').text
+        obj_type = item.tag
         if obj_type == 'fact':
-            card_type = self.database.get_card_type( \
-                item.find('cardtype_id').text)
-            fact_data = dict([(key, item.find('fact_data').find(key).text) \
-                for key, value in card_type.fields])
-            creation_time = item.find('time').text
-            fact_id = item.find('id').text
+            card_type = self.database.get_card_type(item.get('ctid'))
+            dkeys = item.get('dk').split(',')
+            dvalues = []
+            for num in len(dkeys):
+                dvalues.append(item.get("dv%s" % num))
+            fact_data = dict([(key, value) for key, value in dkeys,dvalues])
+            print "create_fact_from_xml, fact_data=", fact_data
+            creation_time = item.get('tm')
+            fact_id = item.get('id')
             return Fact(fact_data, card_type, creation_time, fact_id)
         elif obj_type == 'card':
             class DictClass(dict):
                 pass
             card = DictClass()
-            card.fact = self.database.get_fact_by_id(item.find('factid').text)
-            tags = set(self.database.get_or_create_tag_with_name(tag_name) \
-                for tag_name in item.find('tags').text.split(','))
-            card.tags = tags
-            card.grade = int(item.find('grade').text)
+            card.id = item.get('id')
+            card_type = DictClass()
+            card_type.id = item.get('ctid')
+            card.fact = self.database.get_fact_by_id(item.get('fid'))
+            card.tags = set(self.database.get_or_create_tag_with_name(tag_name) \
+                for tag_name in item.get('tags').split(','))
+            card.grade = int(item.get('gr'))
+            card.easiness = int(item.get('e'))
+            card.last_rep = int(item.get('lr'))
+            card.next_rep = int(item.get('nr'))
             return card
         elif obj_type == 'tag':
-            return Tag(item.find('name').text, item.find('id').text)
-        elif obj_type == 'cardtype':
+            return Tag(item.get('name'), item.get('id'))
+        elif obj_type == 'ctype':
             print "parsing cardtype from xml"
-        elif obj_type == 'repetition':
+        elif obj_type == 'rep':
             print 'repetition'
         return ""
 
