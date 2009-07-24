@@ -3,9 +3,7 @@ import os
 sys.path.insert(0, '../../')
 sys.path.insert(0, "../")
 from libSM2sync.server import Server
-from libSM2sync.server import WSGI
 from libSM2sync.client import Client
-from libSM2sync.client import HttpTransport
 from pomni.factory import app_factory
 
 def main(argv):
@@ -20,16 +18,14 @@ def main(argv):
             app = app_factory()
             app.initialise(os.path.abspath(os.path.join(os.getcwdu(), ".pomni")))
             database = app.database()
-            transport = WSGI(uri)
-            server = Server(transport, database)
+            server = Server(uri, database)
             server.start()
             app.finalise()
         elif mode == "client":
             app = app_factory()
             app.initialise(os.path.abspath(os.path.join(os.getcwdu(), "testdb")))
             database = app.database()
-            transport = HttpTransport(uri)
-            client = Client(transport, database, app.controller())
+            client = Client(uri, database, app.controller())
             client.start()
             app.finalise()
         else:
