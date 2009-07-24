@@ -1,3 +1,7 @@
+"""
+Client.
+"""
+
 import mnemosyne.version
 import httplib
 from urlparse import urlparse
@@ -8,8 +12,10 @@ from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
 class Client:
     """Base client class for syncing."""
 
-    def __init__(self, transport, database, controller):
-        self.transport = transport
+    def __init__(self, uri, database, controller):
+        params = urlparse(uri)
+        self.host = params.scheme
+        self.port = params.path
         self.eman = EventManager(database, controller)
         self.hw_id = 'client_hw_id'
         self.app_name = 'Mnemosyne'
@@ -23,13 +29,10 @@ class Client:
     def start(self):
         """Start syncing."""
         
-        print "getting server history..."
-        server_history = self.transport.get_history()
-        print "applying server history to self..."
+        client_history = self.eman.get_history()
+        server_history = self.get_server_history()
         self.eman.apply_history(server_history)
-        # print "getting client history..."
-        # client_history = self.eman.get_history()
-        # print "sending client history..."
+        self.send_history(client_history)
 
     def handshake(self, server):
         """Handshaking with server."""
@@ -41,21 +44,25 @@ class Client:
         #return False
         return True
 
-    def get_history(self):
-        """Gets all client history events after the last sync."""
+    def get_server_history(self):
+        """Connects to server and gets server history."""
 
-        return self.eman.get_history()
+        conn = httplib.HTTPConnection(self.host, self.port)
+        conn.request('GET', '/sync/history')
+        server_history = conn.getresponse().read()
+        conn.close()
+        return server_history
 
-    def process_server_history(self):
-        """Gets history from server and process it."""
+    def send_history(self, history):
+        """Sends client history to server."""
 
-        print "client:process_history()"
-        history = self.transport.get_history()
-        print history
-        #for event in self.parse_server_history(self.transport.get_history):
-            #self.eman.apply_event(event)
-            #print event
-
+        conn = httplib.HTTPConnection(self.host, self.port)
+        conn.request('PUT', '/sync/history')
+        conn.send(history)
+        response = conn.getresponse().read()
+        conn.close()
+        return response
+        
     def get_sync_params(self):
         """Gets client specific params."""
 
@@ -66,24 +73,3 @@ class Client:
     def done(self):
         """Mark in database that sync was completed successfull."""
         pass
-       
-
-
-class HttpTransport:
-    """Http transport for client."""
-
-    def __init__(self, uri):
-        params = urlparse(uri)
-        self.host = params.scheme
-        self.port = params.path
-        print "HttpTransport: HSOT:%s, PORT:%s" % (self.host, self.port)
-
-    def get_history(self):
-        """Gets history from Server."""
-
-        conn = httplib.HTTPConnection(self.host, self.port)
-        conn.request('GET', '/sync/history')
-        return conn.getresponse().read()
-        #return urllib.urlopen("http://localhost:9999/sync/history")
-
-        
