@@ -9,8 +9,6 @@
 from mnemosyne.libmnemosyne.tag import Tag
 from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger as events
-
-import copy
 from xml.etree import ElementTree
 
 PROTOCOL_VERSION = 0.1
@@ -29,7 +27,7 @@ class Sync(object):
     def start(self):
         """Start syncing."""
 
-        print "Sync:start"
+        print "start syncing..."
         """
         if self.handshake():
             self.client.process_history(self.get_server_history(), \
@@ -45,24 +43,28 @@ class Sync(object):
     def connect(self):
         """Init Server connection."""
 
-        print "Sync:connect"
+        print "connecting..."
 
     def handshake(self):
         """Start handshaking."""
 
-        print "Sync:handshake"
+        print "handshaking..."
+        """
         if not self.server:
             self.connect()
         if not self.client:
             #FIXME: replace "database" by real database
             self.client = Client("database")
         return self.client.handshake(self.server)
+        """
 
     def done(self):
         """Finish syncing."""
 
+        """
         self.client.done()
         self.server.done()
+        """
             
 
 
@@ -90,7 +92,7 @@ class EventManager:
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
             history += self.create_event_element(event).__str__()
-        history += "</history>"
+        history += "</history>\n"
         return history
 
     def create_event_element(self, event):
@@ -121,7 +123,7 @@ class EventManager:
 
     def create_fact_xml_element(self, event):
         fact = self.database.get_fact_by_id(event['id'])
-        dkeys = ','.join(["%s" % key for key,val in fact.data.items()])
+        dkeys = ','.join(["%s" % key for key, val in fact.data.items()])
         dvalues = ' '.join(["dv%s='%s'" % (num, fact.data.values()[num]) \
             for num in range(len(fact.data))])
         return "<fact ev='%s' id='%s' ctid='%s' dk='%s' %s tm='%s'/>" % \
@@ -140,7 +142,7 @@ class EventManager:
         
     def create_card_type_xml_element(self, event):
         cardtype = self.database.get_card_type(event['id'])
-        fields = [key for key,value in cardtype.fields]
+        fields = [key for key, value in cardtype.fields]
         return "<ctype ev='%s' id='%s' name='%s' f='%s' uf='%s' ks='%s'" \
             " edata='%s'/>" % (event['event'], cardtype.id, cardtype.name, \
             ','.join(fields), ','.join(cardtype.unique_fields), '', '')
@@ -163,8 +165,8 @@ class EventManager:
             card.fact_view = DictClass()
             card.fact_view.id = item.get('fvid')
             card.fact = self.database.get_fact_by_id(item.get('fid'))
-            card.tags = set(self.database.get_or_create_tag_with_name(tag_name) \
-                for tag_name in item.get('tags').split(','))
+            card.tags = set(self.database.get_or_create_tag_with_name(\
+                tag_name) for tag_name in item.get('tags').split(','))
             card.grade = int(item.get('gr'))
             card.easiness = float(item.get('e'))
             card.acq_reps, card.ret_reps = 0, 0
