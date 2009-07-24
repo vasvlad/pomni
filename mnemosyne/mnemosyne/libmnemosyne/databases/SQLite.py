@@ -516,8 +516,11 @@ class SQLite(Database):
         return card
 
     def get_card_by_id(self, id):
-        return self.get_card(self.con.execute(\
-            "select _id from cards where id=?", (id, )).fetchone()["_id"])
+        sql_res = self.con.execute("select _id from cards where id=?",\
+            (id, )).fetchone()
+        if sql_res:
+            return self.get_card(sql_res["_id"])
+        return None
     
     def update_card(self, card, repetition_only=False):
         self.con.execute("""update cards set _fact_id=?, fact_view_id=?,
@@ -645,6 +648,22 @@ class SQLite(Database):
         self.con.execute("delete from card_types where id=?",
             (card_type.id, ))
         self.log().deleted_card_type(card_type)
+
+
+    #FIXME: get new version of SQLite
+    def repetition(self, card, scheduled_interval, actual_interval, \
+                   new_interval, noise=0):
+        self.database().con.execute(\
+            """insert into history(event, timestamp, object_id, grade,
+            easiness, acq_reps, ret_reps, lapses, acq_reps_since_lapse,
+            ret_reps_since_lapse, scheduled_interval, actual_interval,
+            new_interval, thinking_time)
+            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (18, int(time.time()), card.id, card.grade,
+            card.easiness, card.acq_reps, card.ret_reps, card.lapses,
+            card.acq_reps_since_lapse, card.ret_reps_since_lapse,
+            scheduled_interval, actual_interval, new_interval,
+            int(self.stopwatch().time())))
 
     #
     # Process media files in fact data.
@@ -892,8 +911,10 @@ class SQLite(Database):
                 (SYNC,)).fetchall()
         if not items:
             return self.con.execute("""select event, timestamp, object_id, \
-                new_interval, thinking_time from history""").fetchall()
+                scheduled_interval, actual_interval, new_interval, \
+                thinking_time from history""").fetchall()
         else:
             return self.con.execute("""select event, timestamp, object_id, \
-                new_interval, thinking_time from history where timestamp > %s \
+                scheduled_interval, actual_interval, new_interval, \
+                thinking_time from history where timestamp > %s \
                 """ % (items[-1][1])).fetchall()
