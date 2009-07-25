@@ -43,7 +43,7 @@ class Html(Renderer):
         if card_type.id not in self._css:
             self._css[card_type.id] = """
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <style type="text/css">*{font-size:30px;}
+            <style type="text/css">*{font-size:30px;font-family:Nokia Sans}
             table {height:100%;margin-left:auto;margin-right:auto;}\n"""
             for key in card_type.keys():
                 self._css[card_type.id] += "div#"+ key + \
