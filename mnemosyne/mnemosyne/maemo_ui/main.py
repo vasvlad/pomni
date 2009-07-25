@@ -128,6 +128,13 @@ class MainWdgt(MainWidget):
 
     def input_(self):
         """Activate input mode."""
+       
+        # reset review controller if needed
+        if "review" not in self.widgets:
+            self.show_mode("review") # without this line 
+                                     # "window" widget is not defined 
+            self.review_controller().reset()
+            self.widgets["review"] = self.review_controller().widget
 
         self.show_mode("input")
         self.controller().add_cards()
