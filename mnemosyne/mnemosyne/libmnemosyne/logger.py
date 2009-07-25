@@ -85,6 +85,9 @@ class Logger(Component):
     def deleted_media(self, filename, fact):
         pass
 
+    def synchronize(self):
+        pass
+
     def dump_to_txt_log(self):
 
         """If we're not logging to a standard text file, we need to dump the

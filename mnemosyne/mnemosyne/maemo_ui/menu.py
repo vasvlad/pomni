@@ -40,7 +40,7 @@ class MenuWidget(UiComponent):
 
         self.w_tree.signal_autoconnect(\
             dict([(mode, getattr(self, mode + "_cb")) \
-                for mode in ["input", "review", "configure", "exit"]]))
+                for mode in ["input", "review", "configure", "exit", "sync"]]))
 
     # callbacks
     def input_cb(self, widget):
@@ -50,6 +50,12 @@ class MenuWidget(UiComponent):
     def review_cb(self, widget):
         """Go to review mode."""
         self.main_widget().review_()
+
+    def sync_cb(self, widget):
+        # test xml generation in EventManager
+        from libSM2sync.sync import EventManager
+        em = EventManager(self.database())
+        em.get_events()
 
     def configure_cb(self, widget):
         """Go to configuration mode."""
