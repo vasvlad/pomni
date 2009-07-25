@@ -1,3 +1,9 @@
+python-libmnemosyne (2.0.0-12) unstable; urgency=low
+
+  * got latest code from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 18 Jul 2009 15:23:42 +0300
+
 python-libmnemosyne (2.0.0-11) unstable; urgency=low
 
   * used setuptools.get_packages for collecting package names 

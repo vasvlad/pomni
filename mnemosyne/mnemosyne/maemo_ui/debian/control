@@ -1,0 +1,46 @@
+Source: mnemosyne
+Section: user/education
+Priority: optional
+Maintainer: Ed Bartosh <bartosh@gmail.com>
+Build-Depends: debhelper (>= 5), python2.5, python-setuptools
+Standards-Version: 3.8.0
+
+Package: mnemosyne
+Architecture: all
+Depends: python2.5, python2.5-gtk2, python-libmnemosyne (>= 2.0.0-12), python-gtkhtml2, python2.5-gstreamer | python-gst0.10
+Description: Learning tool based on spaced repetition technique
+ This is mobile version of Mnemosyne software
+ It resembles a traditional flash-card program to help you
+ memorise question/answer pairs, but with an important twist: it uses a
+ sophisticated algorithm to schedule the best time for an item to come up for
+ review. Difficult items that you tend to forget quickly will be scheduled more
+ often, while Mnemosyne won't waste your time on things you remember well.
+XB-Maemo-Display-Name: Mnemosyne
+XB-Maemo-Icon-26:
+ iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+ WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2QcTCQstoJN9FwAABTNJREFUSMedVm1MW1UYfs65t739
+ pFAKpV3Hx4RiBxEoyKawOMtcYrIP2YzOHybDbUaj8YdkuGicRhb/6C/9wbK4zA39s2nmtjBImDGR
+ xLEw3Be4cidQCo5C+WppoZ/3+IOysQ+g25uc5ObmvM9z3ue+9zkv8ISxb99+8+eHv9j0pHl8shvr
+ 6+uV9vKKj/Jtz33KpDgdHnav//HEieFk87nVNhw5coTs3VtXW7255td1z5a9SeUqQanWyrUqeYaM
+ 58729PQAALZv386JosiWwyErkZw81VxSUGj7JjXDsiUqUUIIQMhCUjw8K5063rSpz+n0AHgHgJUx
+ 9lZLS0s8aemam3/KzLcWHk5JNx2IE0EelRgIAWiChBCAU2pp+fMbTvc5nZMJHEYIKQXQ/ThM+vCL
+ s2d/c5RVVvVoM3M/iDC5nLElJEsXgIoNVWuMxiwDABBCCIBdy6nzCFEgEPSDylIjUQk0IewiMMEC
+ ISUElBKAyvDa7tczAHCUUvA8X1NdXZ2aFNH09ORV713XSTlPHzj9/WrIvWdKgOKSctn6oiIDz/MQ
+ BEGrVqu3JtV1ra2tsJeVdq9da6mTQJU8z9+rilJyT0KaWACQk5OtyjNpUsxrzEIsLmWWl5ef67p6
+ NbJqe7e1tc6+UvOyZLZkb2UgS74ReYBksTJNig7zMx5+iz1d6agqzQ/GhPlonHWIorj6f1RYaL1m
+ Npt2C+pUA6UkId992Qi9T8gYoNSmY+puP9QaLb7/4ZeccCTisFqtuVarNSiKoocuR9TY2Djf3XW5
+ gUphFouEH93AFggYgNDcLDwDN2FI12Fo1BebDQQjAAoAvA2g+LHNsDTuiGLL4J3eNl4mS4CzBXAG
+ SAyAFIfL+Tdi4zdQaTNAp9OhR/xvjjG26BCjAM6s6HXFb3DVnVLTZVm7/KDJkutQaNIEjqNgADiO
+ 4q7LCW5+FBWFFnCcHowxgFDc/OdOkFIKjuMQDoePXbx4MbRsRbZdXLHaSEZVqcQ+MeHtvdZ1+SjP
+ URAAgekxuG/9jkJDGCW2bHC8HISTg3Ay+OYkuIdHgoIgAIB7cnLy3IoWJE+jPUo9W6f25hvfd7zU
+ JHo8Y85rnXGlXOLyDHHYbMYFcMqBcDIQwgEsjr4BV4Tj+AjP8/D5fMeuXLkSXpHoxvEoAAw0bSv8
+ 9owmXlt1qwOGS5cQ2FCJuVcdGBqPwGzUQOC5Bb8gFACD2D8SVCgUCAQC/W63uyXp+ygyNLROP3Uh
+ 3B/yBH1+vz48NoZcQQHBbkd7exumVIpIlsUYt1nzBLPRQMV/B4OUUjYxMXHU6XRGkromTn8J9Itr
+ drgnigbz5PIPWSxW4GFMZ5iZUZbq9TaNSoXA1BQGFIqQaDKNzgFhiTH4/f7erq6uPW63O5bUxbe/
+ Fia9flaTZ7J/PCWTnMoZKZQyNvbHaEXFd+My2Z/R/n47J4qpapeLf8bvTyvbubO7vbv7kNfrPd/b
+ 2+td1VQXQ62DkJZdIDOWWP7KMs6EVBbLed5ojBvU6lBjc/PPs3v2FEcPHPhMsXGjj01PI2VkpLqh
+ oeF6Z2dn3xPNDIRhiNe+UBkPXrglZL0boTmZs6O3b183Gww7APTW19cHAXzd1tp6UtPR8Ulcp/M5
+ HA4fnjIEAMb36uq2bdm8uRZAzaGDB78C8CKAIgBZABTJAK00M6gA5ADIo5TmMsbWMsayMjMylONe
+ rwuAG8AQgEEALgBzTzsFsYS0csYYBRAHEAjOzY0BGH9o+QFIT1vR0sMoEjIm3BVRAGEAocQBVo3/
+ Ad0T/IwwDdDiAAAAAElFTkSuQmCC
+ ====

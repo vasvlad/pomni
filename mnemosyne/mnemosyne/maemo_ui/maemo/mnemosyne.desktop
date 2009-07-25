@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=2.0.0
+Name=Mnemosyne
+Exec=/usr/bin/mnemosyne
+Type=Application
+Icon=mnemosyne
+X-Osso-Service=org.mnemosyneproj.mnemosyne
+X-Osso-Type=application/x-executable
