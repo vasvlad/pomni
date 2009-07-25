@@ -47,6 +47,8 @@ class ConfigHook(Component):
 
             self.config().setdefault(key, value)
 
+        self.config()["upload_logs"] = False
+
 def app_factory(interface=None):
     """Mnemosyne application factory."""
 
