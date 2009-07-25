@@ -73,13 +73,11 @@ class MnemosyneOut(Mnemosyne, UiComponent):
 
 
         self.initialise(datadir)
+        self.review_controller().reset()
 
         self.card_type = [ct for ct in self.card_types() \
                             if ct.name == "Front-to-back only"][0]
         self.saved = False
-        
-        if not category:
-            category = "English-Russian"
         
         self.category = category #Category(category)
 
@@ -88,7 +86,7 @@ class MnemosyneOut(Mnemosyne, UiComponent):
 
         data = {"q": row[0], "a": row[1]}
 
-        self.ui_controller_main().create_new_cards(data, self.card_type, -1, 
+        self.controller().create_new_cards(data, self.card_type, -1, 
                                             [self.category])
 
     def savedb(self):
@@ -110,7 +108,7 @@ def parse_commandline(argv):
     parser = OptionParser(usage = "%prog [options] <csv file>")
 
     parser.add_option("-c", "--category", help="specify category name", 
-        metavar="category")
+        metavar="category", default="English-Russian")
     parser.add_option("-f", "--format", type="choice", 
         choices=("mnemosyne", "text"), default="mnemosyne", metavar="format",
         help="output format: mnemosyne or text, [default: %default]")
