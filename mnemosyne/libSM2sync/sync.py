@@ -83,11 +83,11 @@ class EventManager:
     def set_sync_params(self, params):
         pass 
 
-    def get_history(self):
+    def get_history(self, machine_id):
         """Creates history in XML."""
         
         history = "<history>"
-        for item in self.database.get_history_events():
+        for item in self.database.get_history_events(machine_id):
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}

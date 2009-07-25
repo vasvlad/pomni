@@ -30,7 +30,8 @@ class Client:
     def start(self):
         """Start syncing."""
         
-        client_history = self.eman.get_history()
+        #FIXME: replace by real machine id
+        client_history = self.eman.get_history("test")
         server_history = self.get_server_history()
         self.eman.apply_history(server_history)
         self.send_history(client_history)
