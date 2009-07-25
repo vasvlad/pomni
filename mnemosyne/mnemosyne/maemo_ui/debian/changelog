@@ -1,3 +1,14 @@
+mnemosyne (2.0.0~beta2) unstable; urgency=low
+
+  * Crash fix: reset review controller before swithcing 
+    to input mode
+  * regenerated demo database
+  * disabled log uploads
+  * update current font size on the fly  
+  * used font size in input mode
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 25 Jul 2009 21:44:55 +0300
+
 mnemosyne (2.0.0~beta1) unstable; urgency=low
 
   * rewritten everything according to libmnemosyne design
