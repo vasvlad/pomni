@@ -91,7 +91,7 @@ class EventManager:
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
-            history += self.create_event_element(event).__str__()
+            history += str(self.create_event_element(event))
         history += "</history>\n"
         return history
 
@@ -99,19 +99,17 @@ class EventManager:
         """Creates XML representation of event."""
 
         event_id = event['event']
-        if event_id == events.ADDED_TAG or event_id == events.UPDATED_TAG \
-            or event_id == events.DELETED_TAG:
+        if event_id in (events.ADDED_TAG, events.UPDATED_TAG, \
+            events.DELETED_TAG):
             return self.create_tag_xml_element(event)
-        elif event_id == events.ADDED_FACT or event_id == events.UPDATED_FACT \
-            or event_id == events.DELETED_FACT:
+        elif event_id in (events.ADDED_FACT, events.UPDATED_FACT, \
+            events.DELETED_FACT):
             return self.create_fact_xml_element(event)
-        elif event_id == events.ADDED_CARD or event_id == events.UPDATED_CARD \
-            or event_id == events.DELETED_CARD:
+        elif event_id in (events.ADDED_CARD, events.UPDATED_CARD, \
+            events.DELETED_CARD):
             return self.create_card_xml_element(event)
-        elif event_id == events.ADDED_CARD_TYPE or \
-            event_id == events.UPDATED_CARD_TYPE or \
-            event_id == events.DELETED_CARD_TYPE or \
-            event_id == events.REPETITION:
+        elif event_id in (events.ADDED_CARD_TYPE, events.UPDATED_CARD_TYPE, \
+            events.DELETED_CARD_TYPE, events.REPETITION):
             return self.create_card_xml_element(event)
         else:
             return ''   # No need XML for others events. ?
@@ -174,8 +172,7 @@ class EventManager:
             card.acq_reps_since_lapse, card.ret_reps_since_lapse = 0, 0
             card.last_rep = int(item.get('lr'))
             card.next_rep = int(item.get('nr'))
-            card.extra_data = 0
-            card.scheduler_data = 0
+            card.extra_data, card.scheduler_data = 0, 0
             card.active, card.in_view = True, True
             #for repetition event
             try:
@@ -205,7 +202,6 @@ class EventManager:
             cardtype.unique_fields = item.get('uf').split(',')
             cardtype.keyboard_shortcuts, cardtype.extra_data = {}, {}
             return cardtype
-
 
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
