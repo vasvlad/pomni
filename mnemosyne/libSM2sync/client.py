@@ -4,6 +4,7 @@ Client.
 
 import mnemosyne.version
 import httplib
+import uuid
 from urlparse import urlparse
 from sync import EventManager
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
@@ -17,7 +18,7 @@ class Client:
         self.host = params.scheme
         self.port = params.path
         self.eman = EventManager(database, controller)
-        self.hw_id = 'client_hw_id'
+        self.hw_id = hex(uuid.getnode())
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
         self.protocol_version = PROTOCOL_VERSION

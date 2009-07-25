@@ -3,6 +3,7 @@ Server.
 """
 
 import cgi
+import uuid
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -21,7 +22,7 @@ class Server:
         self.port = int(params.path)
         self.httpd = None
         self.eman = EventManager(database, None)
-        self.hw_id = "server_hw_id"
+        self.hw_id = hex(uuid.getnode())
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
         self.protocol_version = PROTOCOL_VERSION
