@@ -905,16 +905,24 @@ class SQLite(Database):
     # Synchronization
     #
 
-    def get_history_events(self):
-        items = self.con.execute("""
-            select event, timestamp from history where event=?""", \
-                (SYNC,)).fetchall()
-        if not items:
-            return self.con.execute("""select event, timestamp, object_id, \
-                scheduled_interval, actual_interval, new_interval, \
-                thinking_time from history""").fetchall()
+    def get_history_events(self, partner):
+        _id = self.get_last_sync_event(partner)
+        return self.con.execute("""select event, timestamp, object_id,
+            scheduled_interval, actual_interval, new_interval, thinking_time
+            from history where _id>%s""" % _id).fetchall()
+
+    def get_last_sync_event(self, partner):
+        sql_res = self.con.execute("""select _last_history_id from partnerships 
+            where partner=?""", (partner, )).fetchone()
+        if sql_res:
+            return sql_res["_last_history_id"]
         else:
-            return self.con.execute("""select event, timestamp, object_id, \
-                scheduled_interval, actual_interval, new_interval, \
-                thinking_time from history where timestamp > %s \
-                """ % (items[-1][1])).fetchall()
+            self.con.execute("""insert into partnerships(partner, 
+                _last_history_id) values(?,?)""", (partner, 0))
+            return 0
+
+    def update_last_sync_event(self, partner):
+        id = self.con.execute("""select _id from history""").fetchall()[-1][0]
+        self.con.execute("""update partnerships set _last_history_id=? 
+            where partner=?""", (id, partner))
+            
