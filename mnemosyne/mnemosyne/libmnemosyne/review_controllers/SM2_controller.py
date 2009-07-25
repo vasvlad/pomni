@@ -121,22 +121,22 @@ class SM2Controller(ReviewController):
     def get_counters(self):
         if not self.non_memorised_count:
             self.reload_counters()
-        return self.non_memorised_count, self.scheduled_count, self.active_count
+        return self.scheduled_count, self.non_memorised_count, self.active_count
 
     def reload_counters(self):
         sch = self.scheduler()
-        self.non_memorised_count = sch.non_memorised_count()
         self.scheduled_count = sch.scheduled_count()
+        self.non_memorised_count = sch.non_memorised_count()
         self.active_count = sch.active_count()
 
     def update_counters(self, old_grade, new_grade):
         if not self.scheduled_count:
             self.reload_counters()        
-        if old_grade >= 2:
+        if old_grade >= 2 and not self.learning_ahead:
             self.scheduled_count -= 1
         if old_grade >= 2 and new_grade <= 1:
             self.non_memorised_count += 1
-        if old_grade <= 1 and new_grade >= 2:
+        if old_grade <= 1 and new_grade >= 2: 
             self.non_memorised_count -= 1
             
     def update_dialog(self, redraw_all=False):
@@ -163,7 +163,7 @@ class SM2Controller(ReviewController):
         question_label_text = _("Question: ")
         if self.card is not None:
             question_label_text += self.card.tag_string()
-        w.set_question_label(question_label_text)
+        w.set_question_label(question_label_text.replace(_("<default>"), ""))
         # Update question content.
         if self.card is None:
             w.clear_question()

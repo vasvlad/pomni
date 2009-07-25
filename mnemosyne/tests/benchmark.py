@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import time
 import cProfile
 import pstats
 
@@ -29,8 +30,8 @@ def startup():
          "SQLite"),               
         ("mnemosyne.libmnemosyne.configuration",
          "Configuration"),          
-        ("mnemosyne.libmnemosyne.loggers.txt_logger",
-         "TxtLogger"),          
+        ("mnemosyne.libmnemosyne.loggers.sql_logger",
+         "SqlLogger"),          
         ("mnemosyne.libmnemosyne.schedulers.SM2_mnemosyne",
          "SM2Mnemosyne"),
         ("mnemosyne.libmnemosyne.stopwatch",
@@ -49,23 +50,29 @@ def startup():
          "ExpandPaths"),
         ("mnemosyne.libmnemosyne.filters.latex",
          "Latex"),
-        ("mnemosyne.libmnemosyne.ui_controllers_main.default_main_controller",
-         "DefaultMainController"),
-        ("mnemosyne.libmnemosyne.ui_controllers_review.SM2_controller",
+        ("mnemosyne.libmnemosyne.controllers.default_controller",
+         "DefaultController"),
+        ("mnemosyne.libmnemosyne.review_controllers.SM2_controller",
          "SM2Controller"),
         ("mnemosyne.libmnemosyne.card_types.map",
          "MapPlugin"),
         ("mnemosyne.libmnemosyne.card_types.cloze",
          "ClozePlugin"),
         ("mnemosyne.libmnemosyne.plugins.cramming_plugin",
-         "CrammingPlugin") ]    
+         "CrammingPlugin"),
+        ("mnemosyne.libmnemosyne.file_formats.mnemosyne1_mem",
+          "Mnemosyne1Mem"),
+        ("mnemosyne.libmnemosyne.ui_components.dialogs",
+         "ProgressDialog") ]    
 
     mnemosyne.initialise(basedir=os.path.abspath("dot_benchmark"))
     #mnemosyne.initialise(basedir="\SDMMC\.mnemosyne")
-    
-def create_database():
-    mnemosyne.config()["upload_logs"] = False
 
+    mnemosyne.review_controller().reset()
+
+    
+def create_database():    
+    mnemosyne.config()["upload_logs"] = False
     for i in range(number_of_facts):
         fact_data = {"q": "question" + str(i),
                      "a": "answer" + str(i)}
@@ -74,14 +81,14 @@ def create_database():
         else:
             card_type = mnemosyne.card_type_by_id("2")            
         card = mnemosyne.controller().create_new_cards(\
-            fact_data, card_type, grade=4, tag_names=["default" + str(i)])[0]
-        card.next_rep -= 1000*24*60*60
+            fact_data, card_type, grade=4, tag_names=["default"])[0]
+        card.next_rep = time.time() - 24 * 60 * 60
+        card.last_rep = card.next_rep - i * 24 * 60 * 60
         mnemosyne.database().update_card(card)
     mnemosyne.database().save(mnemosyne.config()["path"])
     
 def queue():
     mnemosyne.review_controller().reset()
-    mnemosyne.review_controller().new_question()
     
 def new_question():
     # Note that this actually also happened in startup().
@@ -116,15 +123,21 @@ def finalise():
     mnemosyne.config()["upload_logs"] = False
     mnemosyne.finalise()
 
+def do_import():
+    mnemosyne.component_manager.get_current("file_format").\
+        do_import("/home/pbienst/dot_mnemosyne/default.mem")
+
 #tests = ["startup()", "create_database()", "queue()", "new_question()", "display()", "grade_only()",
 #         "grade()", "count_active()", "count_scheduled()", "count_not_memorised()"]
 #tests = ["startup()", "new_question()", "display()", "grade()", "activate()",
 #    "finalise()"]
 #tests = ["startup()", "create_database()", "new_question()", "display()",
 #    "grade()", "activate()", "finalise()"]
-tests = ["startup()", "create_database()", "new_question()", "display()",
-    "grade()", "finalise()"]
+#tests = ["startup()", "create_database()", "new_question()", "display()",
+#    "grade()", "finalise()"]
 tests = ["startup()", "create_database()"]
+tests = ["startup()", "do_import()", "finalise()"]
+#tests = ["startup()", "queue()", "finalise()"]
 
 for test in tests:  
     cProfile.run(test, "mnemosyne_profile." + test.replace("()", ""))
