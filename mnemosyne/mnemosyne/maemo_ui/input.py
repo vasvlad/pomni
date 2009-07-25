@@ -344,6 +344,7 @@ class InputWidget(Dialog):
         if self.update: #Update card
             main.update_related_cards(self.fact, fact_data, self.card_type, \
                 [self.widgets["CurrentCategory"].get_text()], None)
+            self.review_controller().update_dialog(redraw_all=True)
             self.main_widget().activate_mode("review")
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, -1, \
