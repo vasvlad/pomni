@@ -360,7 +360,7 @@ class InputWidget(Dialog):
             start, end = widget.get_buffer().get_bounds()
             fact[fact_key] = widget.get_buffer().get_text(start, end)
         if check_for_required:
-            for required in self.card_type.required_fields():
+            for required in self.card_type.required_fields:
                 if not fact[required]:
                     raise ValueError
         return fact
