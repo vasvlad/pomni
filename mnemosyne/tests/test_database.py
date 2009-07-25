@@ -2,6 +2,8 @@
 # test_database.py <Peter.Bienstman@UGent.be>
 #
 
+import os
+
 from nose.tools import raises
 
 from mnemosyne_test import MnemosyneTest
@@ -32,7 +34,7 @@ class TestDatabase(MnemosyneTest):
 
         self.database().load(self.config()["path"])
         assert self.database().fact_count() == 1
-        card = self.database().get_card(old_card._id)
+        card = self.database().get_card(old_card._id, id_is_internal=True)
         fact = card.fact
         
         assert fact.data["q"] == "question"
@@ -100,7 +102,7 @@ class TestDatabase(MnemosyneTest):
         fact = card.fact
         self.controller().update_related_cards(fact, fact_data, card_type,
             new_tag_names=["default1"], correspondence=[])
-        new_card = self.database().get_card(card._id)
+        new_card = self.database().get_card(card._id, id_is_internal=True)
         tag_names = [tag.name for tag in new_card.tags]
         assert len(tag_names) == 1
         assert "default1" in tag_names
@@ -115,7 +117,7 @@ class TestDatabase(MnemosyneTest):
         fact = card.fact
         self.controller().clone_card_type(fact.card_type, "my_1")
         
-        new_card_type = self.card_type_by_id("1.my_1")
+        new_card_type = self.card_type_by_id("1::my_1")
         self.controller().update_related_cards(fact, fact_data,
                new_card_type, new_tag_names=["default2"], correspondence=[])
         
@@ -124,10 +126,10 @@ class TestDatabase(MnemosyneTest):
         self.mnemosyne.finalise()
         self.restart()
         assert self.database().fact_count() == 1
-        _card_id, _fact_id = list(self.database().cards_unseen(0))[0]
-        fact = self.database().get_fact(_fact_id)
-        card_type = self.card_type_by_id("1.my_1")        
-        assert fact.card_type.id == "1.my_1"
+        _card_id, _fact_id = list(self.database().cards_unseen())[0]
+        fact = self.database().get_fact(_fact_id, id_is_internal=True)
+        card_type = self.card_type_by_id("1::my_1")        
+        assert fact.card_type.id == "1::my_1"
         assert fact.card_type == card_type
 
     def test_plugin_and_clones(self):
@@ -148,7 +150,7 @@ class TestDatabase(MnemosyneTest):
         fact = card.fact
         self.controller().clone_card_type(fact.card_type, "my_4")
         
-        new_card_type = self.card_type_by_id("4.my_4")
+        new_card_type = self.card_type_by_id("4::my_4")
         self.controller().update_related_cards(fact, fact_data,
                new_card_type, new_tag_names=["default2"], correspondence=[])
         assert self.database().fact_count() == 1        
@@ -159,11 +161,11 @@ class TestDatabase(MnemosyneTest):
         self.restart()
         
         assert self.database().fact_count() == 1
-        _card_id, _fact_id = list(self.database().cards_unseen(0))[0]
-        fact = self.database().get_fact(_fact_id)
+        _card_id, _fact_id = list(self.database().cards_unseen())[0]
+        fact = self.database().get_fact(_fact_id, id_is_internal=True)
         card_type = self.card_type_by_id("4")           
-        card_type = self.card_type_by_id("4.my_4")        
-        assert fact.card_type.id == "4.my_4"
+        card_type = self.card_type_by_id("4::my_4")        
+        assert fact.card_type.id == "4::my_4"
         assert fact.card_type == card_type
         
         card = self.database().cards_from_fact(fact)[0]
@@ -212,7 +214,7 @@ class TestDatabase(MnemosyneTest):
         fact = card.fact
         self.controller().clone_card_type(fact.card_type, "my_4")
         
-        new_card_type = self.card_type_by_id("4.my_4")
+        new_card_type = self.card_type_by_id("4::my_4")
         self.controller().update_related_cards(fact, fact_data,
                new_card_type, new_tag_names=["default2"], correspondence=[])
         
@@ -250,7 +252,7 @@ class TestDatabase(MnemosyneTest):
         fact = card.fact
         self.controller().clone_card_type(fact.card_type, "my_4")
         
-        new_card_type = self.card_type_by_id("4.my_4")
+        new_card_type = self.card_type_by_id("4::my_4")
         self.controller().update_related_cards(fact, fact_data,
                new_card_type, new_tag_names=["default2"], correspondence=[])
         
@@ -292,59 +294,41 @@ class TestDatabase(MnemosyneTest):
         assert self.database().save(self.config()["path"] + ".bak") != -1
         assert self.config()["path"] == new_name
         assert new_name != expand_path(new_name, self.config().basedir)
-        
-    def test_has_fact_with_data(self):
-        fact_data = {"q": "question",
-                     "a": "answer"}
-        card_type = self.card_type_by_id("1")
-        self.controller().create_new_cards(fact_data, card_type,
-                                              grade=-1, tag_names=["default"])
-        assert self.database().has_fact_with_data(fact_data, card_type) == True
-
-        fact_data = {"q": "question2",
-                     "a": "answer2"}
-        self.controller().create_new_cards(fact_data, card_type,
-                                              grade=-1, tag_names=["default"]) 
-        assert self.database().has_fact_with_data(fact_data, card_type) == True
-        
-        fact_data = {"q": "question",
-                     "a": "answer2"}        
-        assert self.database().has_fact_with_data(fact_data, card_type) == False
 
     def test_duplicates_for_fact(self):
         fact_data = {"q": "question",
                      "a": "answer"}
         card_type = self.card_type_by_id("1")
         card = self.controller().create_new_cards(fact_data, card_type,
-                                          grade=-1, tag_names=["default"])[0]
+            grade=-1, tag_names=["default"], check_for_duplicates=False)[0]
         fact = card.fact
 
         fact_data = {"q": "question_",
                      "a": "answer_"}
         card_type = self.card_type_by_id("1")
         self.controller().create_new_cards(fact_data, card_type,
-            grade=-1, tag_names=["default"])
+            grade=-1, tag_names=["default"], check_for_duplicates=False)
         assert len(self.database().duplicates_for_fact(fact)) == 0
         
         fact_data = {"q": "question1",
                      "a": "answer"}
         card_type = self.card_type_by_id("1")
         self.controller().create_new_cards(fact_data, card_type,
-            grade=-1, tag_names=["default"])
+            grade=-1, tag_names=["default"], check_for_duplicates=False)
         assert len(self.database().duplicates_for_fact(fact)) == 0
         
         fact_data = {"q": "question",
                      "a": "answer1"}
         card_type = self.card_type_by_id("1")
         self.controller().create_new_cards(fact_data, card_type,
-            grade=-1, tag_names=["default"])
+            grade=-1, tag_names=["default"], check_for_duplicates=False)
         assert len(self.database().duplicates_for_fact(fact)) == 1
         
         fact_data = {"q": "question",
                      "a": "answer1"}
         card_type = self.card_type_by_id("2")
         self.controller().create_new_cards(fact_data, card_type,
-            grade=-1, tag_names=["default"])
+            grade=-1, tag_names=["default"], check_for_duplicates=False)
         assert len(self.database().duplicates_for_fact(fact)) == 1
         
     def test_card_types_in_use(self):
@@ -459,10 +443,20 @@ class TestDatabase(MnemosyneTest):
         assert card_1 == self.review_controller().card
         assert self.database().count_related_cards_with_next_rep(card_1, 0) == 0
         self.review_controller().grade_answer(2)
-        card_1 = self.database().get_card(card_1._id)
+        card_1 = self.database().get_card(card_1._id, id_is_internal=True)
         card_3.next_rep = card_1.next_rep
         card_3.grade = 2
         self.database().update_card(card_3)
         assert self.database().count_related_cards_with_next_rep(card_2, card_1.next_rep) == 1        
         assert self.database().count_related_cards_with_next_rep(card_3, card_1.next_rep) == 0
-        assert self.database().count_related_cards_with_next_rep(card_1, card_1.next_rep) == 0       
+        assert self.database().count_related_cards_with_next_rep(card_1, card_1.next_rep) == 0
+
+    def test_purge_backups(self):
+        backup_dir = os.path.join(self.config().basedir, "backups")
+        for count in range(10):
+            f = file(os.path.join(backup_dir, "default-%d.db" % count), "w")
+        self.mnemosyne.finalise()
+        backups = [f for f in os.listdir(backup_dir)]
+        assert len(backups) == 5
+        assert "default-0.db" not in backups
+        self.restart()

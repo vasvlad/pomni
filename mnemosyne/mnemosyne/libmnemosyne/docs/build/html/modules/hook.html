@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Category &mdash; libmnemosyne v2.0 documentation</title>
+    <title>Hook &mdash; libmnemosyne v2.0 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -18,8 +18,8 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="libmnemosyne v2.0 documentation" href="../index.html" />
-    <link rel="next" title="CardType" href="card_type.html" />
-    <link rel="prev" title="FactView" href="fact_view.html" /> 
+    <link rel="next" title="LogUploader" href="log_uploader.html" />
+    <link rel="prev" title="Filter" href="filter.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,10 +32,10 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="card_type.html" title="CardType"
+          <a href="log_uploader.html" title="LogUploader"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="fact_view.html" title="FactView"
+          <a href="filter.html" title="Filter"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">libmnemosyne v2.0 documentation</a> &raquo;</li> 
       </ul>
@@ -46,16 +46,51 @@
           <div class="body">
             
   
-  <div class="section" id="module-mnemosyne.libmnemosyne.category">
-<h1><tt class="xref docutils literal"><span class="pre">Category</span></tt><a class="headerlink" href="#module-mnemosyne.libmnemosyne.category" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-mnemosyne.libmnemosyne.hook">
+<h1><tt class="xref docutils literal"><span class="pre">Hook</span></tt><a class="headerlink" href="#module-mnemosyne.libmnemosyne.hook" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="mnemosyne.libmnemosyne.category.Category">
-<!--[mnemosyne.libmnemosyne.category.Category]-->class <tt class="descclassname">mnemosyne.libmnemosyne.category.</tt><tt class="descname">Category</tt><big>(</big><em>name</em>, <em>id=None</em><big>)</big><a class="headerlink" href="#mnemosyne.libmnemosyne.category.Category" title="Permalink to this definition">¶</a></dt>
-<dd><p>The category name is the full name, including all levels of the hierarchy
-separated by two colons.</p>
-<p>&#8216;id&#8217; is used to identify this object to the external world (logs, xml
-files, ...), whereas &#8216;_id&#8217; is an internal id that could be different and
-that can be used by the database for efficiency reasons.</p>
+<dt id="mnemosyne.libmnemosyne.hook.Hook">
+<!--[mnemosyne.libmnemosyne.hook.Hook]-->class <tt class="descclassname">mnemosyne.libmnemosyne.hook.</tt><tt class="descname">Hook</tt><big>(</big><em>component_manager</em><big>)</big><a class="headerlink" href="#mnemosyne.libmnemosyne.hook.Hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function hooks are used by registering an instance of this class as
+component of type hook, with the &#8220;used_for&#8221; argument any of the following
+hook points:</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="44%" />
+<col width="56%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>&#8220;after_load&#8221;</td>
+<td>in database.load</td>
+</tr>
+<tr><td>&#8220;after_backup&#8221;</td>
+<td>in database.backup</td>
+</tr>
+<tr><td>&#8220;before_unload&#8221;</td>
+<td>in database.unload</td>
+</tr>
+<tr><td>&#8220;configuration_defaults&#8221;</td>
+<td>in configuration.set_defaults</td>
+</tr>
+<tr><td>&#8220;before_repetititon&#8221;</td>
+<td>in SM2_mnemosyne.grade_answer
+extra argument: card</td>
+</tr>
+<tr><td>&#8220;after_repetititon&#8221;</td>
+<td>in SM2_mnemosyne.grade_answer
+extra argument: card</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>It is the &#8216;run&#8217; method that will get called at the corresponding point
+in the program.</p>
+<dl class="method">
+<dt id="mnemosyne.libmnemosyne.hook.Hook.run">
+<!--[mnemosyne.libmnemosyne.hook.Hook.run]--><tt class="descname">run</tt><big>(</big><big>)</big><a class="headerlink" href="#mnemosyne.libmnemosyne.hook.Hook.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -67,12 +102,12 @@ that can be used by the database for efficiency reasons.</p>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <h4>Previous topic</h4>
-            <p class="topless"><a href="fact_view.html" title="previous chapter"><tt class="docutils literal"><span class="pre">FactView</span></tt></a></p>
+            <p class="topless"><a href="filter.html" title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">Filter</span></tt></a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="card_type.html" title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">CardType</span></tt></a></p>
+            <p class="topless"><a href="log_uploader.html" title="next chapter"><tt class="docutils literal"><span class="pre">LogUploader</span></tt></a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
-              <li><a href="../_sources/modules/category.txt">Show Source</a></li>
+              <li><a href="../_sources/modules/hook.txt">Show Source</a></li>
             </ul>
           <h3>Quick search</h3>
             <form class="search" action="../search.html" method="get">
@@ -94,17 +129,17 @@ that can be used by the database for efficiency reasons.</p>
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="card_type.html" title="CardType"
+          <a href="log_uploader.html" title="LogUploader"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="fact_view.html" title="FactView"
+          <a href="filter.html" title="Filter"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">libmnemosyne v2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
       &copy; Copyright 2008, Peter Bienstman.
-      Last updated on Jun 12, 2009.
+      Last updated on Jul 23, 2009.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.5.2.
     </div>
   </body>

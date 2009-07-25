@@ -10,12 +10,17 @@ class Database(Component):
     """Interface class describing the functions to be implemented by the
     actual database classes.
 
+    Apart from the basic interface defined here, depending on the situation
+    a database can also implement functions for logging and statistics
+    (see SQLite_logging.py and SQLite_statistics.py for the interface).
+
     """
 
     version = ""
     component_type = "database"
 
     def deactivate(self):
+        self.backup()
         self.unload()
 
     # File operations.
@@ -35,6 +40,9 @@ class Database(Component):
     def unload(self):
         raise NotImplementedError
 
+    def abandon(self):
+        raise NotImplementedError        
+
     def is_loaded(self):
         raise NotImplementedError
 
@@ -43,7 +51,7 @@ class Database(Component):
     def add_tag(self, tag):
         raise NotImplementedError
 
-    def get_tag(self, _id):
+    def get_tag(self, id, id_is_internal):
         raise NotImplementedError
     
     def update_tag(self, tag):
@@ -63,7 +71,7 @@ class Database(Component):
     def add_fact(self, fact):
         raise NotImplementedError
     
-    def get_fact(self, _id):
+    def get_fact(self, id, id_is_internal):
         raise NotImplementedError
     
     def update_fact(self, fact):
@@ -80,12 +88,12 @@ class Database(Component):
     def update_card(self, card, repetition_only=False):
         raise NotImplementedError
         
-    def get_card(self, _id):
+    def get_card(self, id, id_is_internal):
         raise NotImplementedError
 
     def delete_card(self, card):
         raise NotImplementedError
-    
+
     # Card types.
     
     def add_card_type(self, card_type):
@@ -94,7 +102,7 @@ class Database(Component):
     def update_card_type(self, card_type):
         raise NotImplementedError
         
-    def get_card_type(self, id):
+    def get_card_type(self, id, id_is_internal):
         raise NotImplementedError
 
     def delete_card_type(self, card_type):
@@ -130,9 +138,6 @@ class Database(Component):
         """ Returns a list of the cards deriving from a fact. """
         
         raise NotImplementedError
-
-    def has_fact_with_data(self, fact_data, card_type):
-        raise NotImplementedError
     
     def count_related_cards_with_next_rep(self, card, next_rep):
 
@@ -165,9 +170,6 @@ class Database(Component):
         raise NotImplementedError
 
     def active_count(self):
-        raise NotImplementedError
-
-    def average_easiness(self):
         raise NotImplementedError
 
     # Card queries used by the scheduler. Returns tuples of internal ids
@@ -203,3 +205,4 @@ class Database(Component):
 
     def scheduler_data_count(self, scheduler_data):        
         raise NotImplementedError
+

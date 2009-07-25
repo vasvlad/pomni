@@ -56,6 +56,8 @@ class Mnemosyne(Component):
           "ExpandPaths"),
          ("mnemosyne.libmnemosyne.filters.latex",
           "Latex"),
+         ("mnemosyne.libmnemosyne.filters.html5_media",
+          "Html5Media"),
          ("mnemosyne.libmnemosyne.controllers.default_controller",
           "DefaultController"),
          ("mnemosyne.libmnemosyne.review_controllers.SM2_controller",
@@ -73,7 +75,9 @@ class Mnemosyne(Component):
          ("mnemosyne.libmnemosyne.statistics_pages.easiness",
           "Easiness"),
          ("mnemosyne.libmnemosyne.statistics_pages.current_card",
-          "CurrentCard")]
+          "CurrentCard"),
+         ("mnemosyne.libmnemosyne.file_formats.mnemosyne1_mem",
+          "Mnemosyne1Mem")]
         self.extra_components_for_plugin = {}
         self.resource_limited = resource_limited
 
@@ -177,12 +181,6 @@ class Mnemosyne(Component):
                 self.database().new(filename)
             else:
                 self.database().load(filename)
-        except EnvironmentError:
-            from mnemosyne.libmnemosyne.translator import _
-            self.main_widget().error_box(
-                _("Another copy of Mnemosyne is still running.") + "\n" +
-                _("Continuing is impossible and will lead to data loss!"))
-            sys.exit()
         except RuntimeError, e:
             # Making sure the GUI is in a correct state when no database is
             # loaded would require a lot of extra code, and this is only a
