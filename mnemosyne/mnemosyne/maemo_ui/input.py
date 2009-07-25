@@ -63,6 +63,7 @@ class InputWidget(Dialog):
         self.imagedir = None
         self.card_type = None
         self.categories_list = []
+        self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
         iconview_widget = self.w_tree.get_widget("iconview_widget")
@@ -348,6 +349,7 @@ class InputWidget(Dialog):
             main.create_new_cards(fact_data, self.card_type, -1, \
                 [self.widgets["CurrentCategory"].get_text()])
             self.clear_widgets()
+            self.added_new_cards = True
 
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
@@ -429,6 +431,8 @@ class InputWidget(Dialog):
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
+        if self.added_new_cards:
+            self.review_controller().reset()
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
