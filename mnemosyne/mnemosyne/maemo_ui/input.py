@@ -81,7 +81,7 @@ class InputWidget(Dialog):
         }
 
         # Change default font
-        font = pango.FontDescription("Nokia Sans 20")
+        font = pango.FontDescription("Nokia Sans %s" % self.config()['font_size'])
         for area in self.areas.values():
             area.modify_font(font)
 
