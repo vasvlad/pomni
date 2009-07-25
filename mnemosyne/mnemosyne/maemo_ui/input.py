@@ -434,6 +434,7 @@ class InputWidget(Dialog):
 
         if self.added_new_cards:
             self.review_controller().reset()
+            self.added_new_cards = False
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
@@ -444,7 +445,7 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
 
 class EditFactWidget(InputWidget, EditFactDialog):
     """Edit current fact."""
-    def __init__(self, fact, component_manager):
+    def __init__(self, fact, component_manager, allow_cancel=True):
         InputWidget.__init__(self, component_manager)
         self.fact = fact
 
