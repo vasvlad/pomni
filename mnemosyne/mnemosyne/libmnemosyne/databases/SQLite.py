@@ -911,14 +911,14 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
 
     def get_history_events(self):
         items = self.con.execute("""
-            select event, timestamp from history where event=?""", \
-                (SYNC,)).fetchall()
+            select event, timestamp from log where event=?""", \
+                (21,)).fetchall()
         if not items:
             return self.con.execute("""select event, timestamp, object_id, \
                 scheduled_interval, actual_interval, new_interval, \
-                thinking_time from history""").fetchall()
+                thinking_time from log""").fetchall()
         else:
             return self.con.execute("""select event, timestamp, object_id, \
                 scheduled_interval, actual_interval, new_interval, \
-                thinking_time from history where timestamp > %s \
+                thinking_time from log where timestamp > %s \
                 """ % (items[-1][1])).fetchall()
