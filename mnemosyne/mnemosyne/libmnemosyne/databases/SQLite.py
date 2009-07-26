@@ -411,10 +411,6 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         tag._id = sql_res["_id"]
         return tag
 
-    def get_tag_by_id(self, id):
-        return self.get_tag(self.con.execute(\
-            "select _id from tags where id=?", (id,)).fetchone()["_id"])
-    
     def delete_tag(self, tag):
         self.con.execute("delete from tags where _id=?", (tag._id,))
         self.log().deleted_tag(tag)
@@ -472,10 +468,6 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         fact.modification_time = sql_res["modification_time"]
         return fact
     
-    def get_fact_by_id(self, id):        
-        return self.get_fact(self.con.execute(\
-            "select _id from facts where id=?", (id, )).fetchone()["_id"])
-
     def update_fact(self, fact):
         # Update fact.
         self.con.execute("""update facts set id=?, card_type_id=?,
@@ -554,13 +546,6 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             card.tags.add(self.get_tag(cursor["_tag_id"], id_is_internal=True))
         return card
 
-    def get_card_by_id(self, id):
-        sql_res = self.con.execute("select _id from cards where id=?",\
-            (id, )).fetchone()
-        if sql_res:
-            return self.get_card(sql_res["_id"])
-        return None
-    
     def update_card(self, card, repetition_only=False):
         self.con.execute("""update cards set id=?, _fact_id=?, fact_view_id=?,
             grade=?, easiness=?, acq_reps=?, ret_reps=?, lapses=?,
