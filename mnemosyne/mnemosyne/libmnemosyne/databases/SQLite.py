@@ -409,11 +409,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         tag = Tag(sql_res["name"], sql_res["id"])
         tag._id = sql_res["_id"]
         return tag
-<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/databases/SQLite.py
-
-=======
     
->>>>>>> 75881517e22657245e920ec1827f766339dd747a:mnemosyne/mnemosyne/libmnemosyne/databases/SQLite.py
     def delete_tag(self, tag):
         self.con.execute("delete from tags where _id=?", (tag._id,))
         self.log().deleted_tag(tag)
