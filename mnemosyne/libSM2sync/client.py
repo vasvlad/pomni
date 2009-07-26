@@ -18,11 +18,13 @@ class Client:
         self.host = params.scheme
         self.port = params.path
         self.eman = EventManager(database, controller)
-        self.hw_id = hex(uuid.getnode())
+        self.machine_id = hex(uuid.getnode())
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
         self.protocol_version = PROTOCOL_VERSION
+        #FIXME: get from config
         self.login = 'mnemosyne'
+        #FIXME: get from config
         self.password = 'mnemosyne'
         self.cardtypes = N_SIDED_CARD_TYPE
         self.extradata = ''
@@ -30,14 +32,22 @@ class Client:
     def start(self):
         """Start syncing."""
         
-        #FIXME: replace by real machine id
-        client_history = self.eman.get_history("test")
-        server_history = self.get_server_history()
-        print server_history
-        #self.eman.apply_history(server_history)
-        #self.send_history(client_history)
+        if self.login():
+            self.handshake()
+            #FIXME: replace by real machine id from server params
+            client_history = self.eman.get_history("server_machine_id")
+            server_history = self.get_server_history()
+            print server_history
+            #self.eman.apply_history(server_history)
+            #self.send_history(client_history)
+        else:
+            print "client: wring login or password!"
 
-    def handshake(self, server):
+    def login(self):
+        print 'login'
+        return True
+
+    def handshake(self):
         """Handshaking with server."""
 
         #if server.login(self.hw_id, self.login, self.password):
@@ -45,6 +55,7 @@ class Client:
             #server.set_sync_params(self.get_sync_params())
             #return True
         #return False
+        print 'handshaking'
         return True
 
     def get_server_history(self):
