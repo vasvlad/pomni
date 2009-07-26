@@ -43,8 +43,6 @@ class TestAddCards(MnemosyneTest):
         assert self.database().fact_count() == 1
         assert self.database().card_count() == 1
 
-        assert self.database().average_easiness() == 2.5
-
     def test_1_duplicates(self):
         fact_data = {"q": "question",
                      "a": "answer"}
@@ -113,7 +111,7 @@ class TestAddCards(MnemosyneTest):
         self.review_controller().new_question()
         self.controller().update_related_cards(card.fact, fact_data, \
             card_type, ["new"], correspondence={})     
-        new_card = self.database().get_card(card._id)
+        new_card = self.database().get_card(card._id, id_is_internal=True)
         tag_names = [tag.name for tag in new_card.tags]
         assert len(tag_names) == 1
         assert "new" in tag_names

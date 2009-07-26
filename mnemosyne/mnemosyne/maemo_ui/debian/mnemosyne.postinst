@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+PKG="mnemosyne"
+FNAME="default.db"
+USER="user"
+GROUP="users"
+
+SRC="/usr/share/$PKG/demo/$FNAME"
+DOC_DIR="/home/$USER/MyDocs/.documents"
+DESTDIR="$DOC_DIR/$PKG"
+DEST="$DESTDIR/$FNAME"
+
+if [ "$1" = "configure" -a -r $SRC -a -d $DOC_DIR ]; then
+    [ -d $DESTDIR ] || mkdir $DESTDIR
+    [ -f $DEST ] || (cp $SRC $DEST && chown -R $USER:$GROUP $DESTDIR)
+fi
+
+[ -z "$2" ] && gtk-update-icon-cache -f /usr/share/icons/hicolor
+exit 0
+

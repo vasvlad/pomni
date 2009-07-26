@@ -1,5 +1,6 @@
 Source: python-libmnemosyne
 Section: python
+Priority: optional
 Maintainer: Ed Bartosh <bartosh@gmail.com>
 Build-Depends: debhelper (>= 5), python, python-setuptools
 Standards-Version: 3.8.0

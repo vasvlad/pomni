@@ -28,7 +28,7 @@ class Controller(Component):
         raise NotImplementedError
     
     def create_new_cards(self, fact_data, card_type, grade,
-                         tag_names):
+                         tag_names, check_for_duplicates=True, save=False):
         raise NotImplementedError
     
     def update_related_cards(self, fact, new_fact_data, new_card_type, \
@@ -75,4 +75,10 @@ class Controller(Component):
         raise NotImplementedError
     
     def configure(self):
+        raise NotImplementedError
+
+    def import_file(self):
+        raise NotImplementedError
+    
+    def export_file(self):
         raise NotImplementedError

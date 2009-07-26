@@ -36,32 +36,18 @@ class Card(object):
     """
 
     def __init__(self, fact, fact_view):
-        #print "Card.py: __init__ method"
         self.fact = fact
-        #print "card.fact =", self.fact
         self.fact_view = fact_view
-        #print "card.fact_view =", self.fact_view
         self.id = self.fact.id + "." + self.fact.card_type.id + "." + \
                   self.fact_view.id
-        #print "card.id =", self.id
-        #print "card.instance =", self
         self._id = None
         self.tags = set()
         self.extra_data = {}
         self.scheduler_data = 0
         self.active = True
         self.in_view = True
+        self.reset_learning_data()
         
-        self.grade = -1
-        self.easiness = -1
-        self.acq_reps = 0
-        self.ret_reps = 0
-        self.lapses = 0
-        self.acq_reps_since_lapse = 0
-        self.ret_reps_since_lapse = 0
-        self.last_rep = -1
-        self.next_rep = -1
-
     def __eq__(self, other):
         return self.id == other.id
 
@@ -94,15 +80,12 @@ class Card(object):
         self.next_rep = -1
 
     def question(self):
-        """Gets card question."""
         return self.fact.card_type.question(self)
-
-    def answer(self):
-        """Gets card answer."""
+       
+    def answer(self):        
         return self.fact.card_type.answer(self)
 
     def tag_string(self):
-        """Gets all tags for this card separated by ','."""
         tag_string = ""
         for tag in self.tags:
             tag_string += tag.name + ", "

@@ -16,14 +16,16 @@ class DefaultController(Controller):
 
     def heartbeat(self):
 
-        """To be called once a day, to make sure that the logs get uploaded
-        even if the user leaves the program open for a very long time.
+        """To be called once a day, to make sure e.g. that backups get taken
+        and that the logs get uploaded even if the user leaves the program
+        open for a very long time.
 
         """
         
+        self.database().backup()
         self.log().dump_to_txt_log()
         self.log().deactivate()
-        self.log().activate()   
+        self.log().activate()
         
     def update_title(self):
         database_name = os.path.basename(self.config()["path"]).\
@@ -37,6 +39,7 @@ class DefaultController(Controller):
         self.stopwatch().pause()
         self.component_manager.get_current("add_cards_dialog")\
             (self.component_manager).activate()
+        self.database().save()
         review_controller = self.review_controller()
         review_controller.reload_counters()
         if review_controller.card is None:
@@ -52,7 +55,8 @@ class DefaultController(Controller):
         self.component_manager.get_current("edit_fact_dialog")\
             (fact, self.component_manager).activate()
         review_controller.card = \
-            self.database().get_card(review_controller.card._id)
+            self.database().get_card(review_controller.card._id,
+                                     id_is_internal=True)
         review_controller.reload_counters()
         if review_controller.card is None:
             review_controller.update_status_bar()
@@ -60,7 +64,8 @@ class DefaultController(Controller):
         review_controller.update_dialog(redraw_all=True)
         self.stopwatch().unpause()
         
-    def create_new_cards(self, fact_data, card_type, grade, tag_names):
+    def create_new_cards(self, fact_data, card_type, grade, tag_names,
+                         check_for_duplicates=True, save=False):
 
         """Create a new set of related cards. If the grade is 2 or higher,
         we perform a initial review with that grade and move the cards into
@@ -75,39 +80,41 @@ class DefaultController(Controller):
         if grade in [0,1]:
             raise AttributeError, "Use -1 as grade for unlearned cards."
         db = self.database()
-        if db.has_fact_with_data(fact_data, card_type):
-            self.main_widget().information_box(\
-              _("Card is already in database.\nDuplicate not added."))
-            return
         fact = Fact(fact_data, card_type)
+        if check_for_duplicates:
+            duplicates = db.duplicates_for_fact(fact)
+            if len(duplicates) != 0:
+                if len(duplicates) == 1 and duplicates[0].data == fact_data:
+                    self.main_widget().information_box(\
+                      _("Card is already in database.\nDuplicate not added."))
+                    return                
+                answer = self.main_widget().question_box(\
+                  _("There is already data present for:\n\N") +
+                  "".join(fact[k] for k in card_type.required_fields),
+                  _("&Merge and edit"), _("&Add as is"), _("&Do not add"))
+                if answer == 0: # Merge and edit.
+                    db.add_fact(fact)
+                    for card in card_type.create_related_cards(fact):
+                        if grade >= 2:
+                            self.scheduler().set_initial_grade(card, grade)
+                        db.add_card(card)  
+                    merged_fact_data = copy.copy(fact.data)
+                    for duplicate in duplicates:
+                        for key in fact_data:
+                            if key not in card_type.required_fields:
+                                merged_fact_data[key] += " / " + duplicate[key]
+                        db.delete_fact_and_related_data(duplicate)
+                    fact.data = merged_fact_data
+                    self.component_manager.get_current("edit_fact_dialog")\
+                      (fact, self.component_manager, allow_cancel=False).\
+                      activate()
+                    return
+                if answer == 2: # Don't add.
+                    return
+        db.add_fact(fact)
         tags = set()
         for tag_name in tag_names:
             tags.add(db.get_or_create_tag_with_name(tag_name))
-        duplicates = db.duplicates_for_fact(fact)
-        if len(duplicates) != 0:
-            answer = self.main_widget().question_box(\
-              _("There is already data present for:\n\N") +
-              "".join(fact[k] for k in card_type.required_fields()),
-              _("&Merge and edit"), _("&Add as is"), _("&Do not add"))
-            if answer == 0: # Merge and edit.
-                db.add_fact(fact)
-                for card in card_type.create_related_cards(fact):
-                    if grade >= 2:
-                        self.scheduler().set_initial_grade(card, grade)
-                    db.add_card(card)  
-                merged_fact_data = copy.copy(fact.data)
-                for duplicate in duplicates:
-                    for key in fact_data:
-                        if key not in card_type.required_fields():
-                            merged_fact_data[key] += " / " + duplicate[key]
-                    db.delete_fact_and_related_data(duplicate)
-                fact.data = merged_fact_data
-                self.component_manager.get_current("edit_fact_dialog")\
-                  (fact, self.component_manager, allow_cancel=False).activate()
-                return
-            if answer == 2: # Don't add.
-                return
-        db.add_fact(fact)
         cards = []
         for card in card_type.create_related_cards(fact):
             self.log().added_card(card)
@@ -116,7 +123,8 @@ class DefaultController(Controller):
             card.tags = tags
             db.add_card(card)
             cards.append(card)
-        db.save()
+        if save:
+            db.save()
         if self.review_controller().learning_ahead == True:
             self.review_controller().reset()
         return cards # For testability.
@@ -132,8 +140,8 @@ class DefaultController(Controller):
                                                     new_card_type.__class__))
             if not converter:
                 # Perhaps they have a common ancestor.
-                parents_old = old_card_type.id.split(".")
-                parents_new = new_card_type.id.split(".")
+                parents_old = old_card_type.id.split("::")
+                parents_new = new_card_type.id.split("::")
                 if parents_old[0] == parents_new[0]: 
                     fact.card_type = new_card_type
                     updated_cards = db.cards_from_fact(fact)      
@@ -228,6 +236,7 @@ class DefaultController(Controller):
         answer = self.main_widget().question_box(question, _("&Delete"),
                                           _("&Cancel"), "")
         if answer == 1: # Cancel.
+            self.stopwatch().unpause()
             return
         db.delete_fact_and_related_data(fact)
         db.save()
@@ -241,7 +250,7 @@ class DefaultController(Controller):
     def clone_card_type(self, card_type, clone_name):
         from mnemosyne.libmnemosyne.utils import mangle
         
-        clone_id = card_type.id + "." + clone_name
+        clone_id = card_type.id + "::" + clone_name
         if clone_id in [card_t.id for card_t in self.card_types()]:
             self.main_widget.error_box(_("Card type name already exists."))
             return None
@@ -257,16 +266,21 @@ class DefaultController(Controller):
         self.stopwatch().pause()
         db = self.database()
         suffix = db.suffix
-        out = self.main_widget().save_file_dialog(path=self.config().basedir,
-                            filter=_("Mnemosyne databases (*%s)" % suffix),
-                            caption=_("New"))
-        if not out:
+        filename = self.main_widget().save_file_dialog(\
+            path=self.config().basedir, filter=_("Mnemosyne databases") + \
+            " (*%s)" % suffix, caption=_("New"))
+        if not filename:
             self.stopwatch().unpause()
             return
-        if not out.endswith(suffix):
-            out += suffix
+        if not filename.endswith(suffix):
+            filename += suffix
+        db.backup()
         db.unload()
-        db.new(out)
+        # Confirmation on overwrite has happened in the file dialog code,
+        if os.path.exists(filename):
+            import shutil
+            shutil.rmtree(filename + "_media")
+        db.new(filename)
         db.load(self.config()["path"])
         self.log().loaded_database()
         self.review_controller().reset()
@@ -276,28 +290,44 @@ class DefaultController(Controller):
 
     def file_open(self):
         self.stopwatch().pause()
-        old_path = expand_path(self.config()["path"], self.config().basedir)
-        out = self.main_widget().open_file_dialog(path=old_path,
-            filter=_("Mnemosyne databases (*%s)" % self.database().suffix))
-        if not out:
+        db = self.database()
+        basedir = self.config().basedir
+        old_path = expand_path(self.config()["path"], basedir)
+        filename = self.main_widget().open_file_dialog(path=old_path,
+            filter=_("Mnemosyne databases") + " (*%s)" % db.suffix)
+        if not filename:
             self.stopwatch().unpause()
             return
+        if filename.startswith(os.path.join(basedir, "backups")):
+            result = self.main_widget().question_box(\
+                _("Do you want to restore from this backup?"),
+                _("Yes"), _("No"), "")
+            if result == 0: # Yes
+                db.abandon()
+                db_path = expand_path(self.config()["path"], basedir)
+                import shutil
+                shutil.copy(filename, db_path)
+                db.load(db_path)
+                self.review_controller().reset()
+                self.update_title()
+            self.stopwatch().unpause()
+            return  
         try:
-            self.database().unload()
             self.log().saved_database()
+            db.backup()
+            db.unload()
         except RuntimeError, error:
             self.main_widget().error_box(str(error))
             self.stopwatch().unpause()
             return            
-        self.review_controller().reset()
         try:
-            self.database().load(out)
+            db.load(filename)
             self.log().loaded_database()
         except Exception, e:
             self.main_widget().show_exception(e)
             self.stopwatch().unpause()
             return
-        self.review_controller().new_question()
+        self.review_controller().reset()
         self.update_title()
         self.stopwatch().unpause()
 
@@ -314,15 +344,15 @@ class DefaultController(Controller):
         self.stopwatch().pause()
         suffix = self.database().suffix
         old_path = expand_path(self.config()["path"], self.config().basedir)
-        out = self.main_widget().save_file_dialog(path=old_path,
-            filter=_("Mnemosyne databases (*%s)" % suffix))
-        if not out:
+        filename = self.main_widget().save_file_dialog(path=old_path,
+            filter=_("Mnemosyne databases") + " (*%s)" % suffix)
+        if not filename:
             self.stopwatch().unpause()
             return
-        if not out.endswith(suffix):
-            out += suffix
+        if not filename.endswith(suffix):
+            filename += suffix
         try:
-            self.database().save(out)
+            self.database().save(filename)
             self.log().saved_database()
         except RuntimeError, error:
             self.main_widget().error_box(str(error))
@@ -343,37 +373,49 @@ class DefaultController(Controller):
         """
 
         from mnemosyne.libmnemosyne.utils import copy_file_to_dir
-
         basedir, mediadir = self.config().basedir, self.config().mediadir()
         path = expand_path(self.config()["import_img_dir"], basedir)
         filter = _("Image files") + " " + filter
-        fname = self.main_widget().open_file_dialog(\
+        filename = self.main_widget().open_file_dialog(\
             path, filter, _("Insert image"))
-        if not fname:
+        if not filename:
             return ""
         else:
             self.config()["import_img_dir"] = contract_path(\
-                os.path.dirname(fname), basedir)
-            fname = copy_file_to_dir(fname, mediadir)
-            return contract_path(fname, mediadir)
+                os.path.dirname(filename), basedir)
+            filename = copy_file_to_dir(filename, mediadir)
+            return contract_path(filename, mediadir)
         
     def insert_sound(self, filter):
-
         from mnemosyne.libmnemosyne.utils import copy_file_to_dir
-
         basedir, mediadir = self.config().basedir, self.config().mediadir()
         path = expand_path(self.config()["import_sound_dir"], basedir)
         filter = _("Sound files") + " " + filter
-        fname = self.main_widget().open_file_dialog(\
+        filename = self.main_widget().open_file_dialog(\
             path, filter, _("Insert sound"))
-        if not fname:
+        if not filename:
             return ""
         else:
             self.config()["import_sound_dir"] = contract_path(\
-                os.path.dirname(fname), basedir)
-            fname = copy_file_to_dir(fname, mediadir)
-            return fname
-
+                os.path.dirname(filename), basedir)
+            filename = copy_file_to_dir(filename, mediadir)
+            return filename
+        
+    def insert_video(self, filter):
+        from mnemosyne.libmnemosyne.utils import copy_file_to_dir
+        basedir, mediadir = self.config().basedir, self.config().mediadir()
+        path = expand_path(self.config()["import_video_dir"], basedir)
+        filter = _("Video files") + " " + filter
+        filename = self.main_widget().open_file_dialog(\
+            path, filter, _("Insert video"))
+        if not filename:
+            return ""
+        else:
+            self.config()["import_video_dir"] = contract_path(\
+                os.path.dirname(filename), basedir)
+            filename = copy_file_to_dir(filename, mediadir)
+            return filename
+        
     def browse_cards(self):
         self.stopwatch().pause()
         self.component_manager.get_current("browse_cards_dialog")\
@@ -410,4 +452,29 @@ class DefaultController(Controller):
         self.stopwatch().pause()
         self.component_manager.get_current("configuration_dialog")\
             (self.component_manager).activate()
+        self.stopwatch().unpause()
+
+    def import_file(self):
+        self.stopwatch().pause()
+        path = expand_path(self.config()["import_dir"], self.config().basedir)
+
+        # TMP hardcoded single fileformat.
+        filename = self.main_widget().open_file_dialog(path=path,
+            filter=_("Mnemosyne 1.x databases") + " (*.mem)")
+        if not filename:
+            self.stopwatch().unpause()
+            return
+        self.component_manager.get_current("file_format").do_import(filename)
+        self.database().save()
+        review_controller = self.review_controller()
+        review_controller.reload_counters()
+        if review_controller.card is None:
+            review_controller.new_question()
+        else:
+            review_controller.update_status_bar()
+        self.stopwatch().unpause()
+
+    def export_file(self):
+        self.stopwatch().pause()
+
         self.stopwatch().unpause()
