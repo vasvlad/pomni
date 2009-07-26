@@ -80,8 +80,9 @@ class Configuration(Component, dict):
              "reset_learning_data_export": False,
              "import_img_dir": self.basedir, 
              "import_sound_dir": self.basedir,
+             "import_video_dir": self.basedir,
              "user_id": None,
-             "upload_logs": True, 
+             "upload_logs": False, 
              "upload_server": "mnemosyne-proj.dyndns.org:80",
              "log_index": 1, 
              "font": {}, # [card_type.id][fact_key]
@@ -105,6 +106,8 @@ class Configuration(Component, dict):
              "latex": "latex -interaction=nonstopmode",
              "dvipng": "dvipng -D 200 -T tight tmp.dvi",
              "active_plugins": set(), # Plugin classes, not instances.
+             "autoplay": True,
+             "controls": True
             }.items():
 
             self.setdefault(key, value)

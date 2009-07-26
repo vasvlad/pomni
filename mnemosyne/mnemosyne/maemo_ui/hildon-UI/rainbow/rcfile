@@ -1,0 +1,825 @@
+# pixmap_path "<dir 1>:<dir 2>:<dir 3>:..."
+#
+#pixmap_path "/usr/include/X11R6/pixmaps:./"
+#
+# style <name> [= <name>]
+# {
+#   <option>
+# }
+#
+# widget <widget_set> style <style_name>
+# widget_class <widget_class_set> style <style_name>
+
+# Here is a list of all the possible states.  Note that some do not apply to
+# certain widgets.
+#
+# NORMAL - The normal state of a widget, without the mouse over top of
+# it, and not being pressed, etc.
+#
+# PRELIGHT - When the mouse is over top of the widget, colors defined
+# using this state will be in effect.
+#
+# ACTIVE - When the widget is pressed or clicked it will be active, and
+# the attributes assigned by this tag will be in effect.
+#
+# INSENSITIVE - When a widget is set insensitive, and cannot be
+# activated, it will take these attributes.
+#
+# SELECTED - When an object is selected, it takes these attributes.
+#
+# Given these states, we can set the attributes of the widgets in each of
+# these states using the following directives.
+#
+# fg - Sets the foreground color of a widget.
+# fg - Sets the background color of a widget.
+# bg_pixmap - Sets the background of a widget to a tiled pixmap.
+# font - Sets the font to be used with the given widget.
+#
+
+# This sets a style called "button".  The name is not really important, as
+# it is assigned to the actual widgets at the bottom of the file.
+
+style "general-widget" {
+    GtkWidget::image-spacing = 0
+    GtkWidget::focus-line-width = 0
+}
+class "GtkWidget" style "general-widget"
+
+#----------------------------- Main Menu ------------------
+style "program-name-label" {
+    font_name = "Nokia Sans 14"
+}
+widget "*.program_name_label" style "program-name-label"
+
+style "menu-label" {
+    font_name = "Nokia Sans Bold 15"
+}
+widget "*.menu_label_review" style "menu-label"
+widget "*.menu_label_input" style "menu-label"
+widget "*.menu_label_synh" style "menu-label"
+widget "*.menu_label_conf" style "menu-label"
+widget "*.menu_label_exit" style "menu-label"
+
+style "menu-button-review" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "review_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "review_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "review_big.png"
+        }
+    }
+}
+widget "*.menu_button_review" style "menu-button-review"
+
+style "menu-button-input" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "input_small.png"
+        }
+        image {
+            function = BOX
+            file = "input_big.png"
+        }
+    }
+}
+widget "*.menu_button_input" style "menu-button-input"
+
+style "menu-button-synh" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "synh_small.png"
+        }
+        image {
+            function = BOX
+            file = "synh_big.png"
+        }
+    }
+}
+widget "*.menu_button_synh" style "menu-button-synh"
+
+style "menu-button-conf" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "conf_small.png"
+        }
+        image {
+            function = BOX
+            file = "conf_big.png"
+        }
+    }
+}
+widget "*.menu_button_conf" style "menu-button-conf"
+
+style "menu-button-exit" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "exit_small.png"
+        }
+        image {
+            function = BOX
+            file = "exit_big.png"
+        }
+    }
+}
+widget "*.menu_button_exit" style "menu-button-exit"
+#----------------------------- Main Menu ------------------
+
+
+#----------------------------- Review mode ------------------
+style "html-container" {
+    xthickness = 5
+    ythickness = 5
+    engine "sapwood" {
+        image {
+            function = SHADOW
+            file = "textarea.png"
+            border = {14,14,14,14}
+        }
+    }
+}
+widget "*.question_container" style "html-container"
+widget "*.answer_container" style "html-container"
+
+style "grade0" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade0_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade0_normal.png"
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade1_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade1_normal.png"
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade2_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade2_normal.png"
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade3_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade3_normal.png"
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade4_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade4_normal.png"
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "grade5_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "grade5_normal.png"
+        }
+    }
+}
+widget "*.grade5" style "grade5"
+
+style "edit-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "edit_card_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "edit_card_normal.png"
+        }
+    }
+}
+widget "*.review_toolbar_edit_card_button" style "edit-card-button"
+
+style "add-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "add_card_normal.png"
+        }
+    }
+}
+widget "*.review_toolbar_add_card_button" style "add-card-button"
+
+style "delete-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "delete_card_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "delete_card_normal.png"
+        }
+    }
+}
+widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+#----------------------------- Review mode ------------------
+
+
+#----------------------------- Input mode ------------------
+style "input-mode-add-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "input_mode_add_card_normal.png"
+        }
+    }
+}
+widget "*.input_mode_toolbar_add_card_w" style "input-mode-add-card-button"
+
+style "input-mode-add-category-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "input_mode_add_new_category.png"
+        }
+    }
+}
+widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
+
+style "input-mode-close-add-category-block-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "input_mode_close_add_category_block.png"
+        }
+    }
+}
+widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
+
+style "snd-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "sound_preview_stop.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "sound_preview_play.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "sound_preview_stop.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "sound_preview_play.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "sound_preview_stop.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "sound_preview_play.png"
+        }
+    }
+}
+widget "*.input_mode_snd_button" style "snd-button"
+widget "*.review_mode_snd_button" style "snd-button"
+
+style "input-mode-prev-category-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "input_mode_prev_category.png"
+        }
+    }
+}
+widget "*.input_mode_prev_category_w" style "input-mode-prev-category-button"
+
+style "input-mode-next-category-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "input_mode_next_category.png"
+        }
+    }
+}
+widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
+
+style "front-to-back-cardtype" {
+    GtkRadioButton::indicator-size = 72
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "front_to_back_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "front_to_back_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "front_to_back_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+    }
+}
+widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
+
+style "both-way-cardtype" {
+    GtkRadioButton::indicator-size = 72
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "both_way_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "both_way_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "both_way_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+    }
+}
+widget "*.both_way_mode_selector_w" style "both-way-cardtype"
+
+style "three-side-cardtype" {
+    GtkRadioButton::indicator-size = 72
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "three_side_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "three_side_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "three_side_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
+    }
+}
+widget "*.three_side_mode_selector_w" style "three-side-cardtype"
+
+style "cloze-cardtype" {
+    GtkRadioButton::indicator-size = 72
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "cloze_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "cloze_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "cloze_card_type_selected.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+    }
+}
+widget "*.cloze_mode_selector_w" style "cloze-cardtype"
+
+style "sound-content-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "sound_content_button_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "sound_content_button_normal.png"
+        }
+    }
+}
+widget "*.sound_content_button" style "sound-content-button"
+
+style "picture-content-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "picture_content_button_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "picture_content_button_normal.png"
+        }
+    }
+}
+widget "*.picture_content_button" style "picture-content-button"
+
+style "vseparator" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "vseparator.png"
+        }
+    }
+}
+widget "*.vseparator1" style "vseparator"
+widget "*.vseparator2" style "vseparator"
+widget "*.review_mode_vseparator1" style "vseparator"
+widget "*.review_mode_vseparator2" style "vseparator"
+widget "*.config_mode_vseparator1" style "vseparator"
+widget "*.config_mode_vseparator2" style "vseparator"
+
+style "hseparator" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "hseparator.png"
+        }
+    }
+}
+widget "*.hseparator1" style "hseparator"
+
+widget "*.input_mode_answer_container" style "html-container"
+widget "*.input_mode_question_container" style "html-container"
+widget "*.input_mode_foreign_container" style "html-container"
+widget "*.input_mode_pronun_container" style "html-container"
+widget "*.input_mode_translate_container" style "html-container"
+widget "*.input_mode_cloze_container" style "html-container"
+widget "*.input_mode_new_category_entry_container" style "html-container"
+
+style "category-name-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "nothing.png"
+        }
+    }
+}
+widget "*.category_name_container" style "category-name-container"
+
+style "entry" {
+    font_name = "Nokia Sans 18"
+}
+widget "*.input_mode_new_category_entry" style "entry"
+
+style "category-label" {
+    font_name = "Nokia Sans 18"
+}
+widget "*.input_mode_new_category_label" style "category-label"
+widget "*.category_name_w" style "category-label"
+#----------------------------- Input mode -----------------
+
+
+#----------------------------- Config mode ------------------
+style "increase-font-size-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "increase_font_size.png"
+        }
+    }
+}
+widget "*.config_mode_increase_font_size_buttton" style "increase-font-size-button"
+
+style "decrease-font-size-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "decrease_font_size.png"
+        }
+    }
+}
+widget "*.config_mode_decrease_font_size_buttton" style "decrease-font-size-button"
+
+widget "*.config_mode_imagedir_container" style "html-container"
+widget "*.config_mode_sounddir_container" style "html-container"
+widget "*.config_mode_font_size_example_container" style "html-container"
+
+style "config-checkboxes" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "checked.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "unchecked.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "checked.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "unchecked.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "checked.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "unchecked.png"
+        }
+    }
+}
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+
+style "config-mode-label" {
+    font_name = "Nokia Sans 17"
+}
+widget "*.config_mode_fullscreen_label" style "config-mode-label"
+widget "*.config_mode_startup_with_review_label" style "config-mode-label"
+widget "*.config_mode_label_imagedir" style "config-mode-label"
+widget "*.config_mode_label_sounddir" style "config-mode-label"
+
+style "textareas" {
+    font_name = "Nokia Sans 20"
+}
+widget "*.config_mode_entry_imagedir" style "textareas"
+widget "*.config_mode_entry_sounddir" style "textareas"
+#----------------------------- Config mode ------------------
+
+
+#----------------------------- Dialogs ------------------
+style "dialog" {
+    engine "pixmap" {
+        image {
+            function = FLAT_BOX
+            file = "dialogbkg.png"
+            border = {12,12,12,12}
+        }
+    }
+}
+class "GtkDialog" style "dialog"
+
+style "dialog-label" {
+    font_name = "Nokia Sans Bold 16"
+}
+widget "*.question_dialog_label" style "dialog-label"
+widget "*.information_dialog_label" style "dialog-label"
+widget "*.warning_dialog_label" style "dialog-label"
+
+style "dialog-button-label" {
+    fg[NORMAL] = "#000000"
+    fg[ACTIVE] = "#000000"
+    fg[PRELIGHT] = "#000000"
+    font_name = "Nokia Sans Bold 15"
+}
+widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
+widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
+widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-label"
+widget "*.categories_manager_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.categories_manager_dialog_button_create.GtkLabel" style "dialog-button-label"
+
+style "question-dialog-button-yes" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+        }
+    }
+}
+widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
+widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.image_selection_dialog_button_select" style "question-dialog-button-yes"
+widget "*.categories_manager_dialog_button_create" style "question-dialog-button-yes"
+
+style "question-dialog-button-no" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "dialog_button.png"
+            border = {10,10,10,10}
+        }
+    }
+}
+widget "*.question_dialog_button_no" style "question-dialog-button-no"
+widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
+widget "*.categories_manager_dialog_button_close" style "question-dialog-button-no"
+#----------------------------- Dialogs ------------------
+
+
+#----------------------------- General ------------------
+# style for scrolls in Image selection dialog
+style "image-selection-dialog-scrollbars" {
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+}
+widget_class "*.GtkVScrollbar" style "image-selection-dialog-scrollbars"
+
+# Style for Main window
+style "main-window" {
+    engine "pixmap"{
+        image {
+            function = FLAT_BOX
+            file = "background.png"
+        }
+    }
+}
+#class "GtkWindow" style "main-window"
+widget "window" style "main-window"
+
+# Style for "To Main Menu" button
+style "main-menu-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "back.png"
+        }
+    }
+}
+widget "*.*main_menu_button" style "main-menu-button"
+widget "*.input_mode_toolbar_button_back_w" style "main-menu-button"
+#----------------------------- General ------------------

@@ -8,7 +8,7 @@
 
 from mnemosyne.libmnemosyne.tag import Tag
 from mnemosyne.libmnemosyne.fact import Fact
-from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger as events
+from mnemosyne.libmnemosyne.databases.SQLite_logging import SQLiteLogging as events
 from xml.etree import ElementTree
 
 PROTOCOL_VERSION = 0.1
@@ -91,7 +91,7 @@ class EventManager:
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
-            history += self.create_event_element(event).__str__()
+            history += str(self.create_event_element(event))
         history += "</history>\n"
         return history
 
@@ -99,30 +99,28 @@ class EventManager:
         """Creates XML representation of event."""
 
         event_id = event['event']
-        if event_id == events.ADDED_TAG or event_id == events.UPDATED_TAG \
-            or event_id == events.DELETED_TAG:
+        if event_id in (events.ADDED_TAG, events.UPDATED_TAG, \
+            events.DELETED_TAG):
             return self.create_tag_xml_element(event)
-        elif event_id == events.ADDED_FACT or event_id == events.UPDATED_FACT \
-            or event_id == events.DELETED_FACT:
+        elif event_id in (events.ADDED_FACT, events.UPDATED_FACT, \
+            events.DELETED_FACT):
             return self.create_fact_xml_element(event)
-        elif event_id == events.ADDED_CARD or event_id == events.UPDATED_CARD \
-            or event_id == events.DELETED_CARD:
+        elif event_id in (events.ADDED_CARD, events.UPDATED_CARD, \
+            events.DELETED_CARD):
             return self.create_card_xml_element(event)
-        elif event_id == events.ADDED_CARD_TYPE or \
-            event_id == events.UPDATED_CARD_TYPE or \
-            event_id == events.DELETED_CARD_TYPE or \
-            event_id == events.REPETITION:
+        elif event_id in (events.ADDED_CARD_TYPE, events.UPDATED_CARD_TYPE, \
+            events.DELETED_CARD_TYPE, events.REPETITION):
             return self.create_card_xml_element(event)
         else:
             return ''   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
-        tag = self.database.get_tag_by_id(event['id'])
+        tag = self.database.get_tag(event['id'], False)
         return "<tag ev='%s' id='%s' name='%s'/>" % \
             (event['event'], tag.id, tag.name)
 
     def create_fact_xml_element(self, event):
-        fact = self.database.get_fact_by_id(event['id'])
+        fact = self.database.get_fact(event['id'], False)
         dkeys = ','.join(["%s" % key for key, val in fact.data.items()])
         dvalues = ' '.join(["dv%s='%s'" % (num, fact.data.values()[num]) \
             for num in range(len(fact.data))])
@@ -131,7 +129,7 @@ class EventManager:
             event['time'])
 
     def create_card_xml_element(self, event):
-        card = self.database.get_card_by_id(event['id'])
+        card = self.database.get_card(event['id'], False)
         return "<card ev='%s' id='%s' ctid='%s' fid='%s' fvid='%s'" \
             " tags='%s' gr='%s' e='%s' lr='%s' nr='%s' sint='%s' aint='%s'" \
             " nint='%s' ttm='%s' tm='%s'/>" % (event['event'], card.id, \
@@ -141,7 +139,7 @@ class EventManager:
             event['a_int'], event['n_int'], event['t_time'], event['time'])
         
     def create_card_type_xml_element(self, event):
-        cardtype = self.database.get_card_type(event['id'])
+        cardtype = self.database.get_card_type(event['id'], False)
         fields = [key for key, value in cardtype.fields]
         return "<ctype ev='%s' id='%s' name='%s' f='%s' uf='%s' ks='%s'" \
             " edata='%s'/>" % (event['event'], cardtype.id, cardtype.name, \
@@ -155,7 +153,7 @@ class EventManager:
             dkeys = item.get('dk').split(',')
             dvals = [item.get("dv%s" % num) for num in range(len(dkeys))]
             fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
-            card_type = self.database.get_card_type(item.get('ctid'))
+            card_type = self.database.get_card_type(item.get('ctid'), False)
             creation_time = int(item.get('tm'))
             fact_id = item.get('id')
             return Fact(fact_data, card_type, creation_time, fact_id)
@@ -164,7 +162,7 @@ class EventManager:
             card.id = item.get('id')
             card.fact_view = DictClass()
             card.fact_view.id = item.get('fvid')
-            card.fact = self.database.get_fact_by_id(item.get('fid'))
+            card.fact = self.database.get_fact(item.get('fid'), False)
             card.tags = set(self.database.get_or_create_tag_with_name(\
                 tag_name) for tag_name in item.get('tags').split(','))
             card.grade = int(item.get('gr'))
@@ -174,8 +172,7 @@ class EventManager:
             card.acq_reps_since_lapse, card.ret_reps_since_lapse = 0, 0
             card.last_rep = int(item.get('lr'))
             card.next_rep = int(item.get('nr'))
-            card.extra_data = 0
-            card.scheduler_data = 0
+            card.extra_data, card.scheduler_data = 0, 0
             card.active, card.in_view = True, True
             #for repetition event
             try:
@@ -206,7 +203,6 @@ class EventManager:
             cardtype.keyboard_shortcuts, cardtype.extra_data = {}, {}
             return cardtype
 
-
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
@@ -214,8 +210,7 @@ class EventManager:
             event = int(child.get('ev'))
             obj = self.create_object_from_xml(child)
             if event == events.ADDED_FACT:
-                if not self.database.has_fact_with_data(\
-                    obj.data, obj.card_type):
+                if not self.database.has_fact_with_data(obj):
                     self.database.add_fact(obj)
             elif event == events.UPDATED_FACT:
                 self.database.update_fact(obj)
@@ -229,7 +224,7 @@ class EventManager:
             elif event == events.DELETED_TAG:
                 self.database.delete_tag(obj)
             elif event == events.ADDED_CARD:
-                if not self.database.get_card_by_id(obj.id):
+                if not has_card_with_external_id(obj.id):
                     self.database.add_card(obj)
             elif event == events.UPDATED_CARD:
                 self.database.update_card(obj)

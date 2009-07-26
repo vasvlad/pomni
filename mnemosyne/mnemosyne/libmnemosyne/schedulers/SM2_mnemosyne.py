@@ -112,7 +112,7 @@ class SM2Mnemosyne(Scheduler):
         """
 
         card.grade = grade
-        card.easiness = self.database().average_easiness()
+        card.easiness = 2.5
         card.acq_reps = 1
         card.acq_reps_since_lapse = 1
         card.last_rep = int(time.time())
@@ -261,18 +261,18 @@ class SM2Mnemosyne(Scheduler):
                         return
             # If the queue is empty, relax the 'related not together'                           
             # requirement.                                                                      
-            if not related_together and len(self._card_ids_in_queue) == 0:                                   
+            if not related_together and len(self._card_ids_in_queue) == 0:
                 for _card_id, _fact_id in db.cards_unseen(\
                     sort_key=sort_key, limit=min(limit, 50)):                
-                    if _fact_id not in self._fact_ids_in_queue:                                              
-                        self._card_ids_in_queue.append(_card_id)                                             
-                        self._fact_ids_in_queue.append(_fact_id)                                             
+                    if _fact_id not in self._fact_ids_in_queue:
+                        self._card_ids_in_queue.append(_card_id)
+                        self._fact_ids_in_queue.append(_fact_id)
                         grade_0_in_queue += 1                                                   
                         if limit and grade_0_in_queue == limit:                                 
                             self.stage = 2                                                      
                             return                                                              
             # If the queue is still empty, go to learn ahead of schedule.                       
-            if len(self._card_ids_in_queue) == 0:                                                            
+            if len(self._card_ids_in_queue) == 0:
                 self.stage = 5
             
         # Stage 5
@@ -317,7 +317,7 @@ class SM2Mnemosyne(Scheduler):
                       self.last_card == _card_id:
                 _card_id = self._card_ids_in_queue.pop(0)
         self.last_card = _card_id
-        return self.database().get_card(_card_id)
+        return self.database().get_card(_card_id, id_is_internal=True)
 
     def allow_prefetch(self):
 
@@ -355,7 +355,7 @@ class SM2Mnemosyne(Scheduler):
             actual_interval = int(self.stopwatch().start_time) - card.last_rep
         if card.grade == -1:
             # The card has not yet been given its initial grade.
-            card.easiness = self.database().average_easiness()
+            card.easiness = 2.5
             card.acq_reps = 1
             card.acq_reps_since_lapse = 1
             new_interval = self.calculate_initial_interval(new_grade)   
@@ -450,13 +450,20 @@ class SM2Mnemosyne(Scheduler):
         self.log().repetition(card, scheduled_interval, actual_interval,
                               new_interval)
         return new_interval
-
-    def non_memorised_count(self):
-        return self.database().non_memorised_count()
-
+    
     def scheduled_count(self):
         return self.database().scheduled_count(self.adjusted_now())
-
+    
+    def non_memorised_count(self):
+        return self.database().non_memorised_count()
+    
     def active_count(self):
         return self.database().active_count()
 
+    def card_count_scheduled_between(self, start, end):
+
+        "Arguments are in days from today, i.e. today=0, tomorrow=1, ..."
+        
+        now = self.adjusted_now()
+        return self.database().card_count_scheduled_between\
+                (now + start * DAY, now + end * DAY)

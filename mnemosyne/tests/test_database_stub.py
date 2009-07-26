@@ -80,15 +80,15 @@ class TestDatabaseStub:
 
     @raises(NotImplementedError)
     def test_get_tag(self):
-        self.database.get_tag(None)
+        self.database.get_tag(None, True)
 
     @raises(NotImplementedError)
     def test_get_fact(self):
-        self.database.get_fact(None)
+        self.database.get_fact(None, True)
 
     @raises(NotImplementedError)
     def test_get_card(self):
-        self.database.get_card(None)
+        self.database.get_card(None, True)
 
     @raises(NotImplementedError)
     def test_set_cards_active(self):
@@ -105,10 +105,6 @@ class TestDatabaseStub:
     @raises(NotImplementedError)       
     def test_cards_from_fact(self):        
         self.database.cards_from_fact(None)
-
-    @raises(NotImplementedError)
-    def test_has_fact_with_data(self):
-        self.database.has_fact_with_data(None, None)
 
     @raises(NotImplementedError)
     def test_duplicates_for_fact(self):
@@ -133,10 +129,6 @@ class TestDatabaseStub:
     @raises(NotImplementedError)
     def test_active_count(self):
         self.database.active_count()
-
-    @raises(NotImplementedError)
-    def test_average_easiness(self):
-        self.database.average_easiness()
 
     @raises(NotImplementedError)
     def test_card_types_in_use(self):

@@ -4,11 +4,9 @@
 #
 
 import os
-import gzip
-import time
-import cPickle
 import shutil
 import random
+import cPickle
 import mnemosyne.version
 
 from mnemosyne.libmnemosyne.tag import Tag
@@ -185,57 +183,28 @@ class Pickle(Database):
         self.cards = []
         self.global_variables = {"version": self.version}
         return True
-
+    
+    def abandon(self):
+        self.tags = []
+        self.facts = []
+        self.cards = []
+        self.global_variables = {"version": self.version}
+    
     def backup(self):
-        if self.config().resource_limited:
-            return
+        print "Backup not implemented"
         
-        # TODO: implement
-        return
-
-        #if number_of_items() == 0 or get_config("backups_to_keep") == 0:
-        #    return
-
-        #backupdir = os.path.join(basedir, "backups")
-
-        # Export to XML. Create only a single file per day.
-
-        #db_name = os.path.basename(config["path"])[:-4]
-
-        #filename = db_name + "-" +\
-        #           datetime.date.today().strftime("%Y%m%d") + ".xml"
-        #filename = os.path.join(backupdir, filename)
-
-        #export_XML(filename, get_tag_names(), reset_learning_data=False)
-
-        # Compress the file.
-
-        #f = bz2.BZ2File(filename + ".bz2", 'wb', compresslevel=5)
-        #for l in file(filename):
-        #    f.write(l)
-        #f.close()
-
-        #os.remove(filename)
-
-        # Only keep the last logs.
-
-        #if get_config("backups_to_keep") < 0:
-        #    return
-
-        #files = [f for f in os.listdir(backupdir) if f.startswith(db_name + "-")]
-        #files.sort()
-        #if len(files) > get_config("backups_to_keep"):
-        #    os.remove(os.path.join(backupdir, files[0]))
-
     def is_loaded(self):
         return len(self.facts) != 0
     
-    # Adding, modifying and deleting tags, facts and cards.
+    # Tags.
     
     def add_tag(self, tag):
         tag._id = tag.id
         self.tags.append(tag)
-
+        
+    def get_tag(self, id, id_is_internal):
+        return [c for c in self.tags if c.id == id][0]
+    
     def update_tag(self, tag):
         return # Happens automatically.
 
@@ -245,8 +214,6 @@ class Pickle(Database):
                 self.tags.remove(tag_i)
                 del tag_i
                 return
-            
-    # TODO: benchmark this and see if we need a dictionary tag_by_name.
 
     def get_or_create_tag_with_name(self, name):
         for tag in self.tags:
@@ -264,28 +231,38 @@ class Pickle(Database):
             self.tags.remove(tag)
             del tag
 
+    # Facts.
+    
     def add_fact(self, fact):
         fact._id = fact.id
         self.load_failed = False
         self.facts.append(fact)
-
+    
+    def get_fact(self, id, id_is_internal):
+        return [f for f in self.facts if f.id == id][0]
+    
     def update_fact(self, fact):
         return # Happens automatically.
-        
-    def add_card(self, card):
-        card._id = card.id
-        self.load_failed = False
-        self.cards.append(card)
 
-    def update_card(self, card, repetition_only=False):
-        return # Happens automatically.
-    
     def delete_fact_and_related_data(self, fact):
         related_cards = [c for c in self.cards if c.fact == fact]
         for c in related_cards:
             self.delete_card(c)
         self.facts.remove(fact)
         del fact
+
+    # Cards.
+        
+    def add_card(self, card):
+        card._id = card.id
+        self.load_failed = False
+        self.cards.append(card)
+
+    def get_card(self, id, id_is_internal):
+        return [c for c in self.cards if c.id == id][0]
+    
+    def update_card(self, card, repetition_only=False):
+        return # Happens automatically.
             
     def delete_card(self, card):
         old_cat = card.tags
@@ -294,18 +271,7 @@ class Pickle(Database):
             self.remove_tag_if_unused(cat)    
         self.log().deleted_card(card)
         del card
-    
-    # Retrieving tags, facts, cards based on their internal id.
 
-    def get_tag(self, _id):
-        return [c for c in self.tags if c._id == _id][0]
-    
-    def get_fact(self, _id):
-        return [f for f in self.facts if f._id == _id][0]
-
-    def get_card(self, _id):
-        return [c for c in self.cards if c._id == _id][0]
-    
     # Activate and set cards in view.
 
     def set_cards_active(self, card_types_fact_views, tags):
@@ -343,12 +309,6 @@ class Pickle(Database):
         return len([c for c in self.cards if c.fact == card.fact and \
             c != card and c.next_rep == next_rep and c.grade >= 2])
 
-    def has_fact_with_data(self, fact_data, card_type):
-        for f in self.facts:
-            if f.data == fact_data and f.card_type == card_type:
-                return True
-        return False
-
     def duplicates_for_fact(self, fact):
         duplicates = []
         for f in self.facts:
@@ -377,14 +337,6 @@ class Pickle(Database):
 
     def active_count(self):
         return len([c for c in self.cards if c.active])
-
-    def average_easiness(self):
-        if len(self.cards) == 0:
-            return 2.5
-        else:
-            cards = (c.easiness for c in self.cards if \
-                     c.easiness > 0)
-            return sum(cards) / len([cards])
 
     # Card queries used by the scheduler.
     
