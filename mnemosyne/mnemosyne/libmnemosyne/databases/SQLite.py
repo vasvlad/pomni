@@ -19,7 +19,6 @@ from mnemosyne.libmnemosyne.fact_view import FactView
 from mnemosyne.libmnemosyne.utils import traceback_string
 from mnemosyne.libmnemosyne.utils import mangle, copy_file_to_dir
 from mnemosyne.libmnemosyne.utils import expand_path, contract_path
-from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger
 
 re_src = re.compile(r"""src=\"(.+?)\"""", re.DOTALL | re.IGNORECASE)
 
@@ -410,7 +409,11 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         tag = Tag(sql_res["name"], sql_res["id"])
         tag._id = sql_res["_id"]
         return tag
+<<<<<<< HEAD:mnemosyne/mnemosyne/libmnemosyne/databases/SQLite.py
 
+=======
+    
+>>>>>>> 75881517e22657245e920ec1827f766339dd747a:mnemosyne/mnemosyne/libmnemosyne/databases/SQLite.py
     def delete_tag(self, tag):
         self.con.execute("delete from tags where _id=?", (tag._id,))
         self.log().deleted_tag(tag)
@@ -545,7 +548,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             where _card_id=?""", (sql_res["_id"], )):
             card.tags.add(self.get_tag(cursor["_tag_id"], id_is_internal=True))
         return card
-
+    
     def update_card(self, card, repetition_only=False):
         self.con.execute("""update cards set id=?, _fact_id=?, fact_view_id=?,
             grade=?, easiness=?, acq_reps=?, ret_reps=?, lapses=?,
@@ -605,7 +608,6 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             setattr(fact_view, attr, sql_res[attr])
         self._get_extra_data(sql_res, fact_view)
         return fact_view
-
     
     #
     # Card types.
@@ -650,7 +652,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             card_type.fact_views.append(self._get_fact_view(\
                 cursor["_fact_view_id"]))
         return card_type
-
+        
     def update_card_type(self, card_type):
         self.con.execute("""update card_types set name=?, fields=?,
             unique_fields=?, required_fields=?, keyboard_shortcuts=?,
@@ -680,22 +682,6 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         self.con.execute("delete from card_types where id=?",
             (card_type.id, ))
         self.log().deleted_card_type(card_type)
-
-
-    #FIXME: get new version of SQLite
-    def repetition(self, card, scheduled_interval, actual_interval, \
-                   new_interval, noise=0):
-        self.database().con.execute(\
-            """insert into history(event, timestamp, object_id, grade,
-            easiness, acq_reps, ret_reps, lapses, acq_reps_since_lapse,
-            ret_reps_since_lapse, scheduled_interval, actual_interval,
-            new_interval, thinking_time)
-            values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (18, int(time.time()), card.id, card.grade,
-            card.easiness, card.acq_reps, card.ret_reps, card.lapses,
-            card.acq_reps_since_lapse, card.ret_reps_since_lapse,
-            scheduled_interval, actual_interval, new_interval,
-            int(self.stopwatch().time())))
 
     #
     # Process media files in fact data.

@@ -90,12 +90,6 @@ style "menu-button-input" {
         }
         image {
             function = BOX
-            state = ACTIVE
-            file = "input_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "input_big.png"
         }
     }
@@ -111,12 +105,6 @@ style "menu-button-synh" {
         }
         image {
             function = BOX
-            state = ACTIVE
-            file = "synh_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "synh_big.png"
         }
     }
@@ -132,12 +120,6 @@ style "menu-button-conf" {
         }
         image {
             function = BOX
-            state = ACTIVE
-            file = "conf_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "conf_big.png"
         }
     }
@@ -153,12 +135,6 @@ style "menu-button-exit" {
         }
         image {
             function = BOX
-            state = ACTIVE
-            file = "exit_big.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
             file = "exit_big.png"
         }
     }
@@ -176,7 +152,6 @@ style "html-container" {
             function = SHADOW
             file = "textarea.png"
             border = {14,14,14,14}
-            stretch = TRUE
         }
     }
 }
@@ -279,12 +254,10 @@ style "edit-card-button" {
             function = BOX
             state = INSENSITIVE
             file = "edit_card_insensitive.png"
-            stretch = TRUE
         }
         image {
             function = BOX
             file = "edit_card_normal.png"
-            stretch = TRUE
         }
     }
 }
@@ -295,7 +268,6 @@ style "add-card-button" {
         image {
             function = BOX
             file = "add_card_normal.png"
-            stretch = TRUE
         }
     }
 }
@@ -307,12 +279,10 @@ style "delete-card-button" {
             function = BOX
             state = INSENSITIVE
             file = "delete_card_insensitive.png"
-            stretch = TRUE
         }
         image {
             function = BOX
             file = "delete_card_normal.png"
-            stretch = TRUE
         }
     }
 }
@@ -592,12 +562,10 @@ style "sound-content-button" {
             function = BOX
             state = INSENSITIVE
             file = "sound_content_button_insensitive.png"
-            stretch = TRUE
         }
         image {
             function = BOX
             file = "sound_content_button_normal.png"
-            stretch = TRUE
         }
     }
 }
@@ -609,12 +577,10 @@ style "picture-content-button" {
             function = BOX
             state = INSENSITIVE
             file = "picture_content_button_insensitive.png"
-            stretch = TRUE
         }
         image {
             function = BOX
             file = "picture_content_button_normal.png"
-            stretch = TRUE
         }
     }
 }
@@ -640,7 +606,6 @@ style "hseparator" {
         image {
             function = BOX
             file = "hseparator.png"
-            stretch = TRUE
         }
     }
 }
@@ -683,7 +648,6 @@ style "increase-font-size-button" {
         image {
             function = BOX
             file = "increase_font_size.png"
-            stretch = TRUE
         }
     }
 }
@@ -694,7 +658,6 @@ style "decrease-font-size-button" {
         image {
             function = BOX
             file = "decrease_font_size.png"
-            stretch = TRUE
         }
     }
 }
@@ -770,7 +733,6 @@ style "dialog" {
             function = FLAT_BOX
             file = "dialogbkg.png"
             border = {12,12,12,12}
-            stretch = TRUE
         }
     }
 }
@@ -804,7 +766,6 @@ style "question-dialog-button-yes" {
             function = BOX
             file = "dialog_button.png"
             border = {10,10,10,10}
-            stretch = TRUE
         }
     }
 }
@@ -820,7 +781,6 @@ style "question-dialog-button-no" {
             function = BOX
             file = "dialog_button.png"
             border = {10,10,10,10}
-            stretch = TRUE
         }
     }
 }
