@@ -32,7 +32,7 @@ class Client:
     def start(self):
         """Start syncing."""
         
-        if self.login():
+        if self.login_():
             self.handshake()
             #FIXME: replace by real machine id from server params
             client_history = self.eman.get_history("server_machine_id")
@@ -43,7 +43,7 @@ class Client:
         else:
             print "client: wring login or password!"
 
-    def login(self):
+    def login_(self):
         print 'login'
         return True
 

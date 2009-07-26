@@ -22,7 +22,7 @@ class Server:
         self.port = int(params.path)
         self.httpd = None
         self.eman = EventManager(database, None)
-        self.hw_id = hex(uuid.getnode())
+        self.machine_id = hex(uuid.getnode())
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
         self.protocol_version = PROTOCOL_VERSION
@@ -91,7 +91,7 @@ class Server:
         """Gets self history events."""
 
         #FIXME: replace "test" by real machine id
-        return self.eman.get_history("test")
+        return self.eman.get_history("client_machine_id")
 
     def put_sync_history(self, environ):
         """Gets client history and applys to self."""
