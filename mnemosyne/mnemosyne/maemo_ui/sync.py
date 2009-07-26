@@ -4,7 +4,7 @@ sys.path.insert(0, '../../')
 sys.path.insert(0, "../")
 from libSM2sync.server import Server
 from libSM2sync.client import Client
-from pomni.factory import app_factory
+from maemo_ui.factory import app_factory
 
 def main(argv):
     """Main."""
@@ -16,7 +16,7 @@ def main(argv):
         uri = argv[2]
         if mode == "server":
             app = app_factory()
-            app.initialise(os.path.abspath(os.path.join(os.getcwdu(), ".pomni")))
+            app.initialise(os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne")))
             database = app.database()
             server = Server(uri, database)
             server.start()

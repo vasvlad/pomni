@@ -31,8 +31,9 @@ class Client:
         
         client_history = self.eman.get_history()
         server_history = self.get_server_history()
-        self.eman.apply_history(server_history)
-        self.send_history(client_history)
+        print server_history
+        #self.eman.apply_history(server_history)
+        #self.send_history(client_history)
 
     def handshake(self, server):
         """Handshaking with server."""

@@ -8,7 +8,7 @@
 
 from mnemosyne.libmnemosyne.tag import Tag
 from mnemosyne.libmnemosyne.fact import Fact
-from mnemosyne.libmnemosyne.loggers.sql_logger import SqlLogger as events
+from mnemosyne.libmnemosyne.databases.SQLite_logging import SQLiteLogging as events
 from xml.etree import ElementTree
 
 PROTOCOL_VERSION = 0.1
@@ -115,12 +115,12 @@ class EventManager:
             return ''   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
-        tag = self.database.get_tag_by_id(event['id'])
+        tag = self.database.get_tag(event['id'], False)
         return "<tag ev='%s' id='%s' name='%s'/>" % \
             (event['event'], tag.id, tag.name)
 
     def create_fact_xml_element(self, event):
-        fact = self.database.get_fact_by_id(event['id'])
+        fact = self.database.get_fact(event['id'], False)
         dkeys = ','.join(["%s" % key for key, val in fact.data.items()])
         dvalues = ' '.join(["dv%s='%s'" % (num, fact.data.values()[num]) \
             for num in range(len(fact.data))])
@@ -129,7 +129,7 @@ class EventManager:
             event['time'])
 
     def create_card_xml_element(self, event):
-        card = self.database.get_card_by_id(event['id'])
+        card = self.database.get_card(event['id'], False)
         return "<card ev='%s' id='%s' ctid='%s' fid='%s' fvid='%s'" \
             " tags='%s' gr='%s' e='%s' lr='%s' nr='%s' sint='%s' aint='%s'" \
             " nint='%s' ttm='%s' tm='%s'/>" % (event['event'], card.id, \
@@ -139,7 +139,7 @@ class EventManager:
             event['a_int'], event['n_int'], event['t_time'], event['time'])
         
     def create_card_type_xml_element(self, event):
-        cardtype = self.database.get_card_type(event['id'])
+        cardtype = self.database.get_card_type(event['id'], False)
         fields = [key for key, value in cardtype.fields]
         return "<ctype ev='%s' id='%s' name='%s' f='%s' uf='%s' ks='%s'" \
             " edata='%s'/>" % (event['event'], cardtype.id, cardtype.name, \
@@ -153,7 +153,7 @@ class EventManager:
             dkeys = item.get('dk').split(',')
             dvals = [item.get("dv%s" % num) for num in range(len(dkeys))]
             fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
-            card_type = self.database.get_card_type(item.get('ctid'))
+            card_type = self.database.get_card_type(item.get('ctid'), False)
             creation_time = int(item.get('tm'))
             fact_id = item.get('id')
             return Fact(fact_data, card_type, creation_time, fact_id)
@@ -162,7 +162,7 @@ class EventManager:
             card.id = item.get('id')
             card.fact_view = DictClass()
             card.fact_view.id = item.get('fvid')
-            card.fact = self.database.get_fact_by_id(item.get('fid'))
+            card.fact = self.database.get_fact(item.get('fid'), False)
             card.tags = set(self.database.get_or_create_tag_with_name(\
                 tag_name) for tag_name in item.get('tags').split(','))
             card.grade = int(item.get('gr'))
@@ -210,8 +210,7 @@ class EventManager:
             event = int(child.get('ev'))
             obj = self.create_object_from_xml(child)
             if event == events.ADDED_FACT:
-                if not self.database.has_fact_with_data(\
-                    obj.data, obj.card_type):
+                if not self.database.has_fact_with_data(obj):
                     self.database.add_fact(obj)
             elif event == events.UPDATED_FACT:
                 self.database.update_fact(obj)
@@ -225,7 +224,7 @@ class EventManager:
             elif event == events.DELETED_TAG:
                 self.database.delete_tag(obj)
             elif event == events.ADDED_CARD:
-                if not self.database.get_card_by_id(obj.id):
+                if not has_card_with_external_id(obj.id):
                     self.database.add_card(obj)
             elif event == events.UPDATED_CARD:
                 self.database.update_card(obj)
