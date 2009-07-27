@@ -91,11 +91,12 @@ class EventManager:
         for key in params.keys():
             self.partner[key] = params.get(key)
 
-    def get_history(self, machine_id):
+    def get_history(self):
         """Creates history in XML."""
         
         history = "<history>"
-        for item in self.database.get_history_events(machine_id):
+        for item in self.database.get_history_events(\
+            self.partner['machine_id']):
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
