@@ -79,9 +79,17 @@ class EventManager:
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
+        self.partner = {'role': None, 'machine_id': None, 'name': 'Mnemosyne', \
+            'ver': None, 'protocol': None, 'cardtypes': None, 'extra': \
+            None, 'deck': None, 'upload': True, 'readonly': False}
 
-    def set_sync_params(self, params):
-        pass 
+    def set_sync_params(self, partner_params):
+        """Sets other side specific params."""
+
+        params = ElementTree.fromstring(partner_params).getchildren()[0]
+        self.partner['role'] = params.tag
+        for key in params.keys():
+            self.partner[key] = params.get(key)
 
     def get_history(self, machine_id):
         """Creates history in XML."""
