@@ -4,6 +4,8 @@ Client.
 
 import mnemosyne.version
 import httplib
+import base64
+import urllib2
 import uuid
 from urlparse import urlparse
 from sync import EventManager
@@ -13,7 +15,10 @@ from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
 class Client:
     """Base client class for syncing."""
 
-    def __init__(self, uri, database, controller):
+    def __init__(self, uri, database, controller, config):
+        #FIXME: remove from init. 
+        self.config = config
+        self.uri = uri
         params = urlparse(uri)
         self.host = params.scheme
         self.port = params.path
@@ -22,30 +27,47 @@ class Client:
         self.app_name = 'Mnemosyne'
         self.app_version = mnemosyne.version.version
         self.protocol_version = PROTOCOL_VERSION
-        #FIXME: get from config
-        self.login = 'mnemosyne'
-        #FIXME: get from config
-        self.password = 'mnemosyne'
         self.cardtypes = N_SIDED_CARD_TYPE
         self.extradata = ''
+        print dir(self)
 
     def start(self):
         """Start syncing."""
         
-        if self.login_():
+        if self.login():
             self.handshake()
             #FIXME: replace by real machine id from server params
-            client_history = self.eman.get_history("server_machine_id")
-            server_history = self.get_server_history()
-            print server_history
+            #client_history = self.eman.get_history("server_machine_id")
+            #server_history = self.get_server_history()
+            #print server_history
+            print '123'
             #self.eman.apply_history(server_history)
             #self.send_history(client_history)
         else:
-            print "client: wring login or password!"
+            #FIXME: replace by Error Dialog.
+            print "Authentification: wrong login or password!"
 
-    def login_(self):
-        print 'login'
-        return True
+    def login(self):
+        """Logs on the server."""
+        
+        base64string = base64.encodestring("%s:%s" % (self.config['user_id'], \
+            self.config['user_passwd']))[:-1]
+        authheader =  "Basic %s" % base64string
+        #FIXME: it necessary for localhost
+        if not self.uri.startswith("http://"):
+            uri = "http://" + self.uri
+        else:
+            uri = self.uri
+        request = urllib2.Request(uri)
+        request.add_header("AUTHORIZATION", authheader)
+        try:
+            response = urllib2.urlopen(request)
+        except IOError, exception:
+            print exception
+            return False
+        else: 
+            print response.read()
+            return True
 
     def handshake(self):
         """Handshaking with server."""
