@@ -44,6 +44,8 @@ class InputWidget(Dialog):
     
     def __init__(self, component_manager):
 
+        print '>>>>', self
+
         Dialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
@@ -151,21 +153,6 @@ class InputWidget(Dialog):
         # stock gtk doesn't have hildon properties
         except (TypeError, AttributeError): 
             pass # so, skip silently
-
-    def activate(self):
-        """Activate input mode."""
-
-        self.main_widget().soundplayer.stop()
-        self.update = self.fact is not None
-        
-        self.update_categories()
-        self.clear_widgets()
-        if self.fact: # If enter from Review mode
-            self.card_type = self.fact.card_type
-            self.compose_widgets()
-            self.set_widgets_data(self.fact)
-
-        self.show_snd_container()
 
     def show_snd_container(self):
         """ Shows or hides snd container. """
@@ -288,7 +275,6 @@ class InputWidget(Dialog):
         Set html-text with media path and type when user
         select media filefrom media selection dialog. 
         """
-
         self.widgets["MediaDialog"].hide()
         item_index = self.w_tree.get_widget("iconview_widget"). \
             get_selected_items()[0]
@@ -412,9 +398,8 @@ class InputWidget(Dialog):
 
     def clear_text_cb(self, widget, event):
         """Clear textview content."""
-
-        if not self.update:
-            widget.get_buffer().set_text("")
+        print 'empty clear_text_cb'
+        pass
 
     def show_add_category_block_cb(self, widget):
         """Shows add category block."""
@@ -432,22 +417,51 @@ class InputWidget(Dialog):
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
-        if self.added_new_cards:
-            self.review_controller().reset()
-            self.added_new_cards = False
+        #if self.added_new_cards:
+            #self.review_controller().reset()
+            #self.added_new_cards = False
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
 class AddCardsWidget(InputWidget, AddCardsDialog):
     """Add new card.""" 
     def __init__(self, component_manager):
+        print 'AddCardsWidget.__init__'
         InputWidget.__init__(self, component_manager)
+
+    def activate(self):
+        """Activate input mode."""
+
+        self.main_widget().soundplayer.stop()
+        self.update_categories()
+        self.clear_widgets()
+        self.show_snd_container()
+
+    def clear_text_cb(self, widget, event):
+        """Clear textview content."""
+        print 'clear_text_cb'
+        widget.get_buffer().set_text("")
 
 class EditFactWidget(InputWidget, EditFactDialog):
     """Edit current fact."""
     def __init__(self, fact, component_manager, allow_cancel=True):
+        print 'EditCardsWidget.__init__'
         InputWidget.__init__(self, component_manager)
         self.fact = fact
+        self.allow_cancel = allow_cancel
+        self.update = True
+
+    def activate(self):
+        """Activate input mode."""
+
+        self.main_widget().soundplayer.stop()
+
+        self.update_categories()
+        self.clear_widgets()
+        self.card_type = self.fact.card_type
+        self.compose_widgets()
+        self.set_widgets_data(self.fact)
+        self.show_snd_container()
 
 
 # Local Variables:
