@@ -4,6 +4,7 @@ Server.
 
 import cgi
 import uuid
+import base64
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -16,11 +17,14 @@ class Server:
 
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self, uri, database):
+    def __init__(self, uri, database, config):
         params = urlparse(uri)
+        #FIXME: move from here
+        self.config = config
         self.host = params.scheme
         self.port = int(params.path)
         self.httpd = None
+        self.logged = False
         self.eman = EventManager(database, None)
         self.machine_id = hex(uuid.getnode())
         self.app_name = 'Mnemosyne'
@@ -43,19 +47,32 @@ class Server:
                     return False
             return True
 
-        method = (environ['REQUEST_METHOD'] + \
-            '_'.join(environ['PATH_INFO'].split('/'))).lower()
-        if hasattr(self, method) and callable(getattr(self, method)):
-            args = cgi.parse_qs(environ['QUERY_STRING'])
-            args = dict([(key, value[0]) for key, value in args.iteritems()])
-            if getattr(self, method).func_code.co_argcount-2 == len(args) \
-                and compare_args(args.keys(), getattr(self, method). \
-                    func_code.co_varnames):                
-                return '200 OK', self.DEFAULT_MIME, method, args
+        if environ.has_key('HTTP_AUTHORIZATION'):
+            clogin, cpasswd = base64.decodestring(\
+                environ['HTTP_AUTHORIZATION'].split(' ')[-1]).split(':')
+            if clogin == self.config['user_id'] and \
+                cpasswd == self.config['user_passwd']:
+                self.logged = True
+                status = '200 OK'
             else:
-                return '400 Bad Request', "text/plain", None, None
+                status = '403 Forbidden'
+            return status, "text/plain", None, None
         else:
-            return '404 Not Found', "text/plain", None, None
+            if not self.logged:
+                return '403 Forbidden', "text/plain", None, None
+            method = (environ['REQUEST_METHOD'] + \
+                '_'.join(environ['PATH_INFO'].split('/'))).lower()
+            if hasattr(self, method) and callable(getattr(self, method)):
+                args = cgi.parse_qs(environ['QUERY_STRING'])
+                args = dict([(key, value[0]) for key, value in args.iteritems()])
+                if getattr(self, method).func_code.co_argcount-2 == len(args) \
+                    and compare_args(args.keys(), getattr(self, method). \
+                        func_code.co_varnames):                
+                    return '200 OK', self.DEFAULT_MIME, method, args
+                else:
+                    return '400 Bad Request', "text/plain", None, None
+            else:
+                return '404 Not Found', "text/plain", None, None
 
     def wsgi_app(self, environ, start_response):
         """Simple Server wsgi application."""
@@ -75,11 +92,6 @@ class Server:
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
-    def login(self, login, password):
-        """Check client existence."""
-
-        return True
-
     def get_sync_params(self):
         """Gets server specific params."""
 
@@ -90,7 +102,7 @@ class Server:
     def get_sync_history(self, environ):
         """Gets self history events."""
 
-        #FIXME: replace "test" by real machine id
+        #FIXME: replace by real machine id
         return self.eman.get_history("client_machine_id")
 
     def put_sync_history(self, environ):
@@ -101,8 +113,8 @@ class Server:
         self.eman.apply_history(client_history)
         return "OK"
 
-    def done(self):
-        """Mark in database that sync was completed successfull."""
+    def sync_done(self):
+        """Finishes sync."""
 
-        pass
+        self.logged = False
    
