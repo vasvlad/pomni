@@ -111,8 +111,7 @@ class Server:
     def get_sync_history(self, environ):
         """Gets self history events."""
 
-        #FIXME: replace by real machine id
-        return self.eman.get_history("client_machine_id")
+        return self.eman.get_history()
 
     def put_sync_history(self, environ):
         """Gets client history and applys to self."""
