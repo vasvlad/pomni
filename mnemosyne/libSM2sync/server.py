@@ -92,6 +92,12 @@ class Server:
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
+    def set_params(self, params):
+        """Uses for setting non-default params."""
+
+        for key in params.keys():
+            setattr(self, key, params[key])
+
     def get_sync_params(self, environ):
         """Gets server specific params and sends it to client."""
 
