@@ -18,14 +18,14 @@ def main(argv):
             app = app_factory()
             app.initialise(os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne")))
             database = app.database()
-            server = Server(uri, database)
+            server = Server(uri, database, app.config())
             server.start()
             app.finalise()
         elif mode == "client":
             app = app_factory()
             app.initialise(os.path.abspath(os.path.join(os.getcwdu(), "testdb")))
             database = app.database()
-            client = Client(uri, database, app.controller())
+            client = Client(uri, database, app.controller(), app.config())
             client.start()
             app.finalise()
         else:
