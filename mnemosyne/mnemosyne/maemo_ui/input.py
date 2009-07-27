@@ -428,7 +428,7 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
     """Add new card widget."""
 
     def __init__(self, component_manager):
-        InputWidget.__init__(self)
+        InputWidget.__init__(self, component_manager)
         AddCardsDialog.__init__(self, component_manager)
         self.connect_signals([\
             ("input_mode_toolbar_add_card_w", "clicked", self.add_card_cb),
@@ -474,7 +474,7 @@ class EditFactWidget(InputWidget, EditFactDialog):
     """Edit current fact widget."""
 
     def __init__(self, fact, component_manager, allow_cancel=True):
-        InputWidget.__init__(self)
+        InputWidget.__init__(self, component_manager)
         EditFactDialog.__init__(self, fact, component_manager, allow_cancel)
 
         self.fact = fact
