@@ -17,57 +17,6 @@ VICE_VERSA_CARD_TYPE = 2
 N_SIDED_CARD_TYPE = 3
 
 
-class Sync(object):
-    """Main class driving sync."""
-
-    def __init__(self, url):
-        self.url = url
-        self.client = self.server = None
-
-    def start(self):
-        """Start syncing."""
-
-        print "start syncing..."
-        """
-        if self.handshake():
-            self.client.process_history(self.get_server_history(), \
-                self.server.hw_id)
-            self.server.process_history(self.client.get_history(), \
-                self.client.hw_id)
-            self.done()
-        else:
-            #FIXME: make exeption instead of print
-            print "error in handshaking"
-        """
-
-    def connect(self):
-        """Init Server connection."""
-
-        print "connecting..."
-
-    def handshake(self):
-        """Start handshaking."""
-
-        print "handshaking..."
-        """
-        if not self.server:
-            self.connect()
-        if not self.client:
-            #FIXME: replace "database" by real database
-            self.client = Client("database")
-        return self.client.handshake(self.server)
-        """
-
-    def done(self):
-        """Finish syncing."""
-
-        """
-        self.client.done()
-        self.server.done()
-        """
-            
-
-
 class EventManager:
     """
     Class for manipulatig with client/server database:
@@ -79,15 +28,24 @@ class EventManager:
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
+        self.partner = {'role': None, 'machine_id': None, 'name': 'Mnemosyne', \
+            'ver': None, 'protocol': None, 'cardtypes': None, 'extra': \
+            None, 'deck': None, 'upload': True, 'readonly': False}
 
-    def set_sync_params(self, params):
-        pass 
+    def set_sync_params(self, partner_params):
+        """Sets other side specific params."""
 
-    def get_history(self, machine_id):
+        params = ElementTree.fromstring(partner_params).getchildren()[0]
+        self.partner['role'] = params.tag
+        for key in params.keys():
+            self.partner[key] = params.get(key)
+
+    def get_history(self):
         """Creates history in XML."""
         
         history = "<history>"
-        for item in self.database.get_history_events(machine_id):
+        for item in self.database.get_history_events(\
+            self.partner['machine_id']):
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
