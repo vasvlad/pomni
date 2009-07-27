@@ -26,10 +26,10 @@ class Server:
         self.httpd = None
         self.logged = False
         self.eman = EventManager(database, None)
-        self.machine_id = hex(uuid.getnode())
-        self.app_name = 'Mnemosyne'
-        self.app_version = mnemosyne.version.version
-        self.protocol_version = PROTOCOL_VERSION
+        self.id = hex(uuid.getnode())
+        self.name = 'Mnemosyne'
+        self.version = mnemosyne.version.version
+        self.protocol = PROTOCOL_VERSION
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
@@ -92,12 +92,21 @@ class Server:
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
-    def get_sync_params(self):
-        """Gets server specific params."""
+    def get_sync_params(self, environ):
+        """Gets server specific params and sends it to client."""
 
-        return {'app_name': self.app_name, 'app_ver': self.app_version, \
-            'protocol_ver': self.protocol_version, 'cardtypes': self.cardtypes,
-            'upload_media': self.upload_media, 'read_only': self.read_only }
+        return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
+            "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
+            self.name, self.version, self.protocol, self.cardtypes, \
+            self.upload_media, self.read_only)
+
+    def put_sync_params(self, environ):
+        """Gets client specific params."""
+
+        socket = environ['wsgi.input']
+        client_params = socket.readline()
+        self.eman.set_sync_params(client_params)
+        return "OK"
 
     def get_sync_history(self, environ):
         """Gets self history events."""

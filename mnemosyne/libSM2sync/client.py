@@ -23,13 +23,13 @@ class Client:
         self.host = params.scheme
         self.port = params.path
         self.eman = EventManager(database, controller)
-        self.machine_id = hex(uuid.getnode())
-        self.app_name = 'Mnemosyne'
-        self.app_version = mnemosyne.version.version
-        self.protocol_version = PROTOCOL_VERSION
+        self.id = hex(uuid.getnode())
+        self.name = 'Mnemosyne'
+        self.version = mnemosyne.version.version
+        self.deck = 'default'
+        self.protocol = PROTOCOL_VERSION
         self.cardtypes = N_SIDED_CARD_TYPE
-        self.extradata = ''
-        print dir(self)
+        self.extra = ''
 
     def start(self):
         """Start syncing."""
@@ -40,7 +40,6 @@ class Client:
             #client_history = self.eman.get_history("server_machine_id")
             #server_history = self.get_server_history()
             #print server_history
-            print '123'
             #self.eman.apply_history(server_history)
             #self.send_history(client_history)
         else:
@@ -72,13 +71,23 @@ class Client:
     def handshake(self):
         """Handshaking with server."""
 
-        #if server.login(self.hw_id, self.login, self.password):
-            #self.eman = EventManager(self.database, server.get_sync_params())
-            #server.set_sync_params(self.get_sync_params())
-            #return True
-        #return False
-        print 'handshaking'
-        return True
+        conn = httplib.HTTPConnection(self.host, self.port)
+        conn.request('GET', '/sync/params')
+        server_params = conn.getresponse().read()
+        client_params = "<params><client id='%s' name='%s' ver='%s' " \
+            "protocol='%s' deck='%s' cardtypes='%s' extra='%s'/></params>\n" \
+            % (self.id, self.name, self.version, self.protocol, self.deck, \
+            self.cardtypes, self.extra)
+        conn.request('PUT', '/sync/params')
+        conn.send(client_params)
+        conn.close()
+        self.eman.set_sync_params(server_params)
+
+    def set_params(self, params):
+        """Uses for setting non-default params."""
+
+        for key in params.keys():
+            setattr(self, key, params[key])
 
     def get_server_history(self):
         """Connects to server and gets server history."""
@@ -99,13 +108,6 @@ class Client:
         conn.close()
         return response
         
-    def get_sync_params(self):
-        """Gets client specific params."""
-
-        return {'app_name': self.app_name, 'app_ver': self.app_version, \
-            'protocol_ver': self.protocol_version, 'extra': self.extradata, \
-            'cardtypes': self.cardtypes}
-
     def done(self):
         """Mark in database that sync was completed successfull."""
         pass
