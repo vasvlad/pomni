@@ -17,57 +17,6 @@ VICE_VERSA_CARD_TYPE = 2
 N_SIDED_CARD_TYPE = 3
 
 
-class Sync(object):
-    """Main class driving sync."""
-
-    def __init__(self, url):
-        self.url = url
-        self.client = self.server = None
-
-    def start(self):
-        """Start syncing."""
-
-        print "start syncing..."
-        """
-        if self.handshake():
-            self.client.process_history(self.get_server_history(), \
-                self.server.hw_id)
-            self.server.process_history(self.client.get_history(), \
-                self.client.hw_id)
-            self.done()
-        else:
-            #FIXME: make exeption instead of print
-            print "error in handshaking"
-        """
-
-    def connect(self):
-        """Init Server connection."""
-
-        print "connecting..."
-
-    def handshake(self):
-        """Start handshaking."""
-
-        print "handshaking..."
-        """
-        if not self.server:
-            self.connect()
-        if not self.client:
-            #FIXME: replace "database" by real database
-            self.client = Client("database")
-        return self.client.handshake(self.server)
-        """
-
-    def done(self):
-        """Finish syncing."""
-
-        """
-        self.client.done()
-        self.server.done()
-        """
-            
-
-
 class EventManager:
     """
     Class for manipulatig with client/server database:
