@@ -4,7 +4,11 @@ p2
 (dp3
 sS'log_index'
 p4
+<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 I1
+=======
+I3
+>>>>>>> T58:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 sS'locale'
 p5
 NsS'show_daily_tips'
@@ -28,6 +32,11 @@ S'rainbow'
 p14
 asS'controls'
 p15
+<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
+=======
+asS'controls'
+p16
+>>>>>>> T58:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 I01
 sS'active_plugins'
 p16
@@ -45,7 +54,11 @@ sS'only_editable_when_answer_shown'
 p23
 I00
 sS'export_format'
+<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 p24
+=======
+p25
+>>>>>>> T58:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 g8
 sS'export_dir'
 p25
@@ -63,6 +76,7 @@ I5
 sS'tip'
 p31
 I0
+<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 sS'randomise_new_cards'
 p32
 I00
@@ -140,15 +154,105 @@ sS'grade_0_cards_at_once'
 p63
 I10
 sS'upload_logs'
+=======
+sS'imagedir'
+p34
+S'/home/'
+p35
+sS'randomise_new_cards'
+p36
+I00
+sS'reset_learning_data_export'
+p37
+I00
+sS'import_sound_dir'
+p38
+g27
+sS'reset_learning_data_import'
+p39
+I00
+sS'import_dir'
+p40
+g27
+sS'startup_with_review'
+p41
+I00
+sS'fullscreen'
+p42
+I01
+sS'import_img_dir'
+p43
+g27
+sS'show_intervals'
+p44
+S'never'
+p45
+sS'latex_preamble'
+p46
+S'\\documentclass[12pt]{article}\n\\pagestyle{empty}\n\\begin{document}'
+p47
+sS'upload_server'
+p48
+S'mnemosyne-proj.dyndns.org:80'
+p49
+sS'learn_related_cards_together'
+p50
+I00
+sS'path'
+p51
+Vdefault.db
+p52
+sS'latex_postamble'
+p53
+S'\\end{document}'
+p54
+sS'latex'
+p55
+S'latex -interaction=nonstopmode'
+p56
+sS'sounddir'
+p57
+S'/home/'
+p58
+sS'font_size'
+p59
+I29
+sS'first_run'
+p60
+I01
+sS'user_id'
+p61
+S'a9244bb1-bc89-4380-8fcc-235dc7a02c76'
+p62
+sS'grade_0_items_at_once'
+p63
+I10
+sS'theme_path'
+>>>>>>> T58:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 p64
 I00
 sS'autoplay'
 p65
+<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
+=======
+sS'grade_0_cards_at_once'
+p66
+I10
+sS'upload_logs'
+p67
+I00
+sS'autoplay'
+p68
+>>>>>>> T58:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 I01
 sS'times_loaded'
 p66
 I0
 sS'randomise_scheduled_cards'
+<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 p67
+=======
+p70
+>>>>>>> T58:mnemosyne/mnemosyne/maemo_ui/.mnemosyne/config
 I00
 s.
