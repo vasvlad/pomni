@@ -98,7 +98,7 @@ class Server:
         for key in params.keys():
             setattr(self, key, params[key])
 
-    def get_sync_params(self, environ):
+    def get_sync_server_params(self, environ):
         """Gets server specific params and sends it to client."""
 
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
@@ -106,7 +106,7 @@ class Server:
             self.name, self.version, self.protocol, self.cardtypes, \
             self.upload_media, self.read_only)
 
-    def put_sync_params(self, environ):
+    def put_sync_client_params(self, environ):
         """Gets client specific params."""
 
         socket = environ['wsgi.input']
@@ -114,12 +114,12 @@ class Server:
         self.eman.set_sync_params(client_params)
         return "OK"
 
-    def get_sync_history(self, environ):
+    def get_sync_server_history(self, environ):
         """Gets self history events."""
 
         return self.eman.get_history()
 
-    def put_sync_history(self, environ):
+    def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
 
         socket = environ['wsgi.input']

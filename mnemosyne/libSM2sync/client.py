@@ -37,7 +37,7 @@ class Client:
         if self.login():
             self.handshake()
             #FIXME: replace by real machine id from server params
-            #client_history = self.eman.get_history("server_machine_id")
+            #client_history = self.eman.get_history()
             #server_history = self.get_server_history()
             #print server_history
             #self.eman.apply_history(server_history)
@@ -72,13 +72,13 @@ class Client:
         """Handshaking with server."""
 
         conn = httplib.HTTPConnection(self.host, self.port)
-        conn.request('GET', '/sync/params')
+        conn.request('GET', '/sync/server/params')
         server_params = conn.getresponse().read()
         client_params = "<params><client id='%s' name='%s' ver='%s' " \
             "protocol='%s' deck='%s' cardtypes='%s' extra='%s'/></params>\n" \
             % (self.id, self.name, self.version, self.protocol, self.deck, \
             self.cardtypes, self.extra)
-        conn.request('PUT', '/sync/params')
+        conn.request('PUT', '/sync/client/params')
         conn.send(client_params)
         conn.close()
         self.eman.set_sync_params(server_params)
@@ -93,7 +93,7 @@ class Client:
         """Connects to server and gets server history."""
 
         conn = httplib.HTTPConnection(self.host, self.port)
-        conn.request('GET', '/sync/history')
+        conn.request('GET', '/sync/server/history')
         server_history = conn.getresponse().read()
         conn.close()
         return server_history
@@ -102,7 +102,7 @@ class Client:
         """Sends client history to server."""
 
         conn = httplib.HTTPConnection(self.host, self.port)
-        conn.request('PUT', '/sync/history')
+        conn.request('PUT', '/sync/client/history')
         conn.send(history)
         response = conn.getresponse().read()
         conn.close()
