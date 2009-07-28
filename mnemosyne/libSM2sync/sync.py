@@ -17,6 +17,10 @@ VICE_VERSA_CARD_TYPE = 2
 N_SIDED_CARD_TYPE = 3
 
 
+class SyncError(Exception):
+    pass
+
+
 class EventManager:
     """
     Class for manipulatig with client/server database:
