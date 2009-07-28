@@ -912,3 +912,10 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         self.con.execute("""update partnerships set _last_log_id=? 
             where partner=?""", (_id, partner))
 
+    def make_sync_backup(self):
+        backupdir = os.path.join(self.config().basedir, "backups")
+        db_name = os.path.basename(self._path).rsplit(".", 1)[0]
+        backup_file = os.path.join(backupdir, db_name + "_syncbackup.db")
+        shutil.copy(self._path, backup_file)
+        return backup_file
+
