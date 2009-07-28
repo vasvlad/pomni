@@ -18,10 +18,12 @@ class Client:
     def __init__(self, uri, database, controller, config):
         #FIXME: remove from init. 
         self.config = config
+        self.database = database
         self.uri = uri
         params = urlparse(uri)
         self.host = params.scheme
         self.port = params.path
+        self.backup_file = None
         self.eman = EventManager(database, controller)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -36,11 +38,10 @@ class Client:
         
         if self.login():
             self.handshake()
-            #FIXME: replace by real machine id from server params
-            #client_history = self.eman.get_history()
             #server_history = self.get_server_history()
-            #print server_history
+            #self.backup_file = self.database.make_sync_backup()
             #self.eman.apply_history(server_history)
+            #client_history = self.eman.get_history()
             #self.send_history(client_history)
         else:
             #FIXME: replace by Error Dialog.
@@ -109,5 +110,7 @@ class Client:
         return response
         
     def done(self):
-        """Mark in database that sync was completed successfull."""
-        pass
+        """Finishes sync."""
+        
+        import os
+        os.remove(self.backup_file)

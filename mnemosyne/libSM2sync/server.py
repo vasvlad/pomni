@@ -21,10 +21,12 @@ class Server:
         params = urlparse(uri)
         #FIXME: move from here
         self.config = config
+        self.database = database
         self.host = params.scheme
         self.port = int(params.path)
         self.httpd = None
         self.logged = False
+        self.backup_file = None
         self.eman = EventManager(database, None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -88,9 +90,10 @@ class Server:
     def start(self):
         """Activate server."""
 
-        self.httpd = make_server(self.host, self.port, self.wsgi_app)
-        print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
-        self.httpd.serve_forever()
+        #self.httpd = make_server(self.host, self.port, self.wsgi_app)
+        #print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
+        #self.httpd.serve_forever()
+        self.database.sync_backup()
 
     def set_params(self, params):
         """Uses for setting non-default params."""
@@ -124,11 +127,14 @@ class Server:
 
         socket = environ['wsgi.input']
         client_history = socket.readline()
+        self.backup_file = self.database.make_sync_backup()
         self.eman.apply_history(client_history)
         return "OK"
 
     def sync_done(self):
         """Finishes sync."""
 
+        import os
+        os.remove(self.backup_file)
         self.logged = False
    
