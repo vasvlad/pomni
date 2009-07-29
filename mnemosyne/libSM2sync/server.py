@@ -90,10 +90,9 @@ class Server:
     def start(self):
         """Activate server."""
 
-        #self.httpd = make_server(self.host, self.port, self.wsgi_app)
-        #print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
-        #self.httpd.serve_forever()
-        self.database.sync_backup()
+        self.httpd = make_server(self.host, self.port, self.wsgi_app)
+        print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
+        self.httpd.serve_forever()
 
     def set_params(self, params):
         """Uses for setting non-default params."""
