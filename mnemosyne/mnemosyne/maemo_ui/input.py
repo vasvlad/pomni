@@ -31,7 +31,8 @@ import gtk.gdk
 from gtk import ListStore
 
 from mnemosyne.libmnemosyne.ui_components.dialogs import \
-    Dialog, AddCardsDialog, EditFactDialog
+    AddCardsDialog, EditFactDialog
+from mnemosyne.libmnemosyne.component import Component
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
@@ -39,30 +40,47 @@ from mnemosyne.libmnemosyne.card_types.cloze import Cloze
 
 _ = gettext.gettext
 
-class InputWidget(Dialog):
+class InputWidget(Component):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
 
-        Dialog.__init__(self, component_manager)
+        Component.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
+        self.connections = []
+        self.connect_signals([\
+            ("input_mode_toolbar_button_back_w", "clicked",
+             self.input_to_main_menu_cb),
+            ("front_to_back_mode_selector_w", "released",
+             self.change_card_type_cb),
+            ("both_way_mode_selector_w", "released", self.change_card_type_cb),
+            ("three_side_mode_selector_w", "released",
+             self.change_card_type_cb),
+            ("cloze_mode_selector_w", "released", self.change_card_type_cb),
+            ("picture_content_button", "clicked", self.add_picture_cb),
+            ("image_selection_dialog_button_select", "clicked",
+             self.select_item_cb),
+            ("image_selection_dialog_button_close", "clicked",
+             self.close_media_selection_dialog_cb),
+            ("input_mode_prev_category_w", "clicked",
+             self.change_category_cb),
+            ("input_mode_add_new_category_w", "clicked",
+             self.create_new_category_cb),
+            ("sound_content_button", "clicked", self.add_sound_cb),
+            ("category_name_container", "clicked",
+             self.show_add_category_block_cb),
+            ("input_mode_close_add_category_block_w", "clicked",
+             self.hide_add_category_block_cb),
+            ("input_mode_snd_button", "released",
+             self.preview_sound_in_input_cb)])
 
-        signals = ["add_card", "input_to_main_menu", "change_card_type",
-            "add_picture", "select_item", "close_media_selection_dialog",
-            "change_category", "create_new_category", "clear_text",
-            "add_sound", "show_add_category_block", 
-            "hide_add_category_block", "preview_sound_in_input"]
-
-        self.w_tree.signal_autoconnect(\
-             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
-        
         self.fact = None
-        self.update = None
         self.sounddir = None
         self.imagedir = None
         self.card_type = None
         self.categories_list = []
+        self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
         iconview_widget = self.w_tree.get_widget("iconview_widget")
@@ -81,7 +99,8 @@ class InputWidget(Dialog):
         }
 
         # Change default font
-        font = pango.FontDescription("Nokia Sans 20")
+        font = pango.FontDescription("Nokia Sans %s" % \
+                self.config()['font_size'])
         for area in self.areas.values():
             area.modify_font(font)
 
@@ -151,23 +170,23 @@ class InputWidget(Dialog):
         except (TypeError, AttributeError): 
             pass # so, skip silently
 
-    def activate(self):
-        """Activate input mode."""
+    def connect_signals(self, control):
+        """Connect signals to widgets and save connection info."""
 
-        self.main_widget().soundplayer.stop()
-        self.update = self.fact is not None
-        
-        self.update_categories()
-        self.clear_widgets()
-        if self.fact: # If enter from Review mode
-            self.card_type = self.fact.card_type
-            self.compose_widgets()
-            self.set_widgets_data(self.fact)
+        for wname, signal, callback in control:
+            widget = self.w_tree.get_widget(wname)
+            cid = widget.connect(signal, callback)
+            self.connections.append((widget, cid))
 
-        self.show_snd_container()
+    def disconnect_signals(self):
+        """Disconnect previously connected signals."""
+
+        for widget, cid in self.connections:
+            widget.disconnect(cid)
+        self.connections = []
 
     def show_snd_container(self):
-        """ Shows or hides snd container. """
+        """Show or hide snd container. """
                     
         start, end = self.areas["question"].get_buffer().get_bounds()
         text = self.areas["question"].get_buffer().get_text(start, end)
@@ -179,7 +198,7 @@ class InputWidget(Dialog):
             self.widgets["SoundContainer"].hide()
 
     def compose_widgets (self):
-        """Switches to neccessary input page. It depends on card_type."""
+        """Switch to neccessary input page. It depends on card_type."""
 
         self.widgets["CardTypeSwithcer"].set_current_page( \
             self.selectors[self.card_type.id]["page"])
@@ -215,9 +234,10 @@ class InputWidget(Dialog):
         pattern_list = ["Type %s here..." % item for item in ["ANSWER", \
             "QUESTION", "FOREIGN", "PRONUNCIATION", "TRANSLATION", "TEXT"]]
         pattern_list.append("")
-        for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
-            start, end = widget.get_buffer().get_bounds()
-            if widget.get_buffer().get_text(start, end) in pattern_list:
+        for selector in self.selectors[self.card_type.id]["widgets"]:
+            buf = selector[1].get_buffer()
+            start, end = buf.get_bounds()
+            if buf.get_text(start, end) in pattern_list:
                 return False
         return True
 
@@ -287,7 +307,6 @@ class InputWidget(Dialog):
         Set html-text with media path and type when user
         select media filefrom media selection dialog. 
         """
-
         self.widgets["MediaDialog"].hide()
         item_index = self.w_tree.get_widget("iconview_widget"). \
             get_selected_items()[0]
@@ -327,31 +346,6 @@ class InputWidget(Dialog):
             self.main_widget().information_box(\
                 _("There are no files in 'Sounds' directory!"))
 
-    def add_card_cb(self, widget):
-        """Add card to database."""
-
-        # check for empty fields
-        if not self.check_complete_input():
-            return
-
-        try:
-            fact_data = self.get_widgets_data()
-        except ValueError:
-            return # Let the user try again to fill out the missing data.
-
-        main = self.controller()
-        if self.update: #Update card
-            main.update_related_cards(self.fact, fact_data, self.card_type, \
-                [self.widgets["CurrentCategory"].get_text()], None)
-            self.main_widget().activate_mode("review")
-        else: #Create new card
-            main.create_new_cards(fact_data, self.card_type, -1, \
-                [self.widgets["CurrentCategory"].get_text()])
-            self.clear_widgets()
-
-        self.main_widget().soundplayer.stop()
-        self.show_snd_container()
-
     def get_widgets_data(self, check_for_required=True):
         """ Get data from widgets. """
 
@@ -360,7 +354,7 @@ class InputWidget(Dialog):
             start, end = widget.get_buffer().get_bounds()
             fact[fact_key] = widget.get_buffer().get_text(start, end)
         if check_for_required:
-            for required in self.card_type.required_fields():
+            for required in self.card_type.required_fields:
                 if not fact[required]:
                     raise ValueError
         return fact
@@ -379,7 +373,7 @@ class InputWidget(Dialog):
                 "Type %s here..." % caption.upper())
 
     def change_card_type_cb(self, widget):
-        """Changes cardtype when user choose it from cardtype column."""
+        """Change cardtype when user choose it from cardtype column."""
                 
         self.main_widget().soundplayer.stop()
         self.clear_widgets()
@@ -407,21 +401,15 @@ class InputWidget(Dialog):
 
         self.widgets["MediaDialog"].hide()
 
-    def clear_text_cb(self, widget, event):
-        """Clear textview content."""
-
-        if not self.update:
-            widget.get_buffer().set_text("")
-
     def show_add_category_block_cb(self, widget):
-        """Shows add category block."""
+        """Show add category block."""
 
         self.widgets["ChangeCategoryBlock"].hide()
         self.widgets["AddCategoryBlock"].show()
         self.widgets["NewCategory"].grab_focus()
 
     def hide_add_category_block_cb(self, widget):
-        """Hides add category block."""
+        """Hide add category block."""
 
         self.widgets["ChangeCategoryBlock"].show()
         self.widgets["AddCategoryBlock"].hide()
@@ -429,19 +417,97 @@ class InputWidget(Dialog):
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
+        #if self.added_new_cards:
+            #self.review_controller().reset()
+            #self.added_new_cards = False
+        self.disconnect_signals()
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
 class AddCardsWidget(InputWidget, AddCardsDialog):
-    """Add new card.""" 
+    """Add new card widget."""
+
     def __init__(self, component_manager):
         InputWidget.__init__(self, component_manager)
+        AddCardsDialog.__init__(self, component_manager)
+        self.connect_signals([\
+            ("input_mode_toolbar_add_card_w", "clicked", self.add_card_cb),
+            ("question_text_w", "button_press_event", self.clear_text_cb),
+            ("answer_text_w", "button_press_event", self.clear_text_cb),
+            ("pronun_text_w", "button_press_event", self.clear_text_cb)])
+
+    def activate(self):
+        """Activate input mode."""
+
+        self.main_widget().soundplayer.stop()
+        self.update_categories()
+        self.clear_widgets()
+        self.show_snd_container()
+
+    @staticmethod
+    def clear_text_cb(widget, event):
+        """Clear textview content."""
+        widget.get_buffer().set_text("")
+
+    def add_card_cb(self, widget):
+        """Add card to database."""
+
+        # check for empty fields
+        if not self.check_complete_input():
+            return
+
+        try:
+            fact_data = self.get_widgets_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
+
+        self.controller().create_new_cards(fact_data, self.card_type, -1, \
+            [self.widgets["CurrentCategory"].get_text()])
+        self.clear_widgets()
+        self.added_new_cards = True
+
+        self.main_widget().soundplayer.stop()
+        self.show_snd_container()
+
 
 class EditFactWidget(InputWidget, EditFactDialog):
-    """Edit current fact."""
-    def __init__(self, fact, component_manager):
+    """Edit current fact widget."""
+
+    def __init__(self, fact, component_manager, allow_cancel=True):
         InputWidget.__init__(self, component_manager)
+        EditFactDialog.__init__(self, fact, component_manager, allow_cancel)
+
         self.fact = fact
+        self.allow_cancel = allow_cancel
+        self.connect_signals([("input_mode_toolbar_add_card_w", "clicked",
+                    self.update_card_cb)])
+
+    def activate(self):
+        """Activate input mode."""
+
+        self.main_widget().soundplayer.stop()
+        self.update_categories()
+        self.clear_widgets()
+        self.card_type = self.fact.card_type
+        self.compose_widgets()
+        self.set_widgets_data(self.fact)
+        self.show_snd_container()
+
+    def update_card_cb(self, widget):
+        """Update card in the database."""
+
+        try:
+            fact_data = self.get_widgets_data()
+        except ValueError:
+            return # Let the user try again to fill out the missing data.
+
+        self.controller().update_related_cards(self.fact, fact_data,
+          self.card_type, [self.widgets["CurrentCategory"].get_text()], None)
+        self.review_controller().update_dialog(redraw_all=True)
+        self.main_widget().activate_mode("review")
+
+        self.main_widget().soundplayer.stop()
+        self.show_snd_container()
 
 
 # Local Variables:

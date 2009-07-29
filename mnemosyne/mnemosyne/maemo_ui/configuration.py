@@ -116,6 +116,7 @@ class ConfigurationWidget(ConfigurationDialog):
         self.conf['sounddir'] = \
             self.w_tree.get_widget("config_mode_entry_sounddir").get_text()
 
+        self.config()['font_size'] = self.conf['font_size']
         self.config().save()
         self.main_widget().menu_()
 

@@ -28,7 +28,7 @@
             <child>
               <widget class="GtkLabel" id="program_name_label">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Mnemosyne 2.0.0~beta1</property>
+                <property name="label" translatable="yes">Mnemosyne 2.0.0~beta2</property>
               </widget>
               <packing>
                 <property name="x_options"></property>

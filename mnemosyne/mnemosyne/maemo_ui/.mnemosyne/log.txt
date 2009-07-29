@@ -1,5 +1,0 @@
-2009-07-26 13:02:43 : Program started : Mnemosyne 2.0-pre posix linux2
-2009-07-26 13:02:43 : Scheduler : SM2 Mnemosyne
-2009-07-26 13:02:43 : Loaded database 0 2483 2483
-2009-07-26 13:02:45 : Saved database 0 2483 2483
-2009-07-26 13:02:45 : Program stopped
