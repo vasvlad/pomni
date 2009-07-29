@@ -913,6 +913,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             where partner=?""", (_id, partner))
 
     def make_sync_backup(self):
+        self.con.commit()
         backupdir = os.path.join(self.config().basedir, "backups")
         db_name = os.path.basename(self._path).rsplit(".", 1)[0]
         backup_file = os.path.join(backupdir, db_name + "_syncbackup.db")
