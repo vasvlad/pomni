@@ -40,6 +40,7 @@ class Client:
        
         old_file, backuped_file = None, None
         try:
+            old_file, backuped_file = None, None
             self.login()
             self.handshake()
             #server_history = self.get_server_history()
