@@ -23,6 +23,14 @@ class SyncError(Exception):
     pass
 
 
+class DictClass(dict):
+    """Class for creating custom objects."""
+    
+    def __init__(self, attributes=None):
+        for attr in attributes.keys():
+            setattr(self, attr, attributes[attr])
+
+
 class EventManager:
     """
     Class for manipulatig with client/server database:
@@ -34,6 +42,9 @@ class EventManager:
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
+        self.object_factory = {'tag': self.create_tag_object, 'fact': \
+            self.create_fact_object, 'card': self.create_card_object, \
+            'cardtype': self.create_cardtype_object}
         self.partner = {'role': None, 'id': None, 'name': 'Mnemosyne', \
             'ver': None, 'protocol': None, 'cardtypes': None, 'extra': \
             None, 'deck': None, 'upload': True, 'readonly': False}
@@ -111,72 +122,51 @@ class EventManager:
         cardtype.id, cardtype.name, ','.join(fields), \
         ','.join(cardtype.unique_fields), '', '')
 
-    def create_object_from_xml(self, item):
-        class DictClass(dict):
-            pass
-        obj_type = item.find('t').text
-        if obj_type == 'fact':
-            dkeys = item.find('dk').text.split(',')
-            dvals = [item.find("dv%s" % num).text for num in range(len(dkeys))]
-            fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
-            card_type = self.database.get_card_type(\
-                item.find('ctid').text, False)
-            creation_time = int(item.find('tm').text)
-            fact_id = item.find('id').text
-            return Fact(fact_data, card_type, creation_time, fact_id)
-        elif obj_type == 'card':
-            card = DictClass()
-            card.id = item.find('id').text
-            card.fact_view = DictClass()
-            card.fact_view.id = item.find('fvid').text
-            card.fact = self.database.get_fact(item.find('fid').text, False)
-            card.tags = set(self.database.get_or_create_tag_with_name(\
-                tag_name) for tag_name in item.find('tags').text.split(','))
-            card.grade = int(item.find('gr').text)
-            card.easiness = float(item.find('e').text)
-            card.acq_reps, card.ret_reps = 0, 0
-            card.lapses = 0
-            card.acq_reps_since_lapse, card.ret_reps_since_lapse = 0, 0
-            card.last_rep = int(item.find('lr').text)
-            card.next_rep = int(item.find('nr').text)
-            card.extra_data, card.scheduler_data = 0, 0
-            card.active, card.in_view = True, True
-            card.timestamp = int(item.find('tm').text)
-            #for repetition event
-            try:
-                card.scheduled_interval = int(item.find('si').text)
-            except ValueError:
-                card.scheduled_interval = ''
-            try:
-                card.actual_interval = int(item.find('ai').text)
-            except ValueError:
-                card.actual_interval = ''
-            try:
-                card.new_interval = int(item.find('ni').text)
-            except:
-                card.new_interval = ''
-            try:
-                card.thinking_time = int(item.find('ttm').text)
-            except:
-                card.thinking_time = ''
-            return card
-        elif obj_type == 'tag':
-            return Tag(item.find('name').text, item.find('id').text)
-        elif obj_type == 'ctype':
-            cardtype = DictClass()
-            cardtype.id = item.find('id').text
-            cardtype.name = item.find('name').text
-            cardtype.fields = item.find('f').text.split(',')
-            cardtype.unique_fields = item.find('uf').text.split(',')
-            cardtype.keyboard_shortcuts, cardtype.extra_data = {}, {}
-            return cardtype
+    def create_tag_object(self, item):
+        return Tag(item.find('name').text, item.find('id').text)
+
+    def create_fact_object(self, item):
+        dkeys = item.find('dk').text.split(',')
+        dvals = [item.find("dv%s" % num).text for num in range(len(dkeys))]
+        fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
+        card_type = self.database.get_card_type(\
+            item.find('ctid').text, False)
+        creation_time = int(item.find('tm').text)
+        fact_id = item.find('id').text
+        return Fact(fact_data, card_type, creation_time, fact_id)
+
+    def create_card_object(self, item):
+        def get_rep_value(value):
+            """Return value for repetition event."""
+            try: return int(value)
+            except: return ''
+        return DictClass({'id': item.find('id').text, 'fact_view': DictClass(\
+            {'id': item.find('fvid').text}), 'fact': self.database.get_fact(\
+            item.find('fid').text, False), 'tags': set(self.database.\
+            get_or_create_tag_with_name(tag_name) for tag_name in item.find(\
+            'tags').text.split(',')), 'grade': int(item.find('gr').text), \
+            'easiness': float(item.find('e').text), 'acq_reps': 0, 'ret_reps': \
+            0, 'lapses': 0, 'acq_reps_since_lapse': 0, 'ret_reps_since_lapse': \
+            0, 'last_rep': int(item.find('lr').text), 'next_rep': int(\
+            item.find('nr').text), 'extra_data': 0, 'scheduler_data': 0, \
+            'active': True, 'in_view': True, 'timestamp': int(item.find(\
+            'tm').text), 'scheduled_interval': get_rep_value(item.find(\
+            'si').text), 'actual_interval': get_rep_value(item.find(\
+            'ai').text), 'new_interval': get_rep_value(item.find('ni').text), \
+            'thinking_time': get_rep_value(item.find('ttm').text)})
+
+    def create_cardtype_object(self, item):
+        return DictClass({'id': item.find('id').text, 'name': \
+            item.find('name').text, 'fields': item.find('f').text.split(','), \
+            'keyboard_shortcuts': {}, 'extra_data': {}, 'unique_fields': \
+            item.find('uf').text.split(',')})
 
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
         for child in ElementTree.fromstring(history).findall('i'):
             event = int(child.find('ev').text)
-            obj = self.create_object_from_xml(child)
+            obj = self.object_factory[child.find('t').text](child)
             if event == events.ADDED_FACT:
                 if not self.database.duplicates_for_fact(obj):
                     self.database.add_fact(obj)
