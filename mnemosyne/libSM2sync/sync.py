@@ -34,7 +34,7 @@ class EventManager:
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
-        self.partner = {'role': None, 'machine_id': None, 'name': 'Mnemosyne', \
+        self.partner = {'role': None, 'id': None, 'name': 'Mnemosyne', \
             'ver': None, 'protocol': None, 'cardtypes': None, 'extra': \
             None, 'deck': None, 'upload': True, 'readonly': False}
 
@@ -51,7 +51,7 @@ class EventManager:
         
         history = "<history>"
         for item in self.database.get_history_events(\
-            self.partner['machine_id']):
+            self.partner['id']):
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}

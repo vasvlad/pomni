@@ -40,11 +40,11 @@ class Client:
         try:
             self.login()
             self.handshake()
-            #server_history = self.get_server_history()
+            server_history = self.get_server_history()
             self.database.make_sync_backup()
-            #self.eman.apply_history(server_history)
-            #client_history = self.eman.get_history()
-            #self.send_client_history(client_history)
+            self.eman.apply_history(server_history)
+            client_history = self.eman.get_history()
+            self.send_client_history(client_history)
         except SyncError, exception:
             print exception #FIXME: replace by ErrorDialog
             self.database.restore_sync_backup()
