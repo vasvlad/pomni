@@ -26,7 +26,6 @@ class Server:
         self.port = int(params.path)
         self.httpd = None
         self.logged = False
-        self.backup_file = None
         self.eman = EventManager(database, None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -111,10 +110,14 @@ class Server:
     def put_sync_client_params(self, environ):
         """Gets client specific params."""
 
-        socket = environ['wsgi.input']
-        client_params = socket.readline()
-        self.eman.set_sync_params(client_params)
-        return "OK"
+        try:
+            socket = environ['wsgi.input']
+            client_params = socket.readline()
+        except:
+            return "CANCEL"
+        else:
+            self.eman.set_sync_params(client_params)
+            return "OK"
 
     def get_sync_server_history(self, environ):
         """Gets self history events."""
@@ -124,16 +127,15 @@ class Server:
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
 
-        socket = environ['wsgi.input']
-        client_history = socket.readline()
-        self.backup_file = self.database.make_sync_backup()
-        self.eman.apply_history(client_history)
-        return "OK"
-
-    def sync_done(self):
-        """Finishes sync."""
-
-        import os
-        os.remove(self.backup_file)
-        self.logged = False
-   
+        try:
+            socket = environ['wsgi.input']
+            client_history = socket.readline()
+        except:
+            return "CANCEL"
+        else:
+            old_file, backuped_file = self.database.make_sync_backup()
+            self.eman.apply_history(client_history)
+            import os
+            os.remove(self.backup_file)
+            self.logged = False
+            return "OK"
