@@ -917,5 +917,6 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         db_name = os.path.basename(self._path).rsplit(".", 1)[0]
         backup_file = os.path.join(backupdir, db_name + "_syncbackup.db")
         shutil.copy(self._path, backup_file)
-        return backup_file
+        return self._path, backup_file
+
 
