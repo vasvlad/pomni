@@ -204,4 +204,5 @@ class EventManager:
                 obj.acq_reps_since_lapse, obj.ret_reps_since_lapse, \
                 obj.scheduled_interval, obj.actual_interval, obj.new_interval, \
                 obj.thinking_time)
+        self.database.update_last_sync_event(self.partner['id'])
 
