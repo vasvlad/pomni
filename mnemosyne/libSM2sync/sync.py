@@ -141,6 +141,7 @@ class EventManager:
             card.next_rep = int(item.find('nr').text)
             card.extra_data, card.scheduler_data = 0, 0
             card.active, card.in_view = True, True
+            card.timestamp = int(item.find('tm').text)
             #for repetition event
             try:
                 card.scheduled_interval = int(item.find('si').text)
@@ -198,6 +199,9 @@ class EventManager:
             elif event == events.DELETED_CARD:
                 self.database.delete_card(obj)
             elif event == events.REPETITION:
-                self.database.repetition(obj, obj.scheduled_interval, \
-                    obj.actual_interval, obj.new_interval, obj.thinking_time)
+                self.database.log_repetition(obj.timestamp, obj.id, obj.grade, \
+                obj.easiness, obj.acq_reps, obj.ret_reps, obj.lapses, \
+                obj.acq_reps_since_lapse, obj.ret_reps_since_lapse, \
+                obj.scheduled_interval, obj.actual_interval, obj.new_interval, \
+                obj.thinking_time)
 
