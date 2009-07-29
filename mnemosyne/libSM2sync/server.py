@@ -52,7 +52,7 @@ class Server:
         if environ.has_key('HTTP_AUTHORIZATION'):
             clogin, cpasswd = base64.decodestring(\
                 environ['HTTP_AUTHORIZATION'].split(' ')[-1]).split(':')
-            if clogin == self.config['user_id'] and \
+            if clogin == self.config['login'] and \
                 cpasswd == self.config['user_passwd']:
                 self.logged = True
                 status = '200 OK'

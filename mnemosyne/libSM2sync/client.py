@@ -57,7 +57,7 @@ class Client:
     def login(self):
         """Logs on the server."""
         
-        base64string = base64.encodestring("%s:%s" % (self.config['user_id'], \
+        base64string = base64.encodestring("%s:%s" % (self.config['login'], \
             self.config['user_passwd']))[:-1]
         authheader =  "Basic %s" % base64string
         request = urllib2.Request(self.uri)
