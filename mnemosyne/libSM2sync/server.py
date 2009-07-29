@@ -136,5 +136,6 @@ class Server:
             self.database.make_sync_backup()
             self.eman.apply_history(client_history)
             self.database.remove_sync_backup()
+            self.database.con.commit()
             self.logged = False
             return "OK"
