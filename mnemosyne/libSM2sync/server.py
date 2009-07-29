@@ -65,7 +65,7 @@ class Server:
                 '_'.join(environ['PATH_INFO'].split('/'))).lower()
             if hasattr(self, method) and callable(getattr(self, method)):
                 args = cgi.parse_qs(environ['QUERY_STRING'])
-                args = dict([(key, value[0]) for key, value in args.iteritems()])
+                args = dict([(key, val[0]) for key, val in args.iteritems()])
                 if getattr(self, method).func_code.co_argcount-2 == len(args) \
                     and compare_args(args.keys(), getattr(self, method). \
                         func_code.co_varnames):                
