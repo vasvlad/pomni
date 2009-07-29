@@ -26,7 +26,6 @@ class Server:
         self.port = int(params.path)
         self.httpd = None
         self.logged = False
-        self.backup_file = None
         self.eman = EventManager(database, None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -126,14 +125,9 @@ class Server:
 
         socket = environ['wsgi.input']
         client_history = socket.readline()
-        self.backup_file = self.database.make_sync_backup()
+        old_file, backuped_file = self.database.make_sync_backup()
         self.eman.apply_history(client_history)
-        return "OK"
-
-    def sync_done(self):
-        """Finishes sync."""
-
         import os
         os.remove(self.backup_file)
         self.logged = False
-   
+        return "OK"

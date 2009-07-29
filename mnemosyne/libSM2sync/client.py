@@ -26,7 +26,6 @@ class Client:
         self.config = config
         self.database = database
         self.uri = uri
-        self.backup_file = None
         self.eman = EventManager(database, controller)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -40,17 +39,22 @@ class Client:
         """Start syncing."""
        
         try:
+            old_file, backuped_file = None, None
             self.login()
             self.handshake()
             #server_history = self.get_server_history()
-            self.backup_file = self.database.make_sync_backup()
+            old_file, backuped_file = self.database.make_sync_backup()
+            raise SyncError('test error')
             #self.eman.apply_history(server_history)
             #client_history = self.eman.get_history()
             #self.send_client_history(client_history)
         except SyncError, exception:
-            #FIXME: replace by ErrorDialog
-            print exception
-            # move backed database back
+            print exception #FIXME: replace by ErrorDialog
+            if backuped_file: 
+                # should we unload and load databse or just replace file?
+                #self.database.unload()
+                os.rename(backuped_file, old_file)
+                #self.database.load(old_file)
         else:
             os.remove(self.backup_file)
 
