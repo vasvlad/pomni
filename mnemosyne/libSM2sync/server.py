@@ -133,9 +133,8 @@ class Server:
         except:
             return "CANCEL"
         else:
-            old_file, backuped_file = self.database.make_sync_backup()
+            self.database.make_sync_backup()
             self.eman.apply_history(client_history)
-            import os
-            os.remove(self.backup_file)
+            self.database.remove_sync_backup()
             self.logged = False
             return "OK"

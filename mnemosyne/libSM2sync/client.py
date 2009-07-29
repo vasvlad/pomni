@@ -6,7 +6,6 @@ import mnemosyne.version
 import base64
 import urllib2
 import uuid
-import os
 from sync import SyncError
 from sync import EventManager
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
@@ -38,25 +37,19 @@ class Client:
     def start(self):
         """Start syncing."""
        
-        old_file, backuped_file = None, None
         try:
-            old_file, backuped_file = None, None
             self.login()
             self.handshake()
             #server_history = self.get_server_history()
-            old_file, backuped_file = self.database.make_sync_backup()
+            self.database.make_sync_backup()
             #self.eman.apply_history(server_history)
             #client_history = self.eman.get_history()
             #self.send_client_history(client_history)
         except SyncError, exception:
             print exception #FIXME: replace by ErrorDialog
-            if backuped_file: 
-                # should we unload and load database or just replace file?
-                #self.database.unload()
-                os.rename(backuped_file, old_file)
-                #self.database.load(old_file)
+            self.database.restore_sync_backup()
         else:
-            os.remove(backuped_file)
+            self.database.remove_sync_backup()
 
     def login(self):
         """Logs on the server."""
