@@ -718,7 +718,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         for filename in new_files - old_files:
             self.con.execute("""insert into media(filename, _fact_id,
                 last_modified) values(?,?,?)""", (filename, fact._id,
-                os.path.getmtime(os.path.join(mediadir, filename))))
+                int(os.path.getmtime(os.path.join(mediadir, filename)))))
             self.log().added_media(filename, fact)
 
     #
