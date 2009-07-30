@@ -86,6 +86,8 @@ class EventManager:
         elif event_id in (events.ADDED_CARD_TYPE, events.UPDATED_CARD_TYPE, \
             events.DELETED_CARD_TYPE, events.REPETITION):
             return self.create_card_xml_element(event)
+        elif event_id in (events.ADDED_MEDIA, events.DELETED_MEDIA):
+            return self.create_media_xml_element(event)
         else:
             return ''   # No need XML for others events. ?
 
@@ -121,6 +123,10 @@ class EventManager:
         "<uf>%s</uf><ks>%s</ks><edata>%s</edata></i>" % (event['event'], \
         cardtype.id, cardtype.name, ','.join(fields), \
         ','.join(cardtype.unique_fields), '', '')
+
+    def create_media_xml_element(self, event):
+        return "<i><t>media</t><ev>%s</ev><id>%s</id></i>" % \
+            (event['event'], event['id'])
 
     def create_tag_object(self, item):
         return Tag(item.find('name').text, item.find('id').text)
@@ -194,5 +200,6 @@ class EventManager:
                 obj.acq_reps_since_lapse, obj.ret_reps_since_lapse, \
                 obj.scheduled_interval, obj.actual_interval, obj.new_interval, \
                 obj.thinking_time)
+                
         self.database.update_last_sync_event(self.partner['id'])
 
