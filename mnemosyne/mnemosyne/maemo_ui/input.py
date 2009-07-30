@@ -316,8 +316,8 @@ class InputWidget(Component):
             self.liststore.get_iter(item_index), 2)
         item_dirname = self.liststore.get_value( \
             self.liststore.get_iter(item_index), 3)
-        question_text = "<%s src='%s'>" % \
-            (item_type, os.path.join(item_dirname, item_fname))
+        question_text = """<%s src="%s">""" % \
+            (item_type, os.path.abspath(os.path.join(item_dirname, item_fname)))
         self.areas["question"].get_buffer().set_text(question_text)
         self.show_snd_container()
 
