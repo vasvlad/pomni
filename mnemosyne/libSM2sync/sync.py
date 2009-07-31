@@ -99,7 +99,7 @@ class EventManager:
     def create_fact_xml_element(self, event):
         fact = self.database.get_fact(event['id'], False)
         dkeys = ','.join(["%s" % key for key, val in fact.data.items()])
-        dvalues = ''.join(["<dv%s>%s</dv%s>" % (num, fact.data.values()[num], \
+        dvalues = ''.join(["<dv%s><![CDATA[%s]]></dv%s>" % (num, fact.data.values()[num], \
         num) for num in range(len(fact.data))])
         return "<i><t>fact</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><dk>%s</dk>"\
             "%s<tm>%s</tm></i>" % (event['event'], fact.id, fact.card_type.id, \
