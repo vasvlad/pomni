@@ -2,6 +2,7 @@
 Server.
 """
 
+import os
 import cgi
 import uuid
 import base64
@@ -26,7 +27,7 @@ class Server:
         self.port = int(params.path)
         self.httpd = None
         self.logged = False
-        self.eman = EventManager(database, None)
+        self.eman = EventManager(database, None, None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
@@ -139,3 +140,15 @@ class Server:
             self.database.con.commit()
             self.logged = False
             return "OK"
+
+    def get_sync_server_media(self, environ, fname):
+        """Gets server media file and sends it to client."""
+
+        try:
+            mediafile = open(os.path.join(self.config.mediadir(), fname))
+            data = mediafile.read()
+            mediafile.close()
+        except:
+            return "CANCEL"
+        else:
+            return data
