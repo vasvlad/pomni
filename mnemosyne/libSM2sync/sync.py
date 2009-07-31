@@ -38,16 +38,18 @@ class EventManager:
     XML representation of history events.
     """
 
-    def __init__(self, database, controller):
+    def __init__(self, database, controller, get_media):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
         self.object_factory = {'tag': self.create_tag_object, 'fact': \
             self.create_fact_object, 'card': self.create_card_object, \
-            'cardtype': self.create_cardtype_object}
+            'cardtype': self.create_cardtype_object, 'media': \
+            self.create_media_object}
         self.partner = {'role': None, 'id': None, 'name': 'Mnemosyne', \
             'ver': None, 'protocol': None, 'cardtypes': None, 'extra': \
             None, 'deck': None, 'upload': True, 'readonly': False}
+        self.get_media = get_media
 
     def set_sync_params(self, partner_params):
         """Sets other side specific params."""
@@ -110,11 +112,12 @@ class EventManager:
         return "<i><t>card</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><fid>%s" \
             "</fid><fvid>%s</fvid><tags>%s</tags><gr>%s</gr><e>%s</e><lr>%s" \
             "</lr><nr>%s</nr><si>%s</si><ai>%s</ai><ni>%s</ni><ttm>%s</ttm>" \
-            "<tm>%s</tm></i>" % (event['event'], card.id, \
+            "<tm>%s</tm><_id>%s</_id></i>" % (event['event'], card.id, \
             card.fact.card_type.id, card.fact.id, card.fact_view.id, \
             ','.join([item.name for item in card.tags]), card.grade, \
             card.easiness, card.last_rep, card.next_rep, event['s_int'], \
-            event['a_int'], event['n_int'], event['t_time'], event['time'])
+            event['a_int'], event['n_int'], event['t_time'], event['time'],\
+            card._id)
         
     def create_card_type_xml_element(self, event):
         cardtype = self.database.get_card_type(event['id'], False)
@@ -159,7 +162,8 @@ class EventManager:
             'tm').text), 'scheduled_interval': get_rep_value(item.find(\
             'si').text), 'actual_interval': get_rep_value(item.find(\
             'ai').text), 'new_interval': get_rep_value(item.find('ni').text), \
-            'thinking_time': get_rep_value(item.find('ttm').text)})
+            'thinking_time': get_rep_value(item.find('ttm').text), '_id': \
+            item.find('_id').text})
 
     def create_cardtype_object(self, item):
         return DictClass({'id': item.find('id').text, 'name': \
@@ -167,9 +171,19 @@ class EventManager:
             'keyboard_shortcuts': {}, 'extra_data': {}, 'unique_fields': \
             item.find('uf').text.split(',')})
 
+    def create_media_object(self, item):
+        return None
+
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
+        # first, we can copy media
+        for child in ElementTree.fromstring(history).findall('i'):
+            if child.find('t').text == 'media':
+                fname = child.find('id').text.split('__for__')[0]
+                self.get_media(fname)
+
+        # all other stuff
         for child in ElementTree.fromstring(history).findall('i'):
             event = int(child.find('ev').text)
             obj = self.object_factory[child.find('t').text](child)
