@@ -39,6 +39,7 @@ class Html(Renderer):
     def __init__(self, component_manager):
         Renderer.__init__(self, component_manager)
         self._css = {} # {card_type: css}
+        self.config = self.config()
         
     def css(self, card_type):
         """Creates css."""
@@ -82,18 +83,15 @@ class Html(Renderer):
         """Replace html font-size."""
 
         return re.sub('(.*\{font-size):[0-9]{1,2}(px;\}.*)', '\\1:%d\\2' \
-            % self.config()['font_size'], text)
+            % self.config['font_size'], text)
 
     def correct_media_path(self, text):
         """Replace media file name by relative path."""
 
-        iter = re_src.finditer(text)
-        if not iter:
-            return text
-        for match in iter:
+        for match in re_src.finditer(text):
             filename = match.group(1)
             text = text.replace(\
-                filename, os.path.join(self.config().mediadir(), filename))
+                filename, os.path.join(self.config.mediadir(), filename))
         return text
 
     def render_html(self, widget, text="<html><body> </body></html>"):
