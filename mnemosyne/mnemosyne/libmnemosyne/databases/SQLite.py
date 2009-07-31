@@ -698,11 +698,9 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
                 filename = copy_file_to_dir(filename, mediadir)
                 for key, value in fact.data.iteritems():
                     fact.data[key] = value.replace(match.group(1), filename)
-                    fact.data[key] = value.replace(\
-                        match.group(1), os.path.join(mediadir,filename))
                     self.con.execute("""update data_for_fact set value=? 
-                        where _fact_id='%s' and key='%s'""" % \
-                        (fact._id, key), (fact.data[key], ))
+                        where _fact_id=? and key=?""", \
+                        (fact.data[key], fact._id, key))
             new_files.add(filename)       
         # Determine old media files for this fact.
         old_files = set((cursor["filename"] for cursor in self.con.execute(\
