@@ -24,11 +24,14 @@ Html renderer.
 """
 
 from mnemosyne.libmnemosyne.renderer import Renderer
+import os
 import re
 
 LARGE_HTML_MARGIN = 20
 NORMAL_HTML_MARGIN = 70
 HINT_SIZE = 20
+
+re_src = re.compile(r"""src=\"(.+?)\"""", re.DOTALL | re.IGNORECASE)
 
 class Html(Renderer):
     """Hildon Html renderer."""
@@ -62,6 +65,7 @@ class Html(Renderer):
             #    text = filter.run(text)
             html += "<div id=\"%s\">%s</div>" % (field, text)
         html += "</td></tr></table></body></html>"
+        html = self.correct_media_path(html)
         return self.change_font_size(html)
 
     def render_text(self, text, field_name, card_type):
@@ -71,6 +75,7 @@ class Html(Renderer):
             "</head><body><table><tr><td><div id=\"%s\">"
         html += "<div id=\"%s\">%s</div>" % (field_name, text)
         html += "</td></tr></table></body></html>"
+        html = self.correct_media_path(html)
         return self.change_font_size(html)
 
     def change_font_size(self, text):
@@ -78,6 +83,18 @@ class Html(Renderer):
 
         return re.sub('(.*\{font-size):[0-9]{1,2}(px;\}.*)', '\\1:%d\\2' \
             % self.config()['font_size'], text)
+
+    def correct_media_path(self, text):
+        """Replace media file name by relative path."""
+
+        iter = re_src.finditer(text)
+        if not iter:
+            return text
+        for match in iter:
+            filename = match.group(1)
+            text = text.replace(\
+                filename, os.path.join(self.config().mediadir(), filename))
+        return text
 
     def render_html(self, widget, text="<html><body> </body></html>"):
         """Render html text and set it to widget."""
