@@ -6,6 +6,7 @@ import mnemosyne.version
 import base64
 import urllib2
 import uuid
+import os
 from sync import SyncError
 from sync import EventManager
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
@@ -25,7 +26,7 @@ class Client:
         self.config = config
         self.database = database
         self.uri = uri
-        self.eman = EventManager(database, controller)
+        self.eman = EventManager(database, controller, self.get_media_file)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
@@ -41,10 +42,11 @@ class Client:
             self.login()
             self.handshake()
             server_history = self.get_server_history()
+            #print server_history
             self.database.make_sync_backup()
             self.eman.apply_history(server_history)
-            client_history = self.eman.get_history()
-            self.send_client_history(client_history)
+            #client_history = self.eman.get_history()
+            #self.send_client_history(client_history)
         except SyncError, exception:
             print exception #FIXME: replace by ErrorDialog
             self.database.restore_sync_backup()
@@ -111,3 +113,17 @@ class Client:
                 raise SyncError("Sending client history: error on server side.")
         except urllib2.URLError, error:
             raise SyncError("Sending client history: " + str(error))
+
+    def get_media_file(self, fname):
+        """Gets media from server."""
+
+        try:
+            response = urllib2.urlopen(\
+                self.uri + '/sync/server/media?fname=%s' % fname)
+            data = response.read()
+            if data != "CANCEL":
+                fobj = open(os.path.join(self.config.mediadir(), fname), 'w')
+                fobj.write(data)
+                fobj.close()
+        except urllib2.URLError, error:
+            raise SyncError("Getting server media: " + str(error))
