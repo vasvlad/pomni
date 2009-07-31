@@ -697,11 +697,21 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         # Determine new media files for this fact. Copy them to the media dir
         # if needed. (The user could have typed in the full path directly
         # withouh going through the add_img or add_sound callback.)
+<<<<<<< TREE
         iter = re_src.finditer("".join(fact.data.values()))
         if not iter:
             return
+=======
+        matches = re_src.finditer("".join(fact.data.values()))
+        if not matches:
+            return
+>>>>>>> MERGE-SOURCE
         new_files = set()
+<<<<<<< TREE
         for match in iter:
+=======
+        for match in matches:
+>>>>>>> MERGE-SOURCE
             filename = match.group(1)
             if os.path.isabs(filename):
                 filename = copy_file_to_dir(filename, mediadir)
