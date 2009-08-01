@@ -211,59 +211,52 @@ class EventManager:
         # all other stuff
         for child in ElementTree.fromstring(history).findall('i'):
             event = int(child.find('ev').text)
-            #obj = self.object_factory[child.find('t').text](child)
             if event == events.ADDED_FACT:
                 fact = self.create_fact_object(child)
                 if not self.database.duplicates_for_fact(fact):
-                    print "adding fact..."
                     self.database.add_fact(fact)
+                    print "adding fact..."
             elif event == events.UPDATED_FACT:
-                print "updating fact..."
                 fact = self.create_fact_object(child)
                 self.database.update_fact(fact)
+                print "updating fact..."
             elif event == events.DELETED_FACT:
                 fact = self.database.get_fact(child.find('id').text, False)
                 if fact:
-                    print "deleting fact..."
                     self.database.delete_fact_and_related_data(fact)
+                    print "deleting fact..."
             elif event == events.ADDED_TAG:
                 tag = self.create_tag_object(child)
                 if not tag.name in self.database.tag_names():
-                    print "adding tag..."
                     self.database.add_tag(tag)
+                    print "adding tag..."
             elif event == events.UPDATED_TAG:
                 print "updating tag..."
                 tag = self.create_tag_object(child)
                 self.database.update_tag(tag)
             elif event == events.DELETED_TAG:
-                #tag = self.database.get_tag(child.find('id').text, False)
-                #if tag:
                 print "deleting tag..."
-                #    self.database.delete_tag(tag)
             elif event == events.ADDED_CARD:
                 if not self.database.has_card_with_external_id(\
                     child.find('id').text):
-                    print "adding card..."
                     card = self.create_card_object(child)
                     self.database.add_card(card)
                     self.log.added_card(card)
+                    print "adding card..."
             elif event == events.UPDATED_CARD:
-                print "updating card..."
                 card = self.create_card_object(child)
                 self.database.update_card(card)
+                print "updating card..."
             elif event == events.DELETED_CARD:
-                #if self.database.has_card_with_external_id(\
-                #    child.find('id').text):
-                #    card = self.database.get_card(child.find('id'), False)
                 print "deleting card..."
-                #    self.database.delete_card(card)
             elif event == events.REPETITION:
+                card = self.create_card_object(child)
+                self.database.log_repetition(card.timestamp, card.id, \
+                card.grade, card.easiness, card.acq_reps, card.ret_reps, \
+                card.lapses, card.acq_reps_since_lapse, \
+                card.ret_reps_since_lapse, card.scheduled_interval, \
+                card.actual_interval, card.new_interval, card.thinking_time)
                 print "repetiting..."
-                self.database.log_repetition(obj.timestamp, obj.id, obj.grade, \
-                obj.easiness, obj.acq_reps, obj.ret_reps, obj.lapses, \
-                obj.acq_reps_since_lapse, obj.ret_reps_since_lapse, \
-                obj.scheduled_interval, obj.actual_interval, obj.new_interval, \
-                obj.thinking_time)
                 
         self.database.update_last_sync_event(self.partner['id'])
 
