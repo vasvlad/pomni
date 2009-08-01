@@ -152,3 +152,19 @@ class Server:
             return "CANCEL"
         else:
             return data
+
+    def put_sync_client_media(self, environ, fname):
+        """Gets client media and applys to self."""
+
+        try:
+            socket = environ['wsgi.input']
+            size = int(environ['CONTENT_LENGTH'])
+            data = socket.read(size)
+        except:
+            return "CANCEL"
+        else:
+           mfile = open(os.path.join(self.config.mediadir(), fname), 'w')
+           mfile.write(data)
+           mfile.close()
+           return "OK"
+
