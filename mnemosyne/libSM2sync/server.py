@@ -18,16 +18,17 @@ class Server:
 
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self, uri, database, config):
+    def __init__(self, uri, database, config, log):
         params = urlparse(uri)
         #FIXME: move from here
         self.config = config
         self.database = database
+        self.log = log
         self.host = params.scheme
         self.port = int(params.path)
         self.httpd = None
         self.logged = False
-        self.eman = EventManager(database, None, None)
+        self.eman = EventManager(database, log, None, None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version

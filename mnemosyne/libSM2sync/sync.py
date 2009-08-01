@@ -38,10 +38,11 @@ class EventManager:
     XML representation of history events.
     """
 
-    def __init__(self, database, controller, get_media):
+    def __init__(self, database, log, controller, get_media):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
+        self.log = log
         self.object_factory = {'tag': self.create_tag_object, 'fact': \
             self.create_fact_object, 'card': self.create_card_object, \
             'cardtype': self.create_cardtype_object, 'media': \

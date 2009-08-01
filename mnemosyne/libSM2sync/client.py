@@ -21,12 +21,13 @@ class PutRequest(urllib2.Request):
 class Client:
     """Base client class for syncing."""
 
-    def __init__(self, uri, database, controller, config):
+    def __init__(self, uri, database, controller, config, log):
         #FIXME: remove from init. 
         self.config = config
         self.database = database
+        self.log = log
         self.uri = uri
-        self.eman = EventManager(database, controller, self.get_media_file)
+        self.eman = EventManager(database, log, controller, self.get_media_file)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
@@ -41,10 +42,10 @@ class Client:
         try:
             self.login()
             self.handshake()
-            #server_history = self.get_server_history()
+            server_history = self.get_server_history()
             #print server_history
             self.database.make_sync_backup()
-            #self.eman.apply_history(server_history)
+            self.eman.apply_history(server_history)
             #client_history = self.eman.get_history()
             #self.send_client_history(client_history)
         except SyncError, exception:
