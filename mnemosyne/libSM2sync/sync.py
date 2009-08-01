@@ -73,7 +73,6 @@ class EventManager:
                 't_time': item[6]}
             history += str(self.create_event_element(event))
         history += "</history>\n"
-        #print history
         return history
 
     def create_event_element(self, event):
@@ -208,7 +207,7 @@ class EventManager:
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
-        # first, we can copy media
+        # first, we can copy media, if necessary
         for child in ElementTree.fromstring(history).findall('i'):
             if child.find('t').text == 'media':
                 fname = child.find('id').text.split('__for__')[0]
@@ -241,8 +240,6 @@ class EventManager:
                 print "updating tag..."
                 tag = self.create_tag_object(child)
                 self.database.update_tag(tag)
-            elif event == events.DELETED_TAG:
-                print "deleting tag..."
             elif event == events.ADDED_CARD:
                 if not self.database.has_card_with_external_id(\
                     child.find('id').text):
@@ -254,8 +251,6 @@ class EventManager:
                 card = self.create_card_object(child)
                 self.database.update_card(card)
                 print "updating card..."
-            elif event == events.DELETED_CARD:
-                print "deleting card..."
             elif event == events.REPETITION:
                 card = self.create_card_object(child)
                 self.database.log_repetition(card.timestamp, card.id, \
