@@ -119,8 +119,9 @@ class EventManager:
             dvalues = ''.join(["<dv%s><![CDATA[%s]]></dv%s>" % (num, \
             fact.data.values()[num], num) for num in range(len(fact.data))])
             return "<i><t>fact</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><dk>" \
-                "%s</dk>%s<tm>%s</tm></i>" % (event['event'], fact.id, \
-                fact.card_type.id, dkeys, dvalues, event['time'])
+                "%s</dk>%s<tm>%s</tm><_id>%s</_id></i>" % (event['event'], \
+                fact.id, fact.card_type.id, dkeys, dvalues, event['time'], \
+                fact._id)
 
     def create_card_xml_element(self, event):
         if event['event'] == events.DELETED_CARD:
@@ -164,7 +165,9 @@ class EventManager:
             item.find('ctid').text, False)
         creation_time = int(item.find('tm').text)
         fact_id = item.find('id').text
-        return Fact(fact_data, card_type, creation_time, fact_id)
+        fact = Fact(fact_data, card_type, creation_time, fact_id)
+        fact._id = item.find('_id').text
+        return fact
 
     def create_card_object(self, item):
         def get_rep_value(value):
