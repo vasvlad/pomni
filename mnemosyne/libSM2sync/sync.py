@@ -205,6 +205,7 @@ class EventManager:
             elif event == events.ADDED_CARD:
                 if not self.database.has_card_with_external_id(obj.id):
                     self.database.add_card(obj)
+                    self.log.added_card(obj)
             elif event == events.UPDATED_CARD:
                 self.database.update_card(obj)
             elif event == events.DELETED_CARD:
