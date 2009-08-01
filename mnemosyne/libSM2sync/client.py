@@ -41,10 +41,10 @@ class Client:
         try:
             self.login()
             self.handshake()
-            server_history = self.get_server_history()
+            #server_history = self.get_server_history()
             #print server_history
             self.database.make_sync_backup()
-            self.eman.apply_history(server_history)
+            #self.eman.apply_history(server_history)
             #client_history = self.eman.get_history()
             #self.send_client_history(client_history)
         except SyncError, exception:
@@ -127,3 +127,20 @@ class Client:
                 fobj.close()
         except urllib2.URLError, error:
             raise SyncError("Getting server media: " + str(error))
+
+    def send_media_file(self, fname):
+        """Sends media to server."""
+
+        mfile = open(fname, 'r')
+        data = mfile.read()
+        mfile.close()
+
+        try:
+            request = PutRequest(self.uri + '/sync/client/media?fname=%s' % \
+                os.path.basename(fname), data)
+            request.add_header('CONTENT_LENGTH', len(data))
+            response = urllib2.urlopen(request)
+            if response.read() != "OK":
+                raise SyncError("Sending client media: error on server side.")
+        except urllib2.URLError, error:
+            raise SyncError("Sending client media: " + str(error))
