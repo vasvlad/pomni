@@ -28,7 +28,7 @@ class Server:
         self.port = int(params.path)
         self.httpd = None
         self.logged = False
-        self.eman = EventManager(database, log, None, None)
+        self.eman = EventManager(database, log, None, self.config.mediadir(), None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version

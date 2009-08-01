@@ -11,6 +11,7 @@ from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.databases.SQLite_logging \
     import SQLiteLogging as events
 from xml.etree import ElementTree
+import os
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
@@ -38,7 +39,7 @@ class EventManager:
     XML representation of history events.
     """
 
-    def __init__(self, database, log, controller, get_media):
+    def __init__(self, database, log, controller, mediadir, get_media):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
@@ -50,6 +51,7 @@ class EventManager:
         self.partner = {'role': None, 'id': None, 'name': 'Mnemosyne', \
             'ver': None, 'protocol': None, 'cardtypes': None, 'extra': \
             None, 'deck': None, 'upload': True, 'readonly': False}
+        self.mediadir = mediadir
         self.get_media = get_media
 
     def set_sync_params(self, partner_params):
@@ -71,7 +73,7 @@ class EventManager:
                 't_time': item[6]}
             history += str(self.create_event_element(event))
         history += "</history>\n"
-        print history
+        #print history
         return history
 
     def create_event_element(self, event):
@@ -151,8 +153,12 @@ class EventManager:
         ','.join(cardtype.unique_fields), '', '')
 
     def create_media_xml_element(self, event):
-        return "<i><t>media</t><ev>%s</ev><id>%s</id></i>" % \
-            (event['event'], event['id'])
+        fname = event['id'].split('__for__')[0]
+        if os.path.exists(os.path.join(self.mediadir, fname)):
+            return "<i><t>media</t><ev>%s</ev><id>%s</id></i>" % \
+                (event['event'], event['id'])
+        else:
+            return ""
 
     def create_tag_object(self, item):
         return Tag(item.find('name').text, item.find('id').text)
@@ -207,6 +213,7 @@ class EventManager:
             if child.find('t').text == 'media':
                 fname = child.find('id').text.split('__for__')[0]
                 self.get_media(fname)
+                print "adding media..."
 
         # all other stuff
         for child in ElementTree.fromstring(history).findall('i'):
@@ -257,6 +264,7 @@ class EventManager:
                 card.ret_reps_since_lapse, card.scheduled_interval, \
                 card.actual_interval, card.new_interval, card.thinking_time)
                 print "repetiting..."
+                
                 
         self.database.update_last_sync_event(self.partner['id'])
 
