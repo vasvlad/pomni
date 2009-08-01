@@ -406,6 +406,8 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         else:
             sql_res = self.con.execute("select * from tags where id=?",
                                        (id, )).fetchone()            
+        if not sql_res:
+            return None
         tag = Tag(sql_res["name"], sql_res["id"])
         tag._id = sql_res["_id"]
         return tag
