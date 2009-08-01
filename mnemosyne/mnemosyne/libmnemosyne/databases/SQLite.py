@@ -453,7 +453,9 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
                                        (id, )).fetchone()
         else:
             sql_res = self.con.execute("select * from facts where id=?",
-                                       (id, )).fetchone()            
+                                       (id, )).fetchone()
+        if not sql_res:
+            return None
         # Create dictionary with fact.data.
         data = dict([(cursor["key"], cursor["value"]) for cursor in
             self.con.execute("select * from data_for_fact where _fact_id=?",
