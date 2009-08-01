@@ -71,6 +71,7 @@ class EventManager:
                 't_time': item[6]}
             history += str(self.create_event_element(event))
         history += "</history>\n"
+        print history
         return history
 
     def create_event_element(self, event):
@@ -95,30 +96,50 @@ class EventManager:
             return ''   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
+        if event['event'] == events.DELETED_TAG:
+            # we only transfer tag id, that should be deleted.
+            return "<i><t>tag</t><ev>%s</ev><id>%s</id></i>" % \
+                (event['event'], event['id'])
         tag = self.database.get_tag(event['id'], False)
+        if not tag:
+            return ""
         return "<i><t>tag</t><ev>%s</ev><id>%s</id><name>%s</name></i>" % \
             (event['event'], tag.id, tag.name)
 
     def create_fact_xml_element(self, event):
+        if event['event'] == events.DELETED_FACT:
+            # we only transfer fact id, that should be deleted.
+            return "<i><t>fact</t><ev>%s</ev><id>%s</id></i>" % \
+                (event['event'], event['id'])
         fact = self.database.get_fact(event['id'], False)
-        dkeys = ','.join(["%s" % key for key, val in fact.data.items()])
-        dvalues = ''.join(["<dv%s><![CDATA[%s]]></dv%s>" % (num, fact.data.values()[num], \
-        num) for num in range(len(fact.data))])
-        return "<i><t>fact</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><dk>%s</dk>"\
-            "%s<tm>%s</tm></i>" % (event['event'], fact.id, fact.card_type.id, \
-            dkeys, dvalues, event['time'])
+        if not fact:
+            return ""
+        else:
+            dkeys = ','.join(["%s" % key for key, val in fact.data.items()])
+            dvalues = ''.join(["<dv%s><![CDATA[%s]]></dv%s>" % (num, \
+            fact.data.values()[num], num) for num in range(len(fact.data))])
+            return "<i><t>fact</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><dk>" \
+                "%s</dk>%s<tm>%s</tm></i>" % (event['event'], fact.id, \
+                fact.card_type.id, dkeys, dvalues, event['time'])
 
     def create_card_xml_element(self, event):
-        card = self.database.get_card(event['id'], False)
-        return "<i><t>card</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><fid>%s" \
-            "</fid><fvid>%s</fvid><tags>%s</tags><gr>%s</gr><e>%s</e><lr>%s" \
-            "</lr><nr>%s</nr><si>%s</si><ai>%s</ai><ni>%s</ni><ttm>%s</ttm>" \
-            "<tm>%s</tm><_id>%s</_id></i>" % (event['event'], card.id, \
-            card.fact.card_type.id, card.fact.id, card.fact_view.id, \
-            ','.join([item.name for item in card.tags]), card.grade, \
-            card.easiness, card.last_rep, card.next_rep, event['s_int'], \
-            event['a_int'], event['n_int'], event['t_time'], event['time'],\
-            card._id)
+        if event['event'] == events.DELETED_CARD:
+            # we only transfer card id, that shoild be deleted.
+            return "<i><t>card</t><ev>%s</ev><id>%s</id></i>" % \
+                (event['event'], event['id'])
+        if not self.database.has_card_with_external_id(event['id']):
+            return ""
+        else:
+            card = self.database.get_card(event['id'], False)
+            return "<i><t>card</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><fid>" \
+                "%s</fid><fvid>%s</fvid><tags>%s</tags><gr>%s</gr><e>%s</e>" \
+                "<lr>%s</lr><nr>%s</nr><si>%s</si><ai>%s</ai><ni>%s</ni>" \
+                "<ttm>%s</ttm><tm>%s</tm><_id>%s</_id></i>" % (event['event'], \
+                card.id, card.fact.card_type.id, card.fact.id, \
+                card.fact_view.id, ','.join([item.name for item in card.tags]),\
+                card.grade, card.easiness, card.last_rep, card.next_rep, \
+                event['s_int'], event['a_int'], event['n_int'], \
+                event['t_time'], event['time'], card._id)
         
     def create_card_type_xml_element(self, event):
         cardtype = self.database.get_card_type(event['id'], False)
@@ -187,30 +208,54 @@ class EventManager:
         # all other stuff
         for child in ElementTree.fromstring(history).findall('i'):
             event = int(child.find('ev').text)
-            obj = self.object_factory[child.find('t').text](child)
+            #obj = self.object_factory[child.find('t').text](child)
             if event == events.ADDED_FACT:
-                if not self.database.duplicates_for_fact(obj):
-                    self.database.add_fact(obj)
+                fact = self.create_fact_object(child)
+                if not self.database.duplicates_for_fact(fact):
+                    print "adding fact..."
+                    self.database.add_fact(fact)
             elif event == events.UPDATED_FACT:
-                self.database.update_fact(obj)
+                print "updating fact..."
+                fact = self.create_fact_object(child)
+                self.database.update_fact(fact)
             elif event == events.DELETED_FACT:
-                self.database.delete_fact_and_related_data(obj)
+                fact = self.database.get_fact(child.find('id').text, False)
+                if fact:
+                    print "deleting fact..."
+                    self.database.delete_fact_and_related_data(fact)
             elif event == events.ADDED_TAG:
-                if not obj.name in self.database.tag_names():
-                    self.database.add_tag(obj)
+                tag = self.create_tag_object(child)
+                if not tag.name in self.database.tag_names():
+                    print "adding tag..."
+                    self.database.add_tag(tag)
             elif event == events.UPDATED_TAG:
-                self.database.update_tag(obj)
+                print "updating tag..."
+                tag = self.create_tag_object(child)
+                self.database.update_tag(tag)
             elif event == events.DELETED_TAG:
-                self.database.delete_tag(obj)
+                #tag = self.database.get_tag(child.find('id').text, False)
+                #if tag:
+                print "deleting tag..."
+                #    self.database.delete_tag(tag)
             elif event == events.ADDED_CARD:
-                if not self.database.has_card_with_external_id(obj.id):
-                    self.database.add_card(obj)
-                    self.log.added_card(obj)
+                if not self.database.has_card_with_external_id(\
+                    child.find('id').text):
+                    print "adding card..."
+                    card = self.create_card_object(child)
+                    self.database.add_card(card)
+                    self.log.added_card(card)
             elif event == events.UPDATED_CARD:
-                self.database.update_card(obj)
+                print "updating card..."
+                card = self.create_card_object(child)
+                self.database.update_card(card)
             elif event == events.DELETED_CARD:
-                self.database.delete_card(obj)
+                #if self.database.has_card_with_external_id(\
+                #    child.find('id').text):
+                #    card = self.database.get_card(child.find('id'), False)
+                print "deleting card..."
+                #    self.database.delete_card(card)
             elif event == events.REPETITION:
+                print "repetiting..."
                 self.database.log_repetition(obj.timestamp, obj.id, obj.grade, \
                 obj.easiness, obj.acq_reps, obj.ret_reps, obj.lapses, \
                 obj.acq_reps_since_lapse, obj.ret_reps_since_lapse, \
