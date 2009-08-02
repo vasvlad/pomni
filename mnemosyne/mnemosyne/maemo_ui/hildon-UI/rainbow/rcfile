@@ -766,6 +766,11 @@ style "sync-client" {
             shadow = OUT
             file = "sync_client.png"
         }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "sync_client_insensitive.png"
+        }
     }
 }
 widget "*.sync_toolbar_client_mode_button" style "sync-client"
@@ -808,20 +813,57 @@ style "sync-server" {
             shadow = OUT
             file = "sync_server.png"
         }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "sync_server_insensitive.png"
+        }
     }
 }
 widget "*.sync_toolbar_server_mode_button" style "sync-server"
 
-style "start-sync" {
+style "sync-button" {
     engine "pixmap" {
         image {
             function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "sync_stop.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "synh.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "sync_stop.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "synh.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "sync_stop.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
             file = "synh.png"
         }
     }
 }
-widget "*.sync_mode_client_start_button" style "start-sync"
-widget "*.sync_mode_server_start_button" style "start-sync"
+widget "*.sync_mode_client_start_button" style "sync-button"
+widget "*.sync_mode_server_start_button" style "sync-button"
 
 style "sync-mode-label" {
     font_name = "Nokia Sans 17"
@@ -831,6 +873,8 @@ widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
 widget "*.sync_mode_client_address_label" style "sync-mode-label"
 widget "*.sync_mode_information_label" style "sync-mode-label"
 widget "*.sync_mode_server_port_label" style "sync-mode-label"
+widget "*.sync_mode_client_progress_label" style "sync-mode-label"
+widget "*.sync_mode_server_progress_label" style "sync-mode-label"
 
 style "sync-textarea" {
     font_name = "Nokia Sans 20"
@@ -929,6 +973,13 @@ widget "window" style "main-window"
 
 # Style for "To Main Menu" button
 style "main-menu-button" {
+    engine "pixmap" {
+        image {
+            state = INSENSITIVE
+            function = BOX
+            file = "back_insensitive.png"
+        }
+    }
     engine "pixmap" {
         image {
             function = BOX

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Aug  2 19:41:30 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Aug  2 22:25:02 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -1819,158 +1819,173 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
                     <child>
-                      <widget class="GtkTable" id="sync_mode_client_params_table">
-                        <property name="visible">True</property>
-                        <property name="n_rows">3</property>
-                        <child>
-                          <widget class="GtkVBox" id="sync_mode_client_table_address_vbox">
-                            <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <property name="spacing">5</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox3">
-                                <property name="visible">True</property>
-                                <property name="spacing">5</property>
-                                <child>
-                                  <widget class="GtkLabel" id="sync_mode_client_address_label">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Address (HOST:PORT):</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="sync_mode_client_address_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">●</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">2</property>
-                            <property name="bottom_attach">3</property>
-                            <property name="y_padding">14</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkVBox" id="sync_mode_client_table_passwd_vbox">
-                            <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <property name="spacing">5</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox2">
-                                <property name="visible">True</property>
-                                <child>
-                                  <widget class="GtkLabel" id="sync_mode_client_passwd_label">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Passwd:</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="sync_mode_client_passwd_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">●</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="top_attach">1</property>
-                            <property name="bottom_attach">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkVBox" id="sync_mode_client_table_login_vbox">
-                            <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <property name="spacing">5</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <child>
-                              <widget class="GtkHBox" id="hbox1">
-                                <property name="visible">True</property>
-                                <child>
-                                  <widget class="GtkLabel" id="sync_mode_client_login_label">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Login:</property>
-                                  </widget>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                  </packing>
-                                </child>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="sync_mode_client_login_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">●</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="y_padding">14</property>
-                          </packing>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                        <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="sync_mode_client_start_button">
+                      <widget class="GtkToggleButton" id="sync_mode_client_start_button">
                         <property name="width_request">72</property>
                         <property name="height_request">72</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
+                        <signal name="pressed" handler="start_client_sync"/>
+                        <child>
+                          <placeholder/>
+                        </child>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                        <property name="x_options"></property>
+                        <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options"></property>
                         <property name="y_padding">18</property>
                       </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkVBox" id="vbox6">
+                        <property name="visible">True</property>
+                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                        <child>
+                          <widget class="GtkTable" id="sync_mode_client_params_table">
+                            <property name="visible">True</property>
+                            <property name="n_rows">3</property>
+                            <child>
+                              <widget class="GtkVBox" id="sync_mode_client_table_login_vbox">
+                                <property name="visible">True</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <property name="spacing">5</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox1">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <widget class="GtkLabel" id="sync_mode_client_login_label">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Login:</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkEntry" id="sync_mode_client_login_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="y_padding">14</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkVBox" id="sync_mode_client_table_passwd_vbox">
+                                <property name="visible">True</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <property name="spacing">5</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox2">
+                                    <property name="visible">True</property>
+                                    <child>
+                                      <widget class="GtkLabel" id="sync_mode_client_passwd_label">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Password:</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkEntry" id="sync_mode_client_passwd_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">1</property>
+                                <property name="bottom_attach">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkVBox" id="sync_mode_client_table_address_vbox">
+                                <property name="visible">True</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <property name="spacing">5</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <child>
+                                  <widget class="GtkHBox" id="hbox3">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <widget class="GtkLabel" id="sync_mode_client_address_label">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Address (HOST:PORT):</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                      </packing>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkEntry" id="sync_mode_client_address_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="top_attach">2</property>
+                                <property name="bottom_attach">3</property>
+                                <property name="y_padding">14</property>
+                              </packing>
+                            </child>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="sync_mode_client_progress_label">
+                            <property name="label" translatable="yes">Syncing...</property>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
                     </child>
                   </widget>
                   <packing>
@@ -1988,72 +2003,84 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                     <property name="visible">True</property>
                     <property name="n_rows">2</property>
                     <child>
-                      <widget class="GtkTable" id="sync_mode_server_params_table">
+                      <widget class="GtkVBox" id="vbox7">
                         <property name="visible">True</property>
-                        <property name="n_rows">3</property>
-                        <property name="homogeneous">True</property>
+                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <widget class="GtkVBox" id="sync_mode_server_table_port_vbox">
+                          <widget class="GtkTable" id="sync_mode_server_params_table">
                             <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                            <property name="spacing">5</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                            <property name="n_rows">3</property>
+                            <property name="homogeneous">True</property>
                             <child>
-                              <widget class="GtkHBox" id="hbox4">
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <widget class="GtkVBox" id="sync_mode_server_table_port_vbox">
                                 <property name="visible">True</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                <property name="spacing">5</property>
+                                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                                 <child>
-                                  <widget class="GtkLabel" id="sync_mode_server_port_label">
+                                  <widget class="GtkHBox" id="hbox4">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Port:</property>
+                                    <child>
+                                      <widget class="GtkLabel" id="sync_mode_server_port_label">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Port:</property>
+                                      </widget>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                      </packing>
+                                    </child>
                                   </widget>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">False</property>
                                   </packing>
                                 </child>
+                                <child>
+                                  <widget class="GtkEntry" id="sync_mode_server_port_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">●</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </widget>
                               <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkEntry" id="sync_mode_server_port_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">●</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">False</property>
-                                <property name="position">1</property>
+                                <property name="y_padding">14</property>
                               </packing>
                             </child>
                           </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="sync_mode_server_progress_label">
+                            <property name="label" translatable="yes">Syncing...</property>
+                          </widget>
                           <packing>
-                            <property name="y_padding">14</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                       </widget>
-                      <packing>
-                        <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                        <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                      </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="sync_mode_server_start_button">
+                      <widget class="GtkToggleButton" id="sync_mode_server_start_button">
                         <property name="width_request">72</property>
                         <property name="height_request">72</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
+                        <signal name="pressed" handler="start_server_sync"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -2061,7 +2088,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
-                        <property name="x_options"></property>
+                        <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options"></property>
                         <property name="y_padding">18</property>
                       </packing>
