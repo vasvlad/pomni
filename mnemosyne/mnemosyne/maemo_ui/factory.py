@@ -74,6 +74,7 @@ def app_factory(interface=None):
         app.components.append(("mnemosyne.maemo_ui.input", "EditFactWidget"))
         app.components.append(("mnemosyne.maemo_ui.configuration", 
                                 "ConfigurationWidget"))
+        app.components.append(("mnemosyne.maemo_ui.sync", "SyncWidget"))
 
         # Add necessary components
         app.components.append(\

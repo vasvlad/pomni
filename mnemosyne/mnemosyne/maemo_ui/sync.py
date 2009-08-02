@@ -1,36 +1,38 @@
-import sys
-import os
-sys.path.insert(0, '../../')
-sys.path.insert(0, "../")
-from libSM2sync.server import Server
-from libSM2sync.client import Client
-from maemo_ui.factory import app_factory
+#!/usr/bin/python -tt7
+# vim: sw=4 ts=4 expandtab ai
+#
+# Mnemosyne. Learning tool based on spaced repetition technique
+#
+# Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License version 2 as published by the
+# Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+# 02110-1301 USA
+#
 
-def main(argv):
-    """Main."""
+"""
+Hildon UI. Sync Widget.
+"""
 
-    if len(argv) < 3:
-        print "USAGE: %s MODE HOST:PORT" % argv[0]
-    else:
-        mode = argv[1]
-        uri = argv[2]
-        if mode == "server":
-            app = app_factory()
-            app.initialise(os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne")))
-            database = app.database()
-            server = Server(uri, database, app.config(), app.log())
-            server.start()
-            app.finalise()
-        elif mode == "client":
-            app = app_factory()
-            app.initialise(os.path.abspath(os.path.join(os.getcwdu(), "testdb")))
-            database = app.database()
-            client = Client(uri, database, app.controller(), app.config(), app.log())
-            client.start()
-            app.finalise()
-        else:
-            print "unknown mode"
+from mnemosyne.libmnemosyne.ui_component import UiComponent
 
+class SyncWidget(UiComponent):
+    """Sync Widget."""
 
-if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    def __init__(self, component_manager):
+        UiComponent.__init__(self, component_manager)
+        self.w_tree = self.main_widget().w_tree
+
+    def activate(self):
+        """Activate sync mode."""
+        print "sync activated"

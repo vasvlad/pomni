@@ -52,10 +52,8 @@ class MenuWidget(UiComponent):
         self.main_widget().review_()
 
     def sync_cb(self, widget):
-        # test xml generation in EventManager
-        from libSM2sync.sync import EventManager
-        em = EventManager(self.database())
-        em.get_events()
+        """Go to sync mode."""
+        self.main_widget().sync_()
 
     def configure_cb(self, widget):
         """Go to configuration mode."""
