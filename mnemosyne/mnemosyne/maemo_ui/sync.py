@@ -32,7 +32,39 @@ class SyncWidget(UiComponent):
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
         self.w_tree = self.main_widget().w_tree
+        self.w_tree.signal_autoconnect(\
+            dict([(sig, getattr(self, sig + "_cb")) for sig in \
+                ("sync_to_main_menu", "activate_client_mode", \
+                "activate_server_mode")]))
+        self.conf = self.config()
+        self.w_tree.get_widget(\
+            "sync_mode_client_login_entry").set_text(self.conf['login'])
+        self.w_tree.get_widget(\
+            "sync_mode_client_passwd_entry").set_text(self.conf['user_passwd'])
 
     def activate(self):
         """Activate sync mode."""
-        print "sync activated"
+
+        self.w_tree.get_widget("sync_mode_role_switcher").set_current_page(0)
+        self.w_tree.get_widget(\
+            "sync_toolbar_client_mode_button").set_active(False)
+        self.w_tree.get_widget(\
+            "sync_toolbar_server_mode_button").set_active(False)
+
+    def activate_client_mode_cb(self, widget):
+        """Switches to Client mode."""
+
+        self.w_tree.get_widget("sync_toolbar_server_mode_button").set_active(False)
+        self.w_tree.get_widget("sync_mode_role_switcher").set_current_page(1)
+
+    def activate_server_mode_cb(self, widget):
+        """Switches to Server mode."""
+
+        self.w_tree.get_widget("sync_toolbar_client_mode_button").set_active(False)
+        self.w_tree.get_widget("sync_mode_role_switcher").set_current_page(2)
+
+    def sync_to_main_menu_cb(self, widget):
+        """Returns to main menu."""
+
+        self.main_widget().menu_()
+        

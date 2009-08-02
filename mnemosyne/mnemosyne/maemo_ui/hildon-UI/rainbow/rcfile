@@ -600,6 +600,7 @@ widget "*.review_mode_vseparator1" style "vseparator"
 widget "*.review_mode_vseparator2" style "vseparator"
 widget "*.config_mode_vseparator1" style "vseparator"
 widget "*.config_mode_vseparator2" style "vseparator"
+widget "*.sync_mode_vseparator1" style "vseparator"
 
 style "hseparator" {
     engine "sapwood" {
@@ -724,6 +725,121 @@ style "textareas" {
 widget "*.config_mode_entry_imagedir" style "textareas"
 widget "*.config_mode_entry_sounddir" style "textareas"
 #----------------------------- Config mode ------------------
+
+
+#----------------------------- Sync mode ------------------
+style "sync-client" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "sync_client_selected.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "sync_client.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "sync_client_selected.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "sync_client.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "sync_client_selected.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "sync_client.png"
+        }
+    }
+}
+widget "*.sync_toolbar_client_mode_button" style "sync-client"
+    
+style "sync-server" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "sync_server_selected.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "sync_server.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "sync_server_selected.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "sync_server.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "sync_server_selected.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "sync_server.png"
+        }
+    }
+}
+widget "*.sync_toolbar_server_mode_button" style "sync-server"
+
+style "start-sync" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "synh.png"
+        }
+    }
+}
+widget "*.sync_mode_client_start_button" style "start-sync"
+widget "*.sync_mode_server_start_button" style "start-sync"
+
+style "sync-mode-label" {
+    font_name = "Nokia Sans 17"
+}
+widget "*.sync_mode_client_login_label" style "sync-mode-label"
+widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
+widget "*.sync_mode_client_address_label" style "sync-mode-label"
+widget "*.sync_mode_information_label" style "sync-mode-label"
+widget "*.sync_mode_server_port_label" style "sync-mode-label"
+
+style "sync-textarea" {
+    font_name = "Nokia Sans 20"
+}
+widget "*.sync_mode_client_login_entry" style "sync-textarea"
+widget "*.sync_mode_client_passwd_entry" style "sync-textarea"
+widget "*.sync_mode_client_address_entry" style "sync-textarea"
+widget "*.sync_mode_server_port_entry" style "sync-textarea"
+#----------------------------- Sync mode ------------------
 
 
 #----------------------------- Dialogs ------------------
