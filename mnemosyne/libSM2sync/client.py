@@ -28,6 +28,8 @@ class Client:
         self.log = log
         self.uri = uri
         self.eman = EventManager(database, log, controller, self.config.mediadir(), self.get_media_file)
+        self.login = ''
+        self.passwd = ''
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
@@ -35,6 +37,35 @@ class Client:
         self.protocol = PROTOCOL_VERSION
         self.cardtypes = N_SIDED_CARD_TYPE
         self.extra = ''
+        self.messenger = None
+        self.progress_bar_updater = None
+        self.stopped = False
+
+    def set_user(self, login, passwd):
+        """Sets user login and password."""
+
+        self.login, self.passwd = login, passwd
+
+    def test(self):
+        import time
+        size = 5
+        for i in range(size):
+            if self.stopped:
+                return
+            time.sleep(1)
+            value = (i+1) / float(size)
+            self.progress_bar_updater(value)
+        self.progress_bar_updater(0)
+
+    def set_messenger(self, messenger):
+        """Sets UI messenger."""
+
+        self.messenger = messenger
+
+    def set_progress_bar_updater(self, progress_bar_updater):
+        """Sets UI ProgressBar updater."""
+
+        self.progress_bar_updater = progress_bar_updater
 
     def start(self):
         """Start syncing."""
@@ -54,11 +85,15 @@ class Client:
             self.database.remove_sync_backup()
             print "Finished."
 
+    def stop(self):
+        self.stopped = True
+        print "stopped"
+
     def login(self):
         """Logs on the server."""
         
-        base64string = base64.encodestring("%s:%s" % (self.config['login'], \
-            self.config['user_passwd']))[:-1]
+        base64string = base64.encodestring("%s:%s" % \
+            (self.login, self.passwd))[:-1]
         authheader =  "Basic %s" % base64string
         request = urllib2.Request(self.uri)
         request.add_header("AUTHORIZATION", authheader)
