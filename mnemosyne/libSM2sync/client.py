@@ -83,7 +83,7 @@ class Client:
             self.database.restore_sync_backup()
         else:
             self.database.remove_sync_backup()
-            print "Finished."
+            self.messenger("Finished!")
 
     def stop(self):
         self.stopped = True
@@ -98,9 +98,8 @@ class Client:
         request = urllib2.Request(self.uri)
         request.add_header("AUTHORIZATION", authheader)
         try:
-            urllib2.urlopen(request)
+            urllib2.urlopen(request, timeout=5)
         except urllib2.URLError, error:
-            print "ERROR"
             if hasattr(error, 'code'):
                 if error.code == 403:
                     raise SyncError(\
