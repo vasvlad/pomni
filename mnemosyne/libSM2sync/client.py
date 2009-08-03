@@ -11,12 +11,10 @@ from sync import SyncError
 from sync import EventManager
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
 
-
 #Overrides get_method method for using PUT request in urllib2
 class PutRequest(urllib2.Request):
     def get_method(self):
         return "PUT"
-
 
 class Client:
     """Base client class for syncing."""
@@ -27,7 +25,8 @@ class Client:
         self.database = database
         self.log = log
         self.uri = uri
-        self.eman = EventManager(database, log, controller, self.config.mediadir(), self.get_media_file)
+        self.eman = EventManager(database, log, controller, \
+            self.config.mediadir(), self.get_media_file)
         self.login = ''
         self.passwd = ''
         self.id = hex(uuid.getnode())
@@ -37,61 +36,69 @@ class Client:
         self.protocol = PROTOCOL_VERSION
         self.cardtypes = N_SIDED_CARD_TYPE
         self.extra = ''
-        self.messenger = None
-        self.progress_bar_updater = None
+        self.show_message = None
+        self.update_progressbar = None
+        self.update_events = None
+        self.update_status = None
         self.stopped = False
+
+    def __del__(self):
+        print "goodbye"
 
     def set_user(self, login, passwd):
         """Sets user login and password."""
 
         self.login, self.passwd = login, passwd
 
-    def test(self):
-        import time
-        size = 5
-        for i in range(size):
-            if self.stopped:
-                return
-            time.sleep(1)
-            value = (i+1) / float(size)
-            self.progress_bar_updater(value)
-        self.progress_bar_updater(0)
-
     def set_messenger(self, messenger):
         """Sets UI messenger."""
 
-        self.messenger = messenger
+        self.show_message = messenger
 
     def set_progress_bar_updater(self, progress_bar_updater):
         """Sets UI ProgressBar updater."""
 
-        self.progress_bar_updater = progress_bar_updater
+        self.eman.set_progress_updater(progress_bar_updater)
+
+    def set_status_updater(self, status_updater):
+        """Sets UI status updater."""
+
+        self.update_status = status_updater
+
+    def set_events_updater(self, events_updater):
+        """Process events pending."""
+        
+        self.update_events = events_updater
 
     def start(self):
         """Start syncing."""
        
         try:
+            self.update_status("Authorization...")
             self.login_()
+            self.update_status("Handshaking...")
             self.handshake()
+            self.update_status("Getting history from server. Please, wait...")
             server_history = self.get_server_history()
+            self.update_status("Getting self history. Please, wait...")
             #client_history = self.eman.get_history()
+            self.update_status("Backuping...")
             self.database.make_sync_backup()
+            self.update_status("Applying server history...")
             self.eman.apply_history(server_history)
             #self.send_client_history(client_history)
         except SyncError, exception:
-            self.messenger("Error: " + str(exception))
+            self.show_message("Error: " + str(exception))
             self.database.restore_sync_backup()
         else:
+            self.update_status("Removing backup database...")
             self.database.remove_sync_backup()
-            self.messenger("Finished!")
-
-    def stop(self):
-        self.stopped = True
-        print "stopped"
+            self.show_message("Finished!")
 
     def login_(self):
         """Logs on the server."""
         
+        self.update_events()
         base64string = base64.encodestring("%s:%s" % \
             (self.login, self.passwd))[:-1]
         authheader =  "Basic %s" % base64string
@@ -109,7 +116,8 @@ class Client:
 
     def handshake(self):
         """Handshaking with server."""
-
+    
+        self.update_events()
         cparams = "<params><client id='%s' name='%s' ver='%s' protocol='%s'" \
             " deck='%s' cardtypes='%s' extra='%s'/></params>\n" % (self.id, \
             self.name, self.version, self.protocol, self.deck, self.cardtypes, \
@@ -134,6 +142,7 @@ class Client:
     def get_server_history(self):
         """Connects to server and gets server history."""
 
+        self.update_events()
         try:
             return urllib2.urlopen(self.uri + '/sync/server/history').read()
         except urllib2.URLError, error:
@@ -142,6 +151,7 @@ class Client:
     def send_client_history(self, history):
         """Sends client history to server."""
 
+        self.update_events()
         try:
             response = urllib2.urlopen(PutRequest(\
                 self.uri + '/sync/client/history', history))
