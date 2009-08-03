@@ -71,7 +71,7 @@ class Client:
         """Start syncing."""
        
         try:
-            self.login()
+            self.login_()
             self.handshake()
             server_history = self.get_server_history()
             #client_history = self.eman.get_history()
@@ -79,7 +79,7 @@ class Client:
             self.eman.apply_history(server_history)
             #self.send_client_history(client_history)
         except SyncError, exception:
-            print exception #FIXME: replace by ErrorDialog
+            self.messenger("Error: " + str(exception))
             self.database.restore_sync_backup()
         else:
             self.database.remove_sync_backup()
@@ -89,7 +89,7 @@ class Client:
         self.stopped = True
         print "stopped"
 
-    def login(self):
+    def login_(self):
         """Logs on the server."""
         
         base64string = base64.encodestring("%s:%s" % \
@@ -100,6 +100,7 @@ class Client:
         try:
             urllib2.urlopen(request)
         except urllib2.URLError, error:
+            print "ERROR"
             if hasattr(error, 'code'):
                 if error.code == 403:
                     raise SyncError(\
