@@ -873,8 +873,8 @@ widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
 widget "*.sync_mode_client_address_label" style "sync-mode-label"
 widget "*.sync_mode_information_label" style "sync-mode-label"
 widget "*.sync_mode_server_port_label" style "sync-mode-label"
-widget "*.sync_mode_client_progress_label" style "sync-mode-label"
-widget "*.sync_mode_server_progress_label" style "sync-mode-label"
+widget "*.sync_mode_client_status_label" style "sync-mode-label"
+widget "*.sync_mode_server_progressbar" style "sync-mode-label"
 
 style "sync-textarea" {
     font_name = "Nokia Sans 20"
