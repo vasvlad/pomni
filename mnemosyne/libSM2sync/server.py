@@ -9,9 +9,24 @@ import base64
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
-from wsgiref.simple_server import make_server
+from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
 from sync import PROTOCOL_VERSION
 from sync import N_SIDED_CARD_TYPE
+
+
+class MyWSGIServer(WSGIServer):
+    def __init__(self, host, port, app, handler_class=WSGIRequestHandler):
+        WSGIServer.__init__(self, (host, port), handler_class)
+        self.set_app(app)
+        self.update_events = None
+
+    def stop(self):
+        self.__serving = False
+
+    def _handle_request_noblock(self):
+        self.update_events()
+        WSGIServer._handle_request_nonblock(self)
+        
 
 class Server:
     """Base server class for syncing."""
@@ -27,6 +42,7 @@ class Server:
         self.host = params.scheme
         self.port = int(params.path)
         self.httpd = None
+        #self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.logged = False
         self.eman = EventManager(database, log, None, self.config.mediadir(), None)
         self.id = hex(uuid.getnode())
@@ -36,6 +52,29 @@ class Server:
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
+        self.show_message = None
+        self.update_events = None
+        self.update_status = None
+
+    def set_events_updater(self, events_updater):
+        """Process events pending."""
+
+        self.update_events = events_updater
+
+    def set_status_updater(self, status_updater):
+        """Sets UI status updater."""
+
+        self.update_status = status_updater
+
+    def set_progress_bar_updater(self, progress_bar_updater):
+        """Sets UI ProgressBar updater."""
+
+        self.eman.set_progress_updater(progress_bar_updater)
+
+    def set_messenger(self, messenger):
+        """Sets UI messenger."""
+
+        self.show_message = messenger
 
     def get_method(self, environ):
         """
@@ -80,6 +119,7 @@ class Server:
     def wsgi_app(self, environ, start_response):
         """Simple Server wsgi application."""
 
+        self.update_events()
         status, mime, method, args = self.get_method(environ)
         headers = [('Content-type', mime)]
         start_response(status, headers)
@@ -92,8 +132,14 @@ class Server:
         """Activate server."""
 
         self.httpd = make_server(self.host, self.port, self.wsgi_app)
+        self.update_status("Waiting for client connection...")
+        #self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
+
+    def stop(self):
+        self.eman.stop()
+        self.httpd.shutdown()
 
     def set_params(self, params):
         """Uses for setting non-default params."""
@@ -112,6 +158,7 @@ class Server:
     def put_sync_client_params(self, environ):
         """Gets client specific params."""
 
+        self.update_status("Receiving client params...")
         try:
             socket = environ['wsgi.input']
             client_params = socket.readline()
@@ -124,11 +171,13 @@ class Server:
     def get_sync_server_history(self, environ):
         """Gets self history events."""
 
+        self.update_status("Sending history to client...")
         return self.eman.get_history()
 
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
 
+        self.update_status("Receiving client history...")
         try:
             socket = environ['wsgi.input']
             client_history = socket.readline()
@@ -145,6 +194,7 @@ class Server:
     def get_sync_server_media(self, environ, fname):
         """Gets server media file and sends it to client."""
 
+        self.update_status("Sending media to client...")
         try:
             mediafile = open(os.path.join(self.config.mediadir(), fname))
             data = mediafile.read()
@@ -157,6 +207,7 @@ class Server:
     def put_sync_client_media(self, environ, fname):
         """Gets client media and applys to self."""
 
+        self.update_status("Receiving client media...")
         try:
             socket = environ['wsgi.input']
             size = int(environ['CONTENT_LENGTH'])
