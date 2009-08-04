@@ -38,7 +38,6 @@ class SyncWidget(UiComponent):
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
-        self.client = self.server = None
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in \
@@ -59,7 +58,7 @@ class SyncWidget(UiComponent):
     def activate(self):
         """Activate sync mode."""
 
-        self.get_widget("sync_mode_role_switcher").set_current_page(1)
+        self.get_widget("sync_mode_role_switcher").set_current_page(0)
         self.get_widget("sync_toolbar_client_mode_button").set_active(False)
         self.get_widget("sync_toolbar_server_mode_button").set_active(False)
 
@@ -75,19 +74,46 @@ class SyncWidget(UiComponent):
         self.get_widget("sync_toolbar_client_mode_button").set_active(False)
         self.get_widget("sync_mode_role_switcher").set_current_page(2)
 
-    def update_progress_bar(self, fraction):
-        """Updates progress bar indicator."""
+    def update_client_progress_bar(self, fraction):
+        """Updates client progress bar indicator."""
 
         self.get_widget("sync_mode_client_progressbar").set_fraction(fraction)
+        self.get_widget("sync_mode_client_progressbar").show()
+        self.complete_events()
+
+    def update_server_progress_bar(self, fraction):
+        """Updates server progress bar indicator."""
+
+        self.get_widget("sync_mode_server_progressbar").set_fraction(fraction)
+        self.get_widget("sync_mode_server_progressbar").show()
+        self.complete_events()
 
     def show_message(self, message):
-        """Show message from Client."""
+        """Show message from Client or Server."""
 
         self.main_widget().information_box(message)
+        self.complete_events()
+
+    def update_client_status(self, text):
+        """Set client status text."""
+
+        self.get_widget("sync_mode_client_status_label").set_text(text)
+        self.get_widget("sync_mode_client_status_label").show()
+        self.get_widget("sync_mode_client_progressbar").hide()
+        self.complete_events()
    
+    def update_server_status(self, text):
+        """Set server status text."""
+
+        self.get_widget("sync_mode_server_status_label").set_text(text)
+        self.get_widget("sync_mode_server_status_label").show()
+        self.get_widget("sync_mode_server_progressbar").hide()
+        self.complete_events()
+
     def start_client_sync_cb(self, widget):
         """Starts syncing as Client."""
 
+        client = None
         if not widget.get_active():
             self.show_or_hide_containers(False, "client")
             login = self.get_widget("sync_mode_client_login_entry").get_text()
@@ -96,50 +122,55 @@ class SyncWidget(UiComponent):
             if not uri.startswith("http://"):
                 uri = "http://" + uri
             self.complete_events()
-            self.client = Client(uri, self.database(), self.controller(), \
+            client = Client(uri, self.database(), self.controller(), \
                 self.config(), self.log())
-            self.client.uri = uri
-            self.client.set_user(login, passwd)
-            self.client.set_messenger(self.show_message)
-            self.client.set_progress_bar_updater(self.update_progress_bar)
-            self.client.start()
+            client.uri = uri
+            client.set_user(login, passwd)
+            client.set_messenger(self.show_message)
+            client.set_events_updater(self.complete_events)
+            client.set_progress_bar_updater(self.update_client_progress_bar)
+            client.set_status_updater(self.update_client_status)
+            self.complete_events()
+            client.start()
             self.show_or_hide_containers(True, "client")
             self.get_widget(\
                 "sync_mode_client_start_button").set_active(False)
         else:
             self.show_or_hide_containers(True, "client")
-            #self.client.stop()
-            del self.client
+            client.stop()
 
     def start_server_sync_cb(self, widget):
         """Starts syncing as Server."""
 
+        server = None
         if not widget.get_active():
             try:
-                port = self.get_widget(\
-                    "sync_mode_server_port_entry").get_text()
+                port = int(self.get_widget(\
+                    "sync_mode_server_port_entry").get_text())
             except ValueError:
                 self.main_widget().error_box("Wrong port number!")
             else:
                 self.show_or_hide_containers(False, "server")
                 self.complete_evens()
-                #self.server = Server("localhost:" + port, self.database(), \
-                #    self.config(), self.log())
-                #self.server.start()
+                server = Server("localhost:%s" % port, self.database(), \
+                    self.config(), self.log())
+                server.start()
                 self.show_or_hide_containers(True, "server")
+                self.get_widget(\
+                    "sync_mode_server_start_button").set_active(False)
         else:
             self.show_or_hide_containers(True, "server")
-            self.server.stop()
+            server.stop()
 
     def show_or_hide_containers(self, show, name):
         """Manages containers."""
 
         if show:
             self.get_widget("sync_mode_%s_params_table" % name).show()
-            self.get_widget("sync_mode_%s_progressbar" % name).hide()
+            self.get_widget("sync_mode_%s_status_table" % name).hide()
         else:
             self.get_widget("sync_mode_%s_params_table" % name).hide()
-            self.get_widget("sync_mode_%s_progressbar" % name).show()
+            self.get_widget("sync_mode_%s_status_table" % name).show()
         self.get_widget("sync_toolbar_client_mode_button").set_sensitive(show)
         self.get_widget("sync_toolbar_server_mode_button").set_sensitive(show)
         self.get_widget("sync_toolbar_main_menu_button").set_sensitive(show)
@@ -149,23 +180,3 @@ class SyncWidget(UiComponent):
 
         self.main_widget().menu_()
        
-
-import time
-class Test:
-    def __init__(self, events_updater, progress_updater):
-        self.stopped = False
-        self.events_updater = events_updater
-        self.progress_updater = progress_updater
-
-    def start(self):
-        size = 30
-        for i in range(size):
-            if not self.stopped:
-                time.sleep(1)
-                self.events_updater()
-                self.progress_updater((i+1)/float(size))
-            else:
-                break
-
-    def stop(self):
-        self.stopped = True
