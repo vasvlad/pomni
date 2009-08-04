@@ -60,16 +60,18 @@ class Client(UIMessenger):
             self.update_status("Getting history from server. Please, wait...")
             server_history = self.get_server_history()
             self.update_status("Getting self history. Please, wait...")
-            #client_history = self.eman.get_history()
+            client_history = self.eman.get_history()
             self.update_status("Backuping...")
             self.database.make_sync_backup()
             self.update_status("Applying server history...")
             self.eman.apply_history(server_history)
-            #self.send_client_history(client_history)
+            self.update_status("Sending client gistory. Please, wait...")
+            self.send_client_history(client_history)
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
             self.show_message("Error: " + str(exception))
+            self.update_status("Restoring backuped databse. Please, wait...")
             self.database.restore_sync_backup()
         else:
             self.update_status("Removing backup database...")
