@@ -32,6 +32,30 @@ class DictClass(dict):
             setattr(self, attr, attributes[attr])
 
 
+class UIMessenger:
+    def __init__(self):
+        self.show_message = None
+        self.update_events = None
+        self.update_status = None
+        self.update_progressbar = None
+
+    def set_messenger(self, messenger):
+        """Sets UI messenger."""
+        self.show_message = messenger
+
+    def set_progress_bar_updater(self, progress_bar_updater):
+        """Sets UI ProgressBar updater."""
+        self.eman.set_progress_updater(progress_bar_updater)
+
+    def set_status_updater(self, status_updater):
+        """Sets UI status updater."""
+        self.update_status = status_updater
+
+    def set_events_updater(self, events_updater):
+        """Process events pending."""
+        self.update_events = events_updater
+
+
 class EventManager:
     """
     Class for manipulatig with client/server database:
