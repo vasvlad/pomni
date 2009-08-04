@@ -38,6 +38,8 @@ class SyncWidget(UiComponent):
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
+        self.client = None
+        self.server = None
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in \
@@ -113,7 +115,6 @@ class SyncWidget(UiComponent):
     def start_client_sync_cb(self, widget):
         """Starts syncing as Client."""
 
-        client = None
         if not widget.get_active():
             self.show_or_hide_containers(False, "client")
             login = self.get_widget("sync_mode_client_login_entry").get_text()
@@ -122,22 +123,22 @@ class SyncWidget(UiComponent):
             if not uri.startswith("http://"):
                 uri = "http://" + uri
             self.complete_events()
-            client = Client(uri, self.database(), self.controller(), \
+            self.client = Client(uri, self.database(), self.controller(), \
                 self.config(), self.log())
-            client.uri = uri
-            client.set_user(login, passwd)
-            client.set_messenger(self.show_message)
-            client.set_events_updater(self.complete_events)
-            client.set_progress_bar_updater(self.update_client_progress_bar)
-            client.set_status_updater(self.update_client_status)
+            self.client.uri = uri
+            self.client.set_user(login, passwd)
+            self.client.set_messenger(self.show_message)
+            self.client.set_events_updater(self.complete_events)
+            self.client.set_progress_bar_updater(self.update_client_progress_bar)
+            self.client.set_status_updater(self.update_client_status)
             self.complete_events()
-            client.start()
+            self.client.start()
             self.show_or_hide_containers(True, "client")
             self.get_widget(\
                 "sync_mode_client_start_button").set_active(False)
         else:
             self.show_or_hide_containers(True, "client")
-            client.stop()
+            self.client.stop()
 
     def start_server_sync_cb(self, widget):
         """Starts syncing as Server."""
