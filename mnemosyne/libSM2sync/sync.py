@@ -224,14 +224,15 @@ class EventManager:
         counter = 0
 
         # first, we can copy media, if necessary
-        for child in history:
-            if self.stopped:
-                return
-            if child.find('t').text == 'media':
-                fname = child.find('id').text.split('__for__')[0]
-                self.get_media(fname)
-                counter += 1
-                self.update_progress(counter / float(hsize))
+        if self.partner['role'] == 'server':
+            for child in history:
+                if self.stopped:
+                    return
+                if child.find('t').text == 'media':
+                    fname = child.find('id').text.split('__for__')[0]
+                    self.get_media(fname)
+                    self.update_progress(counter / float(hsize))
+                    counter += 1
 
         # all other stuff
         for child in history:
@@ -280,8 +281,8 @@ class EventManager:
                 card.ret_reps_since_lapse, card.scheduled_interval, \
                 card.actual_interval, card.new_interval, card.thinking_time)
                 #print "repetiting..."
-            counter += 1
             self.update_progress(counter / float(hsize))
+            counter += 1
                     
         self.update_progress(0)
         self.database.update_last_sync_event(self.partner['id'])
