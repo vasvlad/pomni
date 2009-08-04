@@ -11,6 +11,7 @@ from sync import SyncError
 from sync import EventManager
 from sync import UIMessenger
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
+from xml.etree import ElementTree
 
 
 #Overrides get_method method for using PUT request in urllib2
@@ -41,9 +42,6 @@ class Client(UIMessenger):
         self.extra = ''
         self.stopped = False
 
-    def __del__(self):
-        print "goodbye"
-    
     def set_user(self, login, passwd):
         """Sets user login and password."""
 
@@ -65,7 +63,9 @@ class Client(UIMessenger):
             self.database.make_sync_backup()
             self.update_status("Applying server history...")
             self.eman.apply_history(server_history)
-            self.update_status("Sending client gistory. Please, wait...")
+            self.update_status("Sending client media. Please, wait...")
+            self.send_client_media(client_history)
+            self.update_status("Sending client history. Please, wait...")
             self.send_client_history(client_history)
             if self.stopped:
                 raise SyncError("Aborted!")
@@ -153,6 +153,17 @@ class Client(UIMessenger):
         except urllib2.URLError, error:
             raise SyncError("Sending client history: " + str(error))
 
+    def send_client_media(self, history):
+        """Sends client media to server."""
+
+        if self.stopped:
+            return
+        self.update_events()
+        for child in ElementTree.fromstring(history).findall('i'):
+            if child.find('t').text == 'media':
+                fname = child.find('id').text.split('__for__')[0]
+                self.send_media_file(fname)
+
     def get_media_file(self, fname):
         """Gets media from server."""
 
@@ -170,7 +181,7 @@ class Client(UIMessenger):
     def send_media_file(self, fname):
         """Sends media to server."""
 
-        mfile = open(fname, 'r')
+        mfile = open(os.path.join(self.config.mediadir(), fname), 'r')
         data = mfile.read()
         mfile.close()
 
