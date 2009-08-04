@@ -53,6 +53,16 @@ class EventManager:
             None, 'deck': None, 'upload': True, 'readonly': False}
         self.mediadir = mediadir
         self.get_media = get_media
+        self.update_progress = None
+        self.stopped = False
+
+    def stop(self):
+        self.stopped = True
+
+    def set_progress_updater(self, progress_updater):
+        """Sets UI ProgressBar updater."""
+
+        self.update_progress = progress_updater
 
     def set_sync_params(self, partner_params):
         """Sets other side specific params."""
@@ -64,7 +74,9 @@ class EventManager:
 
     def get_history(self):
         """Creates history in XML."""
-        
+       
+        if self.stopped:
+            return None
         history = "<history>"
         for item in self.database.get_history_events(\
             self.partner['id']):
@@ -207,37 +219,46 @@ class EventManager:
     def apply_history(self, history):
         """Parses XML history and apply it to database."""
 
+        history = ElementTree.fromstring(history).findall('i')
+        hsize = len(history)
+        counter = 0
+
         # first, we can copy media, if necessary
-        for child in ElementTree.fromstring(history).findall('i'):
+        for child in history:
+            if self.stopped:
+                return
             if child.find('t').text == 'media':
                 fname = child.find('id').text.split('__for__')[0]
                 self.get_media(fname)
-                print "adding media..."
+                counter += 1
+                self.update_progress(counter / float(hsize))
 
         # all other stuff
-        for child in ElementTree.fromstring(history).findall('i'):
+        for child in history:
+            if self.stopped:
+                return
             event = int(child.find('ev').text)
             if event == events.ADDED_FACT:
                 fact = self.create_fact_object(child)
                 if not self.database.duplicates_for_fact(fact):
                     self.database.add_fact(fact)
-                    print "adding fact..."
+                    #print "adding fact..."
             elif event == events.UPDATED_FACT:
                 fact = self.create_fact_object(child)
                 self.database.update_fact(fact)
-                print "updating fact..."
+                #print "updating fact..."
             elif event == events.DELETED_FACT:
                 fact = self.database.get_fact(child.find('id').text, False)
                 if fact:
                     self.database.delete_fact_and_related_data(fact)
-                    print "deleting fact..."
+                    #print "deleting fact..."
             elif event == events.ADDED_TAG:
                 tag = self.create_tag_object(child)
                 if not tag.name in self.database.tag_names():
                     self.database.add_tag(tag)
-                    print "adding tag..."
+                    #print "adding tag..."
             elif event == events.UPDATED_TAG:
-                print "updating tag..."
+                #print "updating tag..."
                 tag = self.create_tag_object(child)
                 self.database.update_tag(tag)
             elif event == events.ADDED_CARD:
@@ -246,11 +267,11 @@ class EventManager:
                     card = self.create_card_object(child)
                     self.database.add_card(card)
                     self.log.added_card(card)
-                    print "adding card..."
+                    #print "adding card..."
             elif event == events.UPDATED_CARD:
                 card = self.create_card_object(child)
                 self.database.update_card(card)
-                print "updating card..."
+                #print "updating card..."
             elif event == events.REPETITION:
                 card = self.create_card_object(child)
                 self.database.log_repetition(card.timestamp, card.id, \
@@ -258,8 +279,10 @@ class EventManager:
                 card.lapses, card.acq_reps_since_lapse, \
                 card.ret_reps_since_lapse, card.scheduled_interval, \
                 card.actual_interval, card.new_interval, card.thinking_time)
-                print "repetiting..."
-                
-                
+                #print "repetiting..."
+            counter += 1
+            self.update_progress(counter / float(hsize))
+                    
+        self.update_progress(0)
         self.database.update_last_sync_event(self.partner['id'])
 

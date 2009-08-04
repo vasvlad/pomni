@@ -16,6 +16,11 @@ class PutRequest(urllib2.Request):
     def get_method(self):
         return "PUT"
 
+def checker(func):
+    if self.stopped:
+        return
+    return func
+
 class Client:
     """Base client class for syncing."""
 
@@ -44,7 +49,7 @@ class Client:
 
     def __del__(self):
         print "goodbye"
-
+    
     def set_user(self, login, passwd):
         """Sets user login and password."""
 
@@ -87,6 +92,8 @@ class Client:
             self.update_status("Applying server history...")
             self.eman.apply_history(server_history)
             #self.send_client_history(client_history)
+            if self.stopped:
+                raise SyncError("Aborted!")
         except SyncError, exception:
             self.show_message("Error: " + str(exception))
             self.database.restore_sync_backup()
@@ -94,6 +101,10 @@ class Client:
             self.update_status("Removing backup database...")
             self.database.remove_sync_backup()
             self.show_message("Finished!")
+
+    def stop(self):
+        self.stopped = True
+        self.eman.stop()
 
     def login_(self):
         """Logs on the server."""
@@ -117,6 +128,8 @@ class Client:
     def handshake(self):
         """Handshaking with server."""
     
+        if self.stopped:
+            return
         self.update_events()
         cparams = "<params><client id='%s' name='%s' ver='%s' protocol='%s'" \
             " deck='%s' cardtypes='%s' extra='%s'/></params>\n" % (self.id, \
@@ -142,15 +155,19 @@ class Client:
     def get_server_history(self):
         """Connects to server and gets server history."""
 
+        if self.stopped:
+            return
         self.update_events()
         try:
             return urllib2.urlopen(self.uri + '/sync/server/history').read()
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
-        
+       
     def send_client_history(self, history):
         """Sends client history to server."""
 
+        if self.stopped:
+            return
         self.update_events()
         try:
             response = urllib2.urlopen(PutRequest(\
