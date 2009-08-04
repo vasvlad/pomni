@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt7
+#!/usr/bin/python -tt
 # vim: sw=4 ts=4 expandtab ai
 #
 # Pomni. Learning tool based on spaced repetition technique
