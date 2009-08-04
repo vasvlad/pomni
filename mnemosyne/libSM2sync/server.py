@@ -9,6 +9,7 @@ import base64
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
+from sync import UIMessenger
 from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
 from sync import PROTOCOL_VERSION
 from sync import N_SIDED_CARD_TYPE
@@ -28,14 +29,14 @@ class MyWSGIServer(WSGIServer):
         WSGIServer._handle_request_nonblock(self)
         
 
-class Server:
+class Server(UIMessenger):
     """Base server class for syncing."""
 
     DEFAULT_MIME = "xml/text"
 
     def __init__(self, uri, database, config, log):
+        UIMessenger.__init__(self)
         params = urlparse(uri)
-        #FIXME: move from here
         self.config = config
         self.database = database
         self.log = log
@@ -52,29 +53,6 @@ class Server:
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
-        self.show_message = None
-        self.update_events = None
-        self.update_status = None
-
-    def set_events_updater(self, events_updater):
-        """Process events pending."""
-
-        self.update_events = events_updater
-
-    def set_status_updater(self, status_updater):
-        """Sets UI status updater."""
-
-        self.update_status = status_updater
-
-    def set_progress_bar_updater(self, progress_bar_updater):
-        """Sets UI ProgressBar updater."""
-
-        self.eman.set_progress_updater(progress_bar_updater)
-
-    def set_messenger(self, messenger):
-        """Sets UI messenger."""
-
-        self.show_message = messenger
 
     def get_method(self, environ):
         """
