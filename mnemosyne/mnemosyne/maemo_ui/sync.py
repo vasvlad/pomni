@@ -143,7 +143,6 @@ class SyncWidget(UiComponent):
     def start_server_sync_cb(self, widget):
         """Starts syncing as Server."""
 
-        server = None
         if not widget.get_active():
             try:
                 port = int(self.get_widget(\
@@ -152,16 +151,19 @@ class SyncWidget(UiComponent):
                 self.main_widget().error_box("Wrong port number!")
             else:
                 self.show_or_hide_containers(False, "server")
-                self.complete_evens()
-                server = Server("localhost:%s" % port, self.database(), \
+                self.server = Server("localhost:%s" % port, self.database(), \
                     self.config(), self.log())
-                server.start()
+                self.server.set_events_updater(self.complete_events)
+                self.server.set_progress_bar_updater(self.update_server_progress_bar)
+                self.server.set_status_updater(self.update_server_status)
+                self.complete_events()
+                self.server.start()
                 self.show_or_hide_containers(True, "server")
                 self.get_widget(\
                     "sync_mode_server_start_button").set_active(False)
         else:
             self.show_or_hide_containers(True, "server")
-            server.stop()
+            self.server.stop()
 
     def show_or_hide_containers(self, show, name):
         """Manages containers."""
