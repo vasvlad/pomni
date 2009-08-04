@@ -19,14 +19,17 @@ class MyWSGIServer(WSGIServer):
     def __init__(self, host, port, app, handler_class=WSGIRequestHandler):
         WSGIServer.__init__(self, (host, port), handler_class)
         self.set_app(app)
+        self.stopped = False
         self.update_events = None
 
     def stop(self):
-        self.__serving = False
+        self.stopped = True
 
-    def _handle_request_noblock(self):
-        self.update_events()
-        WSGIServer._handle_request_nonblock(self)
+    def serve_forever(self):
+        while not self.stopped:
+            print "update_events"
+            self.update_events()
+            self.handle_request()
         
 
 class Server(UIMessenger):
@@ -42,8 +45,8 @@ class Server(UIMessenger):
         self.log = log
         self.host = params.scheme
         self.port = int(params.path)
-        self.httpd = None
-        #self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
+        #self.httpd = None
+        self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.logged = False
         self.eman = EventManager(database, log, None, self.config.mediadir(), None)
         self.id = hex(uuid.getnode())
@@ -53,6 +56,9 @@ class Server(UIMessenger):
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
+
+    def set_events_updater(self, events_updater):
+        self.httpd.update_events = events_updater
 
     def get_method(self, environ):
         """
@@ -97,7 +103,6 @@ class Server(UIMessenger):
     def wsgi_app(self, environ, start_response):
         """Simple Server wsgi application."""
 
-        self.update_events()
         status, mime, method, args = self.get_method(environ)
         headers = [('Content-type', mime)]
         start_response(status, headers)
@@ -109,15 +114,16 @@ class Server(UIMessenger):
     def start(self):
         """Activate server."""
 
-        self.httpd = make_server(self.host, self.port, self.wsgi_app)
+        #self.httpd = make_server(self.host, self.port, self.wsgi_app)
         self.update_status("Waiting for client connection...")
         #self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
     def stop(self):
+        print "stopppping"
+        self.httpd.stop()
         self.eman.stop()
-        self.httpd.shutdown()
 
     def set_params(self, params):
         """Uses for setting non-default params."""
