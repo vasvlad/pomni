@@ -162,7 +162,7 @@ class SyncWidget(UiComponent):
             else:
                 self.show_or_hide_containers(False, "server")
                 self.db_path = self.database()._path
-                self.database().deactivate()
+                self.database().unload()
                 #self.component_manager.unregister(self.database())
                 self.server = Server()
                 
@@ -191,8 +191,8 @@ class SyncWidget(UiComponent):
             #self.server = None
             self.server_thread._Thread__stop()
             self.server = None
-            #self.database().load(self.db_path)
-            self.database().activate()
+            print self.db_path
+            self.database().load(self.db_path)
 
     def show_or_hide_containers(self, show, name):
         """Manages containers."""

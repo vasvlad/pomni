@@ -132,7 +132,7 @@ class Server(UIMessenger):
         self.httpd.stop()
         self.eman.stop()
         print "unloading"
-        #self.database.deactivate()
+        self.database.unload()
         print "end"
 
     def set_params(self, params):
