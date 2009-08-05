@@ -27,6 +27,7 @@ Hildon UI. Review widgets.
 import gettext
 
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
+from mnemosyne.maemo_ui import tts
 
 _ = gettext.gettext
 
@@ -42,7 +43,8 @@ class ReviewWdgt(ReviewWidget):
         self.w_tree.signal_autoconnect( \
             dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in ["review_to_main_menu", "get_answer", "grade", 
-                "delete_card", "edit_card", "preview_sound_in_review"]]))
+                "delete_card", "edit_card", "preview_sound_in_review", 
+                "speak"]]))
         self.next_is_image_card = False #Image card indicator
         self.sndtext = None
         self.tts = None
@@ -59,8 +61,8 @@ class ReviewWdgt(ReviewWidget):
             "review_mode_snd_container")
         self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
         self.grades_table = self.w_tree.get_widget("grades_table")
-        self.w_tree.get_widget(\
-            "review_toolbar_tts_button").set_sensitive(not self.tts is None)
+        self.tts_button = self.w_tree.get_widget("review_toolbar_tts_button")
+        self.tts_button.set_sensitive(tts.is_available())
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
@@ -76,8 +78,9 @@ class ReviewWdgt(ReviewWidget):
         
     def set_question(self, text):
         """Set question."""
-
+        
         self.next_is_image_card = False
+        self.tts_button.set_sensitive(False)
         if "sound src=" in text:
             self.sndtext = text
             self.question_container.hide()
@@ -95,6 +98,7 @@ class ReviewWdgt(ReviewWidget):
             else:
                 self.question_container.set_size_request( \
                     self.container_width, 16)
+                self.tts_button.set_sensitive(True)
             self.question_container.show()
         self.renderer.render_html(self.question_text, text)
 
@@ -134,6 +138,18 @@ class ReviewWdgt(ReviewWidget):
         self.sound_button.set_active(False)
 
     # callbacks
+    def speak_cb(self, widget):
+        config = self.config()
+        params = {"language": "en", "voice": \
+            "", "speed": config['tts_speed'], \
+            "pitch": config['tts_pitch']}
+        if not self.tts:            
+            self.tts = tts.TTS(params['language'], params['voice'], 
+                params['pitch'], params['speed'])
+        self.tts.set_params(params)
+        print self.renderer.tts_text
+        self.tts.speak(self.renderer.tts_text)
+
     def preview_sound_in_review_cb(self, widget):
         """Play/stop listening."""
 
