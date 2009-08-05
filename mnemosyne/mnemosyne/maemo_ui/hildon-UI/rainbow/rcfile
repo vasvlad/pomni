@@ -248,6 +248,21 @@ style "grade5" {
 }
 widget "*.grade5" style "grade5"
 
+style "tts-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "tts_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "tts_normal.png"
+        }
+    }
+}
+widget "*.review_toolbar_tts_button" style "tts-button"
+
 style "edit-card-button" {
     engine "pixmap" {
         image {

@@ -45,6 +45,7 @@ class ReviewWdgt(ReviewWidget):
                 "delete_card", "edit_card", "preview_sound_in_review"]]))
         self.next_is_image_card = False #Image card indicator
         self.sndtext = None
+        self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
 
         # Widgets as attributes
@@ -58,6 +59,8 @@ class ReviewWdgt(ReviewWidget):
             "review_mode_snd_container")
         self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
         self.grades_table = self.w_tree.get_widget("grades_table")
+        self.w_tree.get_widget(\
+            "review_toolbar_tts_button").set_sensitive(not self.tts is None)
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
