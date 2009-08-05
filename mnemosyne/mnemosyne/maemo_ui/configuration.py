@@ -44,7 +44,7 @@ class ConfigurationWidget(ConfigurationDialog):
                 ('change_fullscreen', 'change_font_size', \
                 'change_startup_with_review', 'config_to_main_menu', \
                 'show_general_settings', 'show_tts_settings', 'change_voice', \
-                'change_speed')]))
+                'change_speed', 'change_pitch')]))
         self.w_tree.get_widget(\
             "config_mode_settings_switcher").set_current_page(0)
         self.w_tree.get_widget("config_toolbar_tts_settings_button")\
@@ -70,6 +70,10 @@ class ConfigurationWidget(ConfigurationDialog):
             set_value(self.config()['tts_speed'])
         self.change_speed_cb(self.w_tree.get_widget(\
             "config_mode_tts_speed_scrollbar"))
+        self.w_tree.get_widget("config_mode_tts_pitch_scrollbar"). \
+            set_value(self.config()['tts_pitch'])
+        self.change_pitch_cb(self.w_tree.get_widget(\
+            "config_mode_tts_pitch_scrollbar"))
 
     def change_font_size(self):
         """Changes font size."""
@@ -111,6 +115,13 @@ class ConfigurationWidget(ConfigurationDialog):
         value = int(widget.get_value())
         self.w_tree.get_widget("config_mode_tts_speed_label"). \
             set_text("Speed: %s" % value)
+
+    def change_pitch_cb(self, widget):
+        """Changes TTS pitch."""
+
+        value = int(widget.get_value())
+        self.w_tree.get_widget("config_mode_tts_pitch_label"). \
+            set_text("Pitch: %s" % value)
 
     def change_fullscreen_cb(self, widget):
         """Change Fullscreen parameter."""
@@ -158,6 +169,8 @@ class ConfigurationWidget(ConfigurationDialog):
             self.w_tree.get_widget("config_mode_entry_sounddir").get_text()
         self.config()['tts_speed'] = int(self.w_tree.get_widget(\
             "config_mode_tts_speed_scrollbar").get_value())
+        self.config()['tts_pitch'] = int(self.w_tree.get_widget(\
+            "config_mode_tts_pitch_scrollbar").get_value())
 
         #self.config()['font_size'] = self.conf['font_size']
         self.config().save()
