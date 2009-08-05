@@ -72,7 +72,7 @@ class TTS:
         command += " -v " + self.language + self.voice
         command += " -s " + str(self.speed)
         command += " -p " + str(self.pitch)
-        command += " -w /tmp/mnemosyne_tts %s" % text
+        command += ' -w /tmp/mnemosyne_tts "%s"' % text
         os.system(command)
         self.play_sound('/tmp/mnemosyne_tts')
 
