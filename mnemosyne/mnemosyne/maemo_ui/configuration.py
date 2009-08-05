@@ -26,6 +26,7 @@ Hildon UI. Configuration Widget.
 
 import os
 import gettext
+import tts
 _ = gettext.gettext
 
 #from mnemosyne.libmnemosyne.ui_component import UiComponent
@@ -41,7 +42,12 @@ class ConfigurationWidget(ConfigurationDialog):
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in 
                 ('change_fullscreen', 'change_font_size', \
-                'change_startup_with_review', 'config_to_main_menu')]))
+                'change_startup_with_review', 'config_to_main_menu', \
+                'show_general_settings', 'show_tts_settings', 'change_voice')]))
+        self.w_tree.get_widget(\
+            "config_mode_settings_switcher").set_current_page(0)
+        self.w_tree.get_widget("config_toolbar_tts_settings_button")\
+            .set_sensitive(tts.is_available())
         self.conf = self.config()
 
     def activate(self):
@@ -71,6 +77,29 @@ class ConfigurationWidget(ConfigurationDialog):
         document.close_stream()
 
     # callbacks
+    def show_general_settings_cb(self, widget):
+        """Switches to the general settings page."""
+
+        self.w_tree.get_widget(\
+            "config_mode_settings_switcher").set_current_page(0)
+        
+    def show_tts_settings_cb(self, widget):
+        """Switches to the tts settings page."""
+
+        self.w_tree.get_widget(\
+            "config_mode_settings_switcher").set_current_page(1)
+
+    def change_voice_cb(self, widget):
+        """Changes TTS voice."""
+
+        voice_label = self.w_tree.get_widget("config_mode_tts_voice_label")
+        if voice_label.get_text() == "Male":
+            voice_label.set_text("Female")
+            self.conf['tts_voice'] = "+12"
+        else:
+            voice_label.set_text("Male")
+            self.conf['tts_voice'] = ""
+
     def change_fullscreen_cb(self, widget):
         """Change Fullscreen parameter."""
 
