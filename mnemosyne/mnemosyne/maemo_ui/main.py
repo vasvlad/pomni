@@ -31,6 +31,8 @@ import gtk.glade
 import urllib
 import gtkhtml2
 import urlparse
+import gobject
+gobject.threads_init()
 
 from mnemosyne.maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
@@ -115,7 +117,9 @@ class MainWdgt(MainWidget):
                 self.review_()
             else:
                 self.menu_()
+        gtk.gdk.threads_enter()
         gtk.main()
+        gtk.gdk.threads_leave()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
         """Hook for custom widgets."""

@@ -14,8 +14,14 @@ from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
 from sync import PROTOCOL_VERSION
 from sync import N_SIDED_CARD_TYPE
 
+import sys
+sys.path.insert(0, "../")
+from mnemosyne.libmnemosyne.databases.SQLite import SQLite
+
+import threading
 
 class MyWSGIServer(WSGIServer):
+
     def __init__(self, host, port, app, handler_class=WSGIRequestHandler):
         WSGIServer.__init__(self, (host, port), handler_class)
         self.set_app(app)
@@ -24,11 +30,10 @@ class MyWSGIServer(WSGIServer):
 
     def stop(self):
         self.stopped = True
-
+        self.server_close()
+        
     def serve_forever(self):
         while not self.stopped:
-            print "update_events"
-            self.update_events()
             self.handle_request()
         
 
@@ -37,18 +42,15 @@ class Server(UIMessenger):
 
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self, uri, database, config, log):
+    def __init__(self):
         UIMessenger.__init__(self)
-        params = urlparse(uri)
-        self.config = config
-        self.database = database
-        self.log = log
-        self.host = params.scheme
-        self.port = int(params.path)
-        #self.httpd = None
-        self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
+        self.config = None
+        self.database = None
+        self.host = None
+        self.port = None
+        self.httpd = None
+        self.eman = None
         self.logged = False
-        self.eman = EventManager(database, log, None, self.config.mediadir(), None)
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
@@ -57,8 +59,15 @@ class Server(UIMessenger):
         self.upload_media = True
         self.read_only = False
 
-    def set_events_updater(self, events_updater):
-        self.httpd.update_events = events_updater
+    def set_connect_params(self, uri, db_path, config, log, component_manager):
+        params = urlparse(uri)
+        self.host = params.scheme
+        self.port = int(params.path)
+        self.config = config
+        self.database = SQLite(component_manager)
+        self.database.load(db_path)
+        self.eman = EventManager(self.database, log, None, self.config.mediadir(), None)
+        self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
 
     def get_method(self, environ):
         """
@@ -110,20 +119,21 @@ class Server(UIMessenger):
             return getattr(self, method)(environ, **args)
         else:
             return status
-
+    
     def start(self):
         """Activate server."""
 
-        #self.httpd = make_server(self.host, self.port, self.wsgi_app)
         self.update_status("Waiting for client connection...")
         #self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
     def stop(self):
-        print "stopppping"
         self.httpd.stop()
         self.eman.stop()
+        print "unloading"
+        #self.database.deactivate()
+        print "end"
 
     def set_params(self, params):
         """Uses for setting non-default params."""

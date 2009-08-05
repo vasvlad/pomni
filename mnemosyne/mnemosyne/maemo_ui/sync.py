@@ -33,6 +33,14 @@ from libSM2sync.server import Server
 from libSM2sync.client import Client
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
+import threading
+
+def threaded(func):
+    def wrapper(*args):
+        thread = threading.Thread(target=func, args=args)
+    return wrapper
+
+
 class SyncWidget(UiComponent):
     """Sync Widget."""
 
@@ -40,6 +48,8 @@ class SyncWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self.client = None
         self.server = None
+        self.db_path = None
+        self.server_thread = None
         self.w_tree = self.main_widget().w_tree
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in \
@@ -60,7 +70,7 @@ class SyncWidget(UiComponent):
     def activate(self):
         """Activate sync mode."""
 
-        self.get_widget("sync_mode_role_switcher").set_current_page(0)
+        self.get_widget("sync_mode_role_switcher").set_current_page(2)
         self.get_widget("sync_toolbar_client_mode_button").set_active(False)
         self.get_widget("sync_toolbar_server_mode_button").set_active(False)
 
@@ -151,19 +161,38 @@ class SyncWidget(UiComponent):
                 self.main_widget().error_box("Wrong port number!")
             else:
                 self.show_or_hide_containers(False, "server")
-                self.server = Server("localhost:%s" % port, self.database(), \
-                    self.config(), self.log())
-                self.server.set_events_updater(self.complete_events)
-                self.server.set_progress_bar_updater(self.update_server_progress_bar)
-                self.server.set_status_updater(self.update_server_status)
-                self.complete_events()
-                self.server.start()
-                self.show_or_hide_containers(True, "server")
-                self.get_widget(\
-                    "sync_mode_server_start_button").set_active(False)
+                self.db_path = self.database()._path
+                self.database().deactivate()
+                #self.component_manager.unregister(self.database())
+                self.server = Server()
+                
+                def start_server(uri, db_path, config, log, component_manager):
+                    """Starts therver in separate thread."""
+                    self.server.set_connect_params(uri, db_path, config, log, \
+                    component_manager)
+                    self.server.set_events_updater(self.complete_events)
+                    self.server.set_progress_bar_updater(\
+                        self.update_server_progress_bar)
+                    self.server.set_status_updater(self.update_server_status)
+                    self.server.start()
+
+                self.server_thread = threading.Thread(target=start_server, \
+                    args=("localhost:%s" % port, self.db_path, self.config(),\
+                    None, self.component_manager))
+                self.server_thread.start()
+                #self.show_or_hide_containers(True, "server")
+                #self.get_widget(\
+                #    "sync_mode_server_start_button").set_active(False)
         else:
             self.show_or_hide_containers(True, "server")
+            #self.get_widget(\
+            #    "sync_mode_server_start_button").set_active(False)
             self.server.stop()
+            #self.server = None
+            self.server_thread._Thread__stop()
+            self.server = None
+            #self.database().load(self.db_path)
+            self.database().activate()
 
     def show_or_hide_containers(self, show, name):
         """Manages containers."""
