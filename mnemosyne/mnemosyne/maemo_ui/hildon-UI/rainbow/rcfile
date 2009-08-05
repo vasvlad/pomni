@@ -659,6 +659,31 @@ widget "*.category_name_w" style "category-label"
 
 
 #----------------------------- Config mode ------------------
+style "general-settings-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "general_settings.png"
+        }
+    }
+}
+widget "*.config_toolbar_general_settings_button" style "general-settings-button"
+
+style "tts-settings-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "tts_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "tts_normal.png"
+        }
+    }
+}
+widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
+
 style "increase-font-size-button" {
     engine "pixmap" {
         image {
