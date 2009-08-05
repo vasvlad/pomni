@@ -39,46 +39,44 @@ class ConfigurationWidget(ConfigurationDialog):
         ConfigurationDialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
+        self.get_widget = self.w_tree.get_widget
+        self.conf = self.config()
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in 
                 ('change_fullscreen', 'change_font_size', \
                 'change_startup_with_review', 'config_to_main_menu', \
                 'show_general_settings', 'show_tts_settings', 'change_voice', \
                 'change_speed', 'change_pitch')]))
-        self.w_tree.get_widget(\
-            "config_mode_settings_switcher").set_current_page(0)
-        self.w_tree.get_widget("config_toolbar_tts_settings_button")\
-            .set_sensitive(tts.is_available())
-        #self.conf = self.config()
+        self.get_widget("config_mode_settings_switcher").set_current_page(0)
+        self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
+            tts.is_available())
 
     def activate(self):
         """Activate configuration mode."""
 
-        self.w_tree.get_widget("checkbox_fullscreen_mode"). \
-            set_active(self.config()['fullscreen'])
-        self.w_tree.get_widget("checkbox_start_in_review_mode"). \
-            set_active(self.config()['startup_with_review'])
-        self.current_size = int(self.config()['font_size'])
+        self.get_widget("checkbox_fullscreen_mode").set_active(\
+            self.conf['fullscreen'])
+        self.get_widget("checkbox_start_in_review_mode").set_active(\
+            self.conf['startup_with_review'])
+        self.current_size = int(self.conf['font_size'])
         self.change_font_size()
-        self.w_tree.get_widget("config_mode_entry_imagedir"). \
-            set_text(self.config()['imagedir'])
-        self.w_tree.get_widget("config_mode_entry_sounddir"). \
-            set_text(self.config()['sounddir'])
-        self.w_tree.get_widget("config_mode_tts_voice_label"). \
-            set_text(self.config()['tts_voice'])
-        self.w_tree.get_widget("config_mode_tts_speed_scrollbar"). \
-            set_value(self.config()['tts_speed'])
-        self.change_speed_cb(self.w_tree.get_widget(\
-            "config_mode_tts_speed_scrollbar"))
-        self.w_tree.get_widget("config_mode_tts_pitch_scrollbar"). \
-            set_value(self.config()['tts_pitch'])
-        self.change_pitch_cb(self.w_tree.get_widget(\
-            "config_mode_tts_pitch_scrollbar"))
+        self.get_widget("config_mode_entry_imagedir").set_text(\
+            self.conf['imagedir'])
+        self.get_widget("config_mode_entry_sounddir").set_text(\
+            self.conf['sounddir'])
+        self.get_widget("config_mode_tts_voice_label").set_text(\
+            self.conf['tts_voice'])
+        self.get_widget("config_mode_tts_speed_scrollbar").set_value(\
+            self.conf['tts_speed'])
+        self.change_speed_cb(self.get_widget("config_mode_tts_speed_scrollbar"))
+        self.get_widget("config_mode_tts_pitch_scrollbar").set_value(\
+            self.conf['tts_pitch'])
+        self.change_pitch_cb(self.get_widget("config_mode_tts_pitch_scrollbar"))
 
     def change_font_size(self):
         """Changes font size."""
 
-        document = self.w_tree.get_widget("font_size_example").document
+        document = self.get_widget("font_size_example").document
         document.clear()
         document.open_stream('text/html')
         text = """<html><style type="text/css"> *{font-size:%spx; \
@@ -91,49 +89,47 @@ class ConfigurationWidget(ConfigurationDialog):
     def show_general_settings_cb(self, widget):
         """Switches to the general settings page."""
 
-        self.w_tree.get_widget(\
-            "config_mode_settings_switcher").set_current_page(0)
+        self.get_widget("config_mode_settings_switcher").set_current_page(0)
         
     def show_tts_settings_cb(self, widget):
         """Switches to the tts settings page."""
 
-        self.w_tree.get_widget(\
-            "config_mode_settings_switcher").set_current_page(1)
+        self.get_widget("config_mode_settings_switcher").set_current_page(1)
 
     def change_voice_cb(self, widget):
         """Changes TTS voice."""
 
         voices = {'Male': 'Female', 'Female': 'Male'}
-        voice_label = self.w_tree.get_widget("config_mode_tts_voice_label")
+        voice_label = self.get_widget("config_mode_tts_voice_label")
         voice = voice_label.get_text()
         voice_label.set_text(voices[voice])
-        self.config()['tts_voice'] = voices[voice]
+        self.conf['tts_voice'] = voices[voice]
 
     def change_speed_cb(self, widget):
         """Changes TTS speed."""
 
         value = int(widget.get_value())
-        self.w_tree.get_widget("config_mode_tts_speed_label"). \
-            set_text("Speed: %s" % value)
+        self.get_widget("config_mode_tts_speed_label").set_text(\
+            "Speed: %s" % value)
 
     def change_pitch_cb(self, widget):
         """Changes TTS pitch."""
 
         value = int(widget.get_value())
-        self.w_tree.get_widget("config_mode_tts_pitch_label"). \
-            set_text("Pitch: %s" % value)
+        self.get_widget("config_mode_tts_pitch_label").set_text(\
+            "Pitch: %s" % value)
 
     def change_fullscreen_cb(self, widget):
         """Change Fullscreen parameter."""
 
-        self.config()['fullscreen'] = \
-            self.w_tree.get_widget("checkbox_fullscreen_mode").get_active()
+        self.conf['fullscreen'] = self.get_widget(\
+            "checkbox_fullscreen_mode").get_active()
 
     def change_startup_with_review_cb(self, widget):
         """Change 'Startup with Review' parameter."""
 
-        self.config()['startup_with_review'] = \
-            self.w_tree.get_widget("checkbox_start_in_review_mode").get_active()
+        self.conf['startup_with_review'] = self.get_widget(\
+            "checkbox_start_in_review_mode").get_active()
 
     def change_font_size_cb(self, widget):
         """Change Font size parameter."""
@@ -148,32 +144,32 @@ class ConfigurationWidget(ConfigurationDialog):
             if self.current_size < max_size:
                 self.current_size += 1
         self.change_font_size()
-        self.config()['font_size'] = self.current_size
+        self.conf['font_size'] = self.current_size
 
     def config_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
         if not os.path.exists( \
-            self.w_tree.get_widget("config_mode_entry_imagedir").get_text()):
+            self.get_widget("config_mode_entry_imagedir").get_text()):
             self.main_widget().information_box( \
                 _("Image dir does not exist! Select another."))
             return
         if not os.path.exists( \
-            self.w_tree.get_widget("config_mode_entry_sounddir").get_text()):
+            self.get_widget("config_mode_entry_sounddir").get_text()):
             self.main_widget().information_box( \
                 _("Sound dir does not exist! Select another."))
             return
-        self.config()['imagedir'] = \
-            self.w_tree.get_widget("config_mode_entry_imagedir").get_text()
-        self.config()['sounddir'] = \
-            self.w_tree.get_widget("config_mode_entry_sounddir").get_text()
-        self.config()['tts_speed'] = int(self.w_tree.get_widget(\
+        self.conf['imagedir'] = self.get_widget(\
+            "config_mode_entry_imagedir").get_text()
+        self.conf['sounddir'] = self.get_widget(\
+            "config_mode_entry_sounddir").get_text()
+        self.conf['tts_speed'] = int(self.get_widget(\
             "config_mode_tts_speed_scrollbar").get_value())
-        self.config()['tts_pitch'] = int(self.w_tree.get_widget(\
+        self.conf['tts_pitch'] = int(self.get_widget(\
             "config_mode_tts_pitch_scrollbar").get_value())
 
         #self.config()['font_size'] = self.conf['font_size']
-        self.config().save()
+        self.conf.save()
         self.main_widget().menu_()
 
 
