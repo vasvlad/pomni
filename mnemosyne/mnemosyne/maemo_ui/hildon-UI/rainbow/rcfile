@@ -684,6 +684,28 @@ style "tts-settings-button" {
 }
 widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
 
+style "previous-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "previous.png"
+        }
+    }
+}
+widget "*.config_mode_tts_voice_prev_button" style "previous-button"
+widget "*.config_mode_tts_lang_prev_button" style "previous-button"
+
+style "next-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "next.png"
+        }
+    }
+}
+widget "*.config_mode_tts_voice_next_button" style "next-button"
+widget "*.config_mode_tts_lang_next_button" style "next-button"
+
 style "increase-font-size-button" {
     engine "pixmap" {
         image {
@@ -758,6 +780,10 @@ widget "*.config_mode_fullscreen_label" style "config-mode-label"
 widget "*.config_mode_startup_with_review_label" style "config-mode-label"
 widget "*.config_mode_label_imagedir" style "config-mode-label"
 widget "*.config_mode_label_sounddir" style "config-mode-label"
+widget "*.config_mode_tts_voice_label" style "config-mode-label"
+widget "*.config_mode_tts_lang_label" style "config-mode-label"
+widget "*.config_mode_tts_speed_label" style "config-mode-label"
+widget "*.config_mode_tts_pitch_label" style "config-mode-label"
 
 style "textareas" {
     font_name = "Nokia Sans 20"
@@ -998,6 +1024,7 @@ style "image-selection-dialog-scrollbars" {
     GtkRange::trough-border = 0
 }
 widget_class "*.GtkVScrollbar" style "image-selection-dialog-scrollbars"
+widget_class "*.GtkHScrollbar" style "image-selection-dialog-scrollbars"
 
 # Style for Main window
 style "main-window" {
