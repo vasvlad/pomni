@@ -46,10 +46,13 @@ class ConfigurationWidget(ConfigurationDialog):
                 ('change_fullscreen', 'change_font_size', \
                 'change_startup_with_review', 'config_to_main_menu', \
                 'show_general_settings', 'show_tts_settings', 'change_voice', \
-                'change_speed', 'change_pitch')]))
+                'change_speed', 'change_pitch', 'change_lang')]))
         self.get_widget("config_mode_settings_switcher").set_current_page(0)
+        tts_available = tts.is_available()
         self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
-            tts.is_available())
+            tts_available)
+        if tts_available:
+            self.languages = [lang for lang in tts.get_languages()]
 
     def activate(self):
         """Activate configuration mode."""
@@ -72,6 +75,8 @@ class ConfigurationWidget(ConfigurationDialog):
         self.get_widget("config_mode_tts_pitch_scrollbar").set_value(\
             self.conf['tts_pitch'])
         self.change_pitch_cb(self.get_widget("config_mode_tts_pitch_scrollbar"))
+        self.get_widget("config_mode_tts_lang_label").set_text(\
+            self.conf['tts_language'])
 
     def change_font_size(self):
         """Changes font size."""
@@ -103,7 +108,24 @@ class ConfigurationWidget(ConfigurationDialog):
         voice_label = self.get_widget("config_mode_tts_voice_label")
         voice = voice_label.get_text()
         voice_label.set_text(voices[voice])
-        self.conf['tts_voice'] = voices[voice]
+
+    def change_lang_cb(self, widget):
+        """Changes current TTS language."""
+
+        lang_index = self.languages.index(\
+            self.get_widget("config_mode_tts_lang_label").get_text())
+        direction = 1
+        if widget == self.get_widget("config_mode_tts_lang_prev_button"):
+            direction = -1
+        try:
+            new_lang = self.languages[lang_index + direction]
+        except IndexError:
+            if direction:
+                new_lang = self.languages[0]
+            else:
+                new_lang = self.languages[-1]
+        finally:
+            self.get_widget("config_mode_tts_lang_label").set_text(new_lang)
 
     def change_speed_cb(self, widget):
         """Changes TTS speed."""
@@ -167,6 +189,10 @@ class ConfigurationWidget(ConfigurationDialog):
             "config_mode_tts_speed_scrollbar").get_value())
         self.conf['tts_pitch'] = int(self.get_widget(\
             "config_mode_tts_pitch_scrollbar").get_value())
+        self.conf['tts_language'] = self.get_widget(\
+            "config_mode_tts_lang_label").get_text()
+        self.conf['tts_voice'] = self.get_widget(\
+            "config_mode_tts_voice_label").get_text()
 
         #self.config()['font_size'] = self.conf['font_size']
         self.conf.save()
