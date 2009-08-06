@@ -32,7 +32,7 @@ class Client(UIMessenger):
         self.log = log
         self.uri = uri
         self.eman = EventManager(database, log, controller, \
-            self.config.mediadir(), self.get_media_file)
+            self.config.mediadir(), self.get_media_file, self.update_progressbar)
         self.login = ''
         self.passwd = ''
         self.id = hex(uuid.getnode())

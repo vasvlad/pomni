@@ -134,13 +134,10 @@ class SyncWidget(UiComponent):
                 uri = "http://" + uri
             self.complete_events()
             self.client = Client(uri, self.database(), self.controller(), \
-                self.config(), self.log())
-            self.client.uri = uri
+                self.config(), self.log(), self.show_message, \
+                self.complete_events, self.update_client_status, \
+                self.update_client_progress_bar)
             self.client.set_user(login, passwd)
-            self.client.set_messenger(self.show_message)
-            self.client.set_events_updater(self.complete_events)
-            self.client.set_progress_bar_updater(self.update_client_progress_bar)
-            self.client.set_status_updater(self.update_client_status)
             self.complete_events()
             self.client.start()
             self.show_or_hide_containers(True, "client")

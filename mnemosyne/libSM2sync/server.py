@@ -56,8 +56,8 @@ class Server(UIMessenger):
         self.database = database
         self.config = config
         self.log = log
-        self.eman = EventManager(\
-            self.database, self.log, None, self.config.mediadir(), None)
+        self.eman = EventManager(self.database, self.log, None, \
+            self.config.mediadir(), None, self.update_progressbar)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.httpd.update_events = events_updater
         self.logged = False
@@ -142,6 +142,7 @@ class Server(UIMessenger):
     def get_sync_server_params(self, environ):
         """Gets server specific params and sends it to client."""
 
+        self.update_status("Sending server params to client...")
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
             "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
             self.name, self.version, self.protocol, self.cardtypes, \
@@ -181,6 +182,7 @@ class Server(UIMessenger):
             self.database.remove_sync_backup()
             self.database.con.commit()
             self.logged = False
+            self.show_message("Finished!")
             return "OK"
 
     def get_sync_server_media(self, environ, fname):
