@@ -182,6 +182,7 @@ class Server(UIMessenger):
             self.database.remove_sync_backup()
             self.database.con.commit()
             self.logged = False
+            self.stop()
             self.show_message("Finished!")
             return "OK"
 
