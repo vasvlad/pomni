@@ -43,7 +43,7 @@ class ConfigHook(Component):
             "upload_logs": False,
             "imagedir": "/home/user/MyDocs/.images",
             "sounddir": "/home/user/MyDocs/.sounds",
-            "tts_language": "English",
+            "tts_language": "english",
             "tts_voice": "Male",
             "tts_speed": 70,
             "tts_pitch": 30,
