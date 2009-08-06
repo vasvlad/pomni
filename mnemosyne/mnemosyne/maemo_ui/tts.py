@@ -26,6 +26,7 @@ TTS engine wrapper.
 
 import commands
 import os
+import StringIO
 
 def is_available():
     """Checks espeak available on system."""
@@ -34,14 +35,25 @@ def is_available():
         return True
     return False
 
+def get_languages():
+    languages = {}
+    voices = StringIO.StringIO(commands.getoutput("espeak --voices"))
+    for voice in voices.readlines()[1:-1]:
+        voice = voice[22:52].rsplit(None,1)
+        languages[voice[0]] = voice[1]
+    return languages
+         
 
 class TTS:
     """TTS main class."""
 
     def __init__(self, language, voice, pitch, speed):
         self.espeak = commands.getoutput("which espeak")
-        self.language = language
-        self.voice = voice
+        self.language = get_languages()[language]
+        if voice == "Male":
+            self.voice = ""
+        else:
+            self.voice = "+12"
         self.pitch = pitch
         self.speed = speed
         try:
@@ -60,8 +72,13 @@ class TTS:
     def set_params(self, params):
         """Sets current espeak params."""
 
-        for param in params:
-            setattr(self, param, params[param])
+        self.language = get_languages()[params['language']]
+        if params['voice'] == "Male":
+            self.voice = ""
+        else:
+            self.voice = "+12"
+        self.pitch = params['pitch']
+        self.speed = params['speed']
 
     def speak(self, text):
         """Speak text."""
