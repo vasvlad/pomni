@@ -11,7 +11,7 @@ import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
 from sync import UIMessenger
-from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
+from wsgiref.simple_server import WSGIServer, WSGIRequestHandler
 from sync import PROTOCOL_VERSION
 from sync import N_SIDED_CARD_TYPE
 
@@ -210,8 +210,8 @@ class Server(UIMessenger):
         except:
             return "CANCEL"
         else:
-           mfile = open(os.path.join(self.config.mediadir(), fname), 'w')
-           mfile.write(data)
-           mfile.close()
-           return "OK"
+            mfile = open(os.path.join(self.config.mediadir(), fname), 'w')
+            mfile.write(data)
+            mfile.close()
+            return "OK"
 

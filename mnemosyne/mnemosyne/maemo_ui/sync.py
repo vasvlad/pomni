@@ -29,16 +29,10 @@ import sys
 sys.path.insert(0, "../../")
 sys.path.insert(0, "../")
 
+import socket
 from libSM2sync.server import Server
 from libSM2sync.client import Client
 from mnemosyne.libmnemosyne.ui_component import UiComponent
-
-import socket
-
-def threaded(func):
-    def wrapper(*args):
-        thread = threading.Thread(target=func, args=args)
-    return wrapper
 
 
 class SyncWidget(UiComponent):
@@ -64,6 +58,8 @@ class SyncWidget(UiComponent):
             "sync_mode_client_passwd_entry").set_text(self.conf['user_passwd'])
 
     def complete_events(self):
+        """Defreeze GTK UI."""
+
         while gtk.events_pending():
             gtk.main_iteration(False)
 
@@ -160,9 +156,10 @@ class SyncWidget(UiComponent):
             else:
                 self.show_or_hide_containers(False, "server")
                 try:
-                    self.server = Server("localhost:%s" % port, self.database(), \
-                    self.config(), self.log(), self.show_message, \
-                    self.complete_events, self.update_server_status, \
+                    self.server = Server("localhost:%s" % port, \
+                    self.database(), self.config(), self.log(), \
+                    self.show_message, self.complete_events, \
+                    self.update_server_status, \
                     self.update_server_progress_bar)
                 except socket.error, error:
                     self.show_message(str(error))
