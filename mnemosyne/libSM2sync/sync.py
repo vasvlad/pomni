@@ -48,7 +48,8 @@ class EventManager:
     XML representation of history events.
     """
 
-    def __init__(self, database, log, controller, mediadir, get_media):
+    def __init__(self, database, log, controller, mediadir, get_media, \
+        progressbar_updater):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
@@ -62,7 +63,7 @@ class EventManager:
             None, 'deck': None, 'upload': True, 'readonly': False}
         self.mediadir = mediadir
         self.get_media = get_media
-        self.update_progress = None
+        self.update_progressbar = progressbar_updater
         self.stopped = False
 
     def stop(self):
@@ -240,7 +241,7 @@ class EventManager:
                 if child.find('t').text == 'media':
                     fname = child.find('id').text.split('__for__')[0]
                     self.get_media(fname)
-                    self.update_progress(counter / float(hsize))
+                    self.update_progressbar(counter / float(hsize))
                     counter += 1
 
         # all other stuff
@@ -290,9 +291,9 @@ class EventManager:
                 card.ret_reps_since_lapse, card.scheduled_interval, \
                 card.actual_interval, card.new_interval, card.thinking_time)
                 #print "repetiting..."
-            self.update_progress(counter / float(hsize))
+            self.update_progressbar(counter / float(hsize))
             counter += 1
                     
-        self.update_progress(0)
+        self.update_progressbar(0)
         self.database.update_last_sync_event(self.partner['id'])
 
