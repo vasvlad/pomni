@@ -706,6 +706,48 @@ style "next-button" {
 widget "*.config_mode_tts_voice_next_button" style "next-button"
 widget "*.config_mode_tts_lang_next_button" style "next-button"
 
+style "config-scrollbars" {
+    GtkScrollbar::fixed-slider-length = 1
+    GtkScrollbar::min-slider-length = 64
+    GtkRange::slider-width = 64
+    GtkRange::stepper-size = 64
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = SLIDER
+            file = "target.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            orientation = HORIZONTAL
+            file = "back_for_scroll.png"
+            border = {59,59,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            detail = "hscrollbar"
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+            arrow_direction = LEFT
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+            arrow_direction = RIGHT
+        }
+    }
+}
+widget "*.config_mode_tts_speed_scrollbar" style "config-scrollbars"
+widget "*.config_mode_tts_pitch_scrollbar" style "config-scrollbars"
+
+
 style "increase-font-size-button" {
     engine "pixmap" {
         image {
@@ -1019,12 +1061,12 @@ widget "*.categories_manager_dialog_button_close" style "question-dialog-button-
 #----------------------------- General ------------------
 # style for scrolls in Image selection dialog
 style "image-selection-dialog-scrollbars" {
+    engine "pixmap" {}
     GtkRange::slider-width = 60
     GtkRange::stepper-size = 60
     GtkRange::trough-border = 0
 }
 widget_class "*.GtkVScrollbar" style "image-selection-dialog-scrollbars"
-widget_class "*.GtkHScrollbar" style "image-selection-dialog-scrollbars"
 
 # Style for Main window
 style "main-window" {
