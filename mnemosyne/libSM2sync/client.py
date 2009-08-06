@@ -23,8 +23,10 @@ class PutRequest(urllib2.Request):
 class Client(UIMessenger):
     """Base client class for syncing."""
 
-    def __init__(self, uri, database, controller, config, log):
-        UIMessenger.__init__(self)
+    def __init__(self, uri, database, controller, config, log, messenger, \
+            events_updater, status_updater, progress_updater):
+        UIMessenger.__init__(self, messenger, events_updater, status_updater, \
+            progress_updater)
         self.config = config
         self.database = database
         self.log = log
