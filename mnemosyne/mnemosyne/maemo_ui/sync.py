@@ -163,13 +163,10 @@ class SyncWidget(UiComponent):
             else:
                 self.show_or_hide_containers(False, "server")
                 self.server = Server("localhost:%s" % port, self.database(), \
-                    self.config(), self.log())
-                self.server.set_events_updater(self.complete_events)
-                self.server.set_progress_bar_updater(\
+                    self.config(), self.log(), self.show_message, \
+                    self.complete_events, self.update_server_status, \
                     self.update_server_progress_bar)
-                self.server.set_status_updater(self.update_server_status)
                 self.server.start()
-                print "show containers"
                 self.show_or_hide_containers(True, "server")
                 self.get_widget(\
                     "sync_mode_server_start_button").set_active(False)

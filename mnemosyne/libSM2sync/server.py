@@ -15,13 +15,9 @@ from wsgiref.simple_server import WSGIServer, WSGIRequestHandler, make_server
 from sync import PROTOCOL_VERSION
 from sync import N_SIDED_CARD_TYPE
 
-import sys
-sys.path.insert(0, "../")
-from mnemosyne.libmnemosyne.databases.SQLite import SQLite
-
-import threading
 
 class MyWSGIServer(WSGIServer):
+    """Redefined WSGIServer class."""
 
     def __init__(self, host, port, app, handler_class=WSGIRequestHandler):
         WSGIServer.__init__(self, (host, port), handler_class)
@@ -31,23 +27,29 @@ class MyWSGIServer(WSGIServer):
         self.timeout = 1
 
     def stop(self):
+        """Stops server."""
+
         self.stopped = True
         
     def serve_forever(self):
+        """Starts  request handling."""
+
         while not self.stopped:
             self.update_events()
             if select.select([self.socket], [], [], self.timeout)[0]:
                 self.handle_request()
             
-        
+       
 
 class Server(UIMessenger):
     """Base server class for syncing."""
 
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self, uri, database, config, log):
-        UIMessenger.__init__(self)
+    def __init__(self, uri, database, config, log, messenger, events_updater, \
+                     status_updater, progress_updater):
+        UIMessenger.__init__(self, messenger, events_updater, status_updater, \
+                                progress_updater)
         params = urlparse(uri)
         self.host = params.scheme
         self.port = int(params.path)
@@ -57,6 +59,7 @@ class Server(UIMessenger):
         self.eman = EventManager(\
             self.database, self.log, None, self.config.mediadir(), None)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
+        self.httpd.update_events = events_updater
         self.logged = False
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -65,9 +68,6 @@ class Server(UIMessenger):
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
-
-    def set_events_updater(self, events_updater):
-        self.httpd.update_events = events_updater
 
     def get_method(self, environ):
         """
@@ -124,11 +124,12 @@ class Server(UIMessenger):
         """Activate server."""
 
         self.update_status("Waiting for client connection...")
-        #self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
     def stop(self):
+        """Stops Server."""
+
         self.httpd.stop()
         self.eman.stop()
 
