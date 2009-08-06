@@ -45,7 +45,7 @@ class ConfigHook(Component):
             "sounddir": "/home/user/MyDocs/.sounds",
             "tts_language": "english",
             "tts_voice": "Male",
-            "tts_speed": 70,
+            "tts_speed": 100,
             "tts_pitch": 30,
             "times_loaded": 0}.iteritems():
 
