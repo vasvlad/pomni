@@ -140,16 +140,16 @@ class ReviewWdgt(ReviewWidget):
 
     # callbacks
     def speak_cb(self, widget):
-        print tts.get_languages()
+        """Speaks current question."""
+
         config = self.config()
-        params = {"language": "en", "voice": \
-            "", "speed": config['tts_speed'], \
+        params = {"language": config['tts_language'], "voice": \
+            config['tts_voice'], "speed": config['tts_speed'], \
             "pitch": config['tts_pitch']}
         if not self.tts:            
             self.tts = tts.TTS(params['language'], params['voice'], 
                 params['pitch'], params['speed'])
         self.tts.set_params(params)
-        print self.renderer.tts_text
         self.tts.speak(self.renderer.tts_text)
 
     def preview_sound_in_review_cb(self, widget):
