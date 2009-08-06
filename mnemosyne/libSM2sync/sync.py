@@ -69,11 +69,6 @@ class EventManager:
     def stop(self):
         self.stopped = True
 
-    def set_progress_updater(self, progress_updater):
-        """Sets UI ProgressBar updater."""
-
-        self.update_progress = progress_updater
-
     def set_sync_params(self, partner_params):
         """Sets other side specific params."""
 
