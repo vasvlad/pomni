@@ -33,7 +33,7 @@ from libSM2sync.server import Server
 from libSM2sync.client import Client
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
-import threading
+import socket
 
 def threaded(func):
     def wrapper(*args):
@@ -159,11 +159,15 @@ class SyncWidget(UiComponent):
                 self.main_widget().error_box("Wrong port number!")
             else:
                 self.show_or_hide_containers(False, "server")
-                self.server = Server("localhost:%s" % port, self.database(), \
+                try:
+                    self.server = Server("localhost:%s" % port, self.database(), \
                     self.config(), self.log(), self.show_message, \
                     self.complete_events, self.update_server_status, \
                     self.update_server_progress_bar)
-                self.server.start()
+                except socket.error, error:
+                    self.show_message(str(error))
+                else:
+                    self.server.start()
                 self.show_or_hide_containers(True, "server")
                 self.get_widget(\
                     "sync_mode_server_start_button").set_active(False)
