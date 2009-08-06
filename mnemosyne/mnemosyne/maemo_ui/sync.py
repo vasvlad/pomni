@@ -70,7 +70,7 @@ class SyncWidget(UiComponent):
     def activate(self):
         """Activate sync mode."""
 
-        self.get_widget("sync_mode_role_switcher").set_current_page(2)
+        self.get_widget("sync_mode_role_switcher").set_current_page(0)
         self.get_widget("sync_toolbar_client_mode_button").set_active(False)
         self.get_widget("sync_toolbar_server_mode_button").set_active(False)
 
