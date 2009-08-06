@@ -149,6 +149,7 @@ class SyncWidget(UiComponent):
         else:
             self.show_or_hide_containers(True, "client")
             self.client.stop()
+            self.client = None
 
     def start_server_sync_cb(self, widget):
         """Starts syncing as Server."""
@@ -161,38 +162,21 @@ class SyncWidget(UiComponent):
                 self.main_widget().error_box("Wrong port number!")
             else:
                 self.show_or_hide_containers(False, "server")
-                self.db_path = self.database()._path
-                self.database().unload()
-                #self.component_manager.unregister(self.database())
-                self.server = Server()
-                
-                def start_server(uri, db_path, config, log, component_manager):
-                    """Starts therver in separate thread."""
-                    self.server.set_connect_params(uri, db_path, config, log, \
-                    component_manager)
-                    self.server.set_events_updater(self.complete_events)
-                    self.server.set_progress_bar_updater(\
-                        self.update_server_progress_bar)
-                    self.server.set_status_updater(self.update_server_status)
-                    self.server.start()
-
-                self.server_thread = threading.Thread(target=start_server, \
-                    args=("localhost:%s" % port, self.db_path, self.config(),\
-                    None, self.component_manager))
-                self.server_thread.start()
-                #self.show_or_hide_containers(True, "server")
-                #self.get_widget(\
-                #    "sync_mode_server_start_button").set_active(False)
+                self.server = Server("localhost:%s" % port, self.database(), \
+                    self.config(), self.log())
+                self.server.set_events_updater(self.complete_events)
+                self.server.set_progress_bar_updater(\
+                    self.update_server_progress_bar)
+                self.server.set_status_updater(self.update_server_status)
+                self.server.start()
+                print "show containers"
+                self.show_or_hide_containers(True, "server")
+                self.get_widget(\
+                    "sync_mode_server_start_button").set_active(False)
         else:
             self.show_or_hide_containers(True, "server")
-            #self.get_widget(\
-            #    "sync_mode_server_start_button").set_active(False)
             self.server.stop()
-            #self.server = None
-            self.server_thread._Thread__stop()
             self.server = None
-            print self.db_path
-            self.database().load(self.db_path)
 
     def show_or_hide_containers(self, show, name):
         """Manages containers."""

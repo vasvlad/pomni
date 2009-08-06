@@ -6,6 +6,7 @@ import os
 import cgi
 import uuid
 import base64
+import select
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -27,14 +28,17 @@ class MyWSGIServer(WSGIServer):
         self.set_app(app)
         self.stopped = False
         self.update_events = None
+        self.timeout = 1
 
     def stop(self):
         self.stopped = True
-        self.server_close()
         
     def serve_forever(self):
         while not self.stopped:
-            self.handle_request()
+            self.update_events()
+            if select.select([self.socket], [], [], self.timeout)[0]:
+                self.handle_request()
+            
         
 
 class Server(UIMessenger):
@@ -42,14 +46,17 @@ class Server(UIMessenger):
 
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self):
+    def __init__(self, uri, database, config, log):
         UIMessenger.__init__(self)
-        self.config = None
-        self.database = None
-        self.host = None
-        self.port = None
-        self.httpd = None
-        self.eman = None
+        params = urlparse(uri)
+        self.host = params.scheme
+        self.port = int(params.path)
+        self.database = database
+        self.config = config
+        self.log = log
+        self.eman = EventManager(\
+            self.database, self.log, None, self.config.mediadir(), None)
+        self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.logged = False
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -59,15 +66,8 @@ class Server(UIMessenger):
         self.upload_media = True
         self.read_only = False
 
-    def set_connect_params(self, uri, db_path, config, log, component_manager):
-        params = urlparse(uri)
-        self.host = params.scheme
-        self.port = int(params.path)
-        self.config = config
-        self.database = SQLite(component_manager)
-        self.database.load(db_path)
-        self.eman = EventManager(self.database, log, None, self.config.mediadir(), None)
-        self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
+    def set_events_updater(self, events_updater):
+        self.httpd.update_events = events_updater
 
     def get_method(self, environ):
         """
@@ -131,9 +131,6 @@ class Server(UIMessenger):
     def stop(self):
         self.httpd.stop()
         self.eman.stop()
-        print "unloading"
-        self.database.unload()
-        print "end"
 
     def set_params(self, params):
         """Uses for setting non-default params."""
