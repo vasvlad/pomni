@@ -236,7 +236,8 @@ class EventManager:
                 if child.find('t').text == 'media':
                     fname = child.find('id').text.split('__for__')[0]
                     self.get_media(fname)
-                    self.update_progressbar(counter / float(hsize))
+                    hsize += 1.0
+                    self.update_progressbar(counter / hsize)
                     counter += 1
 
         # all other stuff
@@ -286,7 +287,7 @@ class EventManager:
                 card.ret_reps_since_lapse, card.scheduled_interval, \
                 card.actual_interval, card.new_interval, card.thinking_time)
                 #print "repetiting..."
-            self.update_progressbar(counter / float(hsize))
+            self.update_progressbar(counter / hsize)
             counter += 1
                     
         self.update_progressbar(0.0)
