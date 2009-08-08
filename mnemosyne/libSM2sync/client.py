@@ -97,7 +97,7 @@ class Client(UIMessenger):
         request = urllib2.Request(self.uri)
         request.add_header("AUTHORIZATION", authheader)
         try:
-            urllib2.urlopen(request, timeout=5)
+            urllib2.urlopen(request)
         except urllib2.URLError, error:
             if hasattr(error, 'code'):
                 if error.code == 403:
