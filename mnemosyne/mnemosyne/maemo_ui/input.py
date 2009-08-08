@@ -415,6 +415,7 @@ class InputWidget(Component):
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
+
 class AddCardsWidget(InputWidget, AddCardsDialog):
     """Add new card widget."""
 
@@ -503,6 +504,13 @@ class EditFactWidget(InputWidget, EditFactDialog):
 
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
+
+    def input_to_main_menu_cb(self, widget):
+        """Return to Review mode."""
+
+        self.disconnect_signals()
+        self.main_widget().soundplayer.stop()
+        self.main_widget().review_()
 
 
 # Local Variables:
