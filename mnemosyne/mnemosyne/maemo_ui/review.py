@@ -40,6 +40,7 @@ class ReviewWdgt(ReviewWidget):
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
         self.w_tree = self.main_widget().w_tree
+        self.get_widget = self.w_tree.get_widget
         self.w_tree.signal_autoconnect( \
             dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in ["review_to_main_menu", "get_answer", "grade", 
@@ -51,31 +52,30 @@ class ReviewWdgt(ReviewWidget):
         self.renderer = self.component_manager.get_current('renderer')
 
         # Widgets as attributes
-        self.question_container = self.w_tree.get_widget("question_container")
-        self.answer_container = self.w_tree.get_widget("answer_container")
-        self.container_width = self.w_tree.get_widget( \
-            "question_text").window.get_geometry()[2]
-        self.question_text = self.w_tree.get_widget("question_text")
-        self.answer_text = self.w_tree.get_widget("answer_text")
-        self.sound_container = self.w_tree.get_widget( \
-            "review_mode_snd_container")
-        self.sound_button = self.w_tree.get_widget("review_mode_snd_button")
-        self.grades_table = self.w_tree.get_widget("grades_table")
-        self.tts_button = self.w_tree.get_widget("review_toolbar_tts_button")
+        self.edit_button = self.get_widget("review_toolbar_edit_card_button")
+        self.del_button = self.get_widget("review_toolbar_delete_card_button")
+        self.question_container = self.get_widget("question_container")
+        self.answer_container = self.get_widget("answer_container")
+        self.container_width = self.get_widget("question_text"). \
+            window.get_geometry()[2]
+        self.question_text = self.get_widget("question_text")
+        self.answer_text = self.get_widget("answer_text")
+        self.sound_container = self.get_widget("review_mode_snd_container")
+        self.sound_button = self.get_widget("review_mode_snd_button")
+        self.grades_table = self.get_widget("grades_table")
+        self.tts_button = self.get_widget("review_toolbar_tts_button")
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
 
-        self.w_tree.get_widget("review_toolbar_edit_card_button"). \
-            set_sensitive(enabled)
+        self.edit_button.set_sensitive(enabled)
         
     def enable_delete_current_card(self, enabled):
         """Enable or disable 'delete card' button."""
 
-        self.w_tree.get_widget("review_toolbar_delete_card_button"). \
-            set_sensitive(enabled)
+        self.del_button.set_sensitive(enabled)
         
     def set_question(self, text):
         """Set question."""
