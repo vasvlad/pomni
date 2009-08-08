@@ -41,18 +41,55 @@ class ConfigurationWidget(ConfigurationDialog):
         self.w_tree = self.main_widget().w_tree
         self.get_widget = self.w_tree.get_widget
         self.conf = self.config()
-        self.w_tree.signal_autoconnect(\
-            dict([(sig, getattr(self, sig + "_cb")) for sig in 
-                ('change_fullscreen', 'change_font_size', \
-                'change_startup_with_review', 'config_to_main_menu', \
-                'show_general_settings', 'show_tts_settings', 'change_voice', \
-                'change_speed', 'change_pitch', 'change_lang')]))
+        self.connections = []
+        self.connect_signals([
+            ("checkbox_fullscreen_mode", "toggled", self.change_fullscreen_cb),
+            ("checkbox_start_in_review_mode", "toggled", \
+                self.change_startup_with_review_cb),
+            ("config_mode_decrease_font_size_buttton", "clicked", \
+                self.change_font_size_cb),
+            ("config_mode_increase_font_size_buttton", "clicked", \
+                self.change_font_size_cb),
+            ("config_toolbar_main_menu_button", "clicked", \
+                self.config_to_main_menu_cb),
+            ("config_toolbar_general_settings_button", "clicked", \
+                self.show_general_settings_cb),
+            ("config_toolbar_tts_settings_button", "clicked", \
+                self.show_tts_settings_cb),
+            ("config_mode_tts_voice_prev_button", "clicked", \
+                self.change_voice_cb),
+            ("config_mode_tts_voice_next_button", "clicked", \
+                self.change_voice_cb),
+            ("config_mode_tts_speed_scrollbar", "value-changed", \
+                self.change_speed_cb),
+            ("config_mode_tts_pitch_scrollbar", "value-changed", \
+                self.change_pitch_cb),
+            ("config_mode_tts_lang_prev_button", "clicked", \
+                self.change_lang_cb),
+            ("config_mode_tts_lang_next_button", "clicked", \
+                self.change_lang_cb)])
+
         self.get_widget("config_mode_settings_switcher").set_current_page(0)
         tts_available = tts.is_available()
         self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
             tts_available)
         if tts_available:
             self.languages = [lang for lang in tts.get_languages()]
+
+    def connect_signals(self, control):
+        """Connect signals to widgets and save connection info."""
+
+        for wname, signal, callback in control:
+            widget = self.get_widget(wname)
+            cid = widget.connect(signal, callback)
+            self.connections.append((widget, cid))
+
+    def disconnect_signals(self):
+        """Disconnect previously connected signals."""
+
+        for widget, cid in self.connections:
+            widget.disconnect(cid)
+        self.connections = []
 
     def activate(self):
         """Activate configuration mode."""
@@ -194,8 +231,8 @@ class ConfigurationWidget(ConfigurationDialog):
         self.conf['tts_voice'] = self.get_widget(\
             "config_mode_tts_voice_label").get_text()
 
-        #self.config()['font_size'] = self.conf['font_size']
         self.conf.save()
+        self.disconnect_signals()
         self.main_widget().menu_()
 
 
