@@ -154,9 +154,11 @@ class SyncWidget(UiComponent):
             except ValueError:
                 self.main_widget().error_box("Wrong port number!")
             else:
+                ip_address = self.get_widget(\
+                    "sync_mode_server_ip_entry").get_text()
                 self.show_or_hide_containers(False, "server")
                 try:
-                    self.server = Server("localhost:%s" % port, \
+                    self.server = Server("%s:%s" % (ip_address, port), \
                     self.database(), self.config(), self.log(), \
                     self.show_message, self.complete_events, \
                     self.update_server_status, \
