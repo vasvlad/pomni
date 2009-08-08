@@ -225,7 +225,7 @@ class EventManager:
         """Parses XML history and apply it to database."""
 
         history = ElementTree.fromstring(history).findall('i')
-        hsize = len(history)
+        hsize = float(len(history))
         counter = 0
 
         # first, we can copy media, if necessary
@@ -289,6 +289,6 @@ class EventManager:
             self.update_progressbar(counter / float(hsize))
             counter += 1
                     
-        self.update_progressbar(0)
+        self.update_progressbar(0.0)
         self.database.update_last_sync_event(self.partner['id'])
 
