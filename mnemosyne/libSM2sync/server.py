@@ -177,8 +177,11 @@ class Server(UIMessenger):
         except:
             return "CANCEL"
         else:
+            self.update_status("Backuping...")
             self.database.make_sync_backup()
+            self.update_status("Applying client history...")
             self.eman.apply_history(client_history)
+            self.update_status("Remove backup history...")
             self.database.remove_sync_backup()
             self.database.con.commit()
             self.logged = False
