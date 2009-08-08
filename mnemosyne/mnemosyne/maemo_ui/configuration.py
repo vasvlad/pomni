@@ -41,6 +41,8 @@ class ConfigurationWidget(ConfigurationDialog):
         self.w_tree = self.main_widget().w_tree
         self.get_widget = self.w_tree.get_widget
         self.conf = self.config()
+        self.current_size = int(self.conf['font_size'])
+        self.change_font_size()
         self.connections = []
         self.connect_signals([
             ("checkbox_fullscreen_mode", "toggled", self.change_fullscreen_cb),
@@ -98,8 +100,6 @@ class ConfigurationWidget(ConfigurationDialog):
             self.conf['fullscreen'])
         self.get_widget("checkbox_start_in_review_mode").set_active(\
             self.conf['startup_with_review'])
-        self.current_size = int(self.conf['font_size'])
-        self.change_font_size()
         self.get_widget("config_mode_entry_imagedir").set_text(\
             self.conf['imagedir'])
         self.get_widget("config_mode_entry_sounddir").set_text(\
