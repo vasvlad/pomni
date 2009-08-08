@@ -84,7 +84,7 @@ class Html(Renderer):
     def change_font_size(self, text):
         """Replace html font-size."""
 
-        return re.sub('(.*\{font-size):[0-9]{1,2}(px;\}.*)', '\\1:%d\\2' \
+        return re.sub('(.*\{font-size):[0-9]{1,2}(px;.*)', '\\1:%d\\2' \
             % self.config['font_size'], text)
 
     def correct_media_path(self, text):
