@@ -277,16 +277,6 @@ class InputWidget(Component):
     def add_picture_cb(self, widget):
         """Show image selection dialog."""
 
-        def resize_image(pixbuf):
-            """Resize image to 64x64 px."""
-
-            x_ratio = pixbuf.get_width() / 64.0
-            y_ratio = pixbuf.get_height() / 64.0
-            new_width = int(pixbuf.get_width() / x_ratio)
-            new_height = int(pixbuf.get_height() / y_ratio)
-            return pixbuf.scale_simple(new_width, new_height, \
-                gtk.gdk.INTERP_BILINEAR)
-
         self.main_widget().soundplayer.stop()
         self.liststore.clear()
         self.imagedir = self.config()['imagedir']
@@ -300,10 +290,10 @@ class InputWidget(Component):
             self.widgets["MediaDialog"].show()
             for fname in os.listdir(self.imagedir):
                 if os.path.isfile(os.path.join(self.imagedir, fname)):
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(\
-                        os.path.join(self.imagedir, fname))
+                    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(\
+                        os.path.join(self.imagedir, fname), 100, 100)
                     self.liststore.append(["", "img", fname, \
-                        self.imagedir, resize_image(pixbuf)])
+                        self.imagedir, pixbuf])
         else:
             self.main_widget().information_box(\
                 _("There are no files in 'Images' directory!"))
@@ -345,7 +335,8 @@ class InputWidget(Component):
                 if os.path.isfile(os.path.join(self.sounddir, fname)):
                     sound_logo_file = os.path.join( \
                         self.config()["theme_path"], "soundlogo.png")
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(sound_logo_file)
+                    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(\
+                        sound_logo_file, 100, 100)
                     self.liststore.append([fname, "sound", fname, \
                         self.sounddir, pixbuf])
         else:
