@@ -1,9 +1,9 @@
-libsm2sync (0.1ubuntu1) jaunty; urgency=low
+libsm2sync (0.1) unstable; urgency=low
 
   * Fixed sync sequence for media cards
   * Fixed progress bar fraction counting
 
- -- Max <plastun@lenovo>  Sat, 08 Aug 2009 17:31:02 +0300
+ -- Max Usachev <maxusachev@gmail.com>  Sat, 08 Aug 2009 17:31:02 +0300
 
 libsm2sync (0.1) unstable; urgency=low
 
