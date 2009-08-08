@@ -75,13 +75,7 @@ class InputWidget(Component):
             ("input_mode_close_add_category_block_w", "clicked",
                 self.hide_add_category_block_cb),
             ("input_mode_snd_button", "released", \
-                self.preview_sound_in_input_cb),
-            ("cloze_text_w", "button-press-event", self.clear_text_cb),
-            ("answer_text_w", "button-press-event", self.clear_text_cb),
-            ("question_text_w", "button-press-event", self.clear_text_cb),
-            ("foreign_text_w", "button-press-event", self.clear_text_cb),
-            ("translation_text_w", "button-press-event", self.clear_text_cb),
-            ("pronun_text_w", "button-press-event", self.clear_text_cb)])
+                self.preview_sound_in_input_cb)])
 
         self.fact = None
         self.sounddir = None
@@ -431,7 +425,11 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
             ("input_mode_toolbar_add_card_w", "clicked", self.add_card_cb),
             ("question_text_w", "button_press_event", self.clear_text_cb),
             ("answer_text_w", "button_press_event", self.clear_text_cb),
-            ("pronun_text_w", "button_press_event", self.clear_text_cb)])
+            ("pronun_text_w", "button_press_event", self.clear_text_cb),
+            ("cloze_text_w", "button-press-event", self.clear_text_cb),
+            ("foreign_text_w", "button-press-event", self.clear_text_cb),
+            ("translation_text_w", "button-press-event", self.clear_text_cb),
+            ("pronun_text_w", "button-press-event", self.clear_text_cb)])
 
     def activate(self):
         """Activate input mode."""
