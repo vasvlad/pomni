@@ -1,24 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/python -tt
 
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-setup(name = "libSM2sync",
-    description='Sync library for SM2 schedulers',
-    version = open('debian/changelog').readline().split(' ')[1][1:-1],
-    author = "users",
-    author_email = "mail@gmail.com",
-    license='GPL 2',
-    packages = [ "mnemosyne.libSM2sync"],
-    package_dir = {'mnemosyne.libSM2sync': ''},
-    classifiers = [
-    'Development Status :: 3 - Alpha',
-    'Environment :: Console',
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: GNU General Public License (GPL)',
-    'Natural Language :: English',
-    'Operating System :: POSIX :: Linux',
-    'Programming Language :: Python',
-    'Topic :: Software Development :: Libraries',
-    ]
+
+setup(name="libSM2sync",
+    version=open('debian/changelog').readline().split(' ')[1][1:-1],
+    description="Sync library for SM2 schedulers",
+    author="Max Usachev, Ed Bartosh, Peter Beinstman",
+    author_email="pomni@googlegroups.com",
+    license="GPL 2",
+    packages=["libSM2sync"],
+    package_dir={"libSM2sync": ""}
 )
-
