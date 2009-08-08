@@ -873,6 +873,7 @@ widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
 widget "*.sync_mode_client_address_label" style "sync-mode-label"
 widget "*.sync_mode_information_label" style "sync-mode-label"
 widget "*.sync_mode_server_port_label" style "sync-mode-label"
+widget "*.sync_mode_server_ip_label" style "sync-mode-label"
 widget "*.sync_mode_client_status_label" style "sync-mode-label"
 widget "*.sync_mode_server_status_label" style "sync-mode-label"
 
@@ -883,6 +884,7 @@ widget "*.sync_mode_client_login_entry" style "sync-textarea"
 widget "*.sync_mode_client_passwd_entry" style "sync-textarea"
 widget "*.sync_mode_client_address_entry" style "sync-textarea"
 widget "*.sync_mode_server_port_entry" style "sync-textarea"
+widget "*.sync_mode_server_ip_entry" style "sync-textarea"
 #----------------------------- Sync mode ------------------
 
 
