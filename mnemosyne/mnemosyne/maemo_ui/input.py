@@ -50,30 +50,36 @@ class InputWidget(Component):
         self.w_tree = self.main_widget().w_tree
         self.connections = []
         self.connect_signals([\
-            ("input_mode_toolbar_button_back_w", "clicked",
-             self.input_to_main_menu_cb),
-            ("front_to_back_mode_selector_w", "released",
-             self.change_card_type_cb),
+            ("input_mode_toolbar_button_back_w", "clicked", \
+                self.input_to_main_menu_cb),
+            ("front_to_back_mode_selector_w", "released", \
+                self.change_card_type_cb),
             ("both_way_mode_selector_w", "released", self.change_card_type_cb),
-            ("three_side_mode_selector_w", "released",
-             self.change_card_type_cb),
+            ("three_side_mode_selector_w", "released", \
+                self.change_card_type_cb),
             ("cloze_mode_selector_w", "released", self.change_card_type_cb),
             ("picture_content_button", "clicked", self.add_picture_cb),
-            ("image_selection_dialog_button_select", "clicked",
-             self.select_item_cb),
+            ("image_selection_dialog_button_select", "clicked", \
+                self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked",
-             self.close_media_selection_dialog_cb),
-            ("input_mode_prev_category_w", "clicked",
-             self.change_category_cb),
-            ("input_mode_add_new_category_w", "clicked",
-             self.create_new_category_cb),
+                self.close_media_selection_dialog_cb),
+            ("input_mode_prev_category_w", "clicked", self.change_category_cb),
+            ("input_mode_next_category_w", "clicked", self.change_category_cb),
+            ("input_mode_add_new_category_w", "clicked", \
+                self.create_new_category_cb),
             ("sound_content_button", "clicked", self.add_sound_cb),
-            ("category_name_container", "clicked",
-             self.show_add_category_block_cb),
+            ("category_name_container", "clicked", \
+                self.show_add_category_block_cb),
             ("input_mode_close_add_category_block_w", "clicked",
-             self.hide_add_category_block_cb),
-            ("input_mode_snd_button", "released",
-             self.preview_sound_in_input_cb)])
+                self.hide_add_category_block_cb),
+            ("input_mode_snd_button", "released", \
+                self.preview_sound_in_input_cb),
+            ("cloze_text_w", "button-press-event", self.clear_text_cb),
+            ("answer_text_w", "button-press-event", self.clear_text_cb),
+            ("question_text_w", "button-press-event", self.clear_text_cb),
+            ("foreign_text_w", "button-press-event", self.clear_text_cb),
+            ("translation_text_w", "button-press-event", self.clear_text_cb),
+            ("pronun_text_w", "button-press-event", self.clear_text_cb)])
 
         self.fact = None
         self.sounddir = None
