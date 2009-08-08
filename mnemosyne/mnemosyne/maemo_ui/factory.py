@@ -43,6 +43,10 @@ class ConfigHook(Component):
             "upload_logs": False,
             "imagedir": "/home/user/MyDocs/.images",
             "sounddir": "/home/user/MyDocs/.sounds",
+            "tts_language": "english",
+            "tts_voice": "Male",
+            "tts_speed": 100,
+            "tts_pitch": 30,
             "times_loaded": 0}.iteritems():
 
             self.config().setdefault(key, value)

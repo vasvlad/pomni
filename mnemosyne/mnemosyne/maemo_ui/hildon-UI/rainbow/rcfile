@@ -248,6 +248,21 @@ style "grade5" {
 }
 widget "*.grade5" style "grade5"
 
+style "tts-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "tts_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "tts_normal.png"
+        }
+    }
+}
+widget "*.review_toolbar_tts_button" style "tts-button"
+
 style "edit-card-button" {
     engine "pixmap" {
         image {
@@ -644,6 +659,95 @@ widget "*.category_name_w" style "category-label"
 
 
 #----------------------------- Config mode ------------------
+style "general-settings-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "general_settings.png"
+        }
+    }
+}
+widget "*.config_toolbar_general_settings_button" style "general-settings-button"
+
+style "tts-settings-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "tts_insensitive.png"
+        }
+        image {
+            function = BOX
+            file = "tts_normal.png"
+        }
+    }
+}
+widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
+
+style "previous-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "previous.png"
+        }
+    }
+}
+widget "*.config_mode_tts_voice_prev_button" style "previous-button"
+widget "*.config_mode_tts_lang_prev_button" style "previous-button"
+
+style "next-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "next.png"
+        }
+    }
+}
+widget "*.config_mode_tts_voice_next_button" style "next-button"
+widget "*.config_mode_tts_lang_next_button" style "next-button"
+
+style "config-scrollbars" {
+    GtkScrollbar::fixed-slider-length = 1
+    GtkScrollbar::min-slider-length = 64
+    GtkRange::slider-width = 64
+    GtkRange::stepper-size = 64
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = SLIDER
+            file = "target.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            orientation = HORIZONTAL
+            file = "back_for_scroll.png"
+            border = {59,59,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            detail = "hscrollbar"
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+            arrow_direction = LEFT
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+            arrow_direction = RIGHT
+        }
+    }
+}
+widget "*.config_mode_tts_speed_scrollbar" style "config-scrollbars"
+widget "*.config_mode_tts_pitch_scrollbar" style "config-scrollbars"
+
+
 style "increase-font-size-button" {
     engine "pixmap" {
         image {
@@ -718,6 +822,10 @@ widget "*.config_mode_fullscreen_label" style "config-mode-label"
 widget "*.config_mode_startup_with_review_label" style "config-mode-label"
 widget "*.config_mode_label_imagedir" style "config-mode-label"
 widget "*.config_mode_label_sounddir" style "config-mode-label"
+widget "*.config_mode_tts_voice_label" style "config-mode-label"
+widget "*.config_mode_tts_lang_label" style "config-mode-label"
+widget "*.config_mode_tts_speed_label" style "config-mode-label"
+widget "*.config_mode_tts_pitch_label" style "config-mode-label"
 
 style "textareas" {
     font_name = "Nokia Sans 20"
@@ -873,8 +981,9 @@ widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
 widget "*.sync_mode_client_address_label" style "sync-mode-label"
 widget "*.sync_mode_information_label" style "sync-mode-label"
 widget "*.sync_mode_server_port_label" style "sync-mode-label"
-widget "*.sync_mode_client_progress_label" style "sync-mode-label"
-widget "*.sync_mode_server_progress_label" style "sync-mode-label"
+widget "*.sync_mode_server_ip_label" style "sync-mode-label"
+widget "*.sync_mode_client_status_label" style "sync-mode-label"
+widget "*.sync_mode_server_status_label" style "sync-mode-label"
 
 style "sync-textarea" {
     font_name = "Nokia Sans 20"
@@ -883,6 +992,7 @@ widget "*.sync_mode_client_login_entry" style "sync-textarea"
 widget "*.sync_mode_client_passwd_entry" style "sync-textarea"
 widget "*.sync_mode_client_address_entry" style "sync-textarea"
 widget "*.sync_mode_server_port_entry" style "sync-textarea"
+widget "*.sync_mode_server_ip_entry" style "sync-textarea"
 #----------------------------- Sync mode ------------------
 
 
@@ -953,6 +1063,7 @@ widget "*.categories_manager_dialog_button_close" style "question-dialog-button-
 #----------------------------- General ------------------
 # style for scrolls in Image selection dialog
 style "image-selection-dialog-scrollbars" {
+    engine "pixmap" {}
     GtkRange::slider-width = 60
     GtkRange::stepper-size = 60
     GtkRange::trough-border = 0

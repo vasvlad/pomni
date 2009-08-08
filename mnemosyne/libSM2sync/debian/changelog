@@ -1,0 +1,12 @@
+libsm2sync (0.1) unstable; urgency=low
+
+  * Fixed sync sequence for media cards
+  * Fixed progress bar fraction counting
+
+ -- Max Usachev <maxusachev@gmail.com>  Sat, 08 Aug 2009 17:31:02 +0300
+
+libsm2sync (0.1) unstable; urgency=low
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- Max Usachev <maxusachev@gmail.com>  Sat, 08 Aug 2009 10:49:32 +0300

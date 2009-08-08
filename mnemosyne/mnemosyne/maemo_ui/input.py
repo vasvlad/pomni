@@ -48,32 +48,40 @@ class InputWidget(Component):
         Component.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
+        self.get_widget = self.w_tree.get_widget
+        self.conf = self.config()
         self.connections = []
         self.connect_signals([\
-            ("input_mode_toolbar_button_back_w", "clicked",
-             self.input_to_main_menu_cb),
-            ("front_to_back_mode_selector_w", "released",
-             self.change_card_type_cb),
+            ("input_mode_toolbar_button_back_w", "clicked", \
+                self.input_to_main_menu_cb),
+            ("front_to_back_mode_selector_w", "released", \
+                self.change_card_type_cb),
             ("both_way_mode_selector_w", "released", self.change_card_type_cb),
-            ("three_side_mode_selector_w", "released",
-             self.change_card_type_cb),
+            ("three_side_mode_selector_w", "released", \
+                self.change_card_type_cb),
             ("cloze_mode_selector_w", "released", self.change_card_type_cb),
             ("picture_content_button", "clicked", self.add_picture_cb),
-            ("image_selection_dialog_button_select", "clicked",
-             self.select_item_cb),
+            ("image_selection_dialog_button_select", "clicked", \
+                self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked",
-             self.close_media_selection_dialog_cb),
-            ("input_mode_prev_category_w", "clicked",
-             self.change_category_cb),
-            ("input_mode_add_new_category_w", "clicked",
-             self.create_new_category_cb),
+                self.close_media_selection_dialog_cb),
+            ("input_mode_prev_category_w", "clicked", self.change_category_cb),
+            ("input_mode_next_category_w", "clicked", self.change_category_cb),
+            ("input_mode_add_new_category_w", "clicked", \
+                self.create_new_category_cb),
             ("sound_content_button", "clicked", self.add_sound_cb),
-            ("category_name_container", "clicked",
-             self.show_add_category_block_cb),
+            ("category_name_container", "clicked", \
+                self.show_add_category_block_cb),
             ("input_mode_close_add_category_block_w", "clicked",
-             self.hide_add_category_block_cb),
-            ("input_mode_snd_button", "released",
-             self.preview_sound_in_input_cb)])
+                self.hide_add_category_block_cb),
+            ("input_mode_snd_button", "released", \
+                self.preview_sound_in_input_cb),
+            ("cloze_text_w", "button-press-event", self.clear_text_cb),
+            ("answer_text_w", "button-press-event", self.clear_text_cb),
+            ("question_text_w", "button-press-event", self.clear_text_cb),
+            ("foreign_text_w", "button-press-event", self.clear_text_cb),
+            ("translation_text_w", "button-press-event", self.clear_text_cb),
+            ("pronun_text_w", "button-press-event", self.clear_text_cb)])
 
         self.fact = None
         self.sounddir = None
@@ -90,36 +98,34 @@ class InputWidget(Component):
 
         # Widgets as attributes
         self.areas = {# Text areas
-            "cloze": self.w_tree.get_widget("cloze_text_w"),
-            "answer":  self.w_tree.get_widget("answer_text_w"),
-            "foreign": self.w_tree.get_widget("foreign_text_w"),
-            "question": self.w_tree.get_widget("question_text_w"),
-            "translation": self.w_tree.get_widget("translation_text_w"),
-            "pronunciation": self.w_tree.get_widget("pronun_text_w")
+            "cloze": self.get_widget("cloze_text_w"),
+            "answer":  self.get_widget("answer_text_w"),
+            "foreign": self.get_widget("foreign_text_w"),
+            "question": self.get_widget("question_text_w"),
+            "translation": self.get_widget("translation_text_w"),
+            "pronunciation": self.get_widget("pronun_text_w")
         }
 
         # Change default font
-        font = pango.FontDescription("Nokia Sans %s" % \
-                self.config()['font_size'])
+        font = pango.FontDescription("Nokia Sans %s" % self.conf['font_size'])
         for area in self.areas.values():
             area.modify_font(font)
 
         self.widgets = {# Other widgets
-            "CurrentCategory": self.w_tree.get_widget("category_name_w"),
-            "SoundButton": self.w_tree.get_widget("sound_content_button"),
-            "PictureButton": self.w_tree.get_widget("picture_content_button"),
-            "SoundIndicator": self.w_tree.get_widget("input_mode_snd_button"),
-            "CardTypeSwithcer": self.w_tree.get_widget("card_type_switcher_w"),
-            "MediaDialog": self.w_tree.get_widget("media_selection_dialog"),
-            "SoundContainer": self.w_tree.get_widget(\
-                "input_mode_snd_container"),
-            "QuestionContainer": self.w_tree.get_widget(\
+            "CurrentCategory": self.get_widget("category_name_w"),
+            "SoundButton": self.get_widget("sound_content_button"),
+            "PictureButton": self.get_widget("picture_content_button"),
+            "SoundIndicator": self.get_widget("input_mode_snd_button"),
+            "CardTypeSwithcer": self.get_widget("card_type_switcher_w"),
+            "MediaDialog": self.get_widget("media_selection_dialog"),
+            "SoundContainer": self.get_widget("input_mode_snd_container"),
+            "QuestionContainer": self.get_widget(\
                 "input_mode_question_container"),
-            "NewCategory": self.w_tree.get_widget(\
+            "NewCategory": self.get_widget(\
                 "input_mode_new_category_entry"),
-            "ChangeCategoryBlock": self.w_tree.get_widget(\
+            "ChangeCategoryBlock": self.get_widget(\
                 "input_mode_change_category_block"),
-            "AddCategoryBlock": self.w_tree.get_widget(\
+            "AddCategoryBlock": self.get_widget(\
                 "input_mode_add_category_block")
         }
         # card_id: {"page": page_id, "selector": selector_widget, 
@@ -127,26 +133,26 @@ class InputWidget(Component):
         self.selectors = {
             FrontToBack.id: {
             "page": 0, 
-            "selector": self.w_tree.get_widget("front_to_back_mode_selector_w"),
+            "selector": self.get_widget("front_to_back_mode_selector_w"),
             "widgets": [('q', self.areas["question"]), 
                         ('a', self.areas["answer"])]
             },
             BothWays.id: {
             "page": 0,
-            "selector": self.w_tree.get_widget("both_way_mode_selector_w"),
+            "selector": self.get_widget("both_way_mode_selector_w"),
             "widgets": [('q', self.areas["question"]), 
                         ('a', self.areas["answer"])]
             },
             ThreeSided.id: {
             "page": 1,
-            "selector": self.w_tree.get_widget("three_side_mode_selector_w"),
+            "selector": self.get_widget("three_side_mode_selector_w"),
             "widgets": [('f', self.areas["foreign"]),
                         ('t', self.areas["translation"]),
                         ('p', self.areas["pronunciation"])]
             },
             Cloze.id: {
             "page": 2,
-            "selector": self.w_tree.get_widget("cloze_mode_selector_w"),
+            "selector": self.get_widget("cloze_mode_selector_w"),
             "widgets": [('text', self.areas["cloze"])]
             }
         }
@@ -158,7 +164,7 @@ class InputWidget(Component):
         self.widget_card_id = dict((self.selectors[id]["selector"], id) \
             for id in self.selectors.keys())
 
-        self.set_card_type(self.w_tree.get_widget( \
+        self.set_card_type(self.get_widget( \
             "front_to_back_mode_selector_w"))
         self.compose_widgets()
 
@@ -174,7 +180,7 @@ class InputWidget(Component):
         """Connect signals to widgets and save connection info."""
 
         for wname, signal, callback in control:
-            widget = self.w_tree.get_widget(wname)
+            widget = self.get_widget(wname)
             cid = widget.connect(signal, callback)
             self.connections.append((widget, cid))
 
@@ -271,19 +277,9 @@ class InputWidget(Component):
     def add_picture_cb(self, widget):
         """Show image selection dialog."""
 
-        def resize_image(pixbuf):
-            """Resize image to 64x64 px."""
-
-            x_ratio = pixbuf.get_width() / 64.0
-            y_ratio = pixbuf.get_height() / 64.0
-            new_width = int(pixbuf.get_width() / x_ratio)
-            new_height = int(pixbuf.get_height() / y_ratio)
-            return pixbuf.scale_simple(new_width, new_height, \
-                gtk.gdk.INTERP_BILINEAR)
-
         self.main_widget().soundplayer.stop()
         self.liststore.clear()
-        self.imagedir = self.config()['imagedir']
+        self.imagedir = self.conf['imagedir']
         if not os.path.exists(self.imagedir):
             self.imagedir = "./images" # on Desktop
             if not os.path.exists(self.imagedir):
@@ -294,10 +290,10 @@ class InputWidget(Component):
             self.widgets["MediaDialog"].show()
             for fname in os.listdir(self.imagedir):
                 if os.path.isfile(os.path.join(self.imagedir, fname)):
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(\
-                        os.path.join(self.imagedir, fname))
+                    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(\
+                        os.path.join(self.imagedir, fname), 100, 100)
                     self.liststore.append(["", "img", fname, \
-                        self.imagedir, resize_image(pixbuf)])
+                        self.imagedir, pixbuf])
         else:
             self.main_widget().information_box(\
                 _("There are no files in 'Images' directory!"))
@@ -326,7 +322,7 @@ class InputWidget(Component):
 
         self.main_widget().soundplayer.stop()
         self.liststore.clear()
-        self.sounddir = self.config()['sounddir']
+        self.sounddir = self.conf['sounddir']
         if not os.path.exists(self.sounddir):
             self.sounddir = "./sounds" # on Desktop
             if not os.path.exists(self.sounddir):
@@ -338,8 +334,9 @@ class InputWidget(Component):
             for fname in os.listdir(self.sounddir):
                 if os.path.isfile(os.path.join(self.sounddir, fname)):
                     sound_logo_file = os.path.join( \
-                        self.config()["theme_path"], "soundlogo.png")
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(sound_logo_file)
+                        self.conf["theme_path"], "soundlogo.png")
+                    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(\
+                        sound_logo_file, 100, 100)
                     self.liststore.append([fname, "sound", fname, \
                         self.sounddir, pixbuf])
         else:

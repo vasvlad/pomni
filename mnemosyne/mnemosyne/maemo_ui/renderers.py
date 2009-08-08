@@ -40,6 +40,7 @@ class Html(Renderer):
         Renderer.__init__(self, component_manager)
         self._css = {} # {card_type: css}
         self.config = self.config()
+        self.tts_text = ''
         
     def css(self, card_type):
         """Creates css."""
@@ -58,6 +59,7 @@ class Html(Renderer):
     def render_card_fields(self, fact, fields):
         """Renders cards fileds."""
 
+        self.tts_text = fact[fields[0]]
         html = "<html><head>" + self.css(fact.card_type) + \
             "</head><body><table><tr><td>"
         for field in fields:
@@ -82,7 +84,7 @@ class Html(Renderer):
     def change_font_size(self, text):
         """Replace html font-size."""
 
-        return re.sub('(.*\{font-size):[0-9]{1,2}(px;\}.*)', '\\1:%d\\2' \
+        return re.sub('(.*\{font-size):[0-9]{1,2}(px;.*)', '\\1:%d\\2' \
             % self.config['font_size'], text)
 
     def correct_media_path(self, text):
@@ -113,8 +115,7 @@ class Html(Renderer):
         html = "<html><p align=center style='margin-top:%spx; \
             font-size:%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
         self.render_html(widget, html)
-
-
+    
 
 
 class Text(Renderer):
