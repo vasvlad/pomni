@@ -79,15 +79,12 @@ class Client(UIMessenger):
                 server_cards_history = self.get_server_history()
                 self.eman.apply_history(server_cards_history, history_length)
 
-            #----------------------------
-            #media_count = self.eman.get_media_count()
-            #print "media_count =", media_count
-            #if media_count:
-            #    self.update_status("Sending client media. Please, wait...")
-            #    client_history = self.eman.get_history()
-            #    print client_history
-            #    print type(client_history)
-            #    self.send_client_media(client_history, media_count)
+            media_count = self.eman.get_media_count()
+            if media_count:
+                self.update_status("Sending client media. Please, wait...")
+                client_media_history = self.eman.get_media_history()
+                self.send_client_media(client_media_history, media_count)
+
             #self.update_status("Sending client history. Please, wait...")
             #self.send_client_history(client_history)
             if self.stopped:
@@ -214,31 +211,18 @@ class Client(UIMessenger):
         except urllib2.URLError, error:
             raise SyncError("Sending client history: " + str(error))
 
-    def send_client_media(self, history_generator, media_count):
+    def send_client_media(self, history, media_count):
         """Sends client media to server."""
 
-        #if self.stopped:
-        #    return
-        #self.update_events()
-        #for child in ElementTree.fromstring(history).findall('i'):
-        #    if child.find('t').text == 'media':
-        #        fname = child.find('id').text.split('__for__')[0]
-        #        self.send_media_file(fname)
-        context = iterparse(t, events=("end",))
-        print context
-        print type(context)
+        if self.stopped:
+            return
         count = 0
         hsize = float(media_count)
-        for ev, child in context:
-            if self.stopped:
-                return
-            if child.tag == 'i' and child.find('t').text == 'media':
-                fname = child.find('id').text.split('__for__')[0]
-                self.send_media_file(fname)
-                count += 1
-                self.update_progress(count / hsize)
-                
-
+        for child in ElementTree.fromstring(history).findall('i'):
+            fname = child.find('id').text.split('__for__')[0]
+            self.send_media_file(fname)
+            count += 1
+            self.update_progressbar(count / hsize)
 
     def get_media_file(self, fname):
         """Gets media from server."""
