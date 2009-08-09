@@ -62,9 +62,9 @@ class Client(UIMessenger):
             self.handshake()
             self.update_status("Backuping...")
             self.database.make_sync_backup()
-            self.update_status("Getting media from server. Please, wait...")
             media_count = self.get_server_media_count()
             if media_count:
+                self.update_status("Getting media from server. Please, wait...")
                 server_history = self.get_server_history()
                 self.eman.apply_media(server_history, media_count)
             self.update_status("Getting history from server. Please, wait...")
