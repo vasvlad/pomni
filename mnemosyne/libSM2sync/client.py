@@ -6,7 +6,7 @@ import mnemosyne.version
 import base64
 import urllib2
 import socket
-socket.setdefaulttimeout(999)
+socket.setdefaulttimeout(5)
 import uuid
 import os
 from sync import SyncError
