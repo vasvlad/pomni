@@ -91,9 +91,14 @@ class EventManager:
             self.partner[key] = params.get(key)
 
     def get_media_count(self):
-        """Return number of media files in sync history."""
+        """Returns number of media files in sync history."""
 
         return self.database.get_sync_media_count(self.partner['id'])
+
+    def get_history_length(self):
+        """Returns number of events in sync history."""
+
+        return self.database.get_sync_history_length(self.partner['id'])
 
     def get_history(self):
         """Creates history in XML."""
@@ -244,6 +249,8 @@ class EventManager:
         count = 0
         hsize = float(media_count)
         for ev, child in iterparse(history_fileobj):
+            if self.stopped:
+                return
             if child.tag == 'i' and child.find('t').text == 'media':
                 fname = child.find('id').text.split('__for__')[0]
                 self.get_media(fname)
@@ -252,9 +259,13 @@ class EventManager:
 
     def apply_history(self, history_fileobj, history_length):
         """Lazy parses XML-history and applys it to database."""
-        
+       
         context = iterparse(history_fileobj, events=("end",))
+        count = 0
+        hsize = float(history_length)
         for ev, child in iterparse(history_fileobj):
+            if self.stopped:
+                return
             if child.tag == 'i':
                 event = int(child.find('ev').text)
                 if event == events.ADDED_FACT:
@@ -299,6 +310,9 @@ class EventManager:
                     card.ret_reps_since_lapse, card.scheduled_interval, \
                     card.actual_interval, card.new_interval, card.thinking_time)
                     #print "repetiting..."
+
+                count += 1
+                self.update_progressbar(count / hsize)
                         
             self.database.update_last_sync_event(self.partner['id'])
 

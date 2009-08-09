@@ -168,6 +168,16 @@ class Server(UIMessenger):
             self.eman.set_sync_params(client_params)
             return "OK"
 
+    def get_sync_server_history_media_count(self, environ):
+        """Gets self media files count."""
+
+        return str(self.eman.get_media_count())
+
+    def get_sync_server_history_length(self, environ):
+        """Gets length of self history."""
+
+        return str(self.eman.get_history_length())
+
     def get_sync_server_history(self, environ):
         """Gets self history events."""
 
