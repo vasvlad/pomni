@@ -53,16 +53,16 @@ class SyncWidget(UiComponent):
         self.conf = self.config()
         self.get_widget = self.w_tree.get_widget
         self.get_widget("sync_mode_client_login_entry"). \
-            set_text(self.conf['login'])
+            set_text(self.conf['client_login'])
         self.get_widget("sync_mode_client_passwd_entry"). \
-            set_text(self.conf['user_passwd'])
+            set_text(self.conf['client_passwd'])
         self.get_widget("sync_mode_client_address_entry"). \
             set_text("%s:%s" % (self.conf['client_sync_address'], \
                 self.conf['client_sync_port']))
         self.get_widget("sync_mode_server_login_entry").\
-            set_text(self.conf['login'])
+            set_text(self.conf['server_login'])
         self.get_widget("sync_mode_server_passwd_entry").\
-            set_text(self.conf['user_passwd'])
+            set_text(self.conf['server_passwd'])
         self.get_widget("sync_mode_server_port_entry").\
             set_text(self.conf['server_sync_port'])
 
@@ -200,5 +200,20 @@ class SyncWidget(UiComponent):
     def sync_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
+        self.conf['client_login'] = self.get_widget(\
+            "sync_mode_client_login_entry").get_text()
+        self.conf['client_passwd'] = self.get_widget(\
+            "sync_mode_client_passwd_entry").get_text()
+        address, port = self.get_widget(\
+            "sync_mode_client_address_entry").get_text().split(':')
+        self.conf['client_sync_address'] = address
+        self.conf['client_sync_port'] = port
+        self.conf['server_login'] = self.get_widget(\
+            "sync_mode_server_login_entry").get_text()
+        self.conf['server_passwd'] = self.get_widget(\
+            "sync_mode_server_passwd_entry").get_text()
+        self.conf['server_sync_port'] = self.get_widget(\
+            "sync_mode_server_port_entry").get_text()
+        self.conf.save()
         self.main_widget().menu_()
        
