@@ -119,13 +119,12 @@ class EventManager:
         """Creates media history in XML."""
 
         history = "<history>"
+        #FIXME: replace my self.database.get_media_history_events
         for item in self.database.get_history_events(self.partner['id']):
             if self.stopped:
                 break
             self.update_events()
-            event = {'event': item[0], 'time': item[1], 'id': item[2], \
-                's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
-                't_time': item[6]}
+            event = {'event': item[0], 'id': item[2]}
             if event['event'] in (events.ADDED_MEDIA, events.DELETED_MEDIA):
                 history += str(self.create_media_xml_element(event))
         history += "</history>"
@@ -147,8 +146,6 @@ class EventManager:
         elif event_id in (events.ADDED_CARD_TYPE, events.UPDATED_CARD_TYPE, \
             events.DELETED_CARD_TYPE, events.REPETITION):
             return self.create_card_xml_element(event)
-        elif event_id in (events.ADDED_MEDIA, events.DELETED_MEDIA):
-            return self.create_media_xml_element(event)
         else:
             return ''   # No need XML for others events. ?
 

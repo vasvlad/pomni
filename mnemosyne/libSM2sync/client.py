@@ -70,13 +70,15 @@ class Client(UIMessenger):
             media_count = self.get_server_media_count()
             if media_count:
                 self.update_status("Getting media from server. Please, wait...")
-                media_history = self.get_media_history()
-                self.eman.apply_media(media_history, media_count)
+                server_media_history = self.get_media_history()
+                self.eman.apply_media(server_media_history, media_count)
 
-            #self.update_status("Getting history from server. Please, wait...")
-            #history_length = self.get_server_history_length()
-            #server_history = self.get_server_history()
-            #self.eman.apply_history(server_history, history_length)
+            history_length = self.get_server_history_length()
+            if history_length:
+                self.update_status("Getting history from server. Please, wait...")
+                server_cards_history = self.get_server_history()
+                self.eman.apply_history(server_cards_history, history_length)
+
             #----------------------------
             #media_count = self.eman.get_media_count()
             #print "media_count =", media_count
