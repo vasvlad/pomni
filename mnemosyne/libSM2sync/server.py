@@ -57,9 +57,12 @@ class Server(UIMessenger):
         self.config = config
         self.log = log
         self.eman = EventManager(self.database, self.log, None, \
-            self.config.mediadir(), None, self.update_progressbar)
+            self.config.mediadir(), None, self.update_progressbar, \
+            events_updater)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.httpd.update_events = events_updater
+        self.login = None
+        self.passwd = None
         self.logged = False
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -68,6 +71,12 @@ class Server(UIMessenger):
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
+
+    def set_user(self, login, passwd):
+        """Sets server login and password."""
+
+        self.login = login
+        self.passwd = passwd
 
     def get_method(self, environ):
         """
@@ -85,8 +94,7 @@ class Server(UIMessenger):
         if environ.has_key('HTTP_AUTHORIZATION'):
             clogin, cpasswd = base64.decodestring(\
                 environ['HTTP_AUTHORIZATION'].split(' ')[-1]).split(':')
-            if clogin == self.config['login'] and \
-                cpasswd == self.config['user_passwd']:
+            if clogin == self.login and cpasswd == self.passwd:
                 self.logged = True
                 status = '200 OK'
             else:
@@ -160,6 +168,18 @@ class Server(UIMessenger):
         else:
             self.eman.set_sync_params(client_params)
             return "OK"
+
+    def get_sync_server_history_media_count(self, environ):
+        """Gets self media files count."""
+
+        self.update_status("Sending count of media files to client...")
+        return str(self.eman.get_media_count())
+
+    def get_sync_server_history_length(self, environ):
+        """Gets length of self history."""
+
+        self.update_status("Sending history size client...")
+        return str(self.eman.get_history_length())
 
     def get_sync_server_history(self, environ):
         """Gets self history events."""

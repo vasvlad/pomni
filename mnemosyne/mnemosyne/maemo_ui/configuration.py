@@ -71,7 +71,8 @@ class ConfigurationWidget(ConfigurationDialog):
             ("config_mode_tts_lang_next_button", "clicked", \
                 self.change_lang_cb)])
 
-        self.get_widget("config_mode_settings_switcher").set_current_page(0)
+        self.get_widget("config_mode_settings_switcher"). \
+            set_current_page(self.conf['last_settings_page'])
         tts_available = tts.is_available()
         self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
             tts_available)
@@ -230,7 +231,8 @@ class ConfigurationWidget(ConfigurationDialog):
             "config_mode_tts_lang_label").get_text()
         self.conf['tts_voice'] = self.get_widget(\
             "config_mode_tts_voice_label").get_text()
-
+        self.conf['last_settings_page'] = self.get_widget(\
+            "config_mode_settings_switcher").get_current_page()
         self.conf.save()
         self.disconnect_signals()
         self.main_widget().menu_()
