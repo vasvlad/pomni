@@ -204,10 +204,13 @@ class SyncWidget(UiComponent):
             "sync_mode_client_login_entry").get_text()
         self.conf['client_passwd'] = self.get_widget(\
             "sync_mode_client_passwd_entry").get_text()
-        address, port = self.get_widget(\
+        address_port = self.get_widget(\
             "sync_mode_client_address_entry").get_text().split(':')
-        self.conf['client_sync_address'] = address
-        self.conf['client_sync_port'] = port
+        if len(address_port) == 1:
+            self.main_widget().error_box("Wrong server address!")
+            return
+        self.conf['client_sync_address'] = address_port[0]
+        self.conf['client_sync_port'] = address_port[1]
         self.conf['server_login'] = self.get_widget(\
             "sync_mode_server_login_entry").get_text()
         self.conf['server_passwd'] = self.get_widget(\
