@@ -7,8 +7,6 @@ import cgi
 import uuid
 import base64
 import select
-import socket
-socket.setdefaulttimeout(999)
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -174,7 +172,8 @@ class Server(UIMessenger):
         """Gets self history events."""
 
         self.update_status("Sending history to client...")
-        return self.eman.get_history()
+        for chunk in self.eman.get_history():
+            yield chunk
 
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""

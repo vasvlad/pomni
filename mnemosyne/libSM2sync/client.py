@@ -5,6 +5,8 @@ Client.
 import mnemosyne.version
 import base64
 import urllib2
+import socket
+socket.setdefaulttimeout(999)
 import uuid
 import os
 from sync import SyncError
@@ -62,14 +64,19 @@ class Client(UIMessenger):
             server_history = self.get_server_history()
             self.update_status("Backuping...")
             self.database.make_sync_backup()
-            self.update_status("Applying server history...")
-            self.eman.apply_history(server_history)
-            self.update_status("Getting self history. Please, wait...")
-            client_history = self.eman.get_history()
-            self.update_status("Sending client media. Please, wait...")
-            self.send_client_media(client_history)
-            self.update_status("Sending client history. Please, wait...")
-            self.send_client_history(client_history)
+            item = server_history.readline()
+            while item:
+                self.eman.apply_history(item)
+                item = server_history.readline()
+            #for chunk in server_history:
+            #    #self.update_status("Applying server history...")
+            #    self.eman.apply_history(chunk)
+            #self.update_status("Getting self history. Please, wait...")
+            #client_history = self.eman.get_history()
+            #self.update_status("Sending client media. Please, wait...")
+            #self.send_client_media(client_history)
+            #self.update_status("Sending client history. Please, wait...")
+            #self.send_client_history(client_history)
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
@@ -97,7 +104,7 @@ class Client(UIMessenger):
         request = urllib2.Request(self.uri)
         request.add_header("AUTHORIZATION", authheader)
         try:
-            urllib2.urlopen(request)
+            urllib2.urlopen(request).read()
         except urllib2.URLError, error:
             if hasattr(error, 'code'):
                 if error.code == 403:
@@ -140,7 +147,9 @@ class Client(UIMessenger):
             return
         self.update_events()
         try:
-            return urllib2.urlopen(self.uri + '/sync/server/history').read()
+            request = urllib2.Request(self.uri + '/sync/server/history')
+            request.add_header('Transfer-Encoding', 'chunked')
+            return urllib2.urlopen(request)
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
        
