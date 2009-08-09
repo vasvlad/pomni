@@ -7,6 +7,8 @@ import cgi
 import uuid
 import base64
 import select
+import socket
+socket.setdefaulttimeout(999)
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -60,6 +62,8 @@ class Server(UIMessenger):
             self.config.mediadir(), None, self.update_progressbar)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.httpd.update_events = events_updater
+        self.login = None
+        self.passwd = None
         self.logged = False
         self.id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
@@ -68,6 +72,12 @@ class Server(UIMessenger):
         self.cardtypes = N_SIDED_CARD_TYPE
         self.upload_media = True
         self.read_only = False
+
+    def set_user(self, login, passwd):
+        """Sets server login and password."""
+
+        self.login = login
+        self.passwd = passwd
 
     def get_method(self, environ):
         """
@@ -85,8 +95,7 @@ class Server(UIMessenger):
         if environ.has_key('HTTP_AUTHORIZATION'):
             clogin, cpasswd = base64.decodestring(\
                 environ['HTTP_AUTHORIZATION'].split(' ')[-1]).split(':')
-            if clogin == self.config['login'] and \
-                cpasswd == self.config['user_passwd']:
+            if clogin == self.login and cpasswd == self.passwd:
                 self.logged = True
                 status = '200 OK'
             else:

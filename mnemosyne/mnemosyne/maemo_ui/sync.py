@@ -175,6 +175,11 @@ class SyncWidget(UiComponent):
                 except socket.error, error:
                     self.show_message(str(error))
                 else:
+                    self.server.set_user(\
+                        self.get_widget("sync_mode_server_login_entry"). \
+                            get_text(), 
+                        self.get_widget("sync_mode_server_passwd_entry"). \
+                            get_text())
                     self.server.start()
                 self.show_or_hide_containers(True, "server")
                 self.get_widget(\
