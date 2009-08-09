@@ -119,12 +119,11 @@ class EventManager:
         """Creates media history in XML."""
 
         history = "<history>"
-        #FIXME: replace my self.database.get_media_history_events
-        for item in self.database.get_history_events(self.partner['id']):
+        for item in self.database.get_media_history_events(self.partner['id']):
             if self.stopped:
                 break
             self.update_events()
-            event = {'event': item[0], 'id': item[2]}
+            event = {'event': item[0], 'id': item[1]}
             if event['event'] in (events.ADDED_MEDIA, events.DELETED_MEDIA):
                 history += str(self.create_media_xml_element(event))
         history += "</history>"
