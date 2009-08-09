@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Aug  9 10:35:53 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Aug  9 11:15:57 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -2064,7 +2064,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                                     <child>
                                       <widget class="GtkLabel" id="sync_mode_client_address_label">
                                         <property name="visible">True</property>
-                                        <property name="label" translatable="yes">Address (HOST:PORT):</property>
+                                        <property name="label" translatable="yes">Server address (HOST:PORT):</property>
                                       </widget>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2258,6 +2258,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                           <widget class="GtkTable" id="sync_mode_server_params_table">
                             <property name="visible">True</property>
                             <property name="n_rows">4</property>
+                            <property name="row_spacing">14</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <widget class="GtkVBox" id="sync_mode_server_table_ip_vbox">
