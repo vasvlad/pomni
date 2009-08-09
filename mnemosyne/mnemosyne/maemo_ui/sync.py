@@ -52,10 +52,19 @@ class SyncWidget(UiComponent):
                 "start_server_sync")]))
         self.conf = self.config()
         self.get_widget = self.w_tree.get_widget
-        self.get_widget(\
-            "sync_mode_client_login_entry").set_text(self.conf['login'])
-        self.get_widget(\
-            "sync_mode_client_passwd_entry").set_text(self.conf['user_passwd'])
+        self.get_widget("sync_mode_client_login_entry"). \
+            set_text(self.conf['login'])
+        self.get_widget("sync_mode_client_passwd_entry"). \
+            set_text(self.conf['user_passwd'])
+        self.get_widget("sync_mode_client_address_entry"). \
+            set_text("%s:%s" % (self.conf['client_sync_address'], \
+                self.conf['client_sync_port']))
+        self.get_widget("sync_mode_server_login_entry").\
+            set_text(self.conf['login'])
+        self.get_widget("sync_mode_server_passwd_entry").\
+            set_text(self.conf['user_passwd'])
+        self.get_widget("sync_mode_server_port_entry").\
+            set_text(self.conf['server_sync_port'])
 
     def complete_events(self):
         """Defreeze GTK UI."""
