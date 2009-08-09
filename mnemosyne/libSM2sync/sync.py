@@ -112,7 +112,9 @@ class EventManager:
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
-            yield str(self.create_event_element(event))
+            item = self.create_event_element(event)
+            if item:
+                yield str(item)
         yield str("</history>")
 
     def get_media_history(self):
@@ -146,7 +148,7 @@ class EventManager:
             events.DELETED_CARD_TYPE, events.REPETITION):
             return self.create_card_xml_element(event)
         else:
-            return ''   # No need XML for others events. ?
+            return None   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
         if event['event'] == events.DELETED_TAG:
@@ -273,7 +275,7 @@ class EventManager:
         context = iterparse(history_fileobj, events=("end",))
         count = 0
         hsize = float(history_length)
-        for ev, child in iterparse(history_fileobj):
+        for ev, child in context:
             if self.stopped:
                 return
             if child.tag == 'i':
