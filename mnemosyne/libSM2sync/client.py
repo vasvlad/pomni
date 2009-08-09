@@ -63,11 +63,14 @@ class Client(UIMessenger):
             self.update_status("Backuping...")
             self.database.make_sync_backup()
             self.update_status("Getting media from server. Please, wait...")
-            server_history = self.get_server_history()
-            self.eman.apply_media(server_history)
-            self.update_status("Getting history from server. Please, wait...")
-            server_history = self.get_server_history()
-            self.eman.apply_history(server_history)
+            media_count = self.get_server_media_count()
+            if media_count:
+                server_history = self.get_server_history()
+                self.eman.apply_media(server_history, media_count)
+            #self.update_status("Getting history from server. Please, wait...")
+            #history_length = self.get_server_history_length()
+            #server_history = self.get_server_history()
+            #self.eman.apply_history(server_history, history_length)
             #self.update_status("Getting self history. Please, wait...")
             #client_history = self.eman.get_history()
             #self.update_status("Sending client media. Please, wait...")
@@ -136,6 +139,30 @@ class Client(UIMessenger):
 
         for key in params.keys():
             setattr(self, key, params[key])
+
+    def get_server_media_count(self):
+        """Gets number of media files to recieve."""
+
+        if self.stopped:
+            return
+        self.update_events()
+        try:
+            return int(urllib2.urlopen(\
+                self.uri + '/sync/server/history/media/count').read())
+        except urllib2.URLError, error:
+            raise SyncError("Getting server media count: " + str(error))
+
+    def get_server_history_length(self):
+        """Gets server history length."""
+
+        if self.stopped:
+            return
+        self.update_events()
+        try:
+            return int(urllib2.urlopen(\
+                self.uri + '/sync/server/history/length').read())
+        except urllib2.URLError, error:
+            raise SyncError("Getting server history length: " + str(error))
 
     def get_server_history(self):
         """Connects to server and gets server history."""

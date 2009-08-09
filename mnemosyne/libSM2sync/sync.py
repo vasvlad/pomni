@@ -90,7 +90,11 @@ class EventManager:
         for key in params.keys():
             self.partner[key] = params.get(key)
 
-    #@run_async
+    def get_media_count(self):
+        """Return number of media files in sync history."""
+
+        return self.database.get_sync_media_count(self.partner['id'])
+
     def get_history(self):
         """Creates history in XML."""
        
@@ -233,16 +237,20 @@ class EventManager:
     def create_media_object(self, item):
         return None
 
-    def apply_media(self, history_fileobj):
+    def apply_media(self, history_fileobj, media_count):
         """Lazy parses XML-history and apllys media to database."""
 
         context = iterparse(history_fileobj, events=("end",))
+        count = 0
+        hsize = float(media_count)
         for ev, child in iterparse(history_fileobj):
             if child.tag == 'i' and child.find('t').text == 'media':
                 fname = child.find('id').text.split('__for__')[0]
                 self.get_media(fname)
+                count += 1
+                self.update_progressbar(count / hsize)
 
-    def apply_history(self, history_fileobj):
+    def apply_history(self, history_fileobj, history_length):
         """Lazy parses XML-history and applys it to database."""
         
         context = iterparse(history_fileobj, events=("end",))
