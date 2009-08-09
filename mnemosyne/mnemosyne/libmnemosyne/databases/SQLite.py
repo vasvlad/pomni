@@ -906,6 +906,12 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             scheduled_interval, actual_interval, new_interval, thinking_time
             from log where _id>%s""" % _id).fetchall()
 
+    def get_media_history_events(self, partner):
+        _id = self.get_last_sync_event(partner)
+        return self.con.execute("""select event, object_id from log where
+            _id>? and event in (?,?)""", (_id, self.ADDED_MEDIA, \
+            self.DELETED_MEDIA)).fetchall()
+
     def get_sync_media_count(self, partner):
         _id = self.get_last_sync_event(partner)
         return self.con.execute("""select count() from log where 
