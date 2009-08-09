@@ -11,6 +11,7 @@ from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.databases.SQLite_logging \
     import SQLiteLogging as events
 from xml.etree import ElementTree
+from xml.etree.cElementTree import iterparse
 import os
 
 from threading import Thread
@@ -95,13 +96,13 @@ class EventManager:
        
         #if self.stopped:
         #    return None
-        #yield str("<history>")
+        yield str("<history>")
         for item in self.database.get_history_events(self.partner['id']):
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
-            yield str(self.create_event_element(event)+'\n')
-        #yield str("</history>")
+            yield str(self.create_event_element(event))
+        yield str("</history>")
 
     def create_event_element(self, event):
         """Creates XML representation of event."""
@@ -232,80 +233,64 @@ class EventManager:
     def create_media_object(self, item):
         return None
 
-    def apply_history(self, chunk):
-        """Parses XML history and apply it to database."""
+    def apply_media(self, history_fileobj):
+        """Lazy parses XML-history and apllys media to database."""
 
-        """
-        history = ElementTree.fromstring(history).findall('i')
-        hsize = float(len(history))
-        counter = 0
+        context = iterparse(history_fileobj, events=("end",))
+        for ev, child in iterparse(history_fileobj):
+            if child.tag == 'i' and child.find('t').text == 'media':
+                fname = child.find('id').text.split('__for__')[0]
+                self.get_media(fname)
 
-        # first, we can copy media, if necessary
-        if self.partner['role'] == 'server':
-            for child in history:
-                if self.stopped:
-                    return
-                if child.find('t').text == 'media':
-                    fname = child.find('id').text.split('__for__')[0]
-                    self.get_media(fname)
-                    hsize += 1.0
-                    self.update_progressbar(counter / hsize)
-                    counter += 1
-        """
-        if chunk == "" or chunk == "\n":
-            return
-        print chunk
-        history = [ElementTree.fromstring(chunk)]
-        # all other stuff
-        for child in history:
-            if self.stopped:
-                return
-            event = int(child.find('ev').text)
-            if event == events.ADDED_FACT:
-                fact = self.create_fact_object(child)
-                if not self.database.duplicates_for_fact(fact):
-                    self.database.add_fact(fact)
-                    #print "adding fact..."
-            elif event == events.UPDATED_FACT:
-                fact = self.create_fact_object(child)
-                self.database.update_fact(fact)
-                #print "updating fact..."
-            elif event == events.DELETED_FACT:
-                fact = self.database.get_fact(child.find('id').text, False)
-                if fact:
-                    self.database.delete_fact_and_related_data(fact)
-                    #print "deleting fact..."
-            elif event == events.ADDED_TAG:
-                tag = self.create_tag_object(child)
-                if not tag.name in self.database.tag_names():
-                    self.database.add_tag(tag)
-                    #print "adding tag..."
-            elif event == events.UPDATED_TAG:
-                #print "updating tag..."
-                tag = self.create_tag_object(child)
-                self.database.update_tag(tag)
-            elif event == events.ADDED_CARD:
-                if not self.database.has_card_with_external_id(\
-                    child.find('id').text):
+    def apply_history(self, history_fileobj):
+        """Lazy parses XML-history and applys it to database."""
+        
+        context = iterparse(history_fileobj, events=("end",))
+        for ev, child in iterparse(history_fileobj):
+            if child.tag == 'i':
+                event = int(child.find('ev').text)
+                if event == events.ADDED_FACT:
+                    fact = self.create_fact_object(child)
+                    if not self.database.duplicates_for_fact(fact):
+                        self.database.add_fact(fact)
+                        #print "adding fact..."
+                elif event == events.UPDATED_FACT:
+                    fact = self.create_fact_object(child)
+                    self.database.update_fact(fact)
+                    #print "updating fact..."
+                elif event == events.DELETED_FACT:
+                    fact = self.database.get_fact(child.find('id').text, False)
+                    if fact:
+                        self.database.delete_fact_and_related_data(fact)
+                        #print "deleting fact..."
+                elif event == events.ADDED_TAG:
+                    tag = self.create_tag_object(child)
+                    if not tag.name in self.database.tag_names():
+                        self.database.add_tag(tag)
+                        #print "adding tag..."
+                elif event == events.UPDATED_TAG:
+                    #print "updating tag..."
+                    tag = self.create_tag_object(child)
+                    self.database.update_tag(tag)
+                elif event == events.ADDED_CARD:
+                    if not self.database.has_card_with_external_id(\
+                        child.find('id').text):
+                        card = self.create_card_object(child)
+                        self.database.add_card(card)
+                        self.log.added_card(card)
+                        #print "adding card..."
+                elif event == events.UPDATED_CARD:
                     card = self.create_card_object(child)
-                    self.database.add_card(card)
-                    self.log.added_card(card)
-                    #print "adding card..."
-            elif event == events.UPDATED_CARD:
-                card = self.create_card_object(child)
-                self.database.update_card(card)
-                #print "updating card..."
-            elif event == events.REPETITION:
-                card = self.create_card_object(child)
-                self.database.log_repetition(card.timestamp, card.id, \
-                card.grade, card.easiness, card.acq_reps, card.ret_reps, \
-                card.lapses, card.acq_reps_since_lapse, \
-                card.ret_reps_since_lapse, card.scheduled_interval, \
-                card.actual_interval, card.new_interval, card.thinking_time)
-                #print "repetiting..."
-            #self.update_progressbar(counter / hsize)
-            #counter += 1
-                    
-        #self.update_progressbar(0.0)
-        #self.database.update_last_sync_event(self.partner['id'])
+                    self.database.update_card(card)
+                    #print "updating card..."
+                elif event == events.REPETITION:
+                    card = self.create_card_object(child)
+                    self.database.log_repetition(card.timestamp, card.id, \
+                    card.grade, card.easiness, card.acq_reps, card.ret_reps, \
+                    card.lapses, card.acq_reps_since_lapse, \
+                    card.ret_reps_since_lapse, card.scheduled_interval, \
+                    card.actual_interval, card.new_interval, card.thinking_time)
+                    #print "repetiting..."
+                        
+            self.database.update_last_sync_event(self.partner['id'])
 

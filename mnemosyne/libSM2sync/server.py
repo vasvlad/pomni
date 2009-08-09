@@ -172,8 +172,7 @@ class Server(UIMessenger):
         """Gets self history events."""
 
         self.update_status("Sending history to client...")
-        for chunk in self.eman.get_history():
-            yield chunk
+        return self.eman.get_history()
 
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""

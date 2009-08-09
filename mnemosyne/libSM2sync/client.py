@@ -60,17 +60,14 @@ class Client(UIMessenger):
             self.login_()
             self.update_status("Handshaking...")
             self.handshake()
-            self.update_status("Getting history from server. Please, wait...")
-            server_history = self.get_server_history()
             self.update_status("Backuping...")
             self.database.make_sync_backup()
-            item = server_history.readline()
-            while item:
-                self.eman.apply_history(item)
-                item = server_history.readline()
-            #for chunk in server_history:
-            #    #self.update_status("Applying server history...")
-            #    self.eman.apply_history(chunk)
+            self.update_status("Getting media from server. Please, wait...")
+            server_history = self.get_server_history()
+            self.eman.apply_media(server_history)
+            self.update_status("Getting history from server. Please, wait...")
+            server_history = self.get_server_history()
+            self.eman.apply_history(server_history)
             #self.update_status("Getting self history. Please, wait...")
             #client_history = self.eman.get_history()
             #self.update_status("Sending client media. Please, wait...")
@@ -147,9 +144,7 @@ class Client(UIMessenger):
             return
         self.update_events()
         try:
-            request = urllib2.Request(self.uri + '/sync/server/history')
-            request.add_header('Transfer-Encoding', 'chunked')
-            return urllib2.urlopen(request)
+            return urllib2.urlopen(self.uri + '/sync/server/history')
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
        
