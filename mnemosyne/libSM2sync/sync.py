@@ -13,10 +13,22 @@ from mnemosyne.libmnemosyne.databases.SQLite_logging \
 from xml.etree import ElementTree
 import os
 
+from threading import Thread
+from functools import wraps
+
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
 VICE_VERSA_CARD_TYPE = 2
 N_SIDED_CARD_TYPE = 3
+
+def run_async(func):
+    @wraps(func)
+    def async_func(*args, **kwargs):
+        func_hl = Thread(target = func, args = args, kwargs = kwargs)
+        func_hl.start()
+        return func_hl
+
+    return async_func
 
 
 class SyncError(Exception):
@@ -77,20 +89,19 @@ class EventManager:
         for key in params.keys():
             self.partner[key] = params.get(key)
 
+    #@run_async
     def get_history(self):
         """Creates history in XML."""
        
-        if self.stopped:
-            return None
-        history = "<history>"
-        for item in self.database.get_history_events(\
-            self.partner['id']):
+        #if self.stopped:
+        #    return None
+        #yield str("<history>")
+        for item in self.database.get_history_events(self.partner['id']):
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
-            history += str(self.create_event_element(event))
-        history += "</history>\n"
-        return history
+            yield str(self.create_event_element(event)+'\n')
+        #yield str("</history>")
 
     def create_event_element(self, event):
         """Creates XML representation of event."""
@@ -221,9 +232,10 @@ class EventManager:
     def create_media_object(self, item):
         return None
 
-    def apply_history(self, history):
+    def apply_history(self, chunk):
         """Parses XML history and apply it to database."""
 
+        """
         history = ElementTree.fromstring(history).findall('i')
         hsize = float(len(history))
         counter = 0
@@ -239,7 +251,11 @@ class EventManager:
                     hsize += 1.0
                     self.update_progressbar(counter / hsize)
                     counter += 1
-
+        """
+        if chunk == "" or chunk == "\n":
+            return
+        print chunk
+        history = [ElementTree.fromstring(chunk)]
         # all other stuff
         for child in history:
             if self.stopped:
@@ -287,9 +303,9 @@ class EventManager:
                 card.ret_reps_since_lapse, card.scheduled_interval, \
                 card.actual_interval, card.new_interval, card.thinking_time)
                 #print "repetiting..."
-            self.update_progressbar(counter / hsize)
-            counter += 1
+            #self.update_progressbar(counter / hsize)
+            #counter += 1
                     
-        self.update_progressbar(0.0)
-        self.database.update_last_sync_event(self.partner['id'])
+        #self.update_progressbar(0.0)
+        #self.database.update_last_sync_event(self.partner['id'])
 
