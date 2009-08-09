@@ -115,6 +115,22 @@ class EventManager:
             yield str(self.create_event_element(event))
         yield str("</history>")
 
+    def get_media_history(self):
+        """Creates media history in XML."""
+
+        history = "<history>"
+        for item in self.database.get_history_events(self.partner['id']):
+            if self.stopped:
+                break
+            self.update_events()
+            event = {'event': item[0], 'time': item[1], 'id': item[2], \
+                's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
+                't_time': item[6]}
+            if event['event'] in (events.ADDED_MEDIA, events.DELETED_MEDIA):
+                history += str(self.create_media_xml_element(event))
+        history += "</history>"
+        return history
+
     def create_event_element(self, event):
         """Creates XML representation of event."""
 
@@ -244,20 +260,16 @@ class EventManager:
     def create_media_object(self, item):
         return None
 
-    def apply_media(self, history_fileobj, media_count):
-        """Lazy parses XML-history and apllys media to database."""
+    def apply_media(self, history, media_count):
+        """Parses media XML-history and apllys media to database."""
 
-        context = iterparse(history_fileobj, events=("end",))
         count = 0
         hsize = float(media_count)
-        for ev, child in iterparse(history_fileobj):
-            if self.stopped:
-                return
-            if child.tag == 'i' and child.find('t').text == 'media':
-                fname = child.find('id').text.split('__for__')[0]
-                self.get_media(fname)
-                count += 1
-                self.update_progressbar(count / hsize)
+        for child in ElementTree.fromstring(history).findall('i'):
+            fname = child.find('id').text.split('__for__')[0]
+            self.get_media(fname)
+            count += 1
+            self.update_progressbar(count / hsize)
 
     def apply_history(self, history_fileobj, history_length):
         """Lazy parses XML-history and applys it to database."""

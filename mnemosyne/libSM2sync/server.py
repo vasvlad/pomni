@@ -7,6 +7,8 @@ import cgi
 import uuid
 import base64
 import select
+import socket
+socket.setdefaulttimeout(60)
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -30,6 +32,7 @@ class MyWSGIServer(WSGIServer):
         """Stops server."""
 
         self.stopped = True
+        self.socket.close()
         
     def serve_forever(self):
         """Starts  request handling."""
@@ -38,6 +41,7 @@ class MyWSGIServer(WSGIServer):
             self.update_events()
             if select.select([self.socket], [], [], self.timeout)[0]:
                 self.handle_request()
+        self.socket.close()
             
        
 
@@ -186,6 +190,12 @@ class Server(UIMessenger):
 
         self.update_status("Sending history to client...")
         return self.eman.get_history()
+
+    def get_sync_server_mediahistory(self, environ):
+        """Gets self. media history."""
+
+        self.update_status("Sending media history to client...")
+        return self.eman.get_media_history()
 
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
