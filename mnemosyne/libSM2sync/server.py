@@ -57,7 +57,8 @@ class Server(UIMessenger):
         self.config = config
         self.log = log
         self.eman = EventManager(self.database, self.log, None, \
-            self.config.mediadir(), None, self.update_progressbar)
+            self.config.mediadir(), None, self.update_progressbar, \
+            events_updater)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
         self.httpd.update_events = events_updater
         self.login = None

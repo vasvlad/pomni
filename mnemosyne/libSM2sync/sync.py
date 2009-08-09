@@ -62,7 +62,7 @@ class EventManager:
     """
 
     def __init__(self, database, log, controller, mediadir, get_media, \
-        progressbar_updater):
+        progressbar_updater, events_updater):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
@@ -77,6 +77,7 @@ class EventManager:
         self.mediadir = mediadir
         self.get_media = get_media
         self.update_progressbar = progressbar_updater
+        self.update_events = events_updater
         self.stopped = False
 
     def stop(self):
@@ -103,10 +104,11 @@ class EventManager:
     def get_history(self):
         """Creates history in XML."""
        
-        #if self.stopped:
-        #    return None
         yield str("<history>")
         for item in self.database.get_history_events(self.partner['id']):
+            if self.stopped:
+                break
+            self.update_events()
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
