@@ -30,7 +30,6 @@ class MyWSGIServer(WSGIServer):
         """Stops server."""
 
         self.stopped = True
-        self.socket.close()
         
     def serve_forever(self):
         """Starts  request handling."""
