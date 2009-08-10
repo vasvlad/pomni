@@ -76,6 +76,7 @@ class Client(UIMessenger):
                 self.send_client_media(client_media_history, client_media_count)
 
             server_history_length = self.get_server_history_length()
+            server_cards_history = ''
             if server_history_length:
                 self.update_status(\
                     "Getting history from server. Please, wait...")
@@ -90,8 +91,10 @@ class Client(UIMessenger):
                 self.send_client_history(\
                     client_cards_history, client_history_length)
     
-            self.update_status("Applying server history. Please, wait...")
-            self.eman.apply_history(server_cards_history, server_history_length)
+            if server_history_length:
+                self.update_status("Applying server history. Please, wait...")
+                self.eman.apply_history(\
+                    server_cards_history, server_history_length)
 
             self.send_finish_request()
 
