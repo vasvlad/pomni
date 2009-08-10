@@ -65,13 +65,15 @@ class Client(UIMessenger):
 
             server_media_count = self.get_server_media_count()
             if server_media_count:
-                self.update_status("Getting media from server. Please, wait...")
+                self.update_status(\
+                    "Getting media from the server. Please, wait...")
                 server_media_history = self.get_media_history()
                 self.eman.apply_media(server_media_history, server_media_count)
 
             client_media_count = self.eman.get_media_count()
             if client_media_count:
-                self.update_status("Sending client media. Please, wait...")
+                self.update_status(\
+                    "Sending client media to the server. Please, wait...")
                 client_media_history = self.eman.get_media_history()
                 self.send_client_media(client_media_history, client_media_count)
 
@@ -79,14 +81,15 @@ class Client(UIMessenger):
             server_cards_history = ''
             if server_history_length:
                 self.update_status(\
-                    "Getting history from server. Please, wait...")
+                    "Getting history from the server. Please, wait...")
                 server_cards_history = self.get_server_history(\
                     server_history_length)
                 #self.eman.apply_history(server_cards_history, server_history_length)
 
             client_history_length = self.eman.get_history_length()
             if client_history_length:
-                self.update_status("Sending client history. Please, wait...")
+                self.update_status(\
+                    "Sending client history to the server. Please, wait...")
                 client_cards_history = self.eman.get_history()
                 self.send_client_history(\
                     client_cards_history, client_history_length)
@@ -102,12 +105,12 @@ class Client(UIMessenger):
                 raise SyncError("Aborted!")
         except SyncError, exception:
             self.show_message("Error: " + str(exception))
-            self.update_status("Restoring backuped databse. Please, wait...")
+            self.update_status("Restoring backuped database. Please, wait...")
             self.database.restore_sync_backup()
         else:
-            self.update_status("Removing backup database...")
+            self.update_status("Removing backuped database. Please, wait...")
             self.database.remove_sync_backup()
-            self.show_message("Finished!")
+            self.show_message("Sync finished!")
 
     def stop(self):
         """Stops syncing."""
