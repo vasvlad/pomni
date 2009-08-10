@@ -137,7 +137,10 @@ class SyncWidget(UiComponent):
             self.show_or_hide_containers(False, "client")
             login = self.get_widget("sync_mode_client_login_entry").get_text()
             passwd = self.get_widget("sync_mode_client_passwd_entry").get_text()
-            uri = self.get_widget("sync_mode_client_address_entry").get_text()
+            address = self.get_widget(\
+                "sync_mode_client_address_entry").get_text()
+            port = self.get_widget("sync_mode_client_port_entry").get_text()
+            uri = address + ':' + port
             if not uri.startswith("http://"):
                 uri = "http://" + uri
             self.complete_events()
