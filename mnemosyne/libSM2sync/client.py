@@ -79,14 +79,16 @@ class Client(UIMessenger):
             if server_history_length:
                 self.update_status(\
                     "Getting history from server. Please, wait...")
-                server_cards_history = self.get_server_history(server_history_length)
+                server_cards_history = self.get_server_history(\
+                    server_history_length)
                 #self.eman.apply_history(server_cards_history, server_history_length)
 
             client_history_length = self.eman.get_history_length()
             if client_history_length:
                 self.update_status("Sending client history. Please, wait...")
                 client_cards_history = self.eman.get_history()
-                self.send_client_history(client_cards_history, client_history_length)
+                self.send_client_history(\
+                    client_cards_history, client_history_length)
     
             self.update_status("Applying server history. Please, wait...")
             self.eman.apply_history(server_cards_history, server_history_length)
