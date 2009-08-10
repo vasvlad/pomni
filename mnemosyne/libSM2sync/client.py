@@ -5,8 +5,6 @@ Client.
 import mnemosyne.version
 import base64
 import urllib2
-import socket
-socket.setdefaulttimeout(999)
 import uuid
 import os
 from sync import SyncError
@@ -58,25 +56,43 @@ class Client(UIMessenger):
         try:
             self.update_status("Authorization...")
             self.login_()
+
             self.update_status("Handshaking...")
             self.handshake()
+
             self.update_status("Backuping...")
             self.database.make_sync_backup()
-            self.update_status("Getting media from server. Please, wait...")
-            media_count = self.get_server_media_count()
-            if media_count:
-                server_history = self.get_server_history()
-                self.eman.apply_media(server_history, media_count)
-            self.update_status("Getting history from server. Please, wait...")
-            history_length = self.get_server_history_length()
-            server_history = self.get_server_history()
-            self.eman.apply_history(server_history, history_length)
-            #self.update_status("Getting self history. Please, wait...")
-            #client_history = self.eman.get_history()
-            #self.update_status("Sending client media. Please, wait...")
-            #self.send_client_media(client_history)
-            #self.update_status("Sending client history. Please, wait...")
-            #self.send_client_history(client_history)
+
+            server_media_count = self.get_server_media_count()
+            if server_media_count:
+                self.update_status("Getting media from server. Please, wait...")
+                server_media_history = self.get_media_history()
+                self.eman.apply_media(server_media_history, server_media_count)
+
+            client_media_count = self.eman.get_media_count()
+            if client_media_count:
+                self.update_status("Sending client media. Please, wait...")
+                client_media_history = self.eman.get_media_history()
+                self.send_client_media(client_media_history, client_media_count)
+
+            server_history_length = self.get_server_history_length()
+            if server_history_length:
+                self.update_status(\
+                    "Getting history from server. Please, wait...")
+                server_cards_history = self.get_server_history()
+                #self.eman.apply_history(server_cards_history, server_history_length)
+
+            client_history_length = self.eman.get_history_length()
+            if client_history_length:
+                self.update_status("Sending client history. Please, wait...")
+                client_cards_history = self.eman.get_history()
+                self.send_client_history(client_cards_history, client_history_length)
+    
+            self.update_status("Applying server history. Please, wait...")
+            self.eman.apply_history(server_cards_history, server_history_length)
+
+            self.send_finish_request()
+
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
@@ -133,6 +149,7 @@ class Client(UIMessenger):
             raise SyncError("Handshaking: " + str(error))
         else:
             self.eman.set_sync_params(sparams)
+            self.eman.update_partnerships_table()
 
     def set_params(self, params):
         """Uses for setting non-default params."""
@@ -171,34 +188,75 @@ class Client(UIMessenger):
             return
         self.update_events()
         try:
-            return urllib2.urlopen(self.uri + '/sync/server/history')
+            #return urllib2.urlopen(self.uri + '/sync/server/history')
+            response = urllib2.urlopen(self.uri + '/sync/server/history')
+            shistory = ''
+            chunk = response.readline()
+            while chunk != "</history>\n":
+                shistory += chunk
+                chunk = response.readline()
+            shistory += chunk
+            import StringIO
+            return StringIO.StringIO(shistory)
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
-       
-    def send_client_history(self, history):
-        """Sends client history to server."""
+
+    def get_media_history(self):
+        """Gets media history from server."""
 
         if self.stopped:
             return
         self.update_events()
         try:
+            return urllib2.urlopen(self.uri + '/sync/server/mediahistory'). \
+                readline()
+        except urllib2.URLError, error:
+            raise SyncError("Getting server media history: " + str(error))
+       
+    def send_client_history(self, history, history_length):
+        """Sends client history to server."""
+
+        if self.stopped:
+            return
+        self.update_events()
+        chistory = ''
+        for chunk in history:
+            chistory += chunk
+        data = str(history_length) + '\n' + chistory + '\n'
+        try:
             response = urllib2.urlopen(PutRequest(\
-                self.uri + '/sync/client/history', history))
+                self.uri + '/sync/client/history', data))
             if response.read() != "OK":
                 raise SyncError("Sending client history: error on server side.")
         except urllib2.URLError, error:
             raise SyncError("Sending client history: " + str(error))
 
-    def send_client_media(self, history):
+    def send_client_media(self, history, media_count):
         """Sends client media to server."""
 
         if self.stopped:
             return
-        self.update_events()
+        count = 0
+        hsize = float(media_count)
         for child in ElementTree.fromstring(history).findall('i'):
-            if child.find('t').text == 'media':
-                fname = child.find('id').text.split('__for__')[0]
-                self.send_media_file(fname)
+            fname = child.find('id').text.split('__for__')[0]
+            self.send_media_file(fname)
+            count += 1
+            self.update_progressbar(count / hsize)
+
+    def send_finish_request(self):
+        """Say to server thar sync is finished."""
+
+        if self.stopped:
+            return
+        try:
+            response = urllib2.urlopen(self.uri + '/sync/finish')
+            if response.read() != "OK":
+                raise SyncError("Finishing sync: error on server side.")
+        except urllib2.URLError, error:
+            raise SyncError("Finishing syncing: " + str(error))
+        else:
+            self.eman.update_last_sync_event()
 
     def get_media_file(self, fname):
         """Gets media from server."""

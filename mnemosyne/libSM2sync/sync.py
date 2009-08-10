@@ -91,6 +91,16 @@ class EventManager:
         for key in params.keys():
             self.partner[key] = params.get(key)
 
+    def update_partnerships_table(self):
+        """Checks existence of partner in partnerships table."""
+
+        self.database.update_partnerships(self.partner['id'])
+
+    def update_last_sync_event(self):
+        """Updates last sync event for partner."""
+
+        self.database.update_last_sync_event(self.partner['id'])
+
     def get_media_count(self):
         """Returns number of media files in sync history."""
 
@@ -112,8 +122,24 @@ class EventManager:
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
-            yield str(self.create_event_element(event))
+            item = self.create_event_element(event)
+            if item:
+                yield str(item)
         yield str("</history>")
+
+    def get_media_history(self):
+        """Creates media history in XML."""
+
+        history = "<history>"
+        for item in self.database.get_media_history_events(self.partner['id']):
+            if self.stopped:
+                break
+            self.update_events()
+            event = {'event': item[0], 'id': item[1]}
+            if event['event'] in (events.ADDED_MEDIA, events.DELETED_MEDIA):
+                history += str(self.create_media_xml_element(event))
+        history += "</history>"
+        return history
 
     def create_event_element(self, event):
         """Creates XML representation of event."""
@@ -131,10 +157,8 @@ class EventManager:
         elif event_id in (events.ADDED_CARD_TYPE, events.UPDATED_CARD_TYPE, \
             events.DELETED_CARD_TYPE, events.REPETITION):
             return self.create_card_xml_element(event)
-        elif event_id in (events.ADDED_MEDIA, events.DELETED_MEDIA):
-            return self.create_media_xml_element(event)
         else:
-            return ''   # No need XML for others events. ?
+            return None   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
         if event['event'] == events.DELETED_TAG:
@@ -244,20 +268,16 @@ class EventManager:
     def create_media_object(self, item):
         return None
 
-    def apply_media(self, history_fileobj, media_count):
-        """Lazy parses XML-history and apllys media to database."""
+    def apply_media(self, history, media_count):
+        """Parses media XML-history and apllys media to database."""
 
-        context = iterparse(history_fileobj, events=("end",))
         count = 0
         hsize = float(media_count)
-        for ev, child in iterparse(history_fileobj):
-            if self.stopped:
-                return
-            if child.tag == 'i' and child.find('t').text == 'media':
-                fname = child.find('id').text.split('__for__')[0]
-                self.get_media(fname)
-                count += 1
-                self.update_progressbar(count / hsize)
+        for child in ElementTree.fromstring(history).findall('i'):
+            fname = child.find('id').text.split('__for__')[0]
+            self.get_media(fname)
+            count += 1
+            self.update_progressbar(count / hsize)
 
     def apply_history(self, history_fileobj, history_length):
         """Lazy parses XML-history and applys it to database."""
@@ -265,7 +285,7 @@ class EventManager:
         context = iterparse(history_fileobj, events=("end",))
         count = 0
         hsize = float(history_length)
-        for ev, child in iterparse(history_fileobj):
+        for ev, child in context:
             if self.stopped:
                 return
             if child.tag == 'i':
@@ -315,6 +335,4 @@ class EventManager:
 
                 count += 1
                 self.update_progressbar(count / hsize)
-                        
-            self.database.update_last_sync_event(self.partner['id'])
 

@@ -24,7 +24,7 @@ class MyWSGIServer(WSGIServer):
         self.set_app(app)
         self.stopped = False
         self.update_events = None
-        self.timeout = 1
+        self.timeout = 10
 
     def stop(self):
         """Stops server."""
@@ -38,6 +38,7 @@ class MyWSGIServer(WSGIServer):
             self.update_events()
             if select.select([self.socket], [], [], self.timeout)[0]:
                 self.handle_request()
+        self.socket.close()
             
        
 
@@ -167,6 +168,7 @@ class Server(UIMessenger):
             return "CANCEL"
         else:
             self.eman.set_sync_params(client_params)
+            self.eman.update_partnerships_table()
             return "OK"
 
     def get_sync_server_history_media_count(self, environ):
@@ -185,14 +187,27 @@ class Server(UIMessenger):
         """Gets self history events."""
 
         self.update_status("Sending history to client...")
-        return self.eman.get_history()
+        #return self.eman.get_history() lazy
+        shistory = ''
+        #for chunk in self.eman.get_history():
+        #    shistory += chunk
+        #return shistory
+        for chunk in self.eman.get_history():
+            yield (chunk + '\n')
+
+    def get_sync_server_mediahistory(self, environ):
+        """Gets self. media history."""
+
+        self.update_status("Sending media history to client...")
+        return self.eman.get_media_history()
 
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
-
+        
         self.update_status("Receiving client history...")
         try:
             socket = environ['wsgi.input']
+            client_history_length = int(socket.readline())
             client_history = socket.readline()
         except:
             return "CANCEL"
@@ -200,14 +215,22 @@ class Server(UIMessenger):
             self.update_status("Backuping...")
             self.database.make_sync_backup()
             self.update_status("Applying client history...")
-            self.eman.apply_history(client_history)
+            from StringIO import StringIO
+            self.eman.apply_history(\
+                StringIO(client_history), client_history_length)
             self.update_status("Remove backup history...")
             self.database.remove_sync_backup()
-            self.database.con.commit()
-            self.logged = False
-            self.stop()
-            self.show_message("Finished!")
             return "OK"
+
+    def get_sync_finish(self, environ):
+        """Finishes syncing."""
+
+        self.eman.update_last_sync_event()
+        self.logged = False
+        self.stop()
+        self.show_message("Finished!")
+        return "OK"
+        
 
     def get_sync_server_media(self, environ, fname):
         """Gets server media file and sends it to client."""
