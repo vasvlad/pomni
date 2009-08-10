@@ -23,13 +23,15 @@ class PutRequest(urllib2.Request):
 class Client(UIMessenger):
     """Base client class for syncing."""
 
-    def __init__(self, uri, database, controller, config, log, messenger, \
+    def __init__(self, host, port, uri, database, controller, config, log, messenger, \
             events_updater, status_updater, progress_updater):
         UIMessenger.__init__(self, messenger, events_updater, status_updater, \
             progress_updater)
         self.config = config
         self.database = database
         self.log = log
+        self.host = host
+        self.port = port
         self.uri = uri
         self.eman = EventManager(database, log, controller, \
             self.config.mediadir(), self.get_media_file, \
@@ -64,27 +66,27 @@ class Client(UIMessenger):
             self.database.make_sync_backup()
 
             server_media_count = self.get_server_media_count()
-            if server_media_count:
-                self.update_status(\
-                    "Getting media from the server. Please, wait...")
-                server_media_history = self.get_media_history()
-                self.eman.apply_media(server_media_history, server_media_count)
+            #if server_media_count:
+            #    self.update_status(\
+            #        "Getting media from the server. Please, wait...")
+            #    server_media_history = self.get_media_history()
+            #    self.eman.apply_media(server_media_history, server_media_count)
 
-            client_media_count = self.eman.get_media_count()
-            if client_media_count:
-                self.update_status(\
-                    "Sending client media to the server. Please, wait...")
-                client_media_history = self.eman.get_media_history()
-                self.send_client_media(client_media_history, client_media_count)
+            #client_media_count = self.eman.get_media_count()
+            #if client_media_count:
+            #    self.update_status(\
+            #        "Sending client media to the server. Please, wait...")
+            #    client_media_history = self.eman.get_media_history()
+            #    self.send_client_media(client_media_history, client_media_count)
 
-            server_history_length = self.get_server_history_length()
-            server_cards_history = ''
-            if server_history_length:
-                self.update_status(\
-                    "Getting history from the server. Please, wait...")
-                server_cards_history = self.get_server_history(\
-                    server_history_length)
-                #self.eman.apply_history(server_cards_history, server_history_length)
+            #server_history_length = self.get_server_history_length()
+            #server_cards_history = ''
+            #if server_history_length:
+            #    self.update_status(\
+            #        "Getting history from the server. Please, wait...")
+            #    server_cards_history = self.get_server_history(\
+            #        server_history_length)
+            #    #self.eman.apply_history(server_cards_history, server_history_length)
 
             client_history_length = self.eman.get_history_length()
             if client_history_length:
@@ -94,10 +96,10 @@ class Client(UIMessenger):
                 self.send_client_history(\
                     client_cards_history, client_history_length)
     
-            if server_history_length:
-                self.update_status("Applying server history. Please, wait...")
-                self.eman.apply_history(\
-                    server_cards_history, server_history_length)
+            #if server_history_length:
+            #    self.update_status("Applying server history. Please, wait...")
+            #    self.eman.apply_history(\
+            #        server_cards_history, server_history_length)
 
             self.send_finish_request()
 
@@ -203,6 +205,8 @@ class Client(UIMessenger):
             shistory = ''
             chunk = ''
             while chunk != "</history>\n":
+                if self.stopped:
+                    return
                 chunk = response.readline()
                 shistory += chunk
                 count += 1
@@ -227,20 +231,48 @@ class Client(UIMessenger):
     def send_client_history(self, history, history_length):
         """Sends client history to server."""
 
-        if self.stopped:
-            return
-        self.update_events()
-        chistory = ''
+        #if self.stopped:
+        #    return
+        #self.update_events()
+        #chistory = ''
+        #for chunk in history:
+        #    chistory += chunk
+        #data = str(history_length) + '\n' + chistory + '\n'
+        #try:
+        #    response = urllib2.urlopen(PutRequest(\
+        #        self.uri + '/sync/client/history', data))
+        #    if response.read() != "OK":
+        #        raise SyncError("Sending client history: error on server side.")
+        #except urllib2.URLError, error:
+        #    raise SyncError("Sending client history: " + str(error))
+        import httplib
+        conn = httplib.HTTPConnection(self.host, self.port)
+        conn.putrequest('PUT', '/sync/client/history')
+        conn.putheader('User-Agent', 'gzip')
+        conn.putheader('Accept-Encoding', 'gzip')
+        conn.putheader('Connection', 'keep-alive')
+        conn.putheader('Content-Type', 'text/plain')
+        conn.putheader('Transfer-Encoding', 'chunked')
+        conn.putheader('Expect', '100-continue')
+        conn.putheader('Accept', '*/*')
+        conn.endheaders()
+       
+        count = 0
+        hsize = float(history_length + 2)
+
+        # send client history length
+        conn.send('%X\r\n' % len(str(history_length)))
+        conn.send(str(history_length) + '\r\n')
         for chunk in history:
-            chistory += chunk
-        data = str(history_length) + '\n' + chistory + '\n'
-        try:
-            response = urllib2.urlopen(PutRequest(\
-                self.uri + '/sync/client/history', data))
-            if response.read() != "OK":
-                raise SyncError("Sending client history: error on server side.")
-        except urllib2.URLError, error:
-            raise SyncError("Sending client history: " + str(error))
+            if self.stopped:
+                return
+            length = len(chunk)
+            conn.send('%X\r\n' % length)
+            conn.send(chunk + '\r\n')
+            count += 1
+            self.update_progressbar(count / hsize)
+        conn.send('0\r\n\r\n')
+        conn.getresponse().read()
 
     def send_client_media(self, history, media_count):
         """Sends client media to server."""

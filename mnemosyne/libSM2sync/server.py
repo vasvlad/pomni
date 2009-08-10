@@ -207,6 +207,7 @@ class Server(UIMessenger):
         """Gets client history and applys to self."""
         
         self.update_status("Receiving client history...")
+        """
         try:
             socket = environ['wsgi.input']
             client_history_length = int(socket.readline())
@@ -223,6 +224,32 @@ class Server(UIMessenger):
             self.update_status("Removing backuped history. Please, wait...")
             self.database.remove_sync_backup()
             return "OK"
+        """
+        socket = environ['wsgi.input']
+
+        # gets client history size
+        socket.readline()
+        hsize = float(socket.readline()[:-2]) + 2
+
+        count = 0
+        chunk = ''
+        chistory = ''
+        while chunk != "</history>":
+            size = socket.readline()
+            chunk = socket.readline()[:-2]
+            chistory += chunk
+            count += 1
+            self.update_progressbar(count / hsize)
+
+        self.update_status("Backuping. Please, wait...")
+        self.database.make_sync_backup()
+        self.update_status("Applying client history...")
+        from StringIO import StringIO
+        self.eman.apply_history(\
+            StringIO(chistory), int(hsize))
+        self.update_status("Removing backuped history. Please, wait...")
+        self.database.remove_sync_backup()
+        return "OK"
 
     def get_sync_finish(self, environ):
         """Finishes syncing."""
