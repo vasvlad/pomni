@@ -63,31 +63,34 @@ class Client(UIMessenger):
             self.update_status("Backuping...")
             self.database.make_sync_backup()
 
-            media_count = self.get_server_media_count()
-            if media_count:
+            server_media_count = self.get_server_media_count()
+            if server_media_count:
                 self.update_status("Getting media from server. Please, wait...")
                 server_media_history = self.get_media_history()
-                self.eman.apply_media(server_media_history, media_count)
+                self.eman.apply_media(server_media_history, server_media_count)
 
-            history_length = self.get_server_history_length()
-            if history_length:
+            client_media_count = self.eman.get_media_count()
+            if client_media_count:
+                self.update_status("Sending client media. Please, wait...")
+                client_media_history = self.eman.get_media_history()
+                self.send_client_media(client_media_history, client_media_count)
+
+            server_history_length = self.get_server_history_length()
+            if server_history_length:
                 self.update_status(\
                     "Getting history from server. Please, wait...")
                 server_cards_history = self.get_server_history()
-                self.eman.apply_history(server_cards_history, history_length)
+                #self.eman.apply_history(server_cards_history, server_history_length)
 
-            media_count = self.eman.get_media_count()
-            if media_count:
-                self.update_status("Sending client media. Please, wait...")
-                client_media_history = self.eman.get_media_history()
-                self.send_client_media(client_media_history, media_count)
-            
-            history_length = self.eman.get_history_length()
-            if history_length:
+            client_history_length = self.eman.get_history_length()
+            if client_history_length:
                 self.update_status("Sending client history. Please, wait...")
                 client_cards_history = self.eman.get_history()
-                self.send_client_history(client_cards_history, history_length)
+                self.send_client_history(client_cards_history, client_history_length)
     
+            self.update_status("Applying server history. Please, wait...")
+            self.eman.apply_history(server_cards_history, server_history_length)
+
             self.send_finish_request()
 
             if self.stopped:
