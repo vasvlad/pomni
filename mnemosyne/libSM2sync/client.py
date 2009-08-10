@@ -188,7 +188,15 @@ class Client(UIMessenger):
             return
         self.update_events()
         try:
-            return urllib2.urlopen(self.uri + '/sync/server/history')
+            #return urllib2.urlopen(self.uri + '/sync/server/history')
+            response = urllib2.urlopen(self.uri + '/sync/server/history')
+            shistory = ''
+            chunk = response.readline()
+            while chunk != "</history>\n":
+                shistory += chunk
+                chunk = response.readline()
+            import StringIO
+            return StringIO.StringIO(shistory)
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
 
