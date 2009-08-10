@@ -24,7 +24,7 @@ class MyWSGIServer(WSGIServer):
         self.set_app(app)
         self.stopped = False
         self.update_events = None
-        self.timeout = 10
+        self.timeout = 1
 
     def stop(self):
         """Stops server."""
@@ -151,7 +151,7 @@ class Server(UIMessenger):
     def get_sync_server_params(self, environ):
         """Gets server specific params and sends it to client."""
 
-        self.update_status("Sending server params to client...")
+        self.update_status("Sending server params to the client...")
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
             "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
             self.name, self.version, self.protocol, self.cardtypes, \
@@ -174,13 +174,11 @@ class Server(UIMessenger):
     def get_sync_server_history_media_count(self, environ):
         """Gets self media files count."""
 
-        self.update_status("Sending count of media files to client...")
         return str(self.eman.get_media_count())
 
     def get_sync_server_history_length(self, environ):
         """Gets length of self history."""
 
-        self.update_status("Sending history size client...")
         return str(self.eman.get_history_length())
 
     def get_sync_server_history(self, environ):
@@ -190,7 +188,7 @@ class Server(UIMessenger):
         #for chunk in self.eman.get_history():
         #    shistory += chunk
         #return shistory
-        self.update_status("Sending history to client...")
+        self.update_status("Sending history to the client...")
         count = 0
         hsize = float(self.eman.get_history_length() + 2)
         shistory = ''
@@ -216,13 +214,13 @@ class Server(UIMessenger):
         except:
             return "CANCEL"
         else:
-            self.update_status("Backuping...")
+            self.update_status("Backuping. Please, wait...")
             self.database.make_sync_backup()
             self.update_status("Applying client history...")
             from StringIO import StringIO
             self.eman.apply_history(\
                 StringIO(client_history), client_history_length)
-            self.update_status("Remove backup history...")
+            self.update_status("Removing backuped history. Please, wait...")
             self.database.remove_sync_backup()
             return "OK"
 
@@ -232,14 +230,14 @@ class Server(UIMessenger):
         self.eman.update_last_sync_event()
         self.logged = False
         self.stop()
-        self.show_message("Finished!")
+        self.show_message("Sync finished!")
         return "OK"
         
 
     def get_sync_server_media(self, environ, fname):
         """Gets server media file and sends it to client."""
 
-        self.update_status("Sending media to client...")
+        self.update_status("Sending media to the client. Please, wait...")
         try:
             mediafile = open(os.path.join(self.config.mediadir(), fname))
             data = mediafile.read()
@@ -252,7 +250,7 @@ class Server(UIMessenger):
     def put_sync_client_media(self, environ, fname):
         """Gets client media and applys to self."""
 
-        self.update_status("Receiving client media...")
+        self.update_status("Receiving client media. Please, wait...")
         try:
             socket = environ['wsgi.input']
             size = int(environ['CONTENT_LENGTH'])
