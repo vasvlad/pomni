@@ -57,14 +57,17 @@ class SyncWidget(UiComponent):
         self.get_widget("sync_mode_client_passwd_entry"). \
             set_text(self.conf['client_passwd'])
         self.get_widget("sync_mode_client_address_entry"). \
-            set_text("%s:%s" % (self.conf['client_sync_address'], \
-                self.conf['client_sync_port']))
+            set_text(self.conf['client_sync_address'])
+        self.get_widget("sync_mode_client_port_entry"). \
+            set_text(self.conf['client_sync_port'])
         self.get_widget("sync_mode_server_login_entry").\
             set_text(self.conf['server_login'])
         self.get_widget("sync_mode_server_passwd_entry").\
             set_text(self.conf['server_passwd'])
         self.get_widget("sync_mode_server_port_entry").\
             set_text(self.conf['server_sync_port'])
+        self.get_widget("sync_mode_server_address_entry").\
+            set_text(self.conf['server_sync_address'])
 
     def complete_events(self):
         """Defreeze GTK UI."""
@@ -134,7 +137,10 @@ class SyncWidget(UiComponent):
             self.show_or_hide_containers(False, "client")
             login = self.get_widget("sync_mode_client_login_entry").get_text()
             passwd = self.get_widget("sync_mode_client_passwd_entry").get_text()
-            uri = self.get_widget("sync_mode_client_address_entry").get_text()
+            address = self.get_widget(\
+                "sync_mode_client_address_entry").get_text()
+            port = self.get_widget("sync_mode_client_port_entry").get_text()
+            uri = address + ':' + port
             if not uri.startswith("http://"):
                 uri = "http://" + uri
             self.complete_events()
@@ -164,7 +170,7 @@ class SyncWidget(UiComponent):
                 self.main_widget().error_box("Wrong port number!")
             else:
                 ip_address = self.get_widget(\
-                    "sync_mode_server_ip_entry").get_text()
+                    "sync_mode_server_address_entry").get_text()
                 self.show_or_hide_containers(False, "server")
                 try:
                     self.server = Server("%s:%s" % (ip_address, port), \
@@ -209,19 +215,18 @@ class SyncWidget(UiComponent):
             "sync_mode_client_login_entry").get_text()
         self.conf['client_passwd'] = self.get_widget(\
             "sync_mode_client_passwd_entry").get_text()
-        address_port = self.get_widget(\
-            "sync_mode_client_address_entry").get_text().split(':')
-        if len(address_port) == 1:
-            self.main_widget().error_box("Wrong server address!")
-            return
-        self.conf['client_sync_address'] = address_port[0]
-        self.conf['client_sync_port'] = address_port[1]
+        self.conf['client_sync_address'] = self.get_widget(\
+            "sync_mode_client_address_entry").get_text()
+        self.conf['client_sync_port'] = self.get_widget(\
+            "sync_mode_client_port_entry").get_text()
         self.conf['server_login'] = self.get_widget(\
             "sync_mode_server_login_entry").get_text()
         self.conf['server_passwd'] = self.get_widget(\
             "sync_mode_server_passwd_entry").get_text()
         self.conf['server_sync_port'] = self.get_widget(\
             "sync_mode_server_port_entry").get_text()
+        self.conf['server_sync_address'] = self.get_widget(\
+            "sync_mode_server_address_entry").get_text()
         self.conf.save()
         self.main_widget().menu_()
        

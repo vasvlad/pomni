@@ -47,6 +47,7 @@ class ConfigHook(Component):
             "server_login": "mnemosyne",
             "server_passwd": "mnemosyne",
             "server_sync_port": "any port",
+            "server_sync_address": "any address",
             "client_login": "mnemosyne",
             "client_passwd": "mnemosyne",
             "client_sync_port": "any port",
