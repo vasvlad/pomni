@@ -261,18 +261,16 @@ class Client(UIMessenger):
         hsize = float(history_length + 2)
 
         # send client history length
-        conn.send('%X\r\n' % len(str(history_length)))
         conn.send(str(history_length) + '\r\n')
         for chunk in history:
             if self.stopped:
                 return
-            length = len(chunk)
-            conn.send('%X\r\n' % length)
             conn.send(chunk + '\r\n')
             count += 1
             self.update_progressbar(count / hsize)
-        conn.send('0\r\n\r\n')
-        conn.getresponse().read()
+        response = conn.getresponse()
+        #FIXME: analize response for complete on serer side
+        response.read()
 
     def send_client_media(self, history, media_count):
         """Sends client media to server."""
