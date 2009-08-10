@@ -188,7 +188,11 @@ class Server(UIMessenger):
         """Gets self history events."""
 
         self.update_status("Sending history to client...")
-        return self.eman.get_history()
+        #return self.eman.get_history() lazy
+        shistory = ''
+        for chunk in self.eman.get_history():
+            shistory += chunk
+        return shistory
 
     def get_sync_server_mediahistory(self, environ):
         """Gets self. media history."""
