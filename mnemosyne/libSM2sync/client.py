@@ -195,6 +195,7 @@ class Client(UIMessenger):
             while chunk != "</history>\n":
                 shistory += chunk
                 chunk = response.readline()
+            shistory += chunk
             import StringIO
             return StringIO.StringIO(shistory)
         except urllib2.URLError, error:
