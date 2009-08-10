@@ -28,6 +28,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import sys
 import os
 import csv
+import xml.sax
 
 from xml.sax.handler import ContentHandler
 from optparse import OptionParser
@@ -42,22 +43,24 @@ class DKFHandler(ContentHandler):
 
         ContentHandler.__init__(self)
 
-        self.tagnames = ("front", "back")
+        self.tagnames = ("front", "back", "card")
         self.state = dict(zip(self.tagnames, [False] * len(self.tagnames)))
-        self.key = self.transcription = ""
-        self.translation = []
+        self.key = self.translation = ""
         self.output = output
 
     def startElement(self, name, attrs):
         """Callback for the start of an element."""
-        self.state[name] = True
+        if name in self.tagnames:
+            self.state[name] = True
 
     def endElement(self, name):
         """Callback for the end of an element."""
-        self.state[name] = False
-        if name == "back":
+        
+        if name in self.tagnames:
+            self.state[name] = False
+
+        if name == "card":
             self.output.out(self)
-            self.translation = []
 
     def characters(self, content):
         """ callback for character data """
@@ -108,14 +111,24 @@ class TextOut(object):
     def __init__(self, fptr=sys.stdout):
         self.fptr = fptr
     
-    def out(self, row):
-        """Output to fptr."""
-        
-        print 'row:', row[0], row[1]
-        self.fptr.write("%s\n%s" % (row[0], row[1]))
+    #def out(self, row):
+    #    """Output to fptr."""
+    #    
+    #    print 'row:', row[0], row[1]
+    #    self.fptr.write("%s\n%s" % (row[0], row[1]))
+
+    def out(self, obj):
+        """Main entry point. Called from parser."""
+
+        if obj.transcription:
+            self.fptr.write("%s\t[%s]\n%s" % (obj.key, obj.transcription, 
+                            "\n".join(obj.translation)))
+        else:
+            self.fptr.write("%s\t%s\n" % (obj.key, "\n".join(obj.translation)))
+
 
 class MnemosyneOut(Mnemosyne, UiComponent):
-    """ Output to Mnemosyne Db """
+    """Output to Mnemosyne Db."""
     
     def __init__(self, datadir=None, category=None):
         
@@ -150,10 +163,12 @@ class MnemosyneOut(Mnemosyne, UiComponent):
         
         self.category = category #Category(category)
 
-    def out(self, row):
+    def out(self, obj):
         """Main entry point. Create mnemosyne card."""
 
-        data = {"q": row[0], "a": row[1]}
+        #data = {"q": row[0], "a": row[1]}
+        data = {"q": obj.key, "a": obj.translation}
+        print data
 
         self.controller().create_new_cards(data, self.card_type, -1, 
                                             [self.category])
@@ -207,7 +222,7 @@ def main(argv):
     else:
         out = TextOut()
 
-    if opts.iformat = "csv":
+    if opts.iformat == "csv":
         for row in csv.reader(open(argv[1], "r"), delimiter=opts.delimiter):
             print row[0]
             if records:
