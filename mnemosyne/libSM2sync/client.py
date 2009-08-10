@@ -79,7 +79,7 @@ class Client(UIMessenger):
             if server_history_length:
                 self.update_status(\
                     "Getting history from server. Please, wait...")
-                server_cards_history = self.get_server_history()
+                server_cards_history = self.get_server_history(server_history_length)
                 #self.eman.apply_history(server_cards_history, server_history_length)
 
             client_history_length = self.eman.get_history_length()
@@ -181,21 +181,24 @@ class Client(UIMessenger):
         except urllib2.URLError, error:
             raise SyncError("Getting server history length: " + str(error))
 
-    def get_server_history(self):
+    def get_server_history(self, history_length):
         """Connects to server and gets server history."""
 
         if self.stopped:
             return
         self.update_events()
+        count = 0
+        hsize = float(history_length + 2)
         try:
             #return urllib2.urlopen(self.uri + '/sync/server/history')
             response = urllib2.urlopen(self.uri + '/sync/server/history')
             shistory = ''
-            chunk = response.readline()
+            chunk = ''
             while chunk != "</history>\n":
-                shistory += chunk
                 chunk = response.readline()
-            shistory += chunk
+                shistory += chunk
+                count += 1
+                self.update_progressbar(count / hsize)
             import StringIO
             return StringIO.StringIO(shistory)
         except urllib2.URLError, error:
