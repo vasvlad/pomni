@@ -24,7 +24,7 @@ class MyWSGIServer(WSGIServer):
         self.set_app(app)
         self.stopped = False
         self.update_events = None
-        self.timeout = 10
+        self.timeout = 1
 
     def stop(self):
         """Stops server."""
