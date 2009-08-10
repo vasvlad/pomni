@@ -186,13 +186,17 @@ class Server(UIMessenger):
     def get_sync_server_history(self, environ):
         """Gets self history events."""
 
-        self.update_status("Sending history to client...")
         #return self.eman.get_history() lazy
-        shistory = ''
         #for chunk in self.eman.get_history():
         #    shistory += chunk
         #return shistory
+        self.update_status("Sending history to client...")
+        count = 0
+        hsize = float(self.eman.get_history_length() + 2)
+        shistory = ''
         for chunk in self.eman.get_history():
+            count += 1
+            self.update_progressbar(count / hsize)
             yield (chunk + '\n')
 
     def get_sync_server_mediahistory(self, environ):
