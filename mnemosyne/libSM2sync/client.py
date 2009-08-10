@@ -147,6 +147,7 @@ class Client(UIMessenger):
             raise SyncError("Handshaking: " + str(error))
         else:
             self.eman.set_sync_params(sparams)
+            self.eman.update_partnerships_table()
 
     def set_params(self, params):
         """Uses for setting non-default params."""
@@ -243,6 +244,8 @@ class Client(UIMessenger):
                 raise SyncError("Finishing sync: error on server side.")
         except urllib2.URLError, error:
             raise SyncError("Finishing syncing: " + str(error))
+        else:
+            self.eman.update_last_sync_event()
 
     def get_media_file(self, fname):
         """Gets media from server."""

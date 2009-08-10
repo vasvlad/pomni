@@ -91,6 +91,16 @@ class EventManager:
         for key in params.keys():
             self.partner[key] = params.get(key)
 
+    def update_partnerships_table(self):
+        """Checks existence of partner in partnerships table."""
+
+        self.database.update_partnerships(self.partner['id'])
+
+    def update_last_sync_event(self):
+        """Updates last sync event for partner."""
+
+        self.database.update_last_sync_event(self.partner['id'])
+
     def get_media_count(self):
         """Returns number of media files in sync history."""
 
@@ -325,7 +335,4 @@ class EventManager:
 
                 count += 1
                 self.update_progressbar(count / hsize)
-
-        print "Updating partnerships table"
-        self.database.update_last_sync_event(self.partner['id'])
 

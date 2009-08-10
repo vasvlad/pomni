@@ -169,6 +169,7 @@ class Server(UIMessenger):
             return "CANCEL"
         else:
             self.eman.set_sync_params(client_params)
+            self.eman.update_partnerships_table()
             return "OK"
 
     def get_sync_server_history_media_count(self, environ):
@@ -214,13 +215,12 @@ class Server(UIMessenger):
                 StringIO(client_history), client_history_length)
             self.update_status("Remove backup history...")
             self.database.remove_sync_backup()
-            #self.database.con.commit()
-            #self.logged = False
-            #self.stop()
-            #self.show_message("Finished!")
             return "OK"
 
     def get_sync_finish(self, environ):
+        """Finishes syncing."""
+
+        self.eman.update_last_sync_event()
         self.logged = False
         self.stop()
         self.show_message("Finished!")
