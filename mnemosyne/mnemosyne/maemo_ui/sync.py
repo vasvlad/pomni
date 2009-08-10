@@ -144,7 +144,7 @@ class SyncWidget(UiComponent):
             if not uri.startswith("http://"):
                 uri = "http://" + uri
             self.complete_events()
-            self.client = Client(uri, self.database(), self.controller(), \
+            self.client = Client(address, port, uri, self.database(), self.controller(), \
                 self.config(), self.log(), self.show_message, \
                 self.complete_events, self.update_client_status, \
                 self.update_client_progress_bar)
