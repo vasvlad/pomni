@@ -7,8 +7,6 @@ import cgi
 import uuid
 import base64
 import select
-import socket
-socket.setdefaulttimeout(60)
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
@@ -26,7 +24,7 @@ class MyWSGIServer(WSGIServer):
         self.set_app(app)
         self.stopped = False
         self.update_events = None
-        self.timeout = 1
+        self.timeout = 10
 
     def stop(self):
         """Stops server."""
@@ -199,10 +197,11 @@ class Server(UIMessenger):
 
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
-
+        
         self.update_status("Receiving client history...")
         try:
             socket = environ['wsgi.input']
+            client_history_length = int(socket.readline())
             client_history = socket.readline()
         except:
             return "CANCEL"
@@ -210,7 +209,9 @@ class Server(UIMessenger):
             self.update_status("Backuping...")
             self.database.make_sync_backup()
             self.update_status("Applying client history...")
-            self.eman.apply_history(client_history)
+            from StringIO import StringIO
+            self.eman.apply_history(\
+                StringIO(client_history), client_history_length)
             self.update_status("Remove backup history...")
             self.database.remove_sync_backup()
             self.database.con.commit()

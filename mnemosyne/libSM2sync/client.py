@@ -5,8 +5,6 @@ Client.
 import mnemosyne.version
 import base64
 import urllib2
-import socket
-socket.setdefaulttimeout(5)
 import uuid
 import os
 from sync import SyncError
@@ -84,9 +82,13 @@ class Client(UIMessenger):
                 self.update_status("Sending client media. Please, wait...")
                 client_media_history = self.eman.get_media_history()
                 self.send_client_media(client_media_history, media_count)
-
-            #self.update_status("Sending client history. Please, wait...")
-            #self.send_client_history(client_history)
+            
+            history_length = self.eman.get_history_length()
+            if history_length:
+                self.update_status("Sending client history. Please, wait...")
+                client_cards_history = self.eman.get_history()
+                self.send_client_history(client_cards_history, history_length)
+    
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
@@ -197,15 +199,19 @@ class Client(UIMessenger):
         except urllib2.URLError, error:
             raise SyncError("Getting server media history: " + str(error))
        
-    def send_client_history(self, history):
+    def send_client_history(self, history, history_length):
         """Sends client history to server."""
 
         if self.stopped:
             return
         self.update_events()
+        chistory = ''
+        for chunk in history:
+            chistory += chunk
+        data = str(history_length) + '\n' + chistory + '\n'
         try:
             response = urllib2.urlopen(PutRequest(\
-                self.uri + '/sync/client/history', history))
+                self.uri + '/sync/client/history', data))
             if response.read() != "OK":
                 raise SyncError("Sending client history: error on server side.")
         except urllib2.URLError, error:
