@@ -214,11 +214,18 @@ class Server(UIMessenger):
                 StringIO(client_history), client_history_length)
             self.update_status("Remove backup history...")
             self.database.remove_sync_backup()
-            self.database.con.commit()
-            self.logged = False
-            self.stop()
-            self.show_message("Finished!")
+            #self.database.con.commit()
+            #self.logged = False
+            #self.stop()
+            #self.show_message("Finished!")
             return "OK"
+
+    def get_sync_finish(self, environ):
+        self.logged = False
+        self.stop()
+        self.show_message("Finished!")
+        return "OK"
+        
 
     def get_sync_server_media(self, environ, fname):
         """Gets server media file and sends it to client."""

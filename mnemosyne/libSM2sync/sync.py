@@ -325,6 +325,7 @@ class EventManager:
 
                 count += 1
                 self.update_progressbar(count / hsize)
-                        
-            self.database.update_last_sync_event(self.partner['id'])
+
+        print "Updating partnerships table"
+        self.database.update_last_sync_event(self.partner['id'])
 

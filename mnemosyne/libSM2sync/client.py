@@ -89,6 +89,8 @@ class Client(UIMessenger):
                 client_cards_history = self.eman.get_history()
                 self.send_client_history(client_cards_history, history_length)
     
+            self.send_finish_request()
+
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
@@ -229,6 +231,18 @@ class Client(UIMessenger):
             self.send_media_file(fname)
             count += 1
             self.update_progressbar(count / hsize)
+
+    def send_finish_request(self):
+        """Say to server thar sync is finished."""
+
+        if self.stopped:
+            return
+        try:
+            response = urllib2.urlopen(self.uri + '/sync/finish')
+            if response.read() != "OK":
+                raise SyncError("Finishing sync: error on server side.")
+        except urllib2.URLError, error:
+            raise SyncError("Finishing syncing: " + str(error))
 
     def get_media_file(self, fname):
         """Gets media from server."""
