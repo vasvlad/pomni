@@ -12,8 +12,6 @@ from sync import EventManager
 from sync import UIMessenger
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
 from xml.etree import ElementTree
-from xml.etree.cElementTree import iterparse
-from StringIO import StringIO
 
 
 #Overrides get_method method for using PUT request in urllib2
@@ -73,7 +71,8 @@ class Client(UIMessenger):
 
             history_length = self.get_server_history_length()
             if history_length:
-                self.update_status("Getting history from server. Please, wait...")
+                self.update_status(\
+                    "Getting history from server. Please, wait...")
                 server_cards_history = self.get_server_history()
                 self.eman.apply_history(server_cards_history, history_length)
 
