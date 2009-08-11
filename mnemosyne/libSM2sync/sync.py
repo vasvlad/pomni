@@ -34,11 +34,13 @@ class DictClass(dict):
 
 class UIMessenger:
     def __init__(self, messenger, events_updater, status_updater, \
-        progress_updater):
+        show_progressbar, progress_updater, hide_progressbar):
         self.show_message = messenger               #Show UI message
         self.update_events = events_updater         #Update GTK UI
         self.update_status = status_updater         #Update UI status label
+        self.show_progressbar = show_progressbar    #Shows UI ProgressBar
         self.update_progressbar = progress_updater  #UI PorgressBar
+        self.hide_progressbar = hide_progressbar    #Hides UI ProgressBar
 
 
 class EventManager:
@@ -49,7 +51,7 @@ class EventManager:
     """
 
     def __init__(self, database, log, controller, mediadir, get_media, \
-        progressbar_updater, events_updater):
+        ui_controller):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
@@ -64,8 +66,7 @@ class EventManager:
             None, 'deck': None, 'upload': True, 'readonly': False}
         self.mediadir = mediadir
         self.get_media = get_media
-        self.update_progressbar = progressbar_updater
-        self.update_events = events_updater
+        self.ui_controller = ui_controller
         self.stopped = False
 
     def make_backup(self):
@@ -150,7 +151,7 @@ class EventManager:
         for item in self.database.get_media_history_events(self.partner['id']):
             if self.stopped:
                 break
-            self.update_events()
+            self.ui_controller.update_events()
             event = {'event': item[0], 'id': item[1]}
             if event['event'] in (events.ADDED_MEDIA, events.DELETED_MEDIA):
                 history += str(self.create_media_xml_element(event))
@@ -314,10 +315,12 @@ class EventManager:
 
         count = 0
         hsize = float(media_count)
+        self.ui_controller.show_progressbar()
         for child in ElementTree.fromstring(history):
             self.get_media(child.find('id').text.split('__for__')[0])
             count += 1
-            self.update_progressbar(count / hsize)
+            self.ui_controller.update_progressbar(count / hsize)
+        self.ui_controller.hide_progressbar()
 
     def apply_event(self, item):
         """Applys XML-event to database."""
