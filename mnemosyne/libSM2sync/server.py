@@ -10,7 +10,6 @@ import select
 import mnemosyne.version
 from urlparse import urlparse
 from sync import EventManager
-from sync import UIMessenger
 from wsgiref.simple_server import WSGIServer, WSGIRequestHandler
 from sync import PROTOCOL_VERSION
 from sync import N_SIDED_CARD_TYPE
@@ -42,25 +41,22 @@ class MyWSGIServer(WSGIServer):
             
        
 
-class Server(UIMessenger):
+class Server:
     """Base server class for syncing."""
 
     DEFAULT_MIME = "xml/text"
 
-    def __init__(self, uri, database, config, log, messenger, events_updater, \
-                     status_updater, progress_updater):
-        UIMessenger.__init__(self, messenger, events_updater, status_updater, \
-                                progress_updater)
+    def __init__(self, uri, database, config, log, ui_controller):
         params = urlparse(uri)
         self.host = params.scheme
         self.port = int(params.path)
         self.config = config
         self.log = log
+        self.ui_controller = ui_controller
         self.eman = EventManager(database, self.log, None, \
-            self.config.mediadir(), None, self.update_progressbar, \
-            events_updater)
+            self.config.mediadir(), None, self.ui_controller)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
-        self.httpd.update_events = events_updater
+        self.httpd.update_events = self.ui_controller.update_events
         self.login = None
         self.passwd = None
         self.logged = False
@@ -131,7 +127,7 @@ class Server(UIMessenger):
     def start(self):
         """Activate server."""
 
-        self.update_status("Waiting for client connection...")
+        self.ui_controller.update_status("Waiting for client connection...")
         print "Server started at HOST:%s, PORT:%s" % (self.host, self.port)
         self.httpd.serve_forever()
 
@@ -150,7 +146,7 @@ class Server(UIMessenger):
     def get_sync_server_params(self, environ):
         """Gets server specific params and sends it to client."""
 
-        self.update_status(\
+        self.ui_controller.update_status(\
             "Sending server params to the client. Please, wait...")
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
             "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
@@ -160,7 +156,8 @@ class Server(UIMessenger):
     def put_sync_client_params(self, environ):
         """Gets client specific params."""
 
-        self.update_status("Receiving client params. Please, wait...")
+        self.ui_controller.update_status(\
+            "Receiving client params. Please, wait...")
         try:
             socket = environ['wsgi.input']
             client_params = socket.readline()
@@ -188,23 +185,26 @@ class Server(UIMessenger):
         #for chunk in self.eman.get_history():
         #    shistory += chunk
         #return shistory
-        self.update_status("Sending history to the client. Please, wait...")
+        self.ui_controller.update_status(\
+            "Sending history to the client. Please, wait...")
         count = 0
         hsize = float(self.eman.get_history_length() + 2)
-        shistory = ''
+        self.ui_controller.show_progressbar()
         for chunk in self.eman.get_history():
             count += 1
             fraction = count / hsize
-            self.update_progressbar(fraction)
+            self.ui_controller.update_progressbar(fraction)
             if fraction == 1.0:
-                self.update_status(\
+                self.ui_controller.hide_progressbar()
+                self.ui_controller.update_status(\
                     "Waiting for the client complete. Please, wait...")
             yield (chunk + '\n')
 
     def get_sync_server_mediahistory(self, environ):
         """Gets self. media history."""
 
-        self.update_status("Sending media history to client. Please, wait...")
+        self.ui_controller.update_status(\
+            "Sending media history to client. Please, wait...")
         return self.eman.get_media_history()
 
     def put_sync_client_history(self, environ):
@@ -236,17 +236,20 @@ class Server(UIMessenger):
         hsize = float(socket.readline()[:-2]) + 2
 
         self.eman.make_backup()
-        self.update_status("Applying client history. Please, wait...")
+        self.ui_controller.update_status(\
+            "Applying client history. Please, wait...")
 
         chunk = socket.readline()[:-2]  #get "<history>"
         chunk = socket.readline()[:-2]  #get first xml-event
+        self.ui_controller.show_progressbar()
         while chunk != "</history>":
             self.eman.apply_event(chunk)
             chunk = socket.readline()[:-2]
             count += 1
-            self.update_progressbar(count / hsize)
+            self.ui_controller.update_progressbar(count / hsize)
 
-        self.update_status(\
+        self.ui_controller.hide_progressbar()
+        self.ui_controller.update_status(\
             "Waiting for the client complete. Please, wait...")
         return "OK"
 
@@ -254,7 +257,7 @@ class Server(UIMessenger):
         """Finishes syncing."""
 
         self.eman.remove_backup()
-        self.update_status(\
+        self.ui_controller.update_status(\
             "Waiting for the client complete. Please, wait...")
         self.eman.update_last_sync_event()
         self.logged = False
@@ -264,7 +267,8 @@ class Server(UIMessenger):
     def get_sync_server_media(self, environ, fname):
         """Gets server media file and sends it to client."""
 
-        self.update_status("Sending media to the client. Please, wait...")
+        self.ui_controller.update_status(\
+            "Sending media to the client. Please, wait...")
         try:
             mediafile = open(os.path.join(self.config.mediadir(), fname))
             data = mediafile.read()
@@ -277,7 +281,8 @@ class Server(UIMessenger):
     def put_sync_client_media(self, environ, fname):
         """Gets client media and applys to self."""
 
-        self.update_status("Receiving client media. Please, wait...")
+        self.ui_controller.update_status(\
+            "Receiving client media. Please, wait...")
         try:
             socket = environ['wsgi.input']
             size = int(environ['CONTENT_LENGTH'])
