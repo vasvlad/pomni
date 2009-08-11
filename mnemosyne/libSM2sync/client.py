@@ -262,6 +262,8 @@ class Client(UIMessenger):
             conn.send(chunk + '\r\n')
             count += 1
             self.update_progressbar(count / hsize)
+
+        self.update_status("Waiting for the server complete. Please, wait...")
         response = conn.getresponse()
         #FIXME: analize response for complete on serer side
         response.read()
