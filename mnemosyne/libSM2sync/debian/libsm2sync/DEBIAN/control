@@ -1,9 +1,0 @@
-Package: libsm2sync
-Version: 0.1
-Architecture: all
-Maintainer: Max Usachev <maxusachev@gmail.com>
-Installed-Size: 140
-Depends: python2.5
-Section: user/libs
-Priority: optional
-Description: Sync library for SM2 schedulers
