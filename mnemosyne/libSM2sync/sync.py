@@ -66,6 +66,8 @@ class EventManager:
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
+        self.db_path = database._path
+        print "evMan, init, db_path=", self.db_path
         self.log = log
         self.object_factory = {'tag': self.create_tag_object, 'fact': \
             self.create_fact_object, 'card': self.create_card_object, \
@@ -79,6 +81,32 @@ class EventManager:
         self.update_progressbar = progressbar_updater
         self.update_events = events_updater
         self.stopped = False
+
+    def make_backup(self):
+        """Creates backup for current database."""
+
+        backup_file = self.database.make_sync_backup()
+        return backup_file
+
+    def restore_backup(self):
+        """Resotre backuped database."""
+
+        self.database.restore_sync_backup()
+
+    def remove_backup(self):
+        """Remove backup."""
+
+        self.database.remove_sync_backup()
+
+    def replace_database(self, backup_file):
+        self.database.unload()
+        self.database.load(backup_file)
+        print "after loading backup_file _path=", self.database._path
+
+    def return_databases(self):
+        self.database.abandon()
+        self.database.load(self.db_path)
+        print "after returning database _path=", self.database._path
 
     def stop(self):
         self.stopped = True

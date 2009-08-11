@@ -23,17 +23,18 @@ class PutRequest(urllib2.Request):
 class Client(UIMessenger):
     """Base client class for syncing."""
 
-    def __init__(self, host, port, uri, component_manager, database, controller, config, log, messenger, \
+    def __init__(self, host, port, uri, database, controller, config, log, messenger, \
             events_updater, status_updater, progress_updater):
         UIMessenger.__init__(self, messenger, events_updater, status_updater, \
             progress_updater)
         self.config = config
         self.database = database
+        print "Sync_client. db_path=", self.database._path
         self.log = log
         self.host = host
         self.port = port
         self.uri = uri
-        self.eman = EventManager(component_manager, database, log, controller, \
+        self.eman = EventManager(database, log, controller, \
             self.config.mediadir(), self.get_media_file, \
             self.update_progressbar, events_updater)
         self.login = ''
@@ -56,14 +57,15 @@ class Client(UIMessenger):
         """Start syncing."""
        
         try:
-            #self.update_status("Authorization...")
-            #self.login_()
+            self.update_status("Authorization...")
+            self.login_()
 
-            #self.update_status("Handshaking...")
-            #self.handshake()
+            self.update_status("Handshaking...")
+            self.handshake()
 
             self.update_status("Backuping...")
-            self.database.make_sync_backup()
+            backup_file = self.eman.make_backup()
+            print "backup_file=", backup_file
 
             #server_media_count = self.get_server_media_count()
             #if server_media_count:
@@ -79,28 +81,28 @@ class Client(UIMessenger):
             #    client_media_history = self.eman.get_media_history()
             #    self.send_client_media(client_media_history, client_media_count)
 
-            #server_history_length = self.get_server_history_length()
-            #server_cards_history = ''
-            #if server_history_length:
-            #    self.update_status("Applying server history. Please, wait...")
-            #    server_cards_history = self.get_server_history(\
-            #        server_history_length)
+            server_history_length = self.get_server_history_length()
+            server_cards_history = ''
+            if server_history_length:
+                self.update_status("Applying server history. Please, wait...")
+                server_cards_history = self.get_server_history(\
+                    server_history_length)
 
             # save current database and open backuped database
             # to get history for server
-            #self.eman.replace_database(backup_file)
+            self.eman.replace_database(backup_file)
             
         
-            #client_history_length = self.eman.get_history_length()
-            #if client_history_length:
-            #    self.update_status(\
-            #        "Sending client history to the server. Please, wait...")
-            #    client_cards_history = self.eman.get_history()
-            #    self.send_client_history(\
-            #        client_cards_history, client_history_length)
+            client_history_length = self.eman.get_history_length()
+            if client_history_length:
+                self.update_status(\
+                    "Sending client history to the server. Please, wait...")
+                client_cards_history = self.eman.get_history()
+                self.send_client_history(\
+                    client_cards_history, client_history_length)
 
             # close temp database and return worked database
-            #self.eman.return_databases()
+            self.eman.return_databases()
     
             self.send_finish_request()
 
@@ -109,10 +111,10 @@ class Client(UIMessenger):
         except SyncError, exception:
             self.show_message("Error: " + str(exception))
             self.update_status("Restoring backuped database. Please, wait...")
-            self.database.restore_sync_backup()
+            self.eman.restore_backup()
         else:
             self.update_status("Removing backuped database. Please, wait...")
-            self.database.remove_sync_backup()
+            self.eman.remove_backup()
             self.show_message("Sync finished!")
 
     def stop(self):
