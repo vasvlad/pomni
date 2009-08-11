@@ -23,7 +23,7 @@ class PutRequest(urllib2.Request):
 class Client(UIMessenger):
     """Base client class for syncing."""
 
-    def __init__(self, host, port, uri, database, controller, config, log, messenger, \
+    def __init__(self, host, port, uri, component_manager, database, controller, config, log, messenger, \
             events_updater, status_updater, progress_updater):
         UIMessenger.__init__(self, messenger, events_updater, status_updater, \
             progress_updater)
@@ -33,7 +33,7 @@ class Client(UIMessenger):
         self.host = host
         self.port = port
         self.uri = uri
-        self.eman = EventManager(database, log, controller, \
+        self.eman = EventManager(component_manager, database, log, controller, \
             self.config.mediadir(), self.get_media_file, \
             self.update_progressbar, events_updater)
         self.login = ''
@@ -56,16 +56,16 @@ class Client(UIMessenger):
         """Start syncing."""
        
         try:
-            self.update_status("Authorization...")
-            self.login_()
+            #self.update_status("Authorization...")
+            #self.login_()
 
-            self.update_status("Handshaking...")
-            self.handshake()
+            #self.update_status("Handshaking...")
+            #self.handshake()
 
             self.update_status("Backuping...")
             self.database.make_sync_backup()
 
-            server_media_count = self.get_server_media_count()
+            #server_media_count = self.get_server_media_count()
             #if server_media_count:
             #    self.update_status(\
             #        "Getting media from the server. Please, wait...")
@@ -82,25 +82,26 @@ class Client(UIMessenger):
             #server_history_length = self.get_server_history_length()
             #server_cards_history = ''
             #if server_history_length:
-            #    self.update_status(\
-            #        "Getting history from the server. Please, wait...")
+            #    self.update_status("Applying server history. Please, wait...")
             #    server_cards_history = self.get_server_history(\
             #        server_history_length)
-            #    #self.eman.apply_history(server_cards_history, server_history_length)
 
-            client_history_length = self.eman.get_history_length()
-            if client_history_length:
-                self.update_status(\
-                    "Sending client history to the server. Please, wait...")
-                client_cards_history = self.eman.get_history()
-                self.send_client_history(\
-                    client_cards_history, client_history_length)
+            # save current database and open backuped database
+            # to get history for server
+            #self.eman.replace_database(backup_file)
+            
+        
+            #client_history_length = self.eman.get_history_length()
+            #if client_history_length:
+            #    self.update_status(\
+            #        "Sending client history to the server. Please, wait...")
+            #    client_cards_history = self.eman.get_history()
+            #    self.send_client_history(\
+            #        client_cards_history, client_history_length)
+
+            # close temp database and return worked database
+            #self.eman.return_databases()
     
-            #if server_history_length:
-            #    self.update_status("Applying server history. Please, wait...")
-            #    self.eman.apply_history(\
-            #        server_cards_history, server_history_length)
-
             self.send_finish_request()
 
             if self.stopped:
@@ -198,21 +199,19 @@ class Client(UIMessenger):
             return
         self.update_events()
         count = 0
-        hsize = float(history_length + 2)
+        hsize = float(history_length)
         try:
             #return urllib2.urlopen(self.uri + '/sync/server/history')
             response = urllib2.urlopen(self.uri + '/sync/server/history')
-            shistory = ''
-            chunk = ''
-            while chunk != "</history>\n":
+            response.readline() # get "<history>"
+            chunk = response.readline()[:-1] #get the first item
+            while chunk != "</history>":
                 if self.stopped:
                     return
-                chunk = response.readline()
-                shistory += chunk
+                self.eman.apply_event(chunk)
+                chunk = response.readline()[:-1]
                 count += 1
                 self.update_progressbar(count / hsize)
-            import StringIO
-            return StringIO.StringIO(shistory)
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
 
