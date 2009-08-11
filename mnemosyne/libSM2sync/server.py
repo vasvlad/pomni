@@ -150,7 +150,8 @@ class Server(UIMessenger):
     def get_sync_server_params(self, environ):
         """Gets server specific params and sends it to client."""
 
-        self.update_status("Sending server params to the client...")
+        self.update_status(\
+            "Sending server params to the client. Please, wait...")
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
             "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
             self.name, self.version, self.protocol, self.cardtypes, \
@@ -159,7 +160,7 @@ class Server(UIMessenger):
     def put_sync_client_params(self, environ):
         """Gets client specific params."""
 
-        self.update_status("Receiving client params...")
+        self.update_status("Receiving client params. Please, wait...")
         try:
             socket = environ['wsgi.input']
             client_params = socket.readline()
@@ -187,7 +188,7 @@ class Server(UIMessenger):
         #for chunk in self.eman.get_history():
         #    shistory += chunk
         #return shistory
-        self.update_status("Sending history to the client...")
+        self.update_status("Sending history to the client. Please, wait...")
         count = 0
         hsize = float(self.eman.get_history_length() + 2)
         shistory = ''
@@ -203,7 +204,7 @@ class Server(UIMessenger):
     def get_sync_server_mediahistory(self, environ):
         """Gets self. media history."""
 
-        self.update_status("Sending media history to client...")
+        self.update_status("Sending media history to client. Please, wait...")
         return self.eman.get_media_history()
 
     def put_sync_client_history(self, environ):
@@ -230,14 +231,12 @@ class Server(UIMessenger):
         """
         socket = environ['wsgi.input']
 
+        count = 0
         # gets client history size
         hsize = float(socket.readline()[:-2]) + 2
 
-        count = 0
-
-        self.update_status("Backuping. Please, wait...")
         self.eman.make_backup()
-        self.update_status("Applying client history...")
+        self.update_status("Applying client history. Please, wait...")
 
         chunk = socket.readline()[:-2]  #get "<history>"
         chunk = socket.readline()[:-2]  #get first xml-event
@@ -247,6 +246,8 @@ class Server(UIMessenger):
             count += 1
             self.update_progressbar(count / hsize)
 
+        self.update_status(\
+            "Waiting for the client complete. Please, wait...")
         return "OK"
 
     def get_sync_finish(self, environ):
