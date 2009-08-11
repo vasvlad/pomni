@@ -54,10 +54,9 @@ class Server(UIMessenger):
         params = urlparse(uri)
         self.host = params.scheme
         self.port = int(params.path)
-        self.database = database
         self.config = config
         self.log = log
-        self.eman = EventManager(self.database, self.log, None, \
+        self.eman = EventManager(database, self.log, None, \
             self.config.mediadir(), None, self.update_progressbar, \
             events_updater)
         self.httpd = MyWSGIServer(self.host, self.port, self.wsgi_app)
@@ -237,7 +236,7 @@ class Server(UIMessenger):
         count = 0
 
         self.update_status("Backuping. Please, wait...")
-        self.database.make_sync_backup()
+        self.eman.make_backup()
         self.update_status("Applying client history...")
 
         chunk = socket.readline()[:-2]  #get "<history>"
@@ -253,7 +252,7 @@ class Server(UIMessenger):
     def get_sync_finish(self, environ):
         """Finishes syncing."""
 
-        self.database.remove_sync_backup()
+        self.eman.remove_backup()
         self.update_status(\
             "Waiting for the client complete. Please, wait...")
         self.eman.update_last_sync_event()
