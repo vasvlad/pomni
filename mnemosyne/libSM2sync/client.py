@@ -23,13 +23,11 @@ class PutRequest(urllib2.Request):
 class Client(UIMessenger):
     """Base client class for syncing."""
 
-    def __init__(self, host, port, uri, database, controller, config, log, messenger, \
-            events_updater, status_updater, progress_updater):
+    def __init__(self, host, port, uri, database, controller, config, log, \
+        messenger, events_updater, status_updater, progress_updater):
         UIMessenger.__init__(self, messenger, events_updater, status_updater, \
             progress_updater)
         self.config = config
-        self.database = database
-        print "Sync_client. db_path=", self.database._path
         self.log = log
         self.host = host
         self.port = port
@@ -57,32 +55,29 @@ class Client(UIMessenger):
         """Start syncing."""
        
         try:
-            self.update_status("Authorization...")
+            self.update_status("Authorization. Please, wait...")
             self.login_()
 
-            self.update_status("Handshaking...")
+            self.update_status("Handshaking. Please, wait...")
             self.handshake()
 
-            self.update_status("Backuping...")
+            self.update_status("Creating backup. Please, wait...")
             backup_file = self.eman.make_backup()
-            print "backup_file=", backup_file
 
-            #server_media_count = self.get_server_media_count()
-            #if server_media_count:
-            #    self.update_status(\
-            #        "Getting media from the server. Please, wait...")
-            #    server_media_history = self.get_media_history()
-            #    self.eman.apply_media(server_media_history, server_media_count)
+            server_media_count = self.get_server_media_count()
+            if server_media_count:
+                self.update_status("Applying server media. Please, wait...")
+                server_media_history = self.get_media_history()
+                self.eman.apply_media(server_media_history, server_media_count)
 
-            #client_media_count = self.eman.get_media_count()
-            #if client_media_count:
-            #    self.update_status(\
-            #        "Sending client media to the server. Please, wait...")
-            #    client_media_history = self.eman.get_media_history()
-            #    self.send_client_media(client_media_history, client_media_count)
+            client_media_count = self.eman.get_media_count()
+            if client_media_count:
+                self.update_status(\
+                    "Sending client media to the server. Please, wait...")
+                client_media_history = self.eman.get_media_history()
+                self.send_client_media(client_media_history, client_media_count)
 
             server_history_length = self.get_server_history_length()
-            server_cards_history = ''
             if server_history_length:
                 self.update_status("Applying server history. Please, wait...")
                 server_cards_history = self.get_server_history(\
@@ -92,7 +87,6 @@ class Client(UIMessenger):
             # to get history for server
             self.eman.replace_database(backup_file)
             
-        
             client_history_length = self.eman.get_history_length()
             if client_history_length:
                 self.update_status(\
@@ -103,6 +97,8 @@ class Client(UIMessenger):
 
             # close temp database and return worked database
             self.eman.return_databases()
+
+            self.update_status("Waiting for the server complete. Please, wait...")
     
             self.send_finish_request()
 
