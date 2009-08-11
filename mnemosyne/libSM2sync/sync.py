@@ -273,8 +273,12 @@ class EventManager:
 
         def get_rep_value(value):
             """Return value for repetition event."""
-            try: return int(value)
-            except: return ''
+            #try: return int(value)
+            #except: return ''
+            if value == "None":
+                return ''
+            else:
+                return int(value)
         return DictClass({'id': item.find('id').text, 'fact_view': DictClass(\
             {'id': item.find('fvid').text}), 'fact': self.database.get_fact(\
             item.find('fid').text, False), 'tags': set(self.database.\
