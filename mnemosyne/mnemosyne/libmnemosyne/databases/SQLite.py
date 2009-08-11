@@ -953,6 +953,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         self.unload()
         shutil.copy(current, backup)
         self.load(current)
+        return backup
 
     def restore_sync_backup(self):
         current, backup = self.get_sync_backup_paths()
