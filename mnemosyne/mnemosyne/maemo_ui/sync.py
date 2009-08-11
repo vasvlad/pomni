@@ -52,6 +52,12 @@ class SyncWidget(UiComponent):
                 "start_server_sync")]))
         self.conf = self.config()
         self.get_widget = self.w_tree.get_widget
+
+        self.client_progressbar = self.get_widget(\
+            "sync_mode_client_progressbar")
+        self.server_progressbar = self.get_widget(\
+            "sync_mode_server_progressbar")
+
         self.get_widget("sync_mode_client_login_entry"). \
             set_text(self.conf['client_login'])
         self.get_widget("sync_mode_client_passwd_entry"). \
@@ -97,8 +103,8 @@ class SyncWidget(UiComponent):
     def update_client_progress_bar(self, fraction):
         """Updates client progress bar indicator."""
 
-        self.get_widget("sync_mode_client_progressbar").set_fraction(fraction)
-        self.get_widget("sync_mode_client_progressbar").show()
+        self.client_progressbar.set_fraction(fraction)
+        self.client_progressbar.show()
         self.complete_events()
 
     def update_server_progress_bar(self, fraction):
