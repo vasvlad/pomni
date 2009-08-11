@@ -11,25 +11,12 @@ from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.databases.SQLite_logging \
     import SQLiteLogging as events
 from xml.etree import ElementTree
-from xml.etree.cElementTree import iterparse
 import os
-
-from threading import Thread
-from functools import wraps
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
 VICE_VERSA_CARD_TYPE = 2
 N_SIDED_CARD_TYPE = 3
-
-def run_async(func):
-    @wraps(func)
-    def async_func(*args, **kwargs):
-        func_hl = Thread(target = func, args = args, kwargs = kwargs)
-        func_hl.start()
-        return func_hl
-
-    return async_func
 
 
 class SyncError(Exception):
@@ -67,7 +54,6 @@ class EventManager:
         self.controller = controller
         self.database = database
         self.db_path = database._path
-        print "evMan, init, db_path=", self.db_path
         self.log = log
         self.object_factory = {'tag': self.create_tag_object, 'fact': \
             self.create_fact_object, 'card': self.create_card_object, \
@@ -85,8 +71,7 @@ class EventManager:
     def make_backup(self):
         """Creates backup for current database."""
 
-        backup_file = self.database.make_sync_backup()
-        return backup_file
+        return self.database.make_sync_backup()
 
     def restore_backup(self):
         """Resotre backuped database."""
@@ -99,16 +84,20 @@ class EventManager:
         self.database.remove_sync_backup()
 
     def replace_database(self, backup_file):
+        """Temporary replace current database by backuped."""
+
         self.database.unload()
         self.database.load(backup_file)
-        print "after loading backup_file _path=", self.database._path
 
     def return_databases(self):
+        """Replace current backuped database by native database."""
+
         self.database.abandon()
         self.database.load(self.db_path)
-        print "after returning database _path=", self.database._path
 
     def stop(self):
+        """Stops any work."""
+
         self.stopped = True
 
     def set_sync_params(self, partner_params):
@@ -146,7 +135,6 @@ class EventManager:
         for item in self.database.get_history_events(self.partner['id']):
             if self.stopped:
                 break
-            self.update_events()
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
@@ -189,6 +177,8 @@ class EventManager:
             return None   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
+        """Creates Tag XML representation."""
+
         if event['event'] == events.DELETED_TAG:
             # we only transfer tag id, that should be deleted.
             return "<i><t>tag</t><ev>%s</ev><id>%s</id></i>" % \
@@ -200,6 +190,8 @@ class EventManager:
             (event['event'], tag.id, tag.name)
 
     def create_fact_xml_element(self, event):
+        """Creates Fact XML representation."""
+
         if event['event'] == events.DELETED_FACT:
             # we only transfer fact id, that should be deleted.
             return "<i><t>fact</t><ev>%s</ev><id>%s</id></i>" % \
@@ -217,6 +209,8 @@ class EventManager:
                 fact._id)
 
     def create_card_xml_element(self, event):
+        """Creates Card XML representation."""
+
         if event['event'] == events.DELETED_CARD:
             # we only transfer card id, that shoild be deleted.
             return "<i><t>card</t><ev>%s</ev><id>%s</id></i>" % \
@@ -236,6 +230,8 @@ class EventManager:
                 event['t_time'], event['time'], card._id)
         
     def create_card_type_xml_element(self, event):
+        """Creates CardType XML representation."""
+
         cardtype = self.database.get_card_type(event['id'], False)
         fields = [key for key, value in cardtype.fields]
         return "<i><t>ctype</t><ev>%s</ev><id>%s</id><name>%s</name><f>%s</f>"\
@@ -244,6 +240,8 @@ class EventManager:
         ','.join(cardtype.unique_fields), '', '')
 
     def create_media_xml_element(self, event):
+        """Creates Media XML representation."""
+
         fname = event['id'].split('__for__')[0]
         if os.path.exists(os.path.join(self.mediadir, fname)):
             return "<i><t>media</t><ev>%s</ev><id>%s</id></i>" % \
@@ -252,9 +250,13 @@ class EventManager:
             return ""
 
     def create_tag_object(self, item):
+        """Creates Tag object from XML representation."""
+
         return Tag(item.find('name').text, item.find('id').text)
 
     def create_fact_object(self, item):
+        """Creates Fact object from XML representation."""
+
         dkeys = item.find('dk').text.split(',')
         dvals = [item.find("dv%s" % num).text for num in range(len(dkeys))]
         fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
@@ -267,6 +269,8 @@ class EventManager:
         return fact
 
     def create_card_object(self, item):
+        """Creates Card object from XML representation."""
+
         def get_rep_value(value):
             """Return value for repetition event."""
             try: return int(value)
@@ -288,12 +292,17 @@ class EventManager:
             item.find('_id').text})
 
     def create_cardtype_object(self, item):
+        """Creates CardType object from XML representation."""
+
         return DictClass({'id': item.find('id').text, 'name': \
             item.find('name').text, 'fields': item.find('f').text.split(','), \
             'keyboard_shortcuts': {}, 'extra_data': {}, 'unique_fields': \
             item.find('uf').text.split(',')})
 
     def create_media_object(self, item):
+        """Creates Media object from XML representation."""
+
+        # Media object = mediafile
         return None
 
     def apply_media(self, history, media_count):
@@ -301,77 +310,10 @@ class EventManager:
 
         count = 0
         hsize = float(media_count)
-        for child in ElementTree.fromstring(history).findall('i'):
-            fname = child.find('id').text.split('__for__')[0]
-            self.get_media(fname)
+        for child in ElementTree.fromstring(history):
+            self.get_media(child.find('id').text.split('__for__')[0])
             count += 1
             self.update_progressbar(count / hsize)
-
-    def apply_history(self, history_fileobj, history_length):
-        """Lazy parses XML-history and applys it to database."""
-       
-        context = iterparse(history_fileobj, events=("end",))
-        count = 0
-        hsize = float(history_length)
-        for ev, child in context:
-            if self.stopped:
-                return
-            if child.tag == 'i':
-                event = int(child.find('ev').text)
-                if event == events.ADDED_FACT:
-                    fact = self.create_fact_object(child)
-                    if not self.database.duplicates_for_fact(fact):
-                        self.database.add_fact(fact)
-                        del fact
-                        #print "adding fact..."
-                elif event == events.UPDATED_FACT:
-                    fact = self.create_fact_object(child)
-                    self.database.update_fact(fact)
-                    del fact
-                    #print "updating fact..."
-                elif event == events.DELETED_FACT:
-                    fact = self.database.get_fact(child.find('id').text, False)
-                    if fact:
-                        self.database.delete_fact_and_related_data(fact)
-                        del fact
-                        #print "deleting fact..."
-                elif event == events.ADDED_TAG:
-                    tag = self.create_tag_object(child)
-                    if not tag.name in self.database.tag_names():
-                        self.database.add_tag(tag)
-                        del tag
-                        #print "adding tag..."
-                elif event == events.UPDATED_TAG:
-                    #print "updating tag..."
-                    tag = self.create_tag_object(child)
-                    self.database.update_tag(tag)
-                    del tag
-                elif event == events.ADDED_CARD:
-                    if not self.database.has_card_with_external_id(\
-                        child.find('id').text):
-                        card = self.create_card_object(child)
-                        self.database.add_card(card)
-                        self.log.added_card(card)
-                        del card
-                        #print "adding card..."
-                elif event == events.UPDATED_CARD:
-                    card = self.create_card_object(child)
-                    self.database.update_card(card)
-                    del card
-                    #print "updating card..."
-                elif event == events.REPETITION:
-                    card = self.create_card_object(child)
-                    self.database.log_repetition(card.timestamp, card.id, \
-                    card.grade, card.easiness, card.acq_reps, card.ret_reps, \
-                    card.lapses, card.acq_reps_since_lapse, \
-                    card.ret_reps_since_lapse, card.scheduled_interval, \
-                    card.actual_interval, card.new_interval, card.thinking_time)
-                    del card
-                    #print "repetiting..."
-
-                count += 1
-                self.update_progressbar(count / hsize)
-
 
     def apply_event(self, item):
         """Applys XML-event to database."""
@@ -385,8 +327,7 @@ class EventManager:
             if not self.database.duplicates_for_fact(fact):
                 self.database.add_fact(fact)
         elif event == events.UPDATED_FACT:
-            fact = self.create_fact_object(child)
-            self.database.update_fact(fact)
+            self.database.update_fact(self.create_fact_object(child))
         elif event == events.DELETED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
@@ -396,8 +337,7 @@ class EventManager:
             if not tag.name in self.database.tag_names():
                 self.database.add_tag(tag)
         elif event == events.UPDATED_TAG:
-            tag = self.create_tag_object(child)
-            self.database.update_tag(tag)
+            self.database.update_tag(self.create_tag_object(child))
         elif event == events.ADDED_CARD:
             if not self.database.has_card_with_external_id(\
                 child.find('id').text):
@@ -405,8 +345,7 @@ class EventManager:
                 self.database.add_card(card)
                 self.log.added_card(card)
         elif event == events.UPDATED_CARD:
-            card = self.create_card_object(child)
-            self.database.update_card(card)
+            self.database.update_card(self.create_card_object(child))
         elif event == events.REPETITION:
             card = self.create_card_object(child)
             self.database.log_repetition(card.timestamp, card.id, \
