@@ -67,15 +67,15 @@ class Client(UIMessenger):
             server_media_count = self.get_server_media_count()
             if server_media_count:
                 self.update_status("Applying server media. Please, wait...")
-                server_media_history = self.get_media_history()
-                self.eman.apply_media(server_media_history, server_media_count)
+                self.eman.apply_media(self.get_media_history(), \
+                    server_media_count)
 
             client_media_count = self.eman.get_media_count()
             if client_media_count:
                 self.update_status(\
                     "Sending client media to the server. Please, wait...")
-                client_media_history = self.eman.get_media_history()
-                self.send_client_media(client_media_history, client_media_count)
+                self.send_client_media(self.eman.get_media_history(), \
+                    client_media_count)
 
             server_history_length = self.get_server_history_length()
             if server_history_length:
@@ -91,9 +91,8 @@ class Client(UIMessenger):
             if client_history_length:
                 self.update_status(\
                     "Sending client history to the server. Please, wait...")
-                client_cards_history = self.eman.get_history()
-                self.send_client_history(\
-                    client_cards_history, client_history_length)
+                self.send_client_history(self.eman.get_history(), \
+                    client_history_length)
 
             # close temp database and return worked database
             self.eman.return_databases()
@@ -105,11 +104,9 @@ class Client(UIMessenger):
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
-            self.show_message("Error: " + str(exception))
-            self.update_status("Restoring backuped database. Please, wait...")
             self.eman.restore_backup()
+            self.show_message("Error: " + str(exception))
         else:
-            self.update_status("Removing backuped database. Please, wait...")
             self.eman.remove_backup()
             self.show_message("Sync finished!")
 
@@ -202,12 +199,12 @@ class Client(UIMessenger):
             #return urllib2.urlopen(self.uri + '/sync/server/history')
             response = urllib2.urlopen(self.uri + '/sync/server/history')
             response.readline() # get "<history>"
-            chunk = response.readline()[:-1] #get the first item
-            while chunk != "</history>":
+            chunk = response.readline() #get the first item
+            while chunk != "</history>\n":
                 if self.stopped:
                     return
                 self.eman.apply_event(chunk)
-                chunk = response.readline()[:-1]
+                chunk = response.readline()
                 count += 1
                 self.update_progressbar(count / hsize)
         except urllib2.URLError, error:
@@ -277,8 +274,7 @@ class Client(UIMessenger):
         count = 0
         hsize = float(media_count)
         for child in ElementTree.fromstring(history).findall('i'):
-            fname = child.find('id').text.split('__for__')[0]
-            self.send_media_file(fname)
+            self.send_media_file(child.find('id').text.split('__for__')[0])
             count += 1
             self.update_progressbar(count / hsize)
 
@@ -288,8 +284,7 @@ class Client(UIMessenger):
         if self.stopped:
             return
         try:
-            response = urllib2.urlopen(self.uri + '/sync/finish')
-            if response.read() != "OK":
+            if urllib2.urlopen(self.uri + '/sync/finish').read() != "OK":
                 raise SyncError("Finishing sync: error on server side.")
         except urllib2.URLError, error:
             raise SyncError("Finishing syncing: " + str(error))
