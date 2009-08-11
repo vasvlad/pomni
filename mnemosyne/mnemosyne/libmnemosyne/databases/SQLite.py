@@ -964,7 +964,8 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
 
     def remove_sync_backup(self):
         current, backup = self.get_sync_backup_paths()
-        os.remove(backup)
+        if os.path.exists(backup):
+            os.remove(backup)
         
 
 
