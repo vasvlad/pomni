@@ -194,7 +194,11 @@ class Server(UIMessenger):
         shistory = ''
         for chunk in self.eman.get_history():
             count += 1
-            self.update_progressbar(count / hsize)
+            fraction = count / hsize
+            self.update_progressbar(fraction)
+            if fraction == 1.0:
+                self.update_status(\
+                    "Waiting for the client complete. Please, wait...")
             yield (chunk + '\n')
 
     def get_sync_server_mediahistory(self, environ):
@@ -231,14 +235,12 @@ class Server(UIMessenger):
         hsize = float(socket.readline()[:-2]) + 2
 
         count = 0
-        chunk = ''
 
         self.update_status("Backuping. Please, wait...")
         self.database.make_sync_backup()
         self.update_status("Applying client history...")
 
         chunk = socket.readline()[:-2]  #get "<history>"
-
         chunk = socket.readline()[:-2]  #get first xml-event
         while chunk != "</history>":
             self.eman.apply_event(chunk)
@@ -246,20 +248,18 @@ class Server(UIMessenger):
             count += 1
             self.update_progressbar(count / hsize)
 
-        self.update_status("Removing backuped history. Please, wait...")
-        self.database.remove_sync_backup()
-        self.update_status("Waiting for client complete...")
         return "OK"
 
     def get_sync_finish(self, environ):
         """Finishes syncing."""
 
+        self.database.remove_sync_backup()
+        self.update_status(\
+            "Waiting for the client complete. Please, wait...")
         self.eman.update_last_sync_event()
         self.logged = False
         self.stop()
-        self.show_message("Sync finished!")
         return "OK"
-        
 
     def get_sync_server_media(self, environ, fname):
         """Gets server media file and sends it to client."""
