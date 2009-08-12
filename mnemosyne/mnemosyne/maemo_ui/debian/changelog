@@ -1,3 +1,12 @@
+mnemosyne (2.0.0~beta3) unstable; urgency=low
+
+  * implemented synchronization (Max)
+  * implemented Text-To-Speech support (Max)
+  * Fix: reimplemented callback connecting/disconnecting for dialogs
+  * Added dependency to python-libsm2sync
+
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 12 Aug 2009 23:14:36 +0300
+
 mnemosyne (2.0.0~beta2) unstable; urgency=low
 
   * Crash fix: reset review controller before swithcing 
