@@ -662,7 +662,7 @@ widget "*.category_name_w" style "category-label"
 
 
 #----------------------------- Config mode ------------------
-style "settings-container" {
+style "config-mode-toolbar-container" {
     engine "pixmap" {
         image {
             function = SHADOW
@@ -671,7 +671,7 @@ style "settings-container" {
         }
     }
 }
-widget "*.config_mode_toolbar_container" style "settings-container"
+widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
 
 style "labels-container" {
     engine "pixmap" {
@@ -734,21 +734,21 @@ widget "*.config_mode_tts_lang_next_button" style "next-button"
 
 style "config-scrollbars" {
     GtkScrollbar::fixed-slider-length = 1
-    GtkScrollbar::min-slider-length = 64
-    GtkRange::slider-width = 64
+    GtkScrollbar::min-slider-length = 34
+    GtkRange::slider-width = 34
     GtkRange::stepper-size = 64
     GtkRange::trough-border = 0
     engine "pixmap" {
         image {
             function = SLIDER
-            file = "target.png"
+            file = "slide_pin.png"
             border = {0,0,0,0}
             stretch = TRUE
         }
         image {
             function = BOX
             orientation = HORIZONTAL
-            file = "back_for_scroll.png"
+            file = "slide_line.png"
             border = {59,59,0,0}
             stretch = TRUE
         }
@@ -778,7 +778,7 @@ style "increase-font-size-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "increase_font_size.png"
+            file = "arrow_right.png"
         }
     }
 }
@@ -788,7 +788,7 @@ style "decrease-font-size-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "decrease_font_size.png"
+            file = "arrow_left.png"
         }
     }
 }
@@ -810,7 +810,7 @@ style "config-checkboxes" {
             function = BOX
             state = NORMAL
             shadow = OUT
-            file = "unchecked.png"
+            file = "card_background.png"
         }
         image {
             function = BOX
@@ -822,7 +822,7 @@ style "config-checkboxes" {
             function = BOX
             state = ACTIVE
             shadow = OUT
-            file = "unchecked.png"
+            file = "card_background.png"
         }
         image {
             function = BOX
@@ -834,7 +834,7 @@ style "config-checkboxes" {
             function = BOX
             state = PRELIGHT
             shadow = OUT
-            file = "unchecked.png"
+            file = "card_background.png"
         }
     }
 }
@@ -842,16 +842,27 @@ widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
 
 style "config-mode-label" {
+    fg[NORMAL] = "#FFFFFF"
     font_name = "Nokia Sans 17"
 }
 widget "*.config_mode_fullscreen_label" style "config-mode-label"
 widget "*.config_mode_startup_with_review_label" style "config-mode-label"
 widget "*.config_mode_label_imagedir" style "config-mode-label"
 widget "*.config_mode_label_sounddir" style "config-mode-label"
-widget "*.config_mode_tts_voice_label" style "config-mode-label"
-widget "*.config_mode_tts_lang_label" style "config-mode-label"
-widget "*.config_mode_tts_speed_label" style "config-mode-label"
-widget "*.config_mode_tts_pitch_label" style "config-mode-label"
+
+style "config-mode-scrollbars-label" {
+    fg[NORMAL] = "#FFFFFF"
+    font_name = "Nokia Sans 15"
+}
+widget "*.config_mode_tts_speed_label" style "config-mode-scrollbars-label"
+widget "*.config_mode_tts_pitch_label" style "config-mode-scrollbars-label"
+
+style "config-mode-voice-label" {
+    fg[NORMAL] = "#000000"
+    font_name = "Nokia Sans 15"
+}
+widget "*.config_mode_tts_voice_label" style "config-mode-voice-label"
+widget "*.config_mode_tts_lang_label" style "config-mode-voice-label"
 
 style "textareas" {
     font_name = "Nokia Sans 20"
