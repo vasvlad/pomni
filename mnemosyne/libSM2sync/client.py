@@ -10,7 +10,7 @@ import os
 from sync import SyncError
 from sync import EventManager
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
-from xml.etree import ElementTree
+from xml.etree import cElementTree
 
 
 #Overrides get_method method for using PUT request in urllib2
@@ -280,7 +280,7 @@ class Client:
         count = 0
         hsize = float(media_count)
         self.ui_controller.show_progressbar()
-        for child in ElementTree.fromstring(history).findall('i'):
+        for child in cElementTree.fromstring(history):
             self.send_media_file(child.find('id').text.split('__for__')[0])
             count += 1
             self.ui_controller.update_progressbar(count / hsize)

@@ -10,7 +10,7 @@ from mnemosyne.libmnemosyne.tag import Tag
 from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.databases.SQLite_logging \
     import SQLiteLogging as events
-from xml.etree import ElementTree
+from xml.etree import cElementTree
 import os
 
 PROTOCOL_VERSION = 0.1
@@ -104,7 +104,7 @@ class EventManager:
     def set_sync_params(self, partner_params):
         """Sets other side specific params."""
 
-        params = ElementTree.fromstring(partner_params).getchildren()[0]
+        params = cElementTree.fromstring(partner_params).getchildren()[0]
         self.partner['role'] = params.tag
         for key in params.keys():
             self.partner[key] = params.get(key)
@@ -316,7 +316,7 @@ class EventManager:
         count = 0
         hsize = float(media_count)
         self.ui_controller.show_progressbar()
-        for child in ElementTree.fromstring(history):
+        for child in cElementTree.fromstring(history):
             self.get_media(child.find('id').text.split('__for__')[0])
             count += 1
             self.ui_controller.update_progressbar(count / hsize)
@@ -327,7 +327,7 @@ class EventManager:
        
         if self.stopped:
             return
-        child = ElementTree.fromstring(item)
+        child = cElementTree.fromstring(item)
         event = int(child.find('ev').text)
         if event == events.ADDED_FACT:
             fact = self.create_fact_object(child)
