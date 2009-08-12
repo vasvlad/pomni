@@ -170,14 +170,14 @@ class ConfigurationWidget(ConfigurationDialog):
 
         value = int(widget.get_value())
         self.get_widget("config_mode_tts_speed_label").set_text(\
-            "Speed: %s" % value)
+            "    Speed: %s" % value)
 
     def change_pitch_cb(self, widget):
         """Changes TTS pitch."""
 
         value = int(widget.get_value())
         self.get_widget("config_mode_tts_pitch_label").set_text(\
-            "Pitch: %s" % value)
+            "    Pitch: %s" % value)
 
     def change_fullscreen_cb(self, widget):
         """Change Fullscreen parameter."""
