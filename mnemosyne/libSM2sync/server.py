@@ -233,18 +233,18 @@ class Server:
 
         count = 0
         # gets client history size
-        hsize = float(socket.readline()[:-2]) + 2
+        hsize = float(socket.readline()) + 2
 
         self.eman.make_backup()
         self.ui_controller.update_status(\
             "Applying client history. Please, wait...")
 
-        chunk = socket.readline()[:-2]  #get "<history>"
-        chunk = socket.readline()[:-2]  #get first xml-event
+        socket.readline()  #get "<history>"
+        chunk = socket.readline()  #get first xml-event
         self.ui_controller.show_progressbar()
-        while chunk != "</history>":
+        while chunk != "</history>\r\n":
             self.eman.apply_event(chunk)
-            chunk = socket.readline()[:-2]
+            chunk = socket.readline()
             count += 1
             self.ui_controller.update_progressbar(count / hsize)
 
