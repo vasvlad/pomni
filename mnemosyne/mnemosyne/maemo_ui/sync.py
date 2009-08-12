@@ -32,6 +32,7 @@ sys.path.insert(0, "../")
 import socket
 from libSM2sync.server import Server
 from libSM2sync.client import Client
+from libSM2sync.sync import UIMessenger
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -52,6 +53,12 @@ class SyncWidget(UiComponent):
                 "start_server_sync")]))
         self.conf = self.config()
         self.get_widget = self.w_tree.get_widget
+
+        self.client_progressbar = self.get_widget(\
+            "sync_mode_client_progressbar")
+        self.server_progressbar = self.get_widget(\
+            "sync_mode_server_progressbar")
+
         self.get_widget("sync_mode_client_login_entry"). \
             set_text(self.conf['client_login'])
         self.get_widget("sync_mode_client_passwd_entry"). \
@@ -94,18 +101,16 @@ class SyncWidget(UiComponent):
         self.get_widget("sync_toolbar_client_mode_button").set_active(False)
         self.get_widget("sync_mode_role_switcher").set_current_page(2)
 
-    def update_client_progress_bar(self, fraction):
+    def update_client_progressbar(self, fraction):
         """Updates client progress bar indicator."""
 
-        self.get_widget("sync_mode_client_progressbar").set_fraction(fraction)
-        self.get_widget("sync_mode_client_progressbar").show()
+        self.client_progressbar.set_fraction(fraction)
         self.complete_events()
 
-    def update_server_progress_bar(self, fraction):
+    def update_server_progressbar(self, fraction):
         """Updates server progress bar indicator."""
 
-        self.get_widget("sync_mode_server_progressbar").set_fraction(fraction)
-        self.get_widget("sync_mode_server_progressbar").show()
+        self.server_progressbar.set_fraction(fraction)
         self.complete_events()
 
     def show_message(self, message):
@@ -117,17 +122,17 @@ class SyncWidget(UiComponent):
     def update_client_status(self, text):
         """Set client status text."""
 
-        self.get_widget("sync_mode_client_status_label").set_text(text)
-        self.get_widget("sync_mode_client_status_label").show()
-        self.get_widget("sync_mode_client_progressbar").hide()
+        status_label = self.get_widget("sync_mode_client_status_label")
+        status_label.set_text(text)
+        status_label.show()
         self.complete_events()
    
     def update_server_status(self, text):
         """Set server status text."""
 
-        self.get_widget("sync_mode_server_status_label").set_text(text)
-        self.get_widget("sync_mode_server_status_label").show()
-        self.get_widget("sync_mode_server_progressbar").hide()
+        status_label = self.get_widget("sync_mode_server_status_label")
+        status_label.set_text(text)
+        status_label.show()
         self.complete_events()
 
     def start_client_sync_cb(self, widget):
@@ -137,17 +142,17 @@ class SyncWidget(UiComponent):
             self.show_or_hide_containers(False, "client")
             login = self.get_widget("sync_mode_client_login_entry").get_text()
             passwd = self.get_widget("sync_mode_client_passwd_entry").get_text()
-            address = self.get_widget(\
+            host = self.get_widget(\
                 "sync_mode_client_address_entry").get_text()
             port = self.get_widget("sync_mode_client_port_entry").get_text()
-            uri = address + ':' + port
+            uri = host + ':' + port
             if not uri.startswith("http://"):
                 uri = "http://" + uri
-            self.complete_events()
-            self.client = Client(uri, self.database(), self.controller(), \
-                self.config(), self.log(), self.show_message, \
-                self.complete_events, self.update_client_status, \
-                self.update_client_progress_bar)
+            messenger = UIMessenger(self.show_message, self.complete_events, \
+                self.update_client_status, self.client_progressbar.show, \
+                self.update_client_progressbar, self.client_progressbar.hide)
+            self.client = Client(host, port, uri, self.database(), \
+                self.controller(), self.config(), self.log(), messenger)
             self.client.set_user(login, passwd)
             self.complete_events()
             self.client.start()
@@ -169,15 +174,17 @@ class SyncWidget(UiComponent):
             except ValueError:
                 self.main_widget().error_box("Wrong port number!")
             else:
-                ip_address = self.get_widget(\
+                host = self.get_widget(\
                     "sync_mode_server_address_entry").get_text()
                 self.show_or_hide_containers(False, "server")
                 try:
-                    self.server = Server("%s:%s" % (ip_address, port), \
-                    self.database(), self.config(), self.log(), \
-                    self.show_message, self.complete_events, \
-                    self.update_server_status, \
-                    self.update_server_progress_bar)
+                    messenger = UIMessenger(self.show_message, \
+                    self.complete_events, self.update_server_status, \
+                    self.server_progressbar.show, \
+                    self.update_server_progressbar, \
+                    self.server_progressbar.hide)
+                    self.server = Server("%s:%s" % (host, port), \
+                    self.database(), self.config(), self.log(), messenger)
                 except socket.error, error:
                     self.show_message(str(error))
                 else:

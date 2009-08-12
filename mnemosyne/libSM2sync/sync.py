@@ -10,26 +10,13 @@ from mnemosyne.libmnemosyne.tag import Tag
 from mnemosyne.libmnemosyne.fact import Fact
 from mnemosyne.libmnemosyne.databases.SQLite_logging \
     import SQLiteLogging as events
-from xml.etree import ElementTree
-from xml.etree.cElementTree import iterparse
+from xml.etree import cElementTree
 import os
-
-from threading import Thread
-from functools import wraps
 
 PROTOCOL_VERSION = 0.1
 QA_CARD_TYPE = 1
 VICE_VERSA_CARD_TYPE = 2
 N_SIDED_CARD_TYPE = 3
-
-def run_async(func):
-    @wraps(func)
-    def async_func(*args, **kwargs):
-        func_hl = Thread(target = func, args = args, kwargs = kwargs)
-        func_hl.start()
-        return func_hl
-
-    return async_func
 
 
 class SyncError(Exception):
@@ -47,11 +34,13 @@ class DictClass(dict):
 
 class UIMessenger:
     def __init__(self, messenger, events_updater, status_updater, \
-        progress_updater):
+        show_progressbar, progress_updater, hide_progressbar):
         self.show_message = messenger               #Show UI message
         self.update_events = events_updater         #Update GTK UI
         self.update_status = status_updater         #Update UI status label
+        self.show_progressbar = show_progressbar    #Shows UI ProgressBar
         self.update_progressbar = progress_updater  #UI PorgressBar
+        self.hide_progressbar = hide_progressbar    #Hides UI ProgressBar
 
 
 class EventManager:
@@ -62,10 +51,11 @@ class EventManager:
     """
 
     def __init__(self, database, log, controller, mediadir, get_media, \
-        progressbar_updater, events_updater):
+        ui_controller):
         # controller - mnemosyne.default_controller
         self.controller = controller
         self.database = database
+        self.db_path = database._path
         self.log = log
         self.object_factory = {'tag': self.create_tag_object, 'fact': \
             self.create_fact_object, 'card': self.create_card_object, \
@@ -76,17 +66,45 @@ class EventManager:
             None, 'deck': None, 'upload': True, 'readonly': False}
         self.mediadir = mediadir
         self.get_media = get_media
-        self.update_progressbar = progressbar_updater
-        self.update_events = events_updater
+        self.ui_controller = ui_controller
         self.stopped = False
 
+    def make_backup(self):
+        """Creates backup for current database."""
+
+        return self.database.make_sync_backup()
+
+    def restore_backup(self):
+        """Resotre backuped database."""
+
+        self.database.restore_sync_backup()
+
+    def remove_backup(self):
+        """Remove backup."""
+
+        self.database.remove_sync_backup()
+
+    def replace_database(self, backup_file):
+        """Temporary replace current database by backuped."""
+
+        self.database.unload()
+        self.database.load(backup_file)
+
+    def return_databases(self):
+        """Replace current backuped database by native database."""
+
+        self.database.abandon()
+        self.database.load(self.db_path)
+
     def stop(self):
+        """Stops any work."""
+
         self.stopped = True
 
     def set_sync_params(self, partner_params):
         """Sets other side specific params."""
 
-        params = ElementTree.fromstring(partner_params).getchildren()[0]
+        params = cElementTree.fromstring(partner_params).getchildren()[0]
         self.partner['role'] = params.tag
         for key in params.keys():
             self.partner[key] = params.get(key)
@@ -118,7 +136,6 @@ class EventManager:
         for item in self.database.get_history_events(self.partner['id']):
             if self.stopped:
                 break
-            self.update_events()
             event = {'event': item[0], 'time': item[1], 'id': item[2], \
                 's_int': item[3], 'a_int': item[4], 'n_int': item[5], \
                 't_time': item[6]}
@@ -134,7 +151,7 @@ class EventManager:
         for item in self.database.get_media_history_events(self.partner['id']):
             if self.stopped:
                 break
-            self.update_events()
+            self.ui_controller.update_events()
             event = {'event': item[0], 'id': item[1]}
             if event['event'] in (events.ADDED_MEDIA, events.DELETED_MEDIA):
                 history += str(self.create_media_xml_element(event))
@@ -161,6 +178,8 @@ class EventManager:
             return None   # No need XML for others events. ?
 
     def create_tag_xml_element(self, event):
+        """Creates Tag XML representation."""
+
         if event['event'] == events.DELETED_TAG:
             # we only transfer tag id, that should be deleted.
             return "<i><t>tag</t><ev>%s</ev><id>%s</id></i>" % \
@@ -172,6 +191,8 @@ class EventManager:
             (event['event'], tag.id, tag.name)
 
     def create_fact_xml_element(self, event):
+        """Creates Fact XML representation."""
+
         if event['event'] == events.DELETED_FACT:
             # we only transfer fact id, that should be deleted.
             return "<i><t>fact</t><ev>%s</ev><id>%s</id></i>" % \
@@ -189,6 +210,8 @@ class EventManager:
                 fact._id)
 
     def create_card_xml_element(self, event):
+        """Creates Card XML representation."""
+
         if event['event'] == events.DELETED_CARD:
             # we only transfer card id, that shoild be deleted.
             return "<i><t>card</t><ev>%s</ev><id>%s</id></i>" % \
@@ -208,6 +231,8 @@ class EventManager:
                 event['t_time'], event['time'], card._id)
         
     def create_card_type_xml_element(self, event):
+        """Creates CardType XML representation."""
+
         cardtype = self.database.get_card_type(event['id'], False)
         fields = [key for key, value in cardtype.fields]
         return "<i><t>ctype</t><ev>%s</ev><id>%s</id><name>%s</name><f>%s</f>"\
@@ -216,6 +241,8 @@ class EventManager:
         ','.join(cardtype.unique_fields), '', '')
 
     def create_media_xml_element(self, event):
+        """Creates Media XML representation."""
+
         fname = event['id'].split('__for__')[0]
         if os.path.exists(os.path.join(self.mediadir, fname)):
             return "<i><t>media</t><ev>%s</ev><id>%s</id></i>" % \
@@ -224,9 +251,13 @@ class EventManager:
             return ""
 
     def create_tag_object(self, item):
+        """Creates Tag object from XML representation."""
+
         return Tag(item.find('name').text, item.find('id').text)
 
     def create_fact_object(self, item):
+        """Creates Fact object from XML representation."""
+
         dkeys = item.find('dk').text.split(',')
         dvals = [item.find("dv%s" % num).text for num in range(len(dkeys))]
         fact_data = dict([(key, dvals[dkeys.index(key)]) for key in dkeys])
@@ -239,10 +270,16 @@ class EventManager:
         return fact
 
     def create_card_object(self, item):
+        """Creates Card object from XML representation."""
+
         def get_rep_value(value):
             """Return value for repetition event."""
-            try: return int(value)
-            except: return ''
+            #try: return int(value)
+            #except: return ''
+            if value == "None":
+                return ''
+            else:
+                return int(value)
         return DictClass({'id': item.find('id').text, 'fact_view': DictClass(\
             {'id': item.find('fvid').text}), 'fact': self.database.get_fact(\
             item.find('fid').text, False), 'tags': set(self.database.\
@@ -260,12 +297,17 @@ class EventManager:
             item.find('_id').text})
 
     def create_cardtype_object(self, item):
+        """Creates CardType object from XML representation."""
+
         return DictClass({'id': item.find('id').text, 'name': \
             item.find('name').text, 'fields': item.find('f').text.split(','), \
             'keyboard_shortcuts': {}, 'extra_data': {}, 'unique_fields': \
             item.find('uf').text.split(',')})
 
     def create_media_object(self, item):
+        """Creates Media object from XML representation."""
+
+        # Media object = mediafile
         return None
 
     def apply_media(self, history, media_count):
@@ -273,66 +315,48 @@ class EventManager:
 
         count = 0
         hsize = float(media_count)
-        for child in ElementTree.fromstring(history).findall('i'):
-            fname = child.find('id').text.split('__for__')[0]
-            self.get_media(fname)
+        self.ui_controller.show_progressbar()
+        for child in cElementTree.fromstring(history):
+            self.get_media(child.find('id').text.split('__for__')[0])
             count += 1
-            self.update_progressbar(count / hsize)
+            self.ui_controller.update_progressbar(count / hsize)
+        self.ui_controller.hide_progressbar()
 
-    def apply_history(self, history_fileobj, history_length):
-        """Lazy parses XML-history and applys it to database."""
+    def apply_event(self, item):
+        """Applys XML-event to database."""
        
-        context = iterparse(history_fileobj, events=("end",))
-        count = 0
-        hsize = float(history_length)
-        for ev, child in context:
-            if self.stopped:
-                return
-            if child.tag == 'i':
-                event = int(child.find('ev').text)
-                if event == events.ADDED_FACT:
-                    fact = self.create_fact_object(child)
-                    if not self.database.duplicates_for_fact(fact):
-                        self.database.add_fact(fact)
-                        #print "adding fact..."
-                elif event == events.UPDATED_FACT:
-                    fact = self.create_fact_object(child)
-                    self.database.update_fact(fact)
-                    #print "updating fact..."
-                elif event == events.DELETED_FACT:
-                    fact = self.database.get_fact(child.find('id').text, False)
-                    if fact:
-                        self.database.delete_fact_and_related_data(fact)
-                        #print "deleting fact..."
-                elif event == events.ADDED_TAG:
-                    tag = self.create_tag_object(child)
-                    if not tag.name in self.database.tag_names():
-                        self.database.add_tag(tag)
-                        #print "adding tag..."
-                elif event == events.UPDATED_TAG:
-                    #print "updating tag..."
-                    tag = self.create_tag_object(child)
-                    self.database.update_tag(tag)
-                elif event == events.ADDED_CARD:
-                    if not self.database.has_card_with_external_id(\
-                        child.find('id').text):
-                        card = self.create_card_object(child)
-                        self.database.add_card(card)
-                        self.log.added_card(card)
-                        #print "adding card..."
-                elif event == events.UPDATED_CARD:
-                    card = self.create_card_object(child)
-                    self.database.update_card(card)
-                    #print "updating card..."
-                elif event == events.REPETITION:
-                    card = self.create_card_object(child)
-                    self.database.log_repetition(card.timestamp, card.id, \
-                    card.grade, card.easiness, card.acq_reps, card.ret_reps, \
-                    card.lapses, card.acq_reps_since_lapse, \
-                    card.ret_reps_since_lapse, card.scheduled_interval, \
-                    card.actual_interval, card.new_interval, card.thinking_time)
-                    #print "repetiting..."
-
-                count += 1
-                self.update_progressbar(count / hsize)
-
+        if self.stopped:
+            return
+        child = cElementTree.fromstring(item)
+        event = int(child.find('ev').text)
+        if event == events.ADDED_FACT:
+            fact = self.create_fact_object(child)
+            if not self.database.duplicates_for_fact(fact):
+                self.database.add_fact(fact)
+        elif event == events.UPDATED_FACT:
+            self.database.update_fact(self.create_fact_object(child))
+        elif event == events.DELETED_FACT:
+            fact = self.database.get_fact(child.find('id').text, False)
+            if fact:
+                self.database.delete_fact_and_related_data(fact)
+        elif event == events.ADDED_TAG:
+            tag = self.create_tag_object(child)
+            if not tag.name in self.database.tag_names():
+                self.database.add_tag(tag)
+        elif event == events.UPDATED_TAG:
+            self.database.update_tag(self.create_tag_object(child))
+        elif event == events.ADDED_CARD:
+            if not self.database.has_card_with_external_id(\
+                child.find('id').text):
+                card = self.create_card_object(child)
+                self.database.add_card(card)
+                self.log.added_card(card)
+        elif event == events.UPDATED_CARD:
+            self.database.update_card(self.create_card_object(child))
+        elif event == events.REPETITION:
+            card = self.create_card_object(child)
+            self.database.log_repetition(card.timestamp, card.id, \
+            card.grade, card.easiness, card.acq_reps, card.ret_reps, \
+            card.lapses, card.acq_reps_since_lapse, \
+            card.ret_reps_since_lapse, card.scheduled_interval, \
+            card.actual_interval, card.new_interval, card.thinking_time)

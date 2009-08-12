@@ -786,22 +786,31 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             (next_rep, card._id, card.fact._id)).fetchone()[0]
 
     def duplicates_for_fact(self, fact):
-        query = "select _id from facts where card_type_id=?"
-        args = (fact.card_type.id,)
-        if fact._id:
-            query += " and not _id=?"
-            args = (fact.card_type.id, fact._id)
-        duplicates = []            
-        for cursor in self.con.execute(query, args):
-            data = dict([(cursor2["key"], cursor2["value"]) for cursor2 in \
-                self.con.execute("""select * from data_for_fact where
-                _fact_id=?""", (cursor[0], ))])
-            for field in fact.card_type.unique_fields:
-                if data[field] == fact[field]:
-                    duplicates.append(\
-                        self.get_fact(cursor[0], id_is_internal=True))
-                    break
-        return duplicates
+        #query = "select _id from facts where card_type_id=?"
+        #args = (fact.card_type.id,)
+        #if fact._id:
+        #    query += " and not _id=?"
+        #    args = (fact.card_type.id, fact._id)
+        #duplicates = []            
+        #for cursor in self.con.execute(query, args):
+        #    data = dict([(cursor2["key"], cursor2["value"]) for cursor2 in \
+        #        self.con.execute("""select * from data_for_fact where
+        #        _fact_id=?""", (cursor[0], ))])
+        #    for field in fact.card_type.unique_fields:
+        #        if data[field] == fact[field]:
+        #            duplicates.append(\
+        #                self.get_fact(cursor[0], id_is_internal=True))
+        #            break
+        #return duplicates
+
+        ids = []
+        for key in fact.card_type.unique_fields:
+            ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
+                """select _fact_id from data_for_fact where key=? and 
+                value=?""", (key, fact.data[key]))])
+        if ids:
+            return [self.get_fact(ids[0], True)]
+        return []
 
     def card_types_in_use(self):
         return [self.card_type_by_id(cursor[0]) for cursor in \
@@ -953,6 +962,7 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         self.unload()
         shutil.copy(current, backup)
         self.load(current)
+        return backup
 
     def restore_sync_backup(self):
         current, backup = self.get_sync_backup_paths()
@@ -963,7 +973,8 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
 
     def remove_sync_backup(self):
         current, backup = self.get_sync_backup_paths()
-        os.remove(backup)
+        if os.path.exists(backup):
+            os.remove(backup)
         
 
 

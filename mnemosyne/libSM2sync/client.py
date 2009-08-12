@@ -9,9 +9,8 @@ import uuid
 import os
 from sync import SyncError
 from sync import EventManager
-from sync import UIMessenger
 from sync import PROTOCOL_VERSION, N_SIDED_CARD_TYPE
-from xml.etree import ElementTree
+from xml.etree import cElementTree
 
 
 #Overrides get_method method for using PUT request in urllib2
@@ -20,20 +19,19 @@ class PutRequest(urllib2.Request):
         return "PUT"
 
 
-class Client(UIMessenger):
+class Client:
     """Base client class for syncing."""
 
-    def __init__(self, uri, database, controller, config, log, messenger, \
-            events_updater, status_updater, progress_updater):
-        UIMessenger.__init__(self, messenger, events_updater, status_updater, \
-            progress_updater)
+    def __init__(self, host, port, uri, database, controller, config, log, \
+        ui_controller):
         self.config = config
-        self.database = database
         self.log = log
+        self.host = host
+        self.port = port
         self.uri = uri
+        self.ui_controller = ui_controller
         self.eman = EventManager(database, log, controller, \
-            self.config.mediadir(), self.get_media_file, \
-            self.update_progressbar, events_updater)
+            self.config.mediadir(), self.get_media_file, self.ui_controller)
         self.login = ''
         self.passwd = ''
         self.id = hex(uuid.getnode())
@@ -54,63 +52,62 @@ class Client(UIMessenger):
         """Start syncing."""
        
         try:
-            self.update_status("Authorization...")
+            self.ui_controller.update_status("Authorization. Please, wait...")
             self.login_()
 
-            self.update_status("Handshaking...")
+            self.ui_controller.update_status("Handshaking. Please, wait...")
             self.handshake()
 
-            self.update_status("Backuping...")
-            self.database.make_sync_backup()
+            self.ui_controller.update_status("Creating backup. Please, wait...")
+            backup_file = self.eman.make_backup()
 
             server_media_count = self.get_server_media_count()
             if server_media_count:
-                self.update_status(\
-                    "Getting media from the server. Please, wait...")
-                server_media_history = self.get_media_history()
-                self.eman.apply_media(server_media_history, server_media_count)
+                self.ui_controller.update_status(\
+                    "Applying server media. Please, wait...")
+                self.eman.apply_media(self.get_media_history(), \
+                    server_media_count)
 
             client_media_count = self.eman.get_media_count()
             if client_media_count:
-                self.update_status(\
+                self.ui_controller.update_status(\
                     "Sending client media to the server. Please, wait...")
-                client_media_history = self.eman.get_media_history()
-                self.send_client_media(client_media_history, client_media_count)
+                self.send_client_media(self.eman.get_media_history(), \
+                    client_media_count)
 
             server_history_length = self.get_server_history_length()
-            server_cards_history = ''
             if server_history_length:
-                self.update_status(\
-                    "Getting history from the server. Please, wait...")
-                server_cards_history = self.get_server_history(\
-                    server_history_length)
-                #self.eman.apply_history(server_cards_history, server_history_length)
+                self.ui_controller.update_status(\
+                    "Applying server history. Please, wait...")
+                self.get_server_history(server_history_length)
 
+            # save current database and open backuped database
+            # to get history for server
+            self.eman.replace_database(backup_file)
+            
             client_history_length = self.eman.get_history_length()
             if client_history_length:
-                self.update_status(\
+                self.ui_controller.update_status(\
                     "Sending client history to the server. Please, wait...")
-                client_cards_history = self.eman.get_history()
-                self.send_client_history(\
-                    client_cards_history, client_history_length)
-    
-            if server_history_length:
-                self.update_status("Applying server history. Please, wait...")
-                self.eman.apply_history(\
-                    server_cards_history, server_history_length)
+                self.send_client_history(self.eman.get_history(), \
+                    client_history_length)
 
+            # close temp database and return worked database
+            self.eman.return_databases()
+
+            self.ui_controller.update_status(\
+                "Waiting for the server complete. Please, wait...")
+    
             self.send_finish_request()
 
             if self.stopped:
                 raise SyncError("Aborted!")
         except SyncError, exception:
-            self.show_message("Error: " + str(exception))
-            self.update_status("Restoring backuped database. Please, wait...")
-            self.database.restore_sync_backup()
+            self.eman.restore_backup()
+            self.ui_controller.show_message("Error: " + str(exception))
         else:
-            self.update_status("Removing backuped database. Please, wait...")
-            self.database.remove_sync_backup()
-            self.show_message("Sync finished!")
+            self.eman.remove_backup()
+            self.ui_controller.show_message("Sync finished!")
 
     def stop(self):
         """Stops syncing."""
@@ -121,7 +118,7 @@ class Client(UIMessenger):
     def login_(self):
         """Logs on the server."""
         
-        self.update_events()
+        self.ui_controller.update_events()
         base64string = base64.encodestring("%s:%s" % \
             (self.login, self.passwd))[:-1]
         authheader =  "Basic %s" % base64string
@@ -142,7 +139,7 @@ class Client(UIMessenger):
     
         if self.stopped:
             return
-        self.update_events()
+        self.ui_controller.update_events()
         cparams = "<params><client id='%s' name='%s' ver='%s' protocol='%s'" \
             " deck='%s' cardtypes='%s' extra='%s'/></params>\n" % (self.id, \
             self.name, self.version, self.protocol, self.deck, self.cardtypes, \
@@ -170,7 +167,7 @@ class Client(UIMessenger):
 
         if self.stopped:
             return
-        self.update_events()
+        self.ui_controller.update_events()
         try:
             return int(urllib2.urlopen(\
                 self.uri + '/sync/server/history/media/count').read())
@@ -182,7 +179,7 @@ class Client(UIMessenger):
 
         if self.stopped:
             return
-        self.update_events()
+        self.ui_controller.update_events()
         try:
             return int(urllib2.urlopen(\
                 self.uri + '/sync/server/history/length').read())
@@ -194,21 +191,23 @@ class Client(UIMessenger):
 
         if self.stopped:
             return
-        self.update_events()
+        self.ui_controller.update_events()
         count = 0
-        hsize = float(history_length + 2)
+        hsize = float(history_length)
         try:
             #return urllib2.urlopen(self.uri + '/sync/server/history')
             response = urllib2.urlopen(self.uri + '/sync/server/history')
-            shistory = ''
-            chunk = ''
+            response.readline() # get "<history>"
+            chunk = response.readline() #get the first item
+            self.ui_controller.show_progressbar()
             while chunk != "</history>\n":
+                if self.stopped:
+                    return
+                self.eman.apply_event(chunk)
                 chunk = response.readline()
-                shistory += chunk
                 count += 1
-                self.update_progressbar(count / hsize)
-            import StringIO
-            return StringIO.StringIO(shistory)
+                self.ui_controller.update_progressbar(count / hsize)
+            self.ui_controller.hide_progressbar()
         except urllib2.URLError, error:
             raise SyncError("Getting server history: " + str(error))
 
@@ -217,7 +216,7 @@ class Client(UIMessenger):
 
         if self.stopped:
             return
-        self.update_events()
+        self.ui_controller.update_events()
         try:
             return urllib2.urlopen(self.uri + '/sync/server/mediahistory'). \
                 readline()
@@ -227,20 +226,51 @@ class Client(UIMessenger):
     def send_client_history(self, history, history_length):
         """Sends client history to server."""
 
-        if self.stopped:
-            return
-        self.update_events()
-        chistory = ''
+        #if self.stopped:
+        #    return
+        #self.update_events()
+        #chistory = ''
+        #for chunk in history:
+        #    chistory += chunk
+        #data = str(history_length) + '\n' + chistory + '\n'
+        #try:
+        #    response = urllib2.urlopen(PutRequest(\
+        #        self.uri + '/sync/client/history', data))
+        #    if response.read() != "OK":
+        #        raise SyncError("Sending client history: error on server side.")
+        #except urllib2.URLError, error:
+        #    raise SyncError("Sending client history: " + str(error))
+        import httplib
+        conn = httplib.HTTPConnection(self.host, self.port)
+        conn.putrequest('PUT', '/sync/client/history')
+        conn.putheader('User-Agent', 'gzip')
+        conn.putheader('Accept-Encoding', 'gzip')
+        conn.putheader('Connection', 'keep-alive')
+        conn.putheader('Content-Type', 'text/plain')
+        conn.putheader('Transfer-Encoding', 'chunked')
+        conn.putheader('Expect', '100-continue')
+        conn.putheader('Accept', '*/*')
+        conn.endheaders()
+       
+        count = 0
+        hsize = float(history_length + 2)
+
+        # send client history length
+        conn.send(str(history_length) + '\r\n')
+        self.ui_controller.show_progressbar()
         for chunk in history:
-            chistory += chunk
-        data = str(history_length) + '\n' + chistory + '\n'
-        try:
-            response = urllib2.urlopen(PutRequest(\
-                self.uri + '/sync/client/history', data))
-            if response.read() != "OK":
-                raise SyncError("Sending client history: error on server side.")
-        except urllib2.URLError, error:
-            raise SyncError("Sending client history: " + str(error))
+            if self.stopped:
+                return
+            conn.send(chunk + '\r\n')
+            count += 1
+            self.ui_controller.update_progressbar(count / hsize)
+
+        self.ui_controller.hide_progressbar()
+        self.ui_controller.update_status(\
+            "Waiting for the server complete. Please, wait...")
+        response = conn.getresponse()
+        #FIXME: analize response for complete on serer side
+        response.read()
 
     def send_client_media(self, history, media_count):
         """Sends client media to server."""
@@ -249,11 +279,12 @@ class Client(UIMessenger):
             return
         count = 0
         hsize = float(media_count)
-        for child in ElementTree.fromstring(history).findall('i'):
-            fname = child.find('id').text.split('__for__')[0]
-            self.send_media_file(fname)
+        self.ui_controller.show_progressbar()
+        for child in cElementTree.fromstring(history):
+            self.send_media_file(child.find('id').text.split('__for__')[0])
             count += 1
-            self.update_progressbar(count / hsize)
+            self.ui_controller.update_progressbar(count / hsize)
+        self.ui_controller.hide_progressbar()
 
     def send_finish_request(self):
         """Say to server thar sync is finished."""
@@ -261,8 +292,7 @@ class Client(UIMessenger):
         if self.stopped:
             return
         try:
-            response = urllib2.urlopen(self.uri + '/sync/finish')
-            if response.read() != "OK":
+            if urllib2.urlopen(self.uri + '/sync/finish').read() != "OK":
                 raise SyncError("Finishing sync: error on server side.")
         except urllib2.URLError, error:
             raise SyncError("Finishing syncing: " + str(error))
