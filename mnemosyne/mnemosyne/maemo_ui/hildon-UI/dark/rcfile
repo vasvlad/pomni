@@ -126,12 +126,12 @@ widget "*.menu_button_exit" style "menu-button-exit"
 
 #----------------------------- Review mode ------------------
 style "html-container" {
-    xthickness = 5
-    ythickness = 5
-    engine "sapwood" {
+    xthickness = 10
+    ythickness = 10
+    engine "pixmap" {
         image {
             function = SHADOW
-            file = "textarea.png"
+            file = "card_background.png"
             border = {14,14,14,14}
         }
     }
@@ -139,16 +139,27 @@ style "html-container" {
 widget "*.question_container" style "html-container"
 widget "*.answer_container" style "html-container"
 
+style "grades-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "right_6.png"
+            border = {40,40,1,1}
+        }
+    }
+}
+widget "*.review_mode_grades_container" style "grades-container"
+
 style "grade0" {
     engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "grade0_insensitive.png"
+            file = "0_disabled.png"
         }
         image {
             function = BOX
-            file = "grade0_normal.png"
+            file = "0_active.png"
         }
     }
 }
@@ -159,11 +170,11 @@ style "grade1" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "grade1_insensitive.png"
+            file = "1_disabled.png"
         }
         image {
             function = BOX
-            file = "grade1_normal.png"
+            file = "1_active.png"
         }
     }
 }
@@ -174,11 +185,11 @@ style "grade2" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "grade2_insensitive.png"
+            file = "2_disabled.png"
         }
         image {
             function = BOX
-            file = "grade2_normal.png"
+            file = "2_active.png"
         }
     }
 }
@@ -189,11 +200,11 @@ style "grade3" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "grade3_insensitive.png"
+            file = "3_disabled.png"
         }
         image {
             function = BOX
-            file = "grade3_normal.png"
+            file = "3_active.png"
         }
     }
 }
@@ -204,11 +215,11 @@ style "grade4" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "grade4_insensitive.png"
+            file = "4_disabled.png"
         }
         image {
             function = BOX
-            file = "grade4_normal.png"
+            file = "4_active.png"
         }
     }
 }
@@ -219,26 +230,37 @@ style "grade5" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "grade5_insensitive.png"
+            file = "5_disabled.png"
         }
         image {
             function = BOX
-            file = "grade5_normal.png"
+            file = "5_active.png"
         }
     }
 }
 widget "*.grade5" style "grade5"
+
+style "toolbar-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "left_5.png"
+            border = {40,40,1,1}
+        }
+    }
+}
+widget "*.review_mode_toolbar_container" style "toolbar-container"
 
 style "tts-button" {
     engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "tts_insensitive.png"
+            file = "speaker.png"
         }
         image {
             function = BOX
-            file = "tts_normal.png"
+            file = "speaker.png"
         }
     }
 }
@@ -249,11 +271,11 @@ style "edit-card-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "edit_card_insensitive.png"
+            file = "edit.png"
         }
         image {
             function = BOX
-            file = "edit_card_normal.png"
+            file = "edit.png"
         }
     }
 }
@@ -263,7 +285,7 @@ style "add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "add_card_normal.png"
+            file = "plus.png"
         }
     }
 }
@@ -274,11 +296,11 @@ style "delete-card-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "delete_card_insensitive.png"
+            file = "trash.png"
         }
         image {
             function = BOX
-            file = "delete_card_normal.png"
+            file = "trash.png"
         }
     }
 }
@@ -640,11 +662,34 @@ widget "*.category_name_w" style "category-label"
 
 
 #----------------------------- Config mode ------------------
+style "settings-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "left_settings.png"
+            border = {40,40,1,1}
+        }
+    }
+}
+widget "*.config_mode_toolbar_container" style "settings-container"
+
+style "labels-container" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "card_background.png"
+            border = {18,18,18,18}
+        }
+    }
+}
+widget "*.config_mode_tts_lang_container" style "labels-container"
+widget "*.config_mode_tts_voice_container" style "labels-container"
+
 style "general-settings-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "general_settings.png"
+            file = "wrench.png"
         }
     }
 }
@@ -655,11 +700,11 @@ style "tts-settings-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "tts_insensitive.png"
+            file = "speaker.png"
         }
         image {
             function = BOX
-            file = "tts_normal.png"
+            file = "speaker.png"
         }
     }
 }
@@ -669,7 +714,7 @@ style "previous-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "previous.png"
+            file = "arrow_left.png"
         }
     }
 }
@@ -680,7 +725,7 @@ style "next-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "next.png"
+            file = "arrow_right.png"
         }
     }
 }
