@@ -1,11 +1,11 @@
-Source: libsm2sync
+Source: python-libsm2sync
 Section: user/libs
 Priority: optional
 Maintainer: Max Usachev <maxusachev@gmail.com>
 Build-Depends: debhelper (>= 5), python2.5, python-setuptools
 Standards-Version: 3.8.0
 
-Package: libsm2sync
+Package: python-libsm2sync
 Architecture: all
 Depends: python2.5
 Description: Sync library for SM2 schedulers

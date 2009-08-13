@@ -1,11 +1,19 @@
-libsm2sync (0.1) unstable; urgency=low
+python-libsm2sync (0.0.3) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * replaced ElementTree by cElementTree (Max)
+  * profiled code (Max)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 12 Aug 2009 23:06:18 +0300
+
+python-libsm2sync (0.0.2) unstable; urgency=low
 
   * Fixed sync sequence for media cards
   * Fixed progress bar fraction counting
 
  -- Max Usachev <maxusachev@gmail.com>  Sat, 08 Aug 2009 17:31:02 +0300
 
-libsm2sync (0.1) unstable; urgency=low
+python-libsm2sync (0.0.1) unstable; urgency=low
 
   * Initial release. (Closes: #XXXXXX)
 
