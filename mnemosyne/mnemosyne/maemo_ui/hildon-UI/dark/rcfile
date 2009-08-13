@@ -150,96 +150,6 @@ style "grades-container" {
 }
 widget "*.review_mode_grades_container" style "grades-container"
 
-style "grade0" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "0_disabled.png"
-        }
-        image {
-            function = BOX
-            file = "0_active.png"
-        }
-    }
-}
-widget "*.grade0" style "grade0"
-
-style "grade1" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "1_disabled.png"
-        }
-        image {
-            function = BOX
-            file = "1_active.png"
-        }
-    }
-}
-widget "*.grade1" style "grade1"
-
-style "grade2" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "2_disabled.png"
-        }
-        image {
-            function = BOX
-            file = "2_active.png"
-        }
-    }
-}
-widget "*.grade2" style "grade2"
-
-style "grade3" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "3_disabled.png"
-        }
-        image {
-            function = BOX
-            file = "3_active.png"
-        }
-    }
-}
-widget "*.grade3" style "grade3"
-
-style "grade4" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "4_disabled.png"
-        }
-        image {
-            function = BOX
-            file = "4_active.png"
-        }
-    }
-}
-widget "*.grade4" style "grade4"
-
-style "grade5" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "5_disabled.png"
-        }
-        image {
-            function = BOX
-            file = "5_active.png"
-        }
-    }
-}
-widget "*.grade5" style "grade5"
-
 style "toolbar-container" {
     engine "pixmap" {
         image {
@@ -250,61 +160,6 @@ style "toolbar-container" {
     }
 }
 widget "*.review_mode_toolbar_container" style "toolbar-container"
-
-style "tts-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "speaker.png"
-        }
-        image {
-            function = BOX
-            file = "speaker.png"
-        }
-    }
-}
-widget "*.review_toolbar_tts_button" style "tts-button"
-
-style "edit-card-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "edit.png"
-        }
-        image {
-            function = BOX
-            file = "edit.png"
-        }
-    }
-}
-widget "*.review_toolbar_edit_card_button" style "edit-card-button"
-
-style "add-card-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "plus.png"
-        }
-    }
-}
-widget "*.review_toolbar_add_card_button" style "add-card-button"
-
-style "delete-card-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "trash.png"
-        }
-        image {
-            function = BOX
-            file = "trash.png"
-        }
-    }
-}
-widget "*.review_toolbar_delete_card_button" style "delete-card-button"
 #----------------------------- Review mode ------------------
 
 
@@ -710,28 +565,6 @@ style "tts-settings-button" {
 }
 widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
 
-style "previous-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "arrow_left.png"
-        }
-    }
-}
-widget "*.config_mode_tts_voice_prev_button" style "previous-button"
-widget "*.config_mode_tts_lang_prev_button" style "previous-button"
-
-style "next-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "arrow_right.png"
-        }
-    }
-}
-widget "*.config_mode_tts_voice_next_button" style "next-button"
-widget "*.config_mode_tts_lang_next_button" style "next-button"
-
 style "config-scrollbars" {
     GtkScrollbar::fixed-slider-length = 1
     GtkScrollbar::min-slider-length = 34
@@ -773,26 +606,6 @@ style "config-scrollbars" {
 widget "*.config_mode_tts_speed_scrollbar" style "config-scrollbars"
 widget "*.config_mode_tts_pitch_scrollbar" style "config-scrollbars"
 
-
-style "increase-font-size-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "arrow_right.png"
-        }
-    }
-}
-widget "*.config_mode_increase_font_size_buttton" style "increase-font-size-button"
-
-style "decrease-font-size-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "arrow_left.png"
-        }
-    }
-}
-widget "*.config_mode_decrease_font_size_buttton" style "decrease-font-size-button"
 
 widget "*.config_mode_imagedir_container" style "html-container"
 widget "*.config_mode_sounddir_container" style "html-container"
