@@ -804,13 +804,24 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
         #return duplicates
 
         ids = []
-        for key in fact.card_type.unique_fields:
-            ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
-                """select _fact_id from data_for_fact where key=? and 
-                value=?""", (key, fact.data[key]))])
-        if ids:
-            return [self.get_fact(ids[0], True)]
-        return []
+        if fact._id:
+            for key in fact.card_type.unique_fields:
+                ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
+                    """select _fact_id from data_for_fact where key=? and 
+                    value=? and not _fact_id=?""", (key, fact.data[key], \
+                    fact._id))])
+        else:
+            for key in fact.card_type.unique_fields:
+                ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
+                    """select _fact_id from data_for_fact where key=? and 
+                    value=?""", (key, fact.data[key]))])
+            
+        if not ids:
+            return []
+        card_type_id = fact.card_type.id
+        return [self.get_fact(fact_id, True) for fact_id in ids if \
+            self.con.execute("""select card_type_id from facts where _id=?""", \
+            (fact_id,)).fetchone()[0] == card_type_id]
 
     def card_types_in_use(self):
         return [self.card_type_by_id(cursor[0]) for cursor in \
