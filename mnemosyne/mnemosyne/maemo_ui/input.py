@@ -52,7 +52,7 @@ class InputWidget(Component):
         self.conf = self.config()
         self.connections = []
         self.connect_signals([\
-            ("input_mode_toolbar_button_back_w", "clicked", \
+            ("input_mode_toolbar_button_back_w", "button-press-event", \
                 self.input_to_main_menu_cb),
             ("front_to_back_mode_selector_w", "released", \
                 self.change_card_type_cb),
@@ -60,16 +60,16 @@ class InputWidget(Component):
             ("three_side_mode_selector_w", "released", \
                 self.change_card_type_cb),
             ("cloze_mode_selector_w", "released", self.change_card_type_cb),
-            ("picture_content_button", "clicked", self.add_picture_cb),
+            ("picture_content_button", "button-press-event", self.add_picture_cb),
             ("image_selection_dialog_button_select", "clicked", \
                 self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked",
                 self.close_media_selection_dialog_cb),
-            ("input_mode_prev_category_w", "clicked", self.change_category_cb),
-            ("input_mode_next_category_w", "clicked", self.change_category_cb),
+            ("input_mode_prev_category_w", "button-press-event", self.change_category_cb),
+            ("input_mode_next_category_w", "button-press-event", self.change_category_cb),
             ("input_mode_add_new_category_w", "clicked", \
                 self.create_new_category_cb),
-            ("sound_content_button", "clicked", self.add_sound_cb),
+            ("sound_content_button", "button-press-event", self.add_sound_cb),
             ("category_name_container", "clicked", \
                 self.show_add_category_block_cb),
             ("input_mode_close_add_category_block_w", "clicked",
@@ -241,7 +241,7 @@ class InputWidget(Component):
                 return False
         return True
 
-    def change_category_cb(self, widget):
+    def change_category_cb(self, widget, event):
         """Change current category."""
 
         if widget.name == "prev_category_w":
@@ -268,7 +268,7 @@ class InputWidget(Component):
             self.widgets["CurrentCategory"].set_text(new_category)
             self.hide_add_category_block_cb(None)
 
-    def add_picture_cb(self, widget):
+    def add_picture_cb(self, widget, event):
         """Show image selection dialog."""
 
         self.main_widget().soundplayer.stop()
@@ -311,7 +311,7 @@ class InputWidget(Component):
         self.areas["question"].get_buffer().set_text(question_text)
         self.show_snd_container()
 
-    def add_sound_cb(self, widget):
+    def add_sound_cb(self, widget, event):
         """Show sound selection dialog."""
 
         self.main_widget().soundplayer.stop()
@@ -405,7 +405,7 @@ class InputWidget(Component):
         self.widgets["ChangeCategoryBlock"].show()
         self.widgets["AddCategoryBlock"].hide()
 
-    def input_to_main_menu_cb(self, widget):
+    def input_to_main_menu_cb(self, widget, event):
         """Return to main menu."""
 
         #if self.added_new_cards:
@@ -423,7 +423,8 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
         InputWidget.__init__(self, component_manager)
         AddCardsDialog.__init__(self, component_manager)
         self.connect_signals([\
-            ("input_mode_toolbar_add_card_w", "clicked", self.add_card_cb),
+            ("input_mode_toolbar_add_card_w", "button-press-event", \
+                self.add_card_cb),
             ("question_text_w", "button_press_event", self.clear_text_cb),
             ("answer_text_w", "button_press_event", self.clear_text_cb),
             ("pronun_text_w", "button_press_event", self.clear_text_cb),
@@ -445,7 +446,7 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
         """Clear textview content."""
         widget.get_buffer().set_text("")
 
-    def add_card_cb(self, widget):
+    def add_card_cb(self, widget, event):
         """Add card to database."""
 
         # check for empty fields
@@ -475,7 +476,7 @@ class EditFactWidget(InputWidget, EditFactDialog):
 
         self.fact = fact
         self.allow_cancel = allow_cancel
-        self.connect_signals([("input_mode_toolbar_add_card_w", "clicked",
+        self.connect_signals([("input_mode_toolbar_add_card_w", "button-press-event",
                     self.update_card_cb)])
 
     def activate(self):
@@ -489,7 +490,7 @@ class EditFactWidget(InputWidget, EditFactDialog):
         self.set_widgets_data(self.fact)
         self.show_snd_container()
 
-    def update_card_cb(self, widget):
+    def update_card_cb(self, widget, event):
         """Update card in the database."""
 
         try:
