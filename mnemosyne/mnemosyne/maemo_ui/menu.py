@@ -43,7 +43,7 @@ class MenuWidget(UiComponent):
                 for mode in ["input", "review", "configure", "exit", "sync"]]))
 
     # callbacks
-    def input_cb(self, widget):
+    def input_cb(self, widget, event=None):
         """Return to main menu."""
         self.main_widget().input_()
 

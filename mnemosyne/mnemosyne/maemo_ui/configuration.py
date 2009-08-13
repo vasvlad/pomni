@@ -48,27 +48,27 @@ class ConfigurationWidget(ConfigurationDialog):
             ("checkbox_fullscreen_mode", "toggled", self.change_fullscreen_cb),
             ("checkbox_start_in_review_mode", "toggled", \
                 self.change_startup_with_review_cb),
-            ("config_mode_decrease_font_size_buttton", "clicked", \
+            ("config_mode_decrease_font_size_buttton", "button-press-event", \
                 self.change_font_size_cb),
-            ("config_mode_increase_font_size_buttton", "clicked", \
+            ("config_mode_increase_font_size_buttton", "button-press-event", \
                 self.change_font_size_cb),
-            ("config_toolbar_main_menu_button", "clicked", \
+            ("config_toolbar_main_menu_button", "button-press-event", \
                 self.config_to_main_menu_cb),
             ("config_toolbar_general_settings_button", "clicked", \
                 self.show_general_settings_cb),
             ("config_toolbar_tts_settings_button", "clicked", \
                 self.show_tts_settings_cb),
-            ("config_mode_tts_voice_prev_button", "clicked", \
+            ("config_mode_tts_voice_prev_button", "button-press-event", \
                 self.change_voice_cb),
-            ("config_mode_tts_voice_next_button", "clicked", \
+            ("config_mode_tts_voice_next_button", "button-press-event", \
                 self.change_voice_cb),
             ("config_mode_tts_speed_scrollbar", "value-changed", \
                 self.change_speed_cb),
             ("config_mode_tts_pitch_scrollbar", "value-changed", \
                 self.change_pitch_cb),
-            ("config_mode_tts_lang_prev_button", "clicked", \
+            ("config_mode_tts_lang_prev_button", "button-press-event", \
                 self.change_lang_cb),
-            ("config_mode_tts_lang_next_button", "clicked", \
+            ("config_mode_tts_lang_next_button", "button-press-event", \
                 self.change_lang_cb)])
 
         self.get_widget("config_mode_settings_switcher"). \
@@ -139,7 +139,7 @@ class ConfigurationWidget(ConfigurationDialog):
 
         self.get_widget("config_mode_settings_switcher").set_current_page(1)
 
-    def change_voice_cb(self, widget):
+    def change_voice_cb(self, widget, event):
         """Changes TTS voice."""
 
         voices = {'Male': 'Female', 'Female': 'Male'}
@@ -147,7 +147,7 @@ class ConfigurationWidget(ConfigurationDialog):
         voice = voice_label.get_text()
         voice_label.set_text(voices[voice])
 
-    def change_lang_cb(self, widget):
+    def change_lang_cb(self, widget, event):
         """Changes current TTS language."""
 
         lang_index = self.languages.index(\
@@ -191,7 +191,7 @@ class ConfigurationWidget(ConfigurationDialog):
         self.conf['startup_with_review'] = self.get_widget(\
             "checkbox_start_in_review_mode").get_active()
 
-    def change_font_size_cb(self, widget):
+    def change_font_size_cb(self, widget, event):
         """Change Font size parameter."""
 
         # move to config?
@@ -206,7 +206,7 @@ class ConfigurationWidget(ConfigurationDialog):
         self.change_font_size()
         self.conf['font_size'] = self.current_size
 
-    def config_to_main_menu_cb(self, widget):
+    def config_to_main_menu_cb(self, widget, event):
         """ Return to main menu. """
 
         if not os.path.exists( \

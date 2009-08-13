@@ -215,7 +215,7 @@ class SyncWidget(UiComponent):
         self.get_widget("sync_toolbar_server_mode_button").set_sensitive(show)
         self.get_widget("sync_toolbar_main_menu_button").set_sensitive(show)
 
-    def sync_to_main_menu_cb(self, widget):
+    def sync_to_main_menu_cb(self, widget, event):
         """Returns to main menu."""
 
         self.conf['client_login'] = self.get_widget(\
