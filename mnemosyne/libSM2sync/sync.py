@@ -69,6 +69,7 @@ class EventManager:
         self.ui_controller = ui_controller
         self.stopped = False
         self.allow_add_card = True
+        self.allow_update_card = True
 
     def make_backup(self):
         """Creates backup for current database."""
@@ -340,7 +341,12 @@ class EventManager:
             else:
                 self.allow_add_card = False
         elif event == events.UPDATED_FACT:
-            self.database.update_fact(self.create_fact_object(child))
+            fact = self.database.get_fact(child.find('id').text, False)
+            if fact:
+                print "updating fact with data=", fact.data
+                self.database.update_fact(self.create_fact_object(child))
+            else:
+                self.allow_update_card = False
         elif event == events.DELETED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
@@ -362,7 +368,10 @@ class EventManager:
                     self.log.added_card(card)
             self.allow_add_card = True
         elif event == events.UPDATED_CARD:
-            self.database.update_card(self.create_card_object(child))
+            if self.allow_update_card:
+                print "updating card..."
+                self.database.update_card(self.create_card_object(child))
+            self.allow_update_card = True
         elif event == events.REPETITION:
             card = self.create_card_object(child)
             self.database.log_repetition(card.timestamp, card.id, \
