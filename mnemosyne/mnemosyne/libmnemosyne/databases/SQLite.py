@@ -786,35 +786,11 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             (next_rep, card._id, card.fact._id)).fetchone()[0]
 
     def duplicates_for_fact(self, fact):
-        #query = "select _id from facts where card_type_id=?"
-        #args = (fact.card_type.id,)
-        #if fact._id:
-        #    query += " and not _id=?"
-        #    args = (fact.card_type.id, fact._id)
-        #duplicates = []            
-        #for cursor in self.con.execute(query, args):
-        #    data = dict([(cursor2["key"], cursor2["value"]) for cursor2 in \
-        #        self.con.execute("""select * from data_for_fact where
-        #        _fact_id=?""", (cursor[0], ))])
-        #    for field in fact.card_type.unique_fields:
-        #        if data[field] == fact[field]:
-        #            duplicates.append(\
-        #                self.get_fact(cursor[0], id_is_internal=True))
-        #            break
-        #return duplicates
-
         ids = []
-        if fact._id:
-            for key in fact.card_type.unique_fields:
-                ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
-                    """select _fact_id from data_for_fact where key=? and 
-                    value=? and not _fact_id=?""", (key, fact.data[key], \
-                    fact._id))])
-        else:
-            for key in fact.card_type.unique_fields:
-                ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
-                    """select _fact_id from data_for_fact where key=? and 
-                    value=?""", (key, fact.data[key]))])
+        for key in fact.card_type.unique_fields:
+            ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
+                """select _fact_id from data_for_fact where key=? and value=?
+                and _fact_id!=?""", (key, fact.data[key], str(fact._id)))])
             
         if not ids:
             return []
