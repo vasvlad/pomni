@@ -68,6 +68,7 @@ class EventManager:
         self.get_media = get_media
         self.ui_controller = ui_controller
         self.stopped = False
+        self.allow_add_card = True
 
     def make_backup(self):
         """Creates backup for current database."""
@@ -331,13 +332,19 @@ class EventManager:
         event = int(child.find('ev').text)
         if event == events.ADDED_FACT:
             fact = self.create_fact_object(child)
+            #FIXME remove _id field from fact
+            fact._id = -1
             if not self.database.duplicates_for_fact(fact):
+                print "adding fact with fact.data=", fact.data
                 self.database.add_fact(fact)
+            else:
+                self.allow_add_card = False
         elif event == events.UPDATED_FACT:
             self.database.update_fact(self.create_fact_object(child))
         elif event == events.DELETED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
+                print "deleting fact with data=", fact.data
                 self.database.delete_fact_and_related_data(fact)
         elif event == events.ADDED_TAG:
             tag = self.create_tag_object(child)
@@ -346,11 +353,14 @@ class EventManager:
         elif event == events.UPDATED_TAG:
             self.database.update_tag(self.create_tag_object(child))
         elif event == events.ADDED_CARD:
-            if not self.database.has_card_with_external_id(\
-                child.find('id').text):
-                card = self.create_card_object(child)
-                self.database.add_card(card)
-                self.log.added_card(card)
+            if self.allow_add_card:
+                if not self.database.has_card_with_external_id(\
+                    child.find('id').text):
+                    card = self.create_card_object(child)
+                    print "adding new card with fact.data=", card.fact.data
+                    self.database.add_card(card)
+                    self.log.added_card(card)
+            self.allow_add_card = True
         elif event == events.UPDATED_CARD:
             self.database.update_card(self.create_card_object(child))
         elif event == events.REPETITION:
