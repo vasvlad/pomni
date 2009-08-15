@@ -181,10 +181,6 @@ class Server:
     def get_sync_server_history(self, environ):
         """Gets self history events."""
 
-        #return self.eman.get_history() lazy
-        #for chunk in self.eman.get_history():
-        #    shistory += chunk
-        #return shistory
         self.ui_controller.update_status(\
             "Sending history to the client. Please, wait...")
         count = 0
@@ -210,25 +206,6 @@ class Server:
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
        
-        """
-        self.update_status("Receiving client history...")
-        try:
-            socket = environ['wsgi.input']
-            client_history_length = int(socket.readline())
-            client_history = socket.readline()
-        except:
-            return "CANCEL"
-        else:
-            self.update_status("Backuping. Please, wait...")
-            self.database.make_sync_backup()
-            self.update_status("Applying client history...")
-            from StringIO import StringIO
-            self.eman.apply_history(\
-                StringIO(client_history), client_history_length)
-            self.update_status("Removing backuped history. Please, wait...")
-            self.database.remove_sync_backup()
-            return "OK"
-        """
         socket = environ['wsgi.input']
 
         count = 0
