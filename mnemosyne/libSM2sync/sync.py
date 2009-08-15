@@ -365,10 +365,15 @@ class EventManager:
         elif event == events.REPETITION:
             if self.database.has_card_with_external_id(\
                 child.find('id').text):
-                print "repetition"
-                card = self.create_card_object(child)
-                self.database.log_repetition(card.timestamp, card.id, \
-                card.grade, card.easiness, card.acq_reps, card.ret_reps, \
-                card.lapses, card.acq_reps_since_lapse, \
-                card.ret_reps_since_lapse, card.scheduled_interval, \
-                card.actual_interval, card.new_interval, card.thinking_time)
+                old_card = self.database.get_card(child.find('id').text, False)
+                new_card = self.create_card_object(child)
+                if new_card.timestamp > old_card.last_rep:
+                    print "repetition"
+                    self.database.update_card(new_card)
+                    self.database.log_repetition(new_card.timestamp, \
+                    new_card.id, new_card.grade, new_card.easiness, \
+                    new_card.acq_reps, new_card.ret_reps, new_card.lapses, \
+                    new_card.acq_reps_since_lapse, \
+                    new_card.ret_reps_since_lapse, new_card.scheduled_interval,\
+                    new_card.actual_interval, new_card.new_interval, \
+                    new_card.thinking_time)
