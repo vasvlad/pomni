@@ -473,15 +473,17 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
     
     def update_fact(self, fact):
         # Update fact.
-        self.con.execute("""update facts set id=?, card_type_id=?,
-            creation_time=?, modification_time=? where _id=?""",
-            (fact.id, fact.card_type.id, fact.creation_time,
-             fact.modification_time, fact._id))
+        self.con.execute("""update facts set card_type_id=?, creation_time=?, 
+            modification_time=? where id=?""", (fact.card_type.id, \
+            fact.creation_time, fact.modification_time, fact.id))
+
+        _fact_id = self.con.execute(\
+            """select _id from facts where id=?""", (fact.id, )).fetchone()[0]
         # Delete data_for_fact and recreate it.
         self.con.execute("delete from data_for_fact where _fact_id=?",
-                (fact._id, ))
+                (_fact_id, ))
         self.con.executemany("""insert into data_for_fact(_fact_id, key, value)
-            values(?,?,?)""", ((fact._id, key, value)
+            values(?,?,?)""", ((_fact_id, key, value)
                 for key, value in fact.data.items()))
         self.log().updated_fact(fact)
         # Process media files.
