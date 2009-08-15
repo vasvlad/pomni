@@ -490,9 +490,11 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
     def delete_fact_and_related_data(self, fact):
         for card in self.cards_from_fact(fact):
             self.delete_card(card)
-        self.con.execute("delete from facts where _id=?", (fact._id, ))
+        _fact_id = self.con.execute(\
+            """select _id from facts where id=?""", (fact.id, )).fetchone()[0]
+        self.con.execute("delete from facts where id=?", (fact.id, ))
         self.con.execute("delete from data_for_fact where _fact_id=?",
-                         (fact._id, ))
+                         (_fact_id, ))
         self.log().deleted_fact(fact)
         # Process media files.
         fact.data = {}
