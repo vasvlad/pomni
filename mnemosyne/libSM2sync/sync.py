@@ -206,9 +206,8 @@ class EventManager:
             dvalues = ''.join(["<dv%s><![CDATA[%s]]></dv%s>" % (num, \
             fact.data.values()[num], num) for num in range(len(fact.data))])
             return "<i><t>fact</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><dk>" \
-                "%s</dk>%s<tm>%s</tm><_id>%s</_id></i>" % (event['event'], \
-                fact.id, fact.card_type.id, dkeys, dvalues, event['time'], \
-                fact._id)
+                "%s</dk>%s<tm>%s</tm></i>" % (event['event'], fact.id, \
+                fact.card_type.id, dkeys, dvalues, event['time'])
 
     def create_card_xml_element(self, event):
         """Creates Card XML representation."""
@@ -267,7 +266,6 @@ class EventManager:
         creation_time = int(item.find('tm').text)
         fact_id = item.find('id').text
         fact = Fact(fact_data, card_type, creation_time, fact_id)
-        fact._id = item.find('_id').text
         return fact
 
     def create_card_object(self, item):
@@ -332,7 +330,6 @@ class EventManager:
         event = int(child.find('ev').text)
         if event == events.ADDED_FACT:
             fact = self.create_fact_object(child)
-            fact._id = -1
             print "adding fact with fact.data=", fact.data
             self.database.add_fact(fact)
         elif event == events.UPDATED_FACT:
@@ -366,9 +363,12 @@ class EventManager:
                 self.database.update_card(self.create_card_object(child))
             self.allow_update_card = True
         elif event == events.REPETITION:
-            card = self.create_card_object(child)
-            self.database.log_repetition(card.timestamp, card.id, \
-            card.grade, card.easiness, card.acq_reps, card.ret_reps, \
-            card.lapses, card.acq_reps_since_lapse, \
-            card.ret_reps_since_lapse, card.scheduled_interval, \
-            card.actual_interval, card.new_interval, card.thinking_time)
+            if self.database.has_card_with_external_id(\
+                child.find('id').text):
+                print "repetition"
+                card = self.create_card_object(child)
+                self.database.log_repetition(card.timestamp, card.id, \
+                card.grade, card.easiness, card.acq_reps, card.ret_reps, \
+                card.lapses, card.acq_reps_since_lapse, \
+                card.ret_reps_since_lapse, card.scheduled_interval, \
+                card.actual_interval, card.new_interval, card.thinking_time)
