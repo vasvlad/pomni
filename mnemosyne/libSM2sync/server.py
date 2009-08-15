@@ -48,8 +48,8 @@ class Server:
 
     def __init__(self, uri, database, config, log, ui_controller):
         params = urlparse(uri)
-        self.host = params.scheme
-        self.port = int(params.path)
+        self.host = params[0]
+        self.port = int(params[2])
         self.config = config
         self.log = log
         self.ui_controller = ui_controller

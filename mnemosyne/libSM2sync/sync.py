@@ -24,15 +24,22 @@ class SyncError(Exception):
     pass
 
 
-class DictClass(dict):
+class DictClass:
     """Class for creating custom objects."""
     
     def __init__(self, attributes=None):
+        # just for pylint
+        self.timestamp = self.grade = self.easiness = self.lapses = \
+        self.acq_reps = self.ret_reps = self.acq_reps_since_lapse = \
+        self.ret_reps_since_lapse = self.scheduled_interval = self.id = \
+        self.actual_interval = self.new_interval = self.thinking_time = None
         for attr in attributes.keys():
             setattr(self, attr, attributes[attr])
 
 
 class UIMessenger:
+    """UI wrapper class."""
+
     def __init__(self, messenger, events_updater, status_updater, \
         show_progressbar, progress_updater, hide_progressbar):
         self.show_message = messenger               #Show UI message
