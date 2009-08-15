@@ -68,7 +68,6 @@ class EventManager:
         self.get_media = get_media
         self.ui_controller = ui_controller
         self.stopped = False
-        self.allow_add_card = True
         self.allow_update_card = True
 
     def make_backup(self):
@@ -333,13 +332,9 @@ class EventManager:
         event = int(child.find('ev').text)
         if event == events.ADDED_FACT:
             fact = self.create_fact_object(child)
-            #FIXME remove _id field from fact
             fact._id = -1
-            if not self.database.duplicates_for_fact(fact):
-                print "adding fact with fact.data=", fact.data
-                self.database.add_fact(fact)
-            else:
-                self.allow_add_card = False
+            print "adding fact with fact.data=", fact.data
+            self.database.add_fact(fact)
         elif event == events.UPDATED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
@@ -359,14 +354,12 @@ class EventManager:
         elif event == events.UPDATED_TAG:
             self.database.update_tag(self.create_tag_object(child))
         elif event == events.ADDED_CARD:
-            if self.allow_add_card:
-                if not self.database.has_card_with_external_id(\
-                    child.find('id').text):
-                    card = self.create_card_object(child)
-                    print "adding new card with fact.data=", card.fact.data
-                    self.database.add_card(card)
-                    self.log.added_card(card)
-            self.allow_add_card = True
+            if not self.database.has_card_with_external_id(\
+                child.find('id').text):
+                card = self.create_card_object(child)
+                print "adding new card with fact.data=", card.fact.data
+                self.database.add_card(card)
+                self.log.added_card(card)
         elif event == events.UPDATED_CARD:
             if self.allow_update_card:
                 print "updating card..."
