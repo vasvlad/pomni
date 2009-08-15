@@ -330,19 +330,19 @@ class EventManager:
         event = int(child.find('ev').text)
         if event == events.ADDED_FACT:
             fact = self.create_fact_object(child)
-            print "adding fact with fact.data=", fact.data
+            #print "adding fact with fact.data=", fact.data
             self.database.add_fact(fact)
         elif event == events.UPDATED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
-                print "updating fact with data=", fact.data
+                #print "updating fact with data=", fact.data
                 self.database.update_fact(self.create_fact_object(child))
             else:
                 self.allow_update_card = False
         elif event == events.DELETED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
-                print "deleting fact with data=", fact.data
+                #print "deleting fact with data=", fact.data
                 self.database.delete_fact_and_related_data(fact)
         elif event == events.ADDED_TAG:
             tag = self.create_tag_object(child)
@@ -354,12 +354,12 @@ class EventManager:
             if not self.database.has_card_with_external_id(\
                 child.find('id').text):
                 card = self.create_card_object(child)
-                print "adding new card with fact.data=", card.fact.data
+                #print "adding new card with fact.data=", card.fact.data
                 self.database.add_card(card)
                 self.log.added_card(card)
         elif event == events.UPDATED_CARD:
             if self.allow_update_card:
-                print "updating card..."
+                #print "updating card..."
                 self.database.update_card(self.create_card_object(child))
             self.allow_update_card = True
         elif event == events.REPETITION:
@@ -368,7 +368,7 @@ class EventManager:
                 old_card = self.database.get_card(child.find('id').text, False)
                 new_card = self.create_card_object(child)
                 if new_card.timestamp > old_card.last_rep:
-                    print "repetition"
+                    #print "repetition"
                     self.database.update_card(new_card)
                     self.database.log_repetition(new_card.timestamp, \
                     new_card.id, new_card.grade, new_card.easiness, \
