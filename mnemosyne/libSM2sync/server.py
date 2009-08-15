@@ -60,7 +60,7 @@ class Server:
         self.login = None
         self.passwd = None
         self.logged = False
-        self.id = hex(uuid.getnode())
+        self.machine_id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
         self.protocol = PROTOCOL_VERSION
@@ -149,9 +149,9 @@ class Server:
         self.ui_controller.update_status(\
             "Sending server params to the client. Please, wait...")
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
-            "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
-            self.name, self.version, self.protocol, self.cardtypes, \
-            self.upload_media, self.read_only)
+            "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (\
+            self.machine_id, self.name, self.version, self.protocol, \
+            self.cardtypes, self.upload_media, self.read_only)
 
     def put_sync_client_params(self, environ):
         """Gets client specific params."""
@@ -273,7 +273,7 @@ class Server:
             mediafile = open(os.path.join(self.config.mediadir(), fname))
             data = mediafile.read()
             mediafile.close()
-        except:
+        except IOError:
             return "CANCEL"
         else:
             return data
