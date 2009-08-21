@@ -203,7 +203,7 @@ class InputWidget(Component):
         self.widgets["CardTypeSwithcer"].set_current_page( \
             self.selectors[self.card_type.id]["page"])
         self.selectors[self.card_type.id]["selector"].set_active(True)
-        state = self.card_type.id in (BothWays.id, FrontToBack.id)
+        state = self.card_type.id in (FrontToBack.id)
         self.widgets["PictureButton"].set_sensitive(state)
         self.widgets["SoundButton"].set_sensitive(state)
 

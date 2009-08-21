@@ -473,15 +473,17 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
     
     def update_fact(self, fact):
         # Update fact.
-        self.con.execute("""update facts set id=?, card_type_id=?,
-            creation_time=?, modification_time=? where _id=?""",
-            (fact.id, fact.card_type.id, fact.creation_time,
-             fact.modification_time, fact._id))
+        self.con.execute("""update facts set card_type_id=?, creation_time=?, 
+            modification_time=? where id=?""", (fact.card_type.id, \
+            fact.creation_time, fact.modification_time, fact.id))
+
+        _fact_id = self.con.execute(\
+            """select _id from facts where id=?""", (fact.id, )).fetchone()[0]
         # Delete data_for_fact and recreate it.
         self.con.execute("delete from data_for_fact where _fact_id=?",
-                (fact._id, ))
+                (_fact_id, ))
         self.con.executemany("""insert into data_for_fact(_fact_id, key, value)
-            values(?,?,?)""", ((fact._id, key, value)
+            values(?,?,?)""", ((_fact_id, key, value)
                 for key, value in fact.data.items()))
         self.log().updated_fact(fact)
         # Process media files.
@@ -490,9 +492,11 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
     def delete_fact_and_related_data(self, fact):
         for card in self.cards_from_fact(fact):
             self.delete_card(card)
-        self.con.execute("delete from facts where _id=?", (fact._id, ))
+        _fact_id = self.con.execute(\
+            """select _id from facts where id=?""", (fact.id, )).fetchone()[0]
+        self.con.execute("delete from facts where id=?", (fact.id, ))
         self.con.execute("delete from data_for_fact where _fact_id=?",
-                         (fact._id, ))
+                         (_fact_id, ))
         self.log().deleted_fact(fact)
         # Process media files.
         fact.data = {}
@@ -786,31 +790,18 @@ class SQLite(Database, SQLiteLogging, SQLiteStatistics):
             (next_rep, card._id, card.fact._id)).fetchone()[0]
 
     def duplicates_for_fact(self, fact):
-        #query = "select _id from facts where card_type_id=?"
-        #args = (fact.card_type.id,)
-        #if fact._id:
-        #    query += " and not _id=?"
-        #    args = (fact.card_type.id, fact._id)
-        #duplicates = []            
-        #for cursor in self.con.execute(query, args):
-        #    data = dict([(cursor2["key"], cursor2["value"]) for cursor2 in \
-        #        self.con.execute("""select * from data_for_fact where
-        #        _fact_id=?""", (cursor[0], ))])
-        #    for field in fact.card_type.unique_fields:
-        #        if data[field] == fact[field]:
-        #            duplicates.append(\
-        #                self.get_fact(cursor[0], id_is_internal=True))
-        #            break
-        #return duplicates
-
         ids = []
         for key in fact.card_type.unique_fields:
             ids.extend([cursor["_fact_id"] for cursor in self.con.execute(\
-                """select _fact_id from data_for_fact where key=? and 
-                value=?""", (key, fact.data[key]))])
-        if ids:
-            return [self.get_fact(ids[0], True)]
-        return []
+                """select _fact_id from data_for_fact where key=? and value=?
+                and _fact_id!=?""", (key, fact.data[key], str(fact._id)))])
+            
+        if not ids:
+            return []
+        card_type_id = fact.card_type.id
+        return [self.get_fact(fact_id, True) for fact_id in ids if \
+            self.con.execute("""select card_type_id from facts where _id=?""", \
+            (fact_id,)).fetchone()[0] == card_type_id]
 
     def card_types_in_use(self):
         return [self.card_type_by_id(cursor[0]) for cursor in \

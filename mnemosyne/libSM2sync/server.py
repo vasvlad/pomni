@@ -48,8 +48,8 @@ class Server:
 
     def __init__(self, uri, database, config, log, ui_controller):
         params = urlparse(uri)
-        self.host = params.scheme
-        self.port = int(params.path)
+        self.host = params[0]
+        self.port = int(params[2])
         self.config = config
         self.log = log
         self.ui_controller = ui_controller
@@ -60,7 +60,7 @@ class Server:
         self.login = None
         self.passwd = None
         self.logged = False
-        self.id = hex(uuid.getnode())
+        self.machine_id = hex(uuid.getnode())
         self.name = 'Mnemosyne'
         self.version = mnemosyne.version.version
         self.protocol = PROTOCOL_VERSION
@@ -149,9 +149,9 @@ class Server:
         self.ui_controller.update_status(\
             "Sending server params to the client. Please, wait...")
         return "<params><server id='%s' name='%s' ver='%s' protocol='%s' " \
-            "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (self.id, \
-            self.name, self.version, self.protocol, self.cardtypes, \
-            self.upload_media, self.read_only)
+            "cardtypes='%s' upload='%s' readonly='%s'/></params>" % (\
+            self.machine_id, self.name, self.version, self.protocol, \
+            self.cardtypes, self.upload_media, self.read_only)
 
     def put_sync_client_params(self, environ):
         """Gets client specific params."""
@@ -181,10 +181,6 @@ class Server:
     def get_sync_server_history(self, environ):
         """Gets self history events."""
 
-        #return self.eman.get_history() lazy
-        #for chunk in self.eman.get_history():
-        #    shistory += chunk
-        #return shistory
         self.ui_controller.update_status(\
             "Sending history to the client. Please, wait...")
         count = 0
@@ -210,25 +206,6 @@ class Server:
     def put_sync_client_history(self, environ):
         """Gets client history and applys to self."""
        
-        """
-        self.update_status("Receiving client history...")
-        try:
-            socket = environ['wsgi.input']
-            client_history_length = int(socket.readline())
-            client_history = socket.readline()
-        except:
-            return "CANCEL"
-        else:
-            self.update_status("Backuping. Please, wait...")
-            self.database.make_sync_backup()
-            self.update_status("Applying client history...")
-            from StringIO import StringIO
-            self.eman.apply_history(\
-                StringIO(client_history), client_history_length)
-            self.update_status("Removing backuped history. Please, wait...")
-            self.database.remove_sync_backup()
-            return "OK"
-        """
         socket = environ['wsgi.input']
 
         count = 0
@@ -273,7 +250,7 @@ class Server:
             mediafile = open(os.path.join(self.config.mediadir(), fname))
             data = mediafile.read()
             mediafile.close()
-        except:
+        except IOError:
             return "CANCEL"
         else:
             return data

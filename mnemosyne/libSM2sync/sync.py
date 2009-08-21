@@ -24,15 +24,22 @@ class SyncError(Exception):
     pass
 
 
-class DictClass(dict):
+class DictClass:
     """Class for creating custom objects."""
     
     def __init__(self, attributes=None):
+        # just for pylint
+        self.timestamp = self.grade = self.easiness = self.lapses = \
+        self.acq_reps = self.ret_reps = self.acq_reps_since_lapse = \
+        self.ret_reps_since_lapse = self.scheduled_interval = self.id = \
+        self.actual_interval = self.new_interval = self.thinking_time = None
         for attr in attributes.keys():
             setattr(self, attr, attributes[attr])
 
 
 class UIMessenger:
+    """UI wrapper class."""
+
     def __init__(self, messenger, events_updater, status_updater, \
         show_progressbar, progress_updater, hide_progressbar):
         self.show_message = messenger               #Show UI message
@@ -68,6 +75,7 @@ class EventManager:
         self.get_media = get_media
         self.ui_controller = ui_controller
         self.stopped = False
+        self.allow_update_card = True
 
     def make_backup(self):
         """Creates backup for current database."""
@@ -205,9 +213,8 @@ class EventManager:
             dvalues = ''.join(["<dv%s><![CDATA[%s]]></dv%s>" % (num, \
             fact.data.values()[num], num) for num in range(len(fact.data))])
             return "<i><t>fact</t><ev>%s</ev><id>%s</id><ctid>%s</ctid><dk>" \
-                "%s</dk>%s<tm>%s</tm><_id>%s</_id></i>" % (event['event'], \
-                fact.id, fact.card_type.id, dkeys, dvalues, event['time'], \
-                fact._id)
+                "%s</dk>%s<tm>%s</tm></i>" % (event['event'], fact.id, \
+                fact.card_type.id, dkeys, dvalues, event['time'])
 
     def create_card_xml_element(self, event):
         """Creates Card XML representation."""
@@ -266,7 +273,6 @@ class EventManager:
         creation_time = int(item.find('tm').text)
         fact_id = item.find('id').text
         fact = Fact(fact_data, card_type, creation_time, fact_id)
-        fact._id = item.find('_id').text
         return fact
 
     def create_card_object(self, item):
@@ -331,13 +337,19 @@ class EventManager:
         event = int(child.find('ev').text)
         if event == events.ADDED_FACT:
             fact = self.create_fact_object(child)
-            if not self.database.duplicates_for_fact(fact):
-                self.database.add_fact(fact)
+            #print "adding fact with fact.data=", fact.data
+            self.database.add_fact(fact)
         elif event == events.UPDATED_FACT:
-            self.database.update_fact(self.create_fact_object(child))
+            fact = self.database.get_fact(child.find('id').text, False)
+            if fact:
+                #print "updating fact with data=", fact.data
+                self.database.update_fact(self.create_fact_object(child))
+            else:
+                self.allow_update_card = False
         elif event == events.DELETED_FACT:
             fact = self.database.get_fact(child.find('id').text, False)
             if fact:
+                #print "deleting fact with data=", fact.data
                 self.database.delete_fact_and_related_data(fact)
         elif event == events.ADDED_TAG:
             tag = self.create_tag_object(child)
@@ -349,14 +361,26 @@ class EventManager:
             if not self.database.has_card_with_external_id(\
                 child.find('id').text):
                 card = self.create_card_object(child)
+                #print "adding new card with fact.data=", card.fact.data
                 self.database.add_card(card)
                 self.log.added_card(card)
         elif event == events.UPDATED_CARD:
-            self.database.update_card(self.create_card_object(child))
+            if self.allow_update_card:
+                #print "updating card..."
+                self.database.update_card(self.create_card_object(child))
+            self.allow_update_card = True
         elif event == events.REPETITION:
-            card = self.create_card_object(child)
-            self.database.log_repetition(card.timestamp, card.id, \
-            card.grade, card.easiness, card.acq_reps, card.ret_reps, \
-            card.lapses, card.acq_reps_since_lapse, \
-            card.ret_reps_since_lapse, card.scheduled_interval, \
-            card.actual_interval, card.new_interval, card.thinking_time)
+            if self.database.has_card_with_external_id(\
+                child.find('id').text):
+                old_card = self.database.get_card(child.find('id').text, False)
+                new_card = self.create_card_object(child)
+                if new_card.timestamp > old_card.last_rep:
+                    #print "repetition"
+                    self.database.update_card(new_card)
+                    self.database.log_repetition(new_card.timestamp, \
+                    new_card.id, new_card.grade, new_card.easiness, \
+                    new_card.acq_reps, new_card.ret_reps, new_card.lapses, \
+                    new_card.acq_reps_since_lapse, \
+                    new_card.ret_reps_since_lapse, new_card.scheduled_interval,\
+                    new_card.actual_interval, new_card.new_interval, \
+                    new_card.thinking_time)
