@@ -751,7 +751,7 @@ widget "*.sync_mode_server_start_button" style "sync-button"
 style "sync-mode-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
-    font_name = "Nokia Sans 17"
+    font_name = "Nokia Sans 18"
 }
 widget "*.sync_mode_client_login_label" style "sync-mode-label"
 widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
@@ -784,7 +784,7 @@ style "dialog" {
     engine "pixmap" {
         image {
             function = FLAT_BOX
-            file = "dialogbkg.png"
+            file = "background.png"
             border = {12,12,12,12}
         }
     }
@@ -792,17 +792,19 @@ style "dialog" {
 class "GtkDialog" style "dialog"
 
 style "dialog-label" {
-    font_name = "Nokia Sans Bold 16"
+    fg[NORMAL] = "#FFFFFF"
+    font_name = "Nokia Sans 17"
 }
 widget "*.question_dialog_label" style "dialog-label"
 widget "*.information_dialog_label" style "dialog-label"
 widget "*.warning_dialog_label" style "dialog-label"
+widget "*.media_selection_dialog_label" style "dialog-label"
 
 style "dialog-button-label" {
-    fg[NORMAL] = "#000000"
-    fg[ACTIVE] = "#000000"
+    fg[NORMAL] = "#FFFFFF"
+    fg[ACTIVE] = "#FFFFFF"
     fg[PRELIGHT] = "#000000"
-    font_name = "Nokia Sans Bold 15"
+    font_name = "Nokia Sans 16"
 }
 widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
 widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
@@ -817,7 +819,7 @@ style "question-dialog-button-yes" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "dialog_button.png"
+            file = "button_left.png"
             border = {10,10,10,10}
         }
     }
@@ -832,7 +834,7 @@ style "question-dialog-button-no" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "dialog_button.png"
+            file = "button_right.png"
             border = {10,10,10,10}
         }
     }
@@ -840,6 +842,42 @@ style "question-dialog-button-no" {
 widget "*.question_dialog_button_no" style "question-dialog-button-no"
 widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
 widget "*.categories_manager_dialog_button_close" style "question-dialog-button-no"
+
+style "icon-view" {
+    base[NORMAL] = "#333333"
+}
+widget "*.iconview_widget" style "icon-view"
+
+style "media-scrolls" {
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "arrow_up.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_down.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        image {
+            function = SLIDER
+            orientation = VERTICAL
+            file = "scroll.png"
+        }
+        image {
+            function = BOX
+            file = "scrollbar.png"
+        }
+        image {
+            function = BOX
+            detail = "vscrollbar"
+        }
+    }
+}
+widget "*.scrolledwindow_widget.*" style "media-scrolls"
 #----------------------------- Dialogs ------------------
 
 

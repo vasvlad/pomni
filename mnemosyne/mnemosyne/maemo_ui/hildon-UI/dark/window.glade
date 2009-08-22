@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Aug 22 21:03:12 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Aug 22 22:08:45 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -2840,7 +2840,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
   </widget>
   <widget class="GtkDialog" id="media_selection_dialog">
     <property name="width_request">510</property>
-    <property name="height_request">375</property>
+    <property name="height_request">420</property>
     <property name="border_width">5</property>
     <property name="type">GTK_WINDOW_POPUP</property>
     <property name="resizable">False</property>
@@ -2852,11 +2852,25 @@ of Mnemosyne program. You can use it as Server or Client.</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox3">
         <property name="visible">True</property>
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <property name="spacing">5</property>
+        <child>
+          <widget class="GtkLabel" id="media_selection_dialog_label">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Select media</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">5</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
         <child>
           <widget class="GtkScrolledWindow" id="scrolledwindow_widget">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="border_width">7</property>
             <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
             <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
             <child>
@@ -2867,45 +2881,44 @@ of Mnemosyne program. You can use it as Server or Client.</property>
             </child>
           </widget>
           <packing>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child internal-child="action_area">
           <widget class="GtkHButtonBox" id="dialog-action_area3">
             <property name="visible">True</property>
+            <property name="homogeneous">True</property>
             <property name="layout_style">GTK_BUTTONBOX_CENTER</property>
             <child>
               <widget class="GtkButton" id="image_selection_dialog_button_select">
-                <property name="width_request">120</property>
-                <property name="height_request">80</property>
+                <property name="width_request">232</property>
+                <property name="height_request">60</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">SELECT</property>
+                <property name="label" translatable="yes">Select</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="select_item"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="padding">10</property>
               </packing>
             </child>
             <child>
               <widget class="GtkButton" id="image_selection_dialog_button_close">
-                <property name="width_request">120</property>
-                <property name="height_request">80</property>
+                <property name="width_request">232</property>
+                <property name="height_request">60</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">CLOSE</property>
+                <property name="label" translatable="yes">Close</property>
                 <property name="response_id">0</property>
                 <signal name="clicked" handler="close_media_selection_dialog"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
-                <property name="padding">10</property>
                 <property name="position">1</property>
               </packing>
             </child>
