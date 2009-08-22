@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sat Aug 22 18:36:53 2009 -->
+<!--Generated with glade3 3.4.5 on Sat Aug 22 21:03:12 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -36,10 +36,10 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkTable" id="table1">
+              <widget class="GtkTable" id="main_mode_buttons_table">
                 <property name="visible">True</property>
                 <property name="n_columns">6</property>
-                <property name="column_spacing">10</property>
+                <property name="column_spacing">8</property>
                 <child>
                   <widget class="GtkButton" id="menu_button_review">
                     <property name="width_request">110</property>
@@ -150,7 +150,7 @@
                         <child>
                           <widget class="GtkLabel" id="menu_label_synh">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Synh</property>
+                            <property name="label" translatable="yes">Sync</property>
                           </widget>
                           <packing>
                             <property name="top_attach">3</property>
@@ -299,7 +299,8 @@
               <packing>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
-                <property name="x_padding">40</property>
+                <property name="x_options">GTK_EXPAND | GTK_SHRINK</property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
           </widget>
@@ -553,6 +554,7 @@
               </widget>
               <packing>
                 <property name="x_options"></property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
             <child>
@@ -704,6 +706,7 @@
                 <property name="left_attach">2</property>
                 <property name="right_attach">3</property>
                 <property name="x_options"></property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
           </widget>
@@ -1272,7 +1275,7 @@
                         <child>
                           <widget class="GtkLabel" id="input_mode_new_category_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">New Category:</property>
+                            <property name="label" translatable="yes">New category:</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -2096,6 +2099,12 @@
                     <property name="n_rows">5</property>
                     <property name="homogeneous">True</property>
                     <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
                       <widget class="GtkEventBox" id="sync_toolbar_main_menu_button">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
@@ -2115,12 +2124,6 @@
                         <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                     <child>
                       <widget class="GtkToggleButton" id="sync_toolbar_client_mode_button">

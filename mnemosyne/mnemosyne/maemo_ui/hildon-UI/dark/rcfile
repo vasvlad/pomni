@@ -39,21 +39,39 @@
 # This sets a style called "button".  The name is not really important, as
 # it is assigned to the actual widgets at the bottom of the file.
 
+#----------------------------- General settings ------------------
 style "general-widget" {
     GtkWidget::image-spacing = 0
     GtkWidget::focus-line-width = 0
 }
 class "GtkWidget" style "general-widget"
 
+style "html-container" {
+    xthickness = 10
+    ythickness = 10
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "card_background.png"
+            border = {14,14,14,14}
+        }
+    }
+}
+#----------------------------- General settings ------------------
+
+
 #----------------------------- Main Menu ------------------
 style "program-name-label" {
     fg[NORMAL] = "#FFFFFF"
-    font_name = "Nokia Sans 14"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 18"
 }
 widget "*.program_name_label" style "program-name-label"
 
 style "menu-label" {
-    font_name = "Nokia Sans 15"
+    fg[NORMAL] = "#000000"
+    fg[PRELIGHT] = "#000000"
+    font_name = "Nokia Sans Wide Bold 15.5"
 }
 widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
@@ -125,27 +143,8 @@ widget "*.menu_button_exit" style "menu-button-exit"
 
 
 #----------------------------- Review mode ------------------
-style "html-container" {
-    xthickness = 10
-    ythickness = 10
-    engine "pixmap" {
-        image {
-            function = SHADOW
-            file = "card_background.png"
-            border = {14,14,14,14}
-        }
-    }
-}
 widget "*.question_container" style "html-container"
 widget "*.answer_container" style "html-container"
-widget "*.sync_mode_client_port_entry_container" style "html-container"
-widget "*.sync_mode_client_login_entry_container" style "html-container"
-widget "*.sync_mode_client_passwd_entry_container" style "html-container"
-widget "*.sync_mode_client_address_entry_container" style "html-container"
-widget "*.sync_mode_server_login_entry_container" style "html-container"
-widget "*.sync_mode_server_passwd_entry_container" style "html-container"
-widget "*.sync_mode_server_address_entry_container" style "html-container"
-widget "*.sync_mode_server_port_entry_container" style "html-container"
 
 style "grades-container" {
     engine "pixmap" {
@@ -184,98 +183,48 @@ style "cardtypes-container" {
 }
 widget "*.input_mode_cardtypes_container" style "cardtypes-container"
 
-style "input-mode-add-card-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_add_card_normal.png"
-        }
-    }
-}
-widget "*.input_mode_toolbar_add_card_w" style "input-mode-add-card-button"
-
-style "input-mode-add-category-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_add_new_category.png"
-        }
-    }
-}
-widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
-
-style "input-mode-close-add-category-block-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_close_add_category_block.png"
-        }
-    }
-}
-widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
-
 style "snd-button" {
     engine "pixmap" {
         image {
             function = BOX
             state = NORMAL
             shadow = IN
-            file = "sound_preview_stop.png"
+            file = "media_stop.png"
         }
         image {
             function = BOX
             state = NORMAL
             shadow = OUT
-            file = "sound_preview_play.png"
+            file = "media_play.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = IN
-            file = "sound_preview_stop.png"
+            file = "media_stop.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = OUT
-            file = "sound_preview_play.png"
+            file = "media_play.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = IN
-            file = "sound_preview_stop.png"
+            file = "media_stop.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = OUT
-            file = "sound_preview_play.png"
+            file = "media_play.png"
         }
     }
 }
 widget "*.input_mode_snd_button" style "snd-button"
 widget "*.review_mode_snd_button" style "snd-button"
-
-style "input-mode-prev-category-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_prev_category.png"
-        }
-    }
-}
-widget "*.input_mode_prev_category_w" style "input-mode-prev-category-button"
-
-style "input-mode-next-category-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_next_category.png"
-        }
-    }
-}
-widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
 
 style "front-to-back-cardtype" {
     GtkRadioButton::indicator-size = 80
@@ -449,36 +398,6 @@ style "cloze-cardtype" {
 }
 widget "*.cloze_mode_selector_w" style "cloze-cardtype"
 
-style "sound-content-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "sound_content_button_insensitive.png"
-        }
-        image {
-            function = BOX
-            file = "sound_content_button_normal.png"
-        }
-    }
-}
-widget "*.sound_content_button" style "sound-content-button"
-
-style "picture-content-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            file = "picture_content_button_insensitive.png"
-        }
-        image {
-            function = BOX
-            file = "picture_content_button_normal.png"
-        }
-    }
-}
-widget "*.picture_content_button" style "picture-content-button"
-
 widget "*.input_mode_answer_container" style "html-container"
 widget "*.input_mode_question_container" style "html-container"
 widget "*.input_mode_foreign_container" style "html-container"
@@ -505,7 +424,7 @@ widget "*.input_mode_new_category_entry" style "entry"
 style "category-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
-    font_name = "Nokia Sans 17"
+    font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_label" style "category-label"
 widget "*.category_name_w" style "category-label"
@@ -683,6 +602,15 @@ widget "*.config_mode_entry_sounddir" style "textareas"
 
 
 #----------------------------- Sync mode ------------------
+widget "*.sync_mode_client_port_entry_container" style "html-container"
+widget "*.sync_mode_client_login_entry_container" style "html-container"
+widget "*.sync_mode_client_passwd_entry_container" style "html-container"
+widget "*.sync_mode_client_address_entry_container" style "html-container"
+widget "*.sync_mode_server_login_entry_container" style "html-container"
+widget "*.sync_mode_server_passwd_entry_container" style "html-container"
+widget "*.sync_mode_server_address_entry_container" style "html-container"
+widget "*.sync_mode_server_port_entry_container" style "html-container"
+
 style "sync-client" {
     engine "pixmap" {
         image {
