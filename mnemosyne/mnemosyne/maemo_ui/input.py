@@ -67,12 +67,12 @@ class InputWidget(Component):
                 self.close_media_selection_dialog_cb),
             ("input_mode_prev_category_w", "button-press-event", self.change_category_cb),
             ("input_mode_next_category_w", "button-press-event", self.change_category_cb),
-            ("input_mode_add_new_category_w", "clicked", \
+            ("input_mode_add_new_category_w", "button-press-event", \
                 self.create_new_category_cb),
             ("sound_content_button", "button-press-event", self.add_sound_cb),
             ("category_name_container", "clicked", \
                 self.show_add_category_block_cb),
-            ("input_mode_close_add_category_block_w", "clicked",
+            ("input_mode_close_add_category_block_w", "button-press-event",
                 self.hide_add_category_block_cb),
             ("input_mode_snd_button", "released", \
                 self.preview_sound_in_input_cb)])
@@ -258,7 +258,7 @@ class InputWidget(Component):
                 new_category = self.categories_list[len(self.categories_list)-1]
         self.widgets["CurrentCategory"].set_text(new_category)
 
-    def create_new_category_cb(self, widget):
+    def create_new_category_cb(self, widget, event):
         """Create new category."""
 
         new_category = self.widgets["NewCategory"].get_text()
@@ -266,7 +266,7 @@ class InputWidget(Component):
             self.categories_list.append(new_category)
             self.widgets["NewCategory"].set_text("")
             self.widgets["CurrentCategory"].set_text(new_category)
-            self.hide_add_category_block_cb(None)
+            self.hide_add_category_block_cb(None, None)
 
     def add_picture_cb(self, widget, event):
         """Show image selection dialog."""
@@ -399,7 +399,7 @@ class InputWidget(Component):
         self.widgets["AddCategoryBlock"].show()
         self.widgets["NewCategory"].grab_focus()
 
-    def hide_add_category_block_cb(self, widget):
+    def hide_add_category_block_cb(self, widget, event):
         """Hide add category block."""
 
         self.widgets["ChangeCategoryBlock"].show()
