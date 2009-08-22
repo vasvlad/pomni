@@ -460,7 +460,8 @@ style "general-settings-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "wrench.png"
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
         }
     }
 }
@@ -471,11 +472,13 @@ style "tts-settings-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            file = "speaker.png"
+            overlay_file = "speaker_disabled.png"
+            overlay_stretch = FALSE
         }
         image {
             function = BOX
-            file = "speaker.png"
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
         }
     }
 }
@@ -533,37 +536,37 @@ style "config-checkboxes" {
             function = BOX
             state = NORMAL
             shadow = IN
-            file = "checked.png"
+            file = "checkbox_checked.png"
         }
         image {
             function = BOX
             state = NORMAL
             shadow = OUT
-            file = "card_background.png"
+            file = "checkbox.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = IN
-            file = "checked.png"
+            file = "checkbox_checked.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = OUT
-            file = "card_background.png"
+            file = "checkbox.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = IN
-            file = "checked.png"
+            file = "checkbox_checked.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = OUT
-            file = "card_background.png"
+            file = "checkbox.png"
         }
     }
 }
