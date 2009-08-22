@@ -160,10 +160,22 @@ style "toolbar-container" {
     }
 }
 widget "*.review_mode_toolbar_container" style "toolbar-container"
+widget "*.input_mode_toolbar_container" style "toolbar-container"
 #----------------------------- Review mode ------------------
 
 
 #----------------------------- Input mode ------------------
+style "cardtypes-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "right_5.png"
+            border = {40,40,1,1}
+        }
+    }
+}
+widget "*.input_mode_cardtypes_container" style "cardtypes-container"
+
 style "input-mode-add-card-button" {
     engine "pixmap" {
         image {
@@ -258,172 +270,172 @@ style "input-mode-next-category-button" {
 widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
 
 style "front-to-back-cardtype" {
-    GtkRadioButton::indicator-size = 72
+    GtkRadioButton::indicator-size = 80
     engine "pixmap" {
         image {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "front_to_back_card_type_selected.png"
+            file = "forward_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "front_to_back_card_type_unselected.png"
+            file = "forward_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "front_to_back_card_type_selected.png"
+            file = "forward_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "front_to_back_card_type_unselected.png"
+            file = "forward_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "front_to_back_card_type_selected.png"
+            file = "forward_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "front_to_back_card_type_unselected.png"
+            file = "forward_disabled.png"
         }
     }
 }
 widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
 
 style "both-way-cardtype" {
-    GtkRadioButton::indicator-size = 72
+    GtkRadioButton::indicator-size = 80
     engine "pixmap" {
         image {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "both_way_card_type_selected.png"
+            file = "both_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "both_way_card_type_unselected.png"
+            file = "both_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "both_way_card_type_selected.png"
+            file = "both_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "both_way_card_type_unselected.png"
+            file = "both_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "both_way_card_type_selected.png"
+            file = "both_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "both_way_card_type_unselected.png"
+            file = "both_disabled.png"
         }
     }
 }
 widget "*.both_way_mode_selector_w" style "both-way-cardtype"
 
 style "three-side-cardtype" {
-    GtkRadioButton::indicator-size = 72
+    GtkRadioButton::indicator-size = 80
     engine "pixmap" {
         image {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "three_side_card_type_selected.png"
+            file = "trans_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "three_side_card_type_unselected.png"
+            file = "trans_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "three_side_card_type_selected.png"
+            file = "trans_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "three_side_card_type_unselected.png"
+            file = "trans_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "three_side_card_type_selected.png"
+            file = "trans_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "three_side_card_type_unselected.png"
+            file = "trans_disabled.png"
         }
     }
 }
 widget "*.three_side_mode_selector_w" style "three-side-cardtype"
 
 style "cloze-cardtype" {
-    GtkRadioButton::indicator-size = 72
+    GtkRadioButton::indicator-size = 80
     engine "pixmap" {
         image {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "cloze_card_type_selected.png"
+            file = "close_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "cloze_card_type_unselected.png"
+            file = "close_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "cloze_card_type_selected.png"
+            file = "close_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "cloze_card_type_unselected.png"
+            file = "close_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "cloze_card_type_selected.png"
+            file = "close_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "cloze_card_type_unselected.png"
+            file = "close_disabled.png"
         }
     }
 }
@@ -459,32 +471,6 @@ style "picture-content-button" {
 }
 widget "*.picture_content_button" style "picture-content-button"
 
-style "vseparator" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            file = "vseparator.png"
-        }
-    }
-}
-widget "*.vseparator1" style "vseparator"
-widget "*.vseparator2" style "vseparator"
-widget "*.review_mode_vseparator1" style "vseparator"
-widget "*.review_mode_vseparator2" style "vseparator"
-widget "*.config_mode_vseparator1" style "vseparator"
-widget "*.config_mode_vseparator2" style "vseparator"
-widget "*.sync_mode_vseparator1" style "vseparator"
-
-style "hseparator" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            file = "hseparator.png"
-        }
-    }
-}
-widget "*.hseparator1" style "hseparator"
-
 widget "*.input_mode_answer_container" style "html-container"
 widget "*.input_mode_question_container" style "html-container"
 widget "*.input_mode_foreign_container" style "html-container"
@@ -509,7 +495,9 @@ style "entry" {
 widget "*.input_mode_new_category_entry" style "entry"
 
 style "category-label" {
-    font_name = "Nokia Sans 18"
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 17"
 }
 widget "*.input_mode_new_category_label" style "category-label"
 widget "*.category_name_w" style "category-label"
@@ -931,7 +919,7 @@ style "main-window" {
     engine "pixmap"{
         image {
             function = FLAT_BOX
-            file = "background.png"
+            file = "general.png"
         }
     }
 }
