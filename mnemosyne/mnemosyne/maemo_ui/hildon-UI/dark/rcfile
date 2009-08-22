@@ -138,6 +138,14 @@ style "html-container" {
 }
 widget "*.question_container" style "html-container"
 widget "*.answer_container" style "html-container"
+widget "*.sync_mode_client_port_entry_container" style "html-container"
+widget "*.sync_mode_client_login_entry_container" style "html-container"
+widget "*.sync_mode_client_passwd_entry_container" style "html-container"
+widget "*.sync_mode_client_address_entry_container" style "html-container"
+widget "*.sync_mode_server_login_entry_container" style "html-container"
+widget "*.sync_mode_server_passwd_entry_container" style "html-container"
+widget "*.sync_mode_server_address_entry_container" style "html-container"
+widget "*.sync_mode_server_port_entry_container" style "html-container"
 
 style "grades-container" {
     engine "pixmap" {
@@ -515,6 +523,7 @@ style "config-mode-toolbar-container" {
     }
 }
 widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
+widget "*.sync_mode_toolbar_container" style "config-mode-toolbar-container"
 
 style "labels-container" {
     engine "pixmap" {
@@ -680,42 +689,42 @@ style "sync-client" {
             function = BOX
             state = NORMAL
             shadow = IN
-            file = "sync_client_selected.png"
+            file = "client_icon.png"
         }
         image {
             function = BOX
             state = NORMAL
             shadow = OUT
-            file = "sync_client.png"
+            file = "client_icon.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = IN
-            file = "sync_client_selected.png"
+            file = "client_icon.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = OUT
-            file = "sync_client.png"
+            file = "client_icon.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = IN
-            file = "sync_client_selected.png"
+            file = "client_icon.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = OUT
-            file = "sync_client.png"
+            file = "client_icon.png"
         }
         image {
             function = BOX
             state = INSENSITIVE
-            file = "sync_client_insensitive.png"
+            file = "client_icon.png"
         }
     }
 }
@@ -727,42 +736,42 @@ style "sync-server" {
             function = BOX
             state = NORMAL
             shadow = IN
-            file = "sync_server_selected.png"
+            file = "server_icon.png"
         }
         image {
             function = BOX
             state = NORMAL
             shadow = OUT
-            file = "sync_server.png"
+            file = "server_icon.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = IN
-            file = "sync_server_selected.png"
+            file = "server_icon.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = OUT
-            file = "sync_server.png"
+            file = "server_icon.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = IN
-            file = "sync_server_selected.png"
+            file = "server_icon.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = OUT
-            file = "sync_server.png"
+            file = "server_icon.png"
         }
         image {
             function = BOX
             state = INSENSITIVE
-            file = "sync_server_insensitive.png"
+            file = "server_icon.png"
         }
     }
 }
@@ -774,37 +783,37 @@ style "sync-button" {
             function = BOX
             state = NORMAL
             shadow = IN
-            file = "sync_stop.png"
+            file = "stop_sync_icon.png"
         }
         image {
             function = BOX
             state = NORMAL
             shadow = OUT
-            file = "synh.png"
+            file = "sync_icon.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = IN
-            file = "sync_stop.png"
+            file = "stop_sync_icon.png"
         }
         image {
             function = BOX
             state = ACTIVE
             shadow = OUT
-            file = "synh.png"
+            file = "sync_icon.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = IN
-            file = "sync_stop.png"
+            file = "stop_sync_icon.png"
         }
         image {
             function = BOX
             state = PRELIGHT
             shadow = OUT
-            file = "synh.png"
+            file = "sync_icon.png"
         }
     }
 }
@@ -812,6 +821,8 @@ widget "*.sync_mode_client_start_button" style "sync-button"
 widget "*.sync_mode_server_start_button" style "sync-button"
 
 style "sync-mode-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
     font_name = "Nokia Sans 17"
 }
 widget "*.sync_mode_client_login_label" style "sync-mode-label"
