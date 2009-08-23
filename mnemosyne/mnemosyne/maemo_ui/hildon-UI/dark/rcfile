@@ -1166,9 +1166,10 @@ widget "*.sync_mode_server_*_entry" style "sync-textarea"
 
 #----------------------------- Dialogs ------------------
 style "dialog" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = FLAT_BOX
+            shaped = TRUE
             file = "background.png"
             border = {12,12,12,12}
         }
