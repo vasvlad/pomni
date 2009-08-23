@@ -52,7 +52,7 @@ class InputWidget(Component):
         self.conf = self.config()
         self.connections = []
         self.connect_signals([\
-            ("input_mode_toolbar_button_back_w", "button-press-event", \
+            ("input_mode_toolbar_button_back_w", "clicked", \
                 self.input_to_main_menu_cb),
             ("front_to_back_mode_selector_w", "released", \
                 self.change_card_type_cb),
@@ -60,19 +60,19 @@ class InputWidget(Component):
             ("three_side_mode_selector_w", "released", \
                 self.change_card_type_cb),
             ("cloze_mode_selector_w", "released", self.change_card_type_cb),
-            ("picture_content_button", "button-press-event", self.add_picture_cb),
+            ("picture_content_button", "clicked", self.add_picture_cb),
             ("image_selection_dialog_button_select", "clicked", \
                 self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked",
                 self.close_media_selection_dialog_cb),
-            ("input_mode_prev_category_w", "button-press-event", self.change_category_cb),
-            ("input_mode_next_category_w", "button-press-event", self.change_category_cb),
-            ("input_mode_add_new_category_w", "button-press-event", \
+            ("input_mode_prev_category_w", "clicked", self.change_category_cb),
+            ("input_mode_next_category_w", "clicked", self.change_category_cb),
+            ("input_mode_add_new_category_w", "clicked", \
                 self.create_new_category_cb),
-            ("sound_content_button", "button-press-event", self.add_sound_cb),
+            ("sound_content_button", "clicked", self.add_sound_cb),
             ("category_name_container", "clicked", \
                 self.show_add_category_block_cb),
-            ("input_mode_close_add_category_block_w", "button-press-event",
+            ("input_mode_close_add_category_block_w", "clicked",
                 self.hide_add_category_block_cb),
             ("input_mode_snd_button", "released", \
                 self.preview_sound_in_input_cb)])
@@ -241,7 +241,7 @@ class InputWidget(Component):
                 return False
         return True
 
-    def change_category_cb(self, widget, event):
+    def change_category_cb(self, widget):
         """Change current category."""
 
         if widget.name == "prev_category_w":
@@ -258,7 +258,7 @@ class InputWidget(Component):
                 new_category = self.categories_list[len(self.categories_list)-1]
         self.widgets["CurrentCategory"].set_text(new_category)
 
-    def create_new_category_cb(self, widget, event):
+    def create_new_category_cb(self, widget):
         """Create new category."""
 
         new_category = self.widgets["NewCategory"].get_text()
@@ -266,9 +266,9 @@ class InputWidget(Component):
             self.categories_list.append(new_category)
             self.widgets["NewCategory"].set_text("")
             self.widgets["CurrentCategory"].set_text(new_category)
-            self.hide_add_category_block_cb(None, None)
+            self.hide_add_category_block_cb(None)
 
-    def add_picture_cb(self, widget, event):
+    def add_picture_cb(self, widget):
         """Show image selection dialog."""
 
         self.main_widget().soundplayer.stop()
@@ -311,7 +311,7 @@ class InputWidget(Component):
         self.areas["question"].get_buffer().set_text(question_text)
         self.show_snd_container()
 
-    def add_sound_cb(self, widget, event):
+    def add_sound_cb(self, widget):
         """Show sound selection dialog."""
 
         self.main_widget().soundplayer.stop()
@@ -399,13 +399,13 @@ class InputWidget(Component):
         self.widgets["AddCategoryBlock"].show()
         self.widgets["NewCategory"].grab_focus()
 
-    def hide_add_category_block_cb(self, widget, event):
+    def hide_add_category_block_cb(self, widget):
         """Hide add category block."""
 
         self.widgets["ChangeCategoryBlock"].show()
         self.widgets["AddCategoryBlock"].hide()
 
-    def input_to_main_menu_cb(self, widget, event):
+    def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
         #if self.added_new_cards:

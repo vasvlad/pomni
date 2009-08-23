@@ -151,7 +151,7 @@ style "grades-container" {
         image {
             function = SHADOW
             file = "right_6.png"
-            border = {40,40,1,1}
+            border = {41,41,1,1}
         }
     }
 }
@@ -162,12 +162,177 @@ style "toolbar-container" {
         image {
             function = SHADOW
             file = "left_5.png"
-            border = {40,40,1,1}
+            border = {41,41,1,1}
         }
     }
 }
 widget "*.review_mode_toolbar_container" style "toolbar-container"
 widget "*.input_mode_toolbar_container" style "toolbar-container"
+
+style "speak-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "speaker_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_tts_button" style "speak-button"
+
+style "edit-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "edit_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "edit.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_edit_card_button" style "edit-button"
+
+style "add-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "plus.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_add_card_button" style "add-card-button"
+
+style "delete-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "trash_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "trash.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+
+style "grade0" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "0_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "0_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "1_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "1_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "2_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "2_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "3_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "3_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "4_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "4_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "5_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "5_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade5" style "grade5"
+
 #----------------------------- Review mode ------------------
 
 
@@ -177,11 +342,91 @@ style "cardtypes-container" {
         image {
             function = SHADOW
             file = "right_5.png"
-            border = {40,40,1,1}
+            border = {41,41,1,1}
         }
     }
 }
 widget "*.input_mode_cardtypes_container" style "cardtypes-container"
+
+style "previous-category" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_prev_category_w" style "previous-category"
+
+style "next-category" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_next_category_w" style "next-category"
+
+style "add-image-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_image.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_image.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.picture_content_button" style "add-image-button"
+
+style "add-music-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_music.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_music.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.sound_content_button" style "add-music-button"
+
+widget "*.input_mode_toolbar_add_card_w" style "add-card-button"
+
+style "add-new-category-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "plus.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_add_new_category_w" style "add-new-category-button"
+
+style "close-new-category-block-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "close.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_close_add_category_block_w" style "close-new-category-block-button"
 
 style "snd-button" {
     engine "pixmap" {
@@ -407,10 +652,11 @@ widget "*.input_mode_cloze_container" style "html-container"
 widget "*.input_mode_new_category_entry_container" style "html-container"
 
 style "category-name-container" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             file = "nothing.png"
+            stretch = TRUE
         }
     }
 }
@@ -432,12 +678,19 @@ widget "*.category_name_w" style "category-label"
 
 
 #----------------------------- Config mode ------------------
+widget "*.config_mode_tts_lang_next_button" style "next-category"
+widget "*.config_mode_tts_voice_next_button" style "next-category"
+widget "*.config_mode_increase_font_size_buttton" style "next-category"
+widget "*.config_mode_tts_lang_prev_button" style "previous-category"
+widget "*.config_mode_tts_voice_prev_button" style "previous-category"
+widget "*.config_mode_decrease_font_size_buttton" style "previous-category"
+
 style "config-mode-toolbar-container" {
     engine "pixmap" {
         image {
             function = SHADOW
             file = "left_settings.png"
-            border = {40,40,1,1}
+            border = {41,41,1,1}
         }
     }
 }
@@ -910,15 +1163,9 @@ widget "window" style "main-window"
 style "main-menu-button" {
     engine "pixmap" {
         image {
-            state = INSENSITIVE
             function = BOX
-            file = "back_insensitive.png"
-        }
-    }
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "back.png"
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
         }
     }
 }

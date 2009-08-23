@@ -139,7 +139,7 @@ class ReviewWdgt(ReviewWidget):
         self.sound_button.set_active(False)
 
     # callbacks
-    def speak_cb(self, widget, event):
+    def speak_cb(self, widget):
         """Speaks current question."""
 
         config = self.config()
@@ -160,7 +160,7 @@ class ReviewWdgt(ReviewWidget):
         else:
             self.main_widget().soundplayer.stop()
 
-    def review_to_main_menu_cb(self, widget, event):
+    def review_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
         self.main_widget().soundplayer.stop()
@@ -171,20 +171,20 @@ class ReviewWdgt(ReviewWidget):
 
         self.review_controller().show_answer()
 
-    def delete_card_cb(self, widget, event):
+    def delete_card_cb(self, widget):
         """Hook for delete card."""
 
         self.main_widget().soundplayer.stop()
         self.controller().delete_current_fact()
 
-    def edit_card_cb(self, widget, event):
+    def edit_card_cb(self, widget):
         """Hook for edit card."""
 
         self.main_widget().soundplayer.stop()
         self.main_widget().show_mode("input")
         self.controller().edit_current_card()
 
-    def grade_cb(self, widget, event):
+    def grade_cb(self, widget):
         """Call grade of answer."""
 
         self.main_widget().soundplayer.stop()
