@@ -36,7 +36,6 @@ class ConfigHook(Component):
         """Entry point."""
         for key, value in {\
             "theme_path": "/usr/share/mnemosyne/hildon-UI/rainbow",
-            "themes": ['rainbow'],
             "fullscreen": True,
             "font_size": 30.0,
             "startup_with_review": False,
