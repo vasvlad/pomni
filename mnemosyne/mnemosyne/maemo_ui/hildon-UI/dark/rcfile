@@ -46,6 +46,17 @@ style "general-widget" {
 }
 class "GtkWidget" style "general-widget"
 
+# Style for Main window
+style "main-window" {
+    engine "pixmap"{
+        image {
+            function = FLAT_BOX
+            file = "general.png"
+        }
+    }
+}
+widget "window" style "main-window"
+
 style "html-container" {
     xthickness = 10
     ythickness = 10
@@ -57,6 +68,19 @@ style "html-container" {
         }
     }
 }
+
+# Style for "To Main Menu" button
+style "main-menu-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.*main_menu_button" style "main-menu-button"
+widget "*.input_mode_toolbar_button_back_w" style "main-menu-button"
 #----------------------------- General settings ------------------
 
 
@@ -73,12 +97,7 @@ style "menu-label" {
     fg[PRELIGHT] = "#000000"
     font_name = "Nokia Sans Wide Bold 15.5"
 }
-widget "*.menu_label_review" style "menu-label"
-widget "*.menu_label_input" style "menu-label"
-widget "*.menu_label_synh" style "menu-label"
-widget "*.menu_label_conf" style "menu-label"
-widget "*.menu_label_about" style "menu-label"
-widget "*.menu_label_exit" style "menu-label"
+widget "*.menu_label_*" style "menu-label"
 
 style "menu-button-review" {
     engine "pixmap" {
@@ -100,7 +119,7 @@ style "menu-button-input" {
 }
 widget "*.menu_button_input" style "menu-button-input"
 
-style "menu-button-synh" {
+style "menu-button-sync" {
     engine "pixmap" {
         image {
             function = BOX
@@ -108,7 +127,7 @@ style "menu-button-synh" {
         }
     }
 }
-widget "*.menu_button_synh" style "menu-button-synh"
+widget "*.menu_button_sync" style "menu-button-sync"
 
 style "menu-button-conf" {
     engine "pixmap" {
@@ -167,7 +186,6 @@ style "toolbar-container" {
     }
 }
 widget "*.review_mode_toolbar_container" style "toolbar-container"
-widget "*.input_mode_toolbar_container" style "toolbar-container"
 
 style "speak-button" {
     engine "pixmap" {
@@ -337,6 +355,8 @@ widget "*.grade5" style "grade5"
 
 
 #----------------------------- Input mode ------------------
+widget "*.input_mode_toolbar_container" style "toolbar-container"
+
 style "cardtypes-container" {
     engine "pixmap" {
         image {
@@ -697,7 +717,6 @@ style "config-mode-toolbar-container" {
     }
 }
 widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
-widget "*.sync_mode_toolbar_container" style "config-mode-toolbar-container"
 
 style "labels-container" {
     engine "pixmap" {
@@ -986,14 +1005,10 @@ widget "*.config_mode_entry_sounddir" style "textareas"
 
 
 #----------------------------- Sync mode ------------------
-widget "*.sync_mode_client_port_entry_container" style "html-container"
-widget "*.sync_mode_client_login_entry_container" style "html-container"
-widget "*.sync_mode_client_passwd_entry_container" style "html-container"
-widget "*.sync_mode_client_address_entry_container" style "html-container"
-widget "*.sync_mode_server_login_entry_container" style "html-container"
-widget "*.sync_mode_server_passwd_entry_container" style "html-container"
-widget "*.sync_mode_server_address_entry_container" style "html-container"
-widget "*.sync_mode_server_port_entry_container" style "html-container"
+widget "*.sync_mode_toolbar_container" style "config-mode-toolbar-container"
+
+widget "*.sync_mode_client_*_container" style "html-container"
+widget "*.sync_mode_server_*_container" style "html-container"
 
 style "sync-client" {
     engine "pixmap" {
@@ -1137,29 +1152,15 @@ style "sync-mode-label" {
     fg[PRELIGHT] = "#FFFFFF"
     font_name = "Nokia Sans 18"
 }
-widget "*.sync_mode_client_login_label" style "sync-mode-label"
-widget "*.sync_mode_client_passwd_label" style "sync-mode-label"
-widget "*.sync_mode_client_address_label" style "sync-mode-label"
-widget "*.sync_mode_client_port_label" style "sync-mode-label"
+widget "*.sync_mode_client_*_label" style "sync-mode-label"
 widget "*.sync_mode_information_label" style "sync-mode-label"
-widget "*.sync_mode_server_port_label" style "sync-mode-label"
-widget "*.sync_mode_server_address_label" style "sync-mode-label"
-widget "*.sync_mode_client_status_label" style "sync-mode-label"
-widget "*.sync_mode_server_status_label" style "sync-mode-label"
-widget "*.sync_mode_server_login_label" style "sync-mode-label"
-widget "*.sync_mode_server_passwd_label" style "sync-mode-label"
+widget "*.sync_mode_server_*_label" style "sync-mode-label"
 
 style "sync-textarea" {
     font_name = "Nokia Sans 20"
 }
-widget "*.sync_mode_client_login_entry" style "sync-textarea"
-widget "*.sync_mode_client_passwd_entry" style "sync-textarea"
-widget "*.sync_mode_client_address_entry" style "sync-textarea"
-widget "*.sync_mode_client_port_entry" style "sync-textarea"
-widget "*.sync_mode_server_port_entry" style "sync-textarea"
-widget "*.sync_mode_server_address_entry" style "sync-textarea"
-widget "*.sync_mode_server_login_entry" style "sync-textarea"
-widget "*.sync_mode_server_passwd_entry" style "sync-textarea"
+widget "*.sync_mode_client_*_entry" style "sync-textarea"
+widget "*.sync_mode_server_*_entry" style "sync-textarea"
 #----------------------------- Sync mode ------------------
 
 
@@ -1233,6 +1234,9 @@ style "icon-view" {
 widget "*.iconview_widget" style "icon-view"
 
 style "media-scrolls" {
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
     engine "pixmap" {
         image {
             function = ARROW
@@ -1263,40 +1267,3 @@ style "media-scrolls" {
 }
 widget "*.scrolledwindow_widget.*" style "media-scrolls"
 #----------------------------- Dialogs ------------------
-
-
-#----------------------------- General ------------------
-# style for scrolls in Image selection dialog
-style "image-selection-dialog-scrollbars" {
-    engine "pixmap" {}
-    GtkRange::slider-width = 60
-    GtkRange::stepper-size = 60
-    GtkRange::trough-border = 0
-}
-widget_class "*.GtkVScrollbar" style "image-selection-dialog-scrollbars"
-
-# Style for Main window
-style "main-window" {
-    engine "pixmap"{
-        image {
-            function = FLAT_BOX
-            file = "general.png"
-        }
-    }
-}
-#class "GtkWindow" style "main-window"
-widget "window" style "main-window"
-
-# Style for "To Main Menu" button
-style "main-menu-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            overlay_file = "arrow_left.png"
-            overlay_stretch = FALSE
-        }
-    }
-}
-widget "*.*main_menu_button" style "main-menu-button"
-widget "*.input_mode_toolbar_button_back_w" style "main-menu-button"
-#----------------------------- General ------------------
