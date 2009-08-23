@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Aug 23 19:52:37 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Aug 23 20:00:08 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -1675,7 +1675,7 @@
                       </widget>
                       <packing>
                         <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                        <property name="y_options">GTK_SHRINK</property>
+                        <property name="y_options">GTK_EXPAND</property>
                         <property name="x_padding">14</property>
                         <property name="y_padding">6</property>
                       </packing>
@@ -1692,8 +1692,6 @@
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="right_attach">2</property>
-                            <property name="x_options">GTK_EXPAND</property>
-                            <property name="y_options">GTK_EXPAND</property>
                             <property name="x_padding">10</property>
                           </packing>
                         </child>
@@ -1739,6 +1737,8 @@
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                        <property name="y_options">GTK_EXPAND</property>
                         <property name="x_padding">14</property>
                       </packing>
                     </child>
