@@ -710,9 +710,47 @@ widget "*.config_mode_tts_lang_container" style "labels-container"
 widget "*.config_mode_tts_voice_container" style "labels-container"
 
 style "general-settings-button" {
+    GtkRadioButton::indicator-size = 80
     engine "pixmap" {
         image {
-            function = BOX
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
             overlay_file = "wrench.png"
             overlay_stretch = FALSE
         }
@@ -720,22 +758,110 @@ style "general-settings-button" {
 }
 widget "*.config_toolbar_general_settings_button" style "general-settings-button"
 
-style "tts-settings-button" {
+style "skin-settings-button" {
+    GtkRadioButton::indicator-size = 80
     engine "pixmap" {
         image {
-            function = BOX
-            state = INSENSITIVE
-            overlay_file = "speaker_disabled.png"
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "brush_selected.png"
             overlay_stretch = FALSE
         }
         image {
-            function = BOX
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_skin_settings_button" style "skin-settings-button"
+
+style "tts-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
             overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            overlay_file = "speaker_disabled.png"
             overlay_stretch = FALSE
         }
     }
 }
 widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
+
 
 style "config-scrollbars" {
     GtkScrollbar::fixed-slider-length = 1

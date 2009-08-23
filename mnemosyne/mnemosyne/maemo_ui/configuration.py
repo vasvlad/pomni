@@ -54,9 +54,11 @@ class ConfigurationWidget(ConfigurationDialog):
                 self.change_font_size_cb),
             ("config_toolbar_main_menu_button", "clicked", \
                 self.config_to_main_menu_cb),
-            ("config_toolbar_general_settings_button", "clicked", \
+            ("config_toolbar_general_settings_button", "released", \
                 self.show_general_settings_cb),
-            ("config_toolbar_tts_settings_button", "clicked", \
+            ("config_toolbar_skin_settings_button", "released", \
+                self.show_skin_settings_cb),
+            ("config_toolbar_tts_settings_button", "released", \
                 self.show_tts_settings_cb),
             ("config_mode_tts_voice_prev_button", "clicked", \
                 self.change_voice_cb),
@@ -70,9 +72,14 @@ class ConfigurationWidget(ConfigurationDialog):
                 self.change_lang_cb),
             ("config_mode_tts_lang_next_button", "clicked", \
                 self.change_lang_cb)])
-
-        self.get_widget("config_mode_settings_switcher"). \
-            set_current_page(self.conf['last_settings_page'])
+        selectors_dict = {
+            0: self.get_widget("config_toolbar_general_settings_button"),
+            1: self.get_widget("config_toolbar_skin_settings_button"),
+            2: self.get_widget("config_toolbar_tts_settings_button")}
+        page = self.conf['last_settings_page']
+        self.get_widget("config_mode_settings_switcher").set_current_page(page)
+        #FIXME: check tts available while activating radio button
+        selectors_dict[page].set_active(True)
         tts_available = tts.is_available()
         self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
             tts_available)
@@ -136,6 +143,11 @@ class ConfigurationWidget(ConfigurationDialog):
         
     def show_tts_settings_cb(self, widget):
         """Switches to the tts settings page."""
+
+        self.get_widget("config_mode_settings_switcher").set_current_page(2)
+
+    def show_skin_settings_cb(self, widget):
+        """Switches to the skin settings page."""
 
         self.get_widget("config_mode_settings_switcher").set_current_page(1)
 
