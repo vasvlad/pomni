@@ -54,9 +54,11 @@ class ConfigurationWidget(ConfigurationDialog):
                 self.change_font_size_cb),
             ("config_toolbar_main_menu_button", "clicked", \
                 self.config_to_main_menu_cb),
-            ("config_toolbar_general_settings_button", "clicked", \
+            ("config_toolbar_general_settings_button", "released", \
                 self.show_general_settings_cb),
-            ("config_toolbar_tts_settings_button", "clicked", \
+            ("config_toolbar_skin_settings_button", "released", \
+                self.show_skin_settings_cb),
+            ("config_toolbar_tts_settings_button", "released", \
                 self.show_tts_settings_cb),
             ("config_mode_tts_voice_prev_button", "clicked", \
                 self.change_voice_cb),
@@ -69,15 +71,26 @@ class ConfigurationWidget(ConfigurationDialog):
             ("config_mode_tts_lang_prev_button", "clicked", \
                 self.change_lang_cb),
             ("config_mode_tts_lang_next_button", "clicked", \
-                self.change_lang_cb)])
+                self.change_lang_cb),
+            ("config_mode_prev_skin_button", "clicked", self.change_skin_cb),
+            ("config_mode_next_skin_button", "clicked", self.change_skin_cb)])
 
-        self.get_widget("config_mode_settings_switcher"). \
-            set_current_page(self.conf['last_settings_page'])
+        selectors_dict = {
+            0: self.get_widget("config_toolbar_general_settings_button"),
+            1: self.get_widget("config_toolbar_skin_settings_button"),
+            2: self.get_widget("config_toolbar_tts_settings_button")}
+        page = self.conf['last_settings_page']
+        self.get_widget("config_mode_settings_switcher").set_current_page(page)
+        #FIXME: check tts available while activating radio button
+        selectors_dict[page].set_active(True)
         tts_available = tts.is_available()
         self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
             tts_available)
         if tts_available:
             self.languages = [lang for lang in tts.get_languages()]
+        self.get_widget("config_mode_skin_preview_image").set_from_file(\
+            os.path.join(self.conf["theme_path"], \
+            os.path.split(self.conf["theme_path"])[1]))
 
     def connect_signals(self, control):
         """Connect signals to widgets and save connection info."""
@@ -137,6 +150,11 @@ class ConfigurationWidget(ConfigurationDialog):
     def show_tts_settings_cb(self, widget):
         """Switches to the tts settings page."""
 
+        self.get_widget("config_mode_settings_switcher").set_current_page(2)
+
+    def show_skin_settings_cb(self, widget):
+        """Switches to the skin settings page."""
+
         self.get_widget("config_mode_settings_switcher").set_current_page(1)
 
     def change_voice_cb(self, widget):
@@ -165,19 +183,30 @@ class ConfigurationWidget(ConfigurationDialog):
         finally:
             self.get_widget("config_mode_tts_lang_label").set_text(new_lang)
 
+    def change_skin_cb(self, widget):
+        """Changes current skin."""
+
+        skins = {'rainbow': 'dark', 'dark': 'rainbow'}
+        skin_preview_widget = self.get_widget("config_mode_skin_preview_image")
+        path, skin = os.path.split(skin_preview_widget.get_properties('file')[0])
+        path = os.path.split(path)[0]
+        skin_preview_widget.set_from_file(os.path.join(os.path.join(\
+            path, skins[skin]), skins[skin]))
+        self.conf['theme_path'] = os.path.join(path, skins[skin])
+
     def change_speed_cb(self, widget):
         """Changes TTS speed."""
 
         value = int(widget.get_value())
         self.get_widget("config_mode_tts_speed_label").set_text(\
-            "Speed: %s" % value)
+            "    Speed: %s" % value)
 
     def change_pitch_cb(self, widget):
         """Changes TTS pitch."""
 
         value = int(widget.get_value())
         self.get_widget("config_mode_tts_pitch_label").set_text(\
-            "Pitch: %s" % value)
+            "    Pitch: %s" % value)
 
     def change_fullscreen_cb(self, widget):
         """Change Fullscreen parameter."""

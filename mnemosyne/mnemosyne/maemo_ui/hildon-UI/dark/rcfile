@@ -1,0 +1,1270 @@
+# pixmap_path "<dir 1>:<dir 2>:<dir 3>:..."
+#
+#pixmap_path "/usr/include/X11R6/pixmaps:./"
+#
+# style <name> [= <name>]
+# {
+#   <option>
+# }
+#
+# widget <widget_set> style <style_name>
+# widget_class <widget_class_set> style <style_name>
+
+# Here is a list of all the possible states.  Note that some do not apply to
+# certain widgets.
+#
+# NORMAL - The normal state of a widget, without the mouse over top of
+# it, and not being pressed, etc.
+#
+# PRELIGHT - When the mouse is over top of the widget, colors defined
+# using this state will be in effect.
+#
+# ACTIVE - When the widget is pressed or clicked it will be active, and
+# the attributes assigned by this tag will be in effect.
+#
+# INSENSITIVE - When a widget is set insensitive, and cannot be
+# activated, it will take these attributes.
+#
+# SELECTED - When an object is selected, it takes these attributes.
+#
+# Given these states, we can set the attributes of the widgets in each of
+# these states using the following directives.
+#
+# fg - Sets the foreground color of a widget.
+# fg - Sets the background color of a widget.
+# bg_pixmap - Sets the background of a widget to a tiled pixmap.
+# font - Sets the font to be used with the given widget.
+#
+
+# This sets a style called "button".  The name is not really important, as
+# it is assigned to the actual widgets at the bottom of the file.
+
+#----------------------------- General settings ------------------
+style "general-widget" {
+    GtkWidget::image-spacing = 0
+    GtkWidget::focus-line-width = 0
+}
+class "GtkWidget" style "general-widget"
+
+# Style for Main window
+style "main-window" {
+    engine "pixmap"{
+        image {
+            function = FLAT_BOX
+            file = "general.png"
+        }
+    }
+}
+widget "window" style "main-window"
+
+style "html-container" {
+    xthickness = 10
+    ythickness = 10
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "card_background.png"
+            border = {14,14,14,14}
+        }
+    }
+}
+
+# Style for "To Main Menu" button
+style "main-menu-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.*main_menu_button" style "main-menu-button"
+widget "*.input_mode_toolbar_button_back_w" style "main-menu-button"
+#----------------------------- General settings ------------------
+
+
+#----------------------------- Main Menu ------------------
+style "program-name-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 18"
+}
+widget "*.program_name_label" style "program-name-label"
+
+style "menu-label" {
+    fg[NORMAL] = "#000000"
+    fg[PRELIGHT] = "#000000"
+    font_name = "Nokia Sans Wide Bold 15.5"
+}
+widget "*.menu_label_*" style "menu-label"
+
+style "menu-button-review" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "learn.png"
+        }
+    }
+}
+widget "*.menu_button_review" style "menu-button-review"
+
+style "menu-button-input" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "input.png"
+        }
+    }
+}
+widget "*.menu_button_input" style "menu-button-input"
+
+style "menu-button-sync" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "sync.png"
+        }
+    }
+}
+widget "*.menu_button_sync" style "menu-button-sync"
+
+style "menu-button-conf" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "settings.png"
+        }
+    }
+}
+widget "*.menu_button_conf" style "menu-button-conf"
+
+style "menu-button-about" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "about.png"
+        }
+    }
+}
+widget "*.menu_button_about" style "menu-button-about"
+
+style "menu-button-exit" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "quit.png"
+        }
+    }
+}
+widget "*.menu_button_exit" style "menu-button-exit"
+#----------------------------- Main Menu ------------------
+
+
+#----------------------------- Review mode ------------------
+widget "*.question_container" style "html-container"
+widget "*.answer_container" style "html-container"
+
+style "grades-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "right_6.png"
+            border = {41,41,1,1}
+        }
+    }
+}
+widget "*.review_mode_grades_container" style "grades-container"
+
+style "toolbar-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "left_5.png"
+            border = {41,41,1,1}
+        }
+    }
+}
+widget "*.review_mode_toolbar_container" style "toolbar-container"
+
+style "speak-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "speaker_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_tts_button" style "speak-button"
+
+style "edit-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "edit_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "edit.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_edit_card_button" style "edit-button"
+
+style "add-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "plus.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_add_card_button" style "add-card-button"
+
+style "delete-card-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "trash_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "trash.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+
+style "grade0" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "0_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "0_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "1_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "1_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "2_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "2_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "3_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "3_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "4_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "4_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "5_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "5_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade5" style "grade5"
+
+#----------------------------- Review mode ------------------
+
+
+#----------------------------- Input mode ------------------
+widget "*.input_mode_toolbar_container" style "toolbar-container"
+
+style "cardtypes-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "right_5.png"
+            border = {41,41,1,1}
+        }
+    }
+}
+widget "*.input_mode_cardtypes_container" style "cardtypes-container"
+
+style "previous-category" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_prev_category_w" style "previous-category"
+
+style "next-category" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_next_category_w" style "next-category"
+
+style "add-image-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_image.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_image.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.picture_content_button" style "add-image-button"
+
+style "add-music-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_music.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_music.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.sound_content_button" style "add-music-button"
+
+widget "*.input_mode_toolbar_add_card_w" style "add-card-button"
+
+style "add-new-category-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "plus.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_add_new_category_w" style "add-new-category-button"
+
+style "close-new-category-block-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "close.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.input_mode_close_add_category_block_w" style "close-new-category-block-button"
+
+style "snd-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "media_play.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "media_play.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "media_play.png"
+        }
+    }
+}
+widget "*.input_mode_snd_button" style "snd-button"
+widget "*.review_mode_snd_button" style "snd-button"
+
+style "front-to-back-cardtype" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "forward_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "forward_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "forward_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "forward_disabled.png"
+        }
+    }
+}
+widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
+
+style "both-way-cardtype" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "both_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "both_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "both_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "both_disabled.png"
+        }
+    }
+}
+widget "*.both_way_mode_selector_w" style "both-way-cardtype"
+
+style "three-side-cardtype" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "trans_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "trans_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "trans_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "trans_disabled.png"
+        }
+    }
+}
+widget "*.three_side_mode_selector_w" style "three-side-cardtype"
+
+style "cloze-cardtype" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "close_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "close_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "close_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "close_disabled.png"
+        }
+    }
+}
+widget "*.cloze_mode_selector_w" style "cloze-cardtype"
+
+widget "*.input_mode_answer_container" style "html-container"
+widget "*.input_mode_question_container" style "html-container"
+widget "*.input_mode_foreign_container" style "html-container"
+widget "*.input_mode_pronun_container" style "html-container"
+widget "*.input_mode_translate_container" style "html-container"
+widget "*.input_mode_cloze_container" style "html-container"
+widget "*.input_mode_new_category_entry_container" style "html-container"
+
+style "category-name-container" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "nothing.png"
+            stretch = TRUE
+        }
+    }
+}
+widget "*.category_name_container" style "category-name-container"
+
+style "entry" {
+    font_name = "Nokia Sans 18"
+}
+widget "*.input_mode_new_category_entry" style "entry"
+
+style "category-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 18"
+}
+widget "*.input_mode_new_category_label" style "category-label"
+widget "*.category_name_w" style "category-label"
+#----------------------------- Input mode -----------------
+
+
+#----------------------------- Config mode ------------------
+widget "*.config_mode_tts_lang_next_button" style "next-category"
+widget "*.config_mode_tts_voice_next_button" style "next-category"
+widget "*.config_mode_increase_font_size_buttton" style "next-category"
+widget "*.config_mode_next_skin_button" style "next-category"
+widget "*.config_mode_tts_lang_prev_button" style "previous-category"
+widget "*.config_mode_tts_voice_prev_button" style "previous-category"
+widget "*.config_mode_decrease_font_size_buttton" style "previous-category"
+widget "*.config_mode_prev_skin_button" style "previous-category"
+
+style "config-mode-toolbar-container" {
+    engine "pixmap" {
+        image {
+            function = SHADOW
+            file = "left_settings.png"
+            border = {41,41,1,1}
+        }
+    }
+}
+widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
+
+style "labels-container" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "card_background.png"
+            border = {18,18,18,18}
+        }
+    }
+}
+widget "*.config_mode_tts_lang_container" style "labels-container"
+widget "*.config_mode_tts_voice_container" style "labels-container"
+
+style "general-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_general_settings_button" style "general-settings-button"
+
+style "skin-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_skin_settings_button" style "skin-settings-button"
+
+style "tts-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            overlay_file = "speaker_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
+
+
+style "config-scrollbars" {
+    GtkScrollbar::fixed-slider-length = 1
+    GtkScrollbar::min-slider-length = 34
+    GtkRange::slider-width = 34
+    GtkRange::stepper-size = 64
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = SLIDER
+            file = "slide_pin.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            orientation = HORIZONTAL
+            file = "slide_line.png"
+            border = {59,59,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            detail = "hscrollbar"
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+            arrow_direction = LEFT
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+            arrow_direction = RIGHT
+        }
+    }
+}
+widget "*.config_mode_tts_speed_scrollbar" style "config-scrollbars"
+widget "*.config_mode_tts_pitch_scrollbar" style "config-scrollbars"
+
+
+widget "*.config_mode_imagedir_container" style "html-container"
+widget "*.config_mode_sounddir_container" style "html-container"
+widget "*.config_mode_font_size_example_container" style "html-container"
+
+style "config-checkboxes" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "checkbox_checked.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "checkbox.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "checkbox_checked.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "checkbox.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "checkbox_checked.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "checkbox.png"
+        }
+    }
+}
+widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
+widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+
+style "config-mode-label" {
+    fg[NORMAL] = "#FFFFFF"
+    font_name = "Nokia Sans 17"
+}
+widget "*.config_mode_fullscreen_label" style "config-mode-label"
+widget "*.config_mode_startup_with_review_label" style "config-mode-label"
+widget "*.config_mode_label_imagedir" style "config-mode-label"
+widget "*.config_mode_label_sounddir" style "config-mode-label"
+
+style "config-mode-scrollbars-label" {
+    fg[NORMAL] = "#FFFFFF"
+    font_name = "Nokia Sans 15"
+}
+widget "*.config_mode_tts_speed_label" style "config-mode-scrollbars-label"
+widget "*.config_mode_tts_pitch_label" style "config-mode-scrollbars-label"
+
+style "config-mode-voice-label" {
+    fg[NORMAL] = "#000000"
+    font_name = "Nokia Sans 15"
+}
+widget "*.config_mode_tts_voice_label" style "config-mode-voice-label"
+widget "*.config_mode_tts_lang_label" style "config-mode-voice-label"
+
+style "textareas" {
+    font_name = "Nokia Sans 20"
+}
+widget "*.config_mode_entry_imagedir" style "textareas"
+widget "*.config_mode_entry_sounddir" style "textareas"
+#----------------------------- Config mode ------------------
+
+
+#----------------------------- Sync mode ------------------
+widget "*.sync_mode_toolbar_container" style "config-mode-toolbar-container"
+
+widget "*.sync_mode_client_*_container" style "html-container"
+widget "*.sync_mode_server_*_container" style "html-container"
+
+style "sync-client" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "client_icon.png"
+        }
+    }
+}
+widget "*.sync_toolbar_client_mode_button" style "sync-client"
+    
+style "sync-server" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "server_icon.png"
+        }
+    }
+}
+widget "*.sync_toolbar_server_mode_button" style "sync-server"
+
+style "sync-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "stop_sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "stop_sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "stop_sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "sync_icon.png"
+        }
+    }
+}
+widget "*.sync_mode_client_start_button" style "sync-button"
+widget "*.sync_mode_server_start_button" style "sync-button"
+
+style "sync-mode-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 18"
+}
+widget "*.sync_mode_client_*_label" style "sync-mode-label"
+widget "*.sync_mode_information_label" style "sync-mode-label"
+widget "*.sync_mode_server_*_label" style "sync-mode-label"
+
+style "sync-textarea" {
+    font_name = "Nokia Sans 20"
+}
+widget "*.sync_mode_client_*_entry" style "sync-textarea"
+widget "*.sync_mode_server_*_entry" style "sync-textarea"
+#----------------------------- Sync mode ------------------
+
+
+#----------------------------- Dialogs ------------------
+style "dialog" {
+    engine "sapwood" {
+        image {
+            function = FLAT_BOX
+            shaped = TRUE
+            file = "background.png"
+            border = {12,12,12,12}
+        }
+    }
+}
+class "GtkDialog" style "dialog"
+
+style "dialog-label" {
+    fg[NORMAL] = "#FFFFFF"
+    font_name = "Nokia Sans 17"
+}
+widget "*.question_dialog_label" style "dialog-label"
+widget "*.information_dialog_label" style "dialog-label"
+widget "*.warning_dialog_label" style "dialog-label"
+widget "*.media_selection_dialog_label" style "dialog-label"
+
+style "dialog-button-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[ACTIVE] = "#FFFFFF"
+    fg[PRELIGHT] = "#000000"
+    font_name = "Nokia Sans 16"
+}
+widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
+widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
+widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-label"
+widget "*.categories_manager_dialog_button_close.GtkLabel" style "dialog-button-label"
+widget "*.categories_manager_dialog_button_create.GtkLabel" style "dialog-button-label"
+
+style "question-dialog-button-yes" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_left.png"
+            border = {10,10,10,10}
+        }
+    }
+}
+widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
+widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
+widget "*.image_selection_dialog_button_select" style "question-dialog-button-yes"
+widget "*.categories_manager_dialog_button_create" style "question-dialog-button-yes"
+
+style "question-dialog-button-no" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button_right.png"
+            border = {10,10,10,10}
+        }
+    }
+}
+widget "*.question_dialog_button_no" style "question-dialog-button-no"
+widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
+widget "*.categories_manager_dialog_button_close" style "question-dialog-button-no"
+
+style "icon-view" {
+    base[NORMAL] = "#333333"
+}
+widget "*.iconview_widget" style "icon-view"
+
+style "media-scrolls" {
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "arrow_up.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_down.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        image {
+            function = SLIDER
+            orientation = VERTICAL
+            file = "scroll.png"
+        }
+        image {
+            function = BOX
+            file = "scrollbar.png"
+        }
+        image {
+            function = BOX
+            detail = "vscrollbar"
+        }
+    }
+}
+widget "*.scrolledwindow_widget.*" style "media-scrolls"
+#----------------------------- Dialogs ------------------
