@@ -681,9 +681,11 @@ widget "*.category_name_w" style "category-label"
 widget "*.config_mode_tts_lang_next_button" style "next-category"
 widget "*.config_mode_tts_voice_next_button" style "next-category"
 widget "*.config_mode_increase_font_size_buttton" style "next-category"
+widget "*.config_mode_next_skin_button" style "next-category"
 widget "*.config_mode_tts_lang_prev_button" style "previous-category"
 widget "*.config_mode_tts_voice_prev_button" style "previous-category"
 widget "*.config_mode_decrease_font_size_buttton" style "previous-category"
+widget "*.config_mode_prev_skin_button" style "previous-category"
 
 style "config-mode-toolbar-container" {
     engine "pixmap" {
