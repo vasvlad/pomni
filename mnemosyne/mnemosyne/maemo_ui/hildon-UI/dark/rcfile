@@ -48,7 +48,7 @@ class "GtkWidget" style "general-widget"
 
 # Style for Main window
 style "main-window" {
-    engine "pixmap"{
+    engine "sapwood"{
         image {
             function = FLAT_BOX
             file = "general.png"
@@ -60,22 +60,28 @@ widget "window" style "main-window"
 style "html-container" {
     xthickness = 10
     ythickness = 10
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = SHADOW
             file = "card_background.png"
             border = {14,14,14,14}
+        }
+        image {
+	        function = FOCUS
         }
     }
 }
 
 # Style for "To Main Menu" button
 style "main-menu-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             overlay_file = "arrow_left.png"
             overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
         }
     }
 }
@@ -100,60 +106,78 @@ style "menu-label" {
 widget "*.menu_label_*" style "menu-label"
 
 style "menu-button-review" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "learn.png"
+        }
+        image {
+            function = FOCUS
         }
     }
 }
 widget "*.menu_button_review" style "menu-button-review"
 
 style "menu-button-input" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "input.png"
+        }
+        image {
+            function = FOCUS
         }
     }
 }
 widget "*.menu_button_input" style "menu-button-input"
 
 style "menu-button-sync" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "sync.png"
+        }
+        image {
+            function = FOCUS
         }
     }
 }
 widget "*.menu_button_sync" style "menu-button-sync"
 
 style "menu-button-conf" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "settings.png"
+        }
+        image {
+            function = FOCUS
         }
     }
 }
 widget "*.menu_button_conf" style "menu-button-conf"
 
 style "menu-button-about" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "about.png"
+        }
+        image {
+            function = FOCUS
         }
     }
 }
 widget "*.menu_button_about" style "menu-button-about"
 
 style "menu-button-exit" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "quit.png"
+        }
+        image {
+            function = FOCUS
         }
     }
 }
@@ -166,29 +190,28 @@ widget "*.question_container" style "html-container"
 widget "*.answer_container" style "html-container"
 
 style "grades-container" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
-            function = SHADOW
+            function = BOX
             file = "right_6.png"
-            border = {41,41,1,1}
         }
     }
 }
 widget "*.review_mode_grades_container" style "grades-container"
 
 style "toolbar-container" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
-            function = SHADOW
+            function = BOX
+            state = NORMAL
             file = "left_5.png"
-            border = {41,41,1,1}
         }
     }
 }
 widget "*.review_mode_toolbar_container" style "toolbar-container"
 
 style "speak-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -200,12 +223,15 @@ style "speak-button" {
             overlay_file = "speaker.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.review_toolbar_tts_button" style "speak-button"
 
 style "edit-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -217,23 +243,29 @@ style "edit-button" {
             overlay_file = "edit.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.review_toolbar_edit_card_button" style "edit-button"
 
 style "add-card-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             overlay_file = "plus.png"
             overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
         }
     }
 }
 widget "*.review_toolbar_add_card_button" style "add-card-button"
 
 style "delete-card-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -245,12 +277,15 @@ style "delete-card-button" {
             overlay_file = "trash.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
 
 style "grade0" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -262,12 +297,15 @@ style "grade0" {
             overlay_file = "0_active.png"
             overlay_stretch = FALSE
         }
+        image {
+    	    function = FOCUS
+        }
     }
 }
 widget "*.grade0" style "grade0"
 
 style "grade1" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -279,12 +317,15 @@ style "grade1" {
             overlay_file = "1_active.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.grade1" style "grade1"
 
 style "grade2" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -296,12 +337,15 @@ style "grade2" {
             overlay_file = "2_active.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.grade2" style "grade2"
 
 style "grade3" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -313,12 +357,15 @@ style "grade3" {
             overlay_file = "3_active.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.grade3" style "grade3"
 
 style "grade4" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -330,12 +377,15 @@ style "grade4" {
             overlay_file = "4_active.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.grade4" style "grade4"
 
 style "grade5" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -347,10 +397,12 @@ style "grade5" {
             overlay_file = "5_active.png"
             overlay_stretch = FALSE
         }
+        image {
+	        function = FOCUS
+        }
     }
 }
 widget "*.grade5" style "grade5"
-
 #----------------------------- Review mode ------------------
 
 
@@ -358,44 +410,49 @@ widget "*.grade5" style "grade5"
 widget "*.input_mode_toolbar_container" style "toolbar-container"
 
 style "cardtypes-container" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
-            function = SHADOW
+            function = BOX
             file = "right_5.png"
-            border = {41,41,1,1}
         }
     }
 }
 widget "*.input_mode_cardtypes_container" style "cardtypes-container"
 
 style "previous-category" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             overlay_file = "arrow_left.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }
 widget "*.input_mode_prev_category_w" style "previous-category"
 
 style "next-category" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             overlay_file = "arrow_right.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }
 widget "*.input_mode_next_category_w" style "next-category"
 
 style "add-image-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
-            overlay_file = "add_image.png"
+            overlay_file = "add_image_disabled.png"
             overlay_stretch = FALSE
         }
         image {
@@ -403,16 +460,19 @@ style "add-image-button" {
             overlay_file = "add_image.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }
 widget "*.picture_content_button" style "add-image-button"
 
 style "add-music-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
-            overlay_file = "add_music.png"
+            overlay_file = "add_music_disabled.png"
             overlay_stretch = FALSE
         }
         image {
@@ -420,6 +480,9 @@ style "add-music-button" {
             overlay_file = "add_music.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }
 widget "*.sound_content_button" style "add-music-button"
@@ -427,23 +490,29 @@ widget "*.sound_content_button" style "add-music-button"
 widget "*.input_mode_toolbar_add_card_w" style "add-card-button"
 
 style "add-new-category-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             overlay_file = "plus.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }
 widget "*.input_mode_add_new_category_w" style "add-new-category-button"
 
 style "close-new-category-block-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             overlay_file = "close.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }
 widget "*.input_mode_close_add_category_block_w" style "close-new-category-block-button"
@@ -672,17 +741,22 @@ widget "*.input_mode_cloze_container" style "html-container"
 widget "*.input_mode_new_category_entry_container" style "html-container"
 
 style "category-name-container" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             file = "nothing.png"
             stretch = TRUE
+        }
+        image {
+            function = FOCUS
         }
     }
 }
 widget "*.category_name_container" style "category-name-container"
 
 style "entry" {
+    fg[NORMAL] = "#000000"
+    fg[PRELIGHT] = "#000000"
     font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_entry" style "entry"
@@ -708,11 +782,10 @@ widget "*.config_mode_decrease_font_size_buttton" style "previous-category"
 widget "*.config_mode_prev_skin_button" style "previous-category"
 
 style "config-mode-toolbar-container" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
-            function = SHADOW
+            function = BOX
             file = "left_settings.png"
-            border = {41,41,1,1}
         }
     }
 }
@@ -931,7 +1004,10 @@ widget "*.config_mode_sounddir_container" style "html-container"
 widget "*.config_mode_font_size_example_container" style "html-container"
 
 style "config-checkboxes" {
-    engine "pixmap" {
+    engine "sapwood" {
+	image {
+	    function = FOCUS
+	}
         image {
             function = BOX
             state = NORMAL
