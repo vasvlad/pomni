@@ -147,8 +147,7 @@ class Configuration(Component, dict):
 
     def determine_basedir(self):
         exists = os.path.exists
-        join = os.path.join
-        
+        join = os.path.join        
         self.old_basedir = None
         if self.basedir == None:
             home = os.path.expanduser("~")
@@ -170,8 +169,7 @@ class Configuration(Component, dict):
         """
 
         exists = os.path.exists
-        join = os.path.join
-        
+        join = os.path.join        
         # Create paths.
         if not exists(self.basedir):
             os.mkdir(self.basedir)
