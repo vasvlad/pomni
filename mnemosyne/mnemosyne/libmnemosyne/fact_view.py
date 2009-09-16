@@ -2,8 +2,10 @@
 # fact_view.py <Peter.Bienstman@UGent.be>
 #
 
-
 class FactView(object):
+
+    # Note: we don't inherit from CompareOnId here, as fact_view.ids are not
+    # unique.
 
     """Sequence of fields from a fact to form a question and an answer.
     A fact view needs an id string as well as a name, because the name can
@@ -26,8 +28,5 @@ class FactView(object):
         #print "fact_view.a_fields =", self.a_fields
         #print "fact_view.required_fields =", self.required_fields
         #print "instance=", self
-
-    def __eq__(self, other):
-        return self.id == other.id   
 
     

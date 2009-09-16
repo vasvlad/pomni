@@ -4,8 +4,10 @@
 
 import time
 
+from mnemosyne.libmnemosyne.utils import CompareOnId
 
-class Fact(object):
+
+class Fact(CompareOnId):
 
     """Basic unit of information from which several cards can be derived.
 
