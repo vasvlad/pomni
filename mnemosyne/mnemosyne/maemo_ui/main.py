@@ -42,7 +42,7 @@ _ = gettext.gettext
 class MainWdgt(MainWidget):
     """Main widget class."""
 
-    menu, review, input, configuration, sync = range(5)
+    menu, review, input, configuration, sync, about = range(6)
 
     def __init__(self, component_manager):
         MainWidget.__init__(self, component_manager)
@@ -105,6 +105,9 @@ class MainWdgt(MainWidget):
             elif mode == "sync":
                 from mnemosyne.maemo_ui.sync import SyncWidget
                 widget = SyncWidget(self.component_manager)
+            elif mode == "about":
+                from mnemosyne.maemo_ui.about import AboutWidget
+                widget = AboutWidget(self.component_manager)
             self.widgets[mode] = widget
 
         widget.activate()
@@ -158,6 +161,10 @@ class MainWdgt(MainWidget):
     def sync_(self):
         """Activate sync mode."""
         self.activate_mode('sync')
+
+    def about_(self):
+        """Activate about mode."""
+        self.activate_mode('about')
 
     @staticmethod
     def exit_():

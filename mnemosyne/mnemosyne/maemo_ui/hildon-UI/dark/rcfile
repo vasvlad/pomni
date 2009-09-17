@@ -1240,6 +1240,116 @@ widget "*.sync_mode_server_*_entry" style "sync-textarea"
 #----------------------------- Sync mode ------------------
 
 
+#----------------------------- About mode ------------------
+widget "*.about_mode_toolbar_container" style "config-mode-toolbar-container"
+
+style "team-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 18"
+}
+#widget "*.about_mode_team_label" style "team-label"
+
+style "team-info-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.about_toolbar_team_button" style "team-info-button"
+
+style "user-guide-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.about_toolbar_guide_button" style "user-guide-button"
+#----------------------------- About mode ------------------
+
+
 #----------------------------- Dialogs ------------------
 style "dialog" {
     engine "sapwood" {

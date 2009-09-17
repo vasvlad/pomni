@@ -40,7 +40,8 @@ class MenuWidget(UiComponent):
 
         self.w_tree.signal_autoconnect(\
             dict([(mode, getattr(self, mode + "_cb")) \
-                for mode in ["input", "review", "configure", "exit", "sync"]]))
+                for mode in ["input", "review", "configure", \
+                    "exit", "sync", "about"]]))
 
     # callbacks
     def input_cb(self, widget):
@@ -58,6 +59,10 @@ class MenuWidget(UiComponent):
     def configure_cb(self, widget):
         """Go to configuration mode."""
         self.main_widget().configure_()
+
+    def about_cb(self, widget):
+        """Go to about mode."""
+        self.main_widget().about_()
 
     def exit_cb(self, widget):
         """Exit program."""
