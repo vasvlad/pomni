@@ -24,7 +24,7 @@
 Hildon UI. About Widget.
 """
 
-import pango
+import os
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -44,6 +44,8 @@ class AboutWidget(UiComponent):
             1: self.get_widget("about_toolbar_guide_button")}
         selectors_dict[page].set_active(True)
         self.get_widget("about_mode_role_switcher").set_current_page(page)
+        self.get_widget("about_mode_logo_image").set_from_file(\
+            os.path.join(self.conf['theme_path'], "mnemosyne.png"))
 
     def activate(self):
         """Activate about mode."""

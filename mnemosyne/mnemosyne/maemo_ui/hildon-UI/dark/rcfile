@@ -1243,13 +1243,6 @@ widget "*.sync_mode_server_*_entry" style "sync-textarea"
 #----------------------------- About mode ------------------
 widget "*.about_mode_toolbar_container" style "config-mode-toolbar-container"
 
-style "team-label" {
-    fg[NORMAL] = "#FFFFFF"
-    fg[PRELIGHT] = "#FFFFFF"
-    font_name = "Nokia Sans 18"
-}
-#widget "*.about_mode_team_label" style "team-label"
-
 style "team-info-button" {
     GtkRadioButton::indicator-size = 80
     engine "pixmap" {

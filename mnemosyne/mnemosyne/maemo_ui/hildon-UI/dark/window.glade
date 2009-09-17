@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Sep 17 14:13:47 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Sep 17 23:18:04 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -2809,6 +2809,95 @@ of Mnemosyne program. You can use it as Server or Client.</property>
             <property name="visible">True</property>
             <property name="n_columns">2</property>
             <child>
+              <widget class="GtkNotebook" id="about_mode_toolbar_container">
+                <property name="width_request">82</property>
+                <property name="height_request">480</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="show_tabs">False</property>
+                <property name="tab_border">0</property>
+                <property name="tab_hborder">0</property>
+                <property name="tab_vborder">0</property>
+                <child>
+                  <widget class="GtkTable" id="about_mode_toolbar">
+                    <property name="visible">True</property>
+                    <property name="n_rows">5</property>
+                    <property name="homogeneous">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="about_toolbar_main_menu_button">
+                        <property name="width_request">80</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <signal name="clicked" handler="about_to_main_menu"/>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">4</property>
+                        <property name="bottom_attach">5</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkRadioButton" id="about_toolbar_team_button">
+                        <property name="width_request">80</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">radiobutton</property>
+                        <property name="response_id">0</property>
+                        <property name="active">True</property>
+                        <signal name="released" handler="show_team_info"/>
+                      </widget>
+                      <packing>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkRadioButton" id="about_toolbar_guide_button">
+                        <property name="width_request">80</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="label" translatable="yes">radiobutton</property>
+                        <property name="response_id">0</property>
+                        <property name="group">about_toolbar_team_button</property>
+                        <signal name="released" handler="show_guide"/>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                  </widget>
+                </child>
+                <child>
+                  <placeholder/>
+                  <packing>
+                    <property name="type">tab</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="x_options"></property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
               <widget class="GtkNotebook" id="about_mode_role_switcher">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -2818,26 +2907,105 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                 <property name="tab_hborder">0</property>
                 <property name="tab_vborder">0</property>
                 <child>
-                  <widget class="GtkLabel" id="about_mode_team_label">
+                  <widget class="GtkVBox" id="vbox7">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;span foreground='white' size='xx-large'&gt;&lt;b&gt;Mnemosyne for Maemo&lt;/b&gt;&lt;/span&gt;
+                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                    <child>
+                      <widget class="GtkHButtonBox" id="hbuttonbox1">
+                        <property name="visible">True</property>
+                        <child>
+                          <widget class="GtkHBox" id="hbox2">
+                            <property name="visible">True</property>
+                            <child>
+                              <widget class="GtkImage" id="about_mode_logo_image">
+                                <property name="visible">True</property>
+                                <property name="stock">gtk-missing-image</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="padding">10</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="about_mode_program_name_label">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">&lt;span foreground='white' size='large'&gt;&lt;b&gt;Mnemosyne for Maemo&lt;/b&gt;&lt;/span&gt;
+&lt;span foreground='white' size='large'&gt;version 2.0.0 beta3&lt;/span&gt;</property>
+                                <property name="use_markup">True</property>
+                                <property name="justify">GTK_JUSTIFY_CENTER</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkHBox" id="hbox1">
+                        <property name="visible">True</property>
+                        <property name="homogeneous">True</property>
+                        <child>
+                          <widget class="GtkLabel" id="label1">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">&lt;span foreground='white' size='small'&gt;&lt;b&gt;Developers:&lt;/b&gt;&lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;Max Usachev |&lt;/span&gt; &lt;span foreground='#299BFC' size='small'&gt;maxusachev@gmail.com&lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;Ed Bartosh |&lt;/span&gt; &lt;span foreground='#299BFC' size='small'&gt;bartosh@gmail.com&lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;Vlad Vasiliev |&lt;/span&gt; &lt;span foreground='#299BFC' size='small'&gt;vlad@gas.by&lt;/span&gt;
 
+&lt;span foreground='white' size='small'&gt;&lt;b&gt;Designer:&lt;/b&gt;&lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;Andrew Zhilin |&lt;/span&gt; &lt;span foreground='#299BFC' size='small'&gt;drew.zhilin@gmail.com&lt;/span&gt;
 
-
-&lt;span foreground='white' size='x-large'&gt;&lt;b&gt;Developers:&lt;/b&gt;&lt;/span&gt;
-&lt;span foreground='white' size='large'&gt;Max Usachev&lt;/span&gt; &lt;span foreground='blue'&gt;&lt;u&gt;maxusachev@gmail.com&lt;/u&gt;&lt;/span&gt;
-&lt;span foreground='white' size='large'&gt;Ed Bartosh&lt;/span&gt; &lt;span foreground='blue'&gt;&lt;u&gt;bartosh@gmail.com&lt;/u&gt;&lt;/span&gt;
-&lt;span foreground='white' size='large'&gt;Vlad Vasiliev&lt;/span&gt; &lt;span foreground='blue'&gt;&lt;u&gt;vlad@gas.by&lt;/u&gt;&lt;/span&gt;
-
-
-&lt;span foreground='white' size='x-large'&gt;&lt;b&gt;Designer:&lt;/b&gt;&lt;/span&gt;
-&lt;span foreground='white' size='large'&gt;Andrew Zhilin&lt;/span&gt; &lt;span foreground='blue'&gt;&lt;u&gt;drew.zhilin@gmail.com&lt;/u&gt;&lt;/span&gt;
-
-
-&lt;span foreground='white' size='x-large'&gt;&lt;b&gt;Development team:&lt;/b&gt;&lt;/span&gt;
-&lt;span foreground='blue'&gt;&lt;u&gt;pomni@googlegroups.com&lt;/u&gt;&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
-                    <property name="justify">GTK_JUSTIFY_CENTER</property>
+&lt;span foreground='white' size='small'&gt;&lt;b&gt;Development team:&lt;/b&gt;&lt;/span&gt;
+&lt;span foreground='#299BFC' size='small'&gt;pomni@googlegroups.com&lt;/span&gt;</property>
+                            <property name="use_markup">True</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="padding">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label2">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">&lt;span foreground='white' size='small'&gt;&lt;b&gt;Special Thanks To:&lt;/b&gt;&lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;Peter Bienstman&lt;/span&gt;
+&lt;span foreground='#299BFC' size='small'&gt;Peter.Bienstman@ugent.be&lt;/span&gt;
+&lt;span foreground='#299BFC' size='small'&gt;http://www.mnemosyne-proj.org/&lt;/span&gt;
+&lt;span size='x-large'&gt; &lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;GSoC 2009&lt;/span&gt;
+&lt;span foreground='#299BFC' size='small'&gt;http://socghop.appspot.com/&lt;/span&gt;
+&lt;span size='x-large'&gt; &lt;/span&gt;
+&lt;span foreground='white' size='small'&gt;Maemo community&lt;/span&gt;
+&lt;span foreground='#299BFC' size='small'&gt;http://maemo.org/&lt;/span&gt;</property>
+                            <property name="use_markup">True</property>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="padding">4</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </widget>
                 </child>
                 <child>
@@ -2866,94 +3034,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkNotebook" id="about_mode_toolbar_container">
-                <property name="width_request">82</property>
-                <property name="height_request">480</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="show_tabs">False</property>
-                <property name="tab_border">0</property>
-                <property name="tab_hborder">0</property>
-                <property name="tab_vborder">0</property>
-                <child>
-                  <widget class="GtkTable" id="about_mode_toolbar">
-                    <property name="visible">True</property>
-                    <property name="n_rows">5</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <widget class="GtkRadioButton" id="about_toolbar_guide_button">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">radiobutton</property>
-                        <property name="response_id">0</property>
-                        <property name="group">about_toolbar_team_button</property>
-                        <signal name="released" handler="show_guide"/>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_EXPAND</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkRadioButton" id="about_toolbar_team_button">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="label" translatable="yes">radiobutton</property>
-                        <property name="response_id">0</property>
-                        <property name="active">True</property>
-                        <signal name="released" handler="show_team_info"/>
-                      </widget>
-                      <packing>
-                        <property name="x_options">GTK_EXPAND</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="about_toolbar_main_menu_button">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="about_to_main_menu"/>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">4</property>
-                        <property name="bottom_attach">5</property>
-                        <property name="x_options">GTK_EXPAND</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                  </widget>
-                </child>
-                <child>
-                  <placeholder/>
-                  <packing>
-                    <property name="type">tab</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="x_options"></property>
+                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                 <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
               </packing>
             </child>
