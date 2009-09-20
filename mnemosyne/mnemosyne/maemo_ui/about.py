@@ -38,6 +38,7 @@ class AboutWidget(UiComponent):
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in \
                 ("about_to_main_menu", "show_team_info", "show_guide")]))
+        self.renderer = self.component_manager.get_current('renderer')
         self.conf = self.config()
         page = self.conf['last_about_page']
         selectors_dict = { 0: self.get_widget("about_toolbar_team_button"),
@@ -60,6 +61,8 @@ class AboutWidget(UiComponent):
     def show_guide_cb(self, widget):
         """Show user guide page."""
 
+        self.renderer.render_html(self.get_widget("about_mode_guide_text"), \
+            "<html><b>Mnemosyne for Maemo user guide</b></html>")
         self.get_widget("about_mode_role_switcher").set_current_page(1)
 
     def about_to_main_menu_cb(self, widget):

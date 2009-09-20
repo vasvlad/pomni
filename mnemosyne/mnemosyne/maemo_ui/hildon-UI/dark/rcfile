@@ -1242,6 +1242,7 @@ widget "*.sync_mode_server_*_entry" style "sync-textarea"
 
 #----------------------------- About mode ------------------
 widget "*.about_mode_toolbar_container" style "config-mode-toolbar-container"
+widget "*.about_mode_guite_container" style "html-container"
 
 style "team-info-button" {
     GtkRadioButton::indicator-size = 80
@@ -1340,6 +1341,45 @@ style "user-guide-button" {
     }
 }
 widget "*.about_toolbar_guide_button" style "user-guide-button"
+
+style "guide-inside-container" {
+    bg[NORMAL] = "#DDDDDD"
+}
+widget "*.about_mode_inside_container" style "guide-inside-container"
+
+style "guide-scrolls" {
+    xthickness = 0
+    ythickness = 0
+    GtkScrolledWindow::scrollbars-within-bevel = 0
+    GtkScrolledWindow::scrollbar-spacing = 0
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "arrow_up_black.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_down_black.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        image {
+            function = SLIDER
+            orientation = VERTICAL
+            file = "transparent.png"
+        }
+        image {
+            function = BOX
+            file = "white.png"
+        }
+    }
+}
+widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- About mode ------------------
 
 
