@@ -33,10 +33,10 @@ class AboutWidget(UiComponent):
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
-        self.w_tree = self.main_widget().w_tree
-        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+        w_tree = self.main_widget().w_tree
+        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in ('about_to_main_menu', 'show_team_info', 'show_guide')]))
-        self.get_widget = self.w_tree.get_widget
+        self.get_widget = w_tree.get_widget
         self.conf = self.config()
         self.renderer = self.component_manager.get_current('renderer')
         if self.config()['last_about_page'] == 0:
@@ -55,6 +55,7 @@ class AboutWidget(UiComponent):
     def show_guide_cb(self, widget):
         """Show user guide page."""
 
+        #FIXME: load from html-file
         self.renderer.render_html(self.get_widget("about_mode_guide_text"), \
             "<html><b>Mnemosyne for Maemo user guide</b></html>")
         self.get_widget("about_mode_role_switcher").set_current_page(1)
