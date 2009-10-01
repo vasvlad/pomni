@@ -52,27 +52,20 @@ class SyncWidget(UiComponent):
                 "activate_server_mode", "start_client_sync", \
                 "start_server_sync")]))
         self.conf = self.config()
-        self.get_widget = self.w_tree.get_widget
-        get_widget = self.get_widget
+        self.get_widget = get_widget = self.w_tree.get_widget
         self.client_progressbar = get_widget("sync_mode_client_progressbar")
         self.server_progressbar = get_widget("sync_mode_server_progressbar")
 
-        get_widget("sync_mode_client_login_entry").set_text(\
-            self.conf['client_login'])
-        get_widget("sync_mode_client_passwd_entry").set_text(\
-            self.conf['client_passwd'])
-        get_widget("sync_mode_client_address_entry").set_text(\
-            self.conf['client_sync_address'])
-        get_widget("sync_mode_client_port_entry").set_text(\
-            self.conf['client_sync_port'])
-        get_widget("sync_mode_server_login_entry").set_text(\
-            self.conf['server_login'])
-        get_widget("sync_mode_server_passwd_entry").set_text(\
-            self.conf['server_passwd'])
-        get_widget("sync_mode_server_port_entry").set_text(\
-            self.conf['server_sync_port'])
-        get_widget("sync_mode_server_address_entry").set_text(\
-            self.conf['server_sync_address'])
+        widgets_dict = {'sync_mode_client_login_entry': 'client_login', \
+            'sync_mode_client_passwd_entry': 'client_passwd', \
+            'sync_mode_client_address_entry': 'client_sync_address', \
+            'sync_mode_client_port_entry': 'client_sync_port', \
+            'sync_mode_server_login_entry': 'server_login', \
+            'sync_mode_server_passwd_entry': 'server_passwd', \
+            'sync_mode_server_port_entry': 'server_sync_port', \
+            'sync_mode_server_address_entry': 'server_sync_address'}
+        for widget_name, param_name in widgets_dict.items():
+            get_widget(widget_name).set_text(self.conf[param_name])
 
     def complete_events(self):
         """Defreeze GTK UI."""
