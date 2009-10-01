@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Oct  1 15:19:17 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Oct  1 23:26:34 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -15,6 +15,7 @@
     <child>
       <widget class="GtkNotebook" id="switcher">
         <property name="visible">True</property>
+        <property name="show_tabs">False</property>
         <property name="show_border">False</property>
         <property name="tab_border">0</property>
         <property name="tab_hborder">0</property>
@@ -1404,7 +1405,6 @@
                         <property name="response_id">0</property>
                         <property name="active">True</property>
                         <property name="group">config_toolbar_general_settings_button</property>
-                        <signal name="released" handler="show_skin_settings"/>
                       </widget>
                       <packing>
                         <property name="top_attach">1</property>
@@ -1422,7 +1422,6 @@
                         <property name="response_id">0</property>
                         <property name="active">True</property>
                         <property name="group">config_toolbar_general_settings_button</property>
-                        <signal name="released" handler="show_tts_settings"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1442,7 +1441,6 @@
                         <property name="can_focus">True</property>
                         <property name="response_id">0</property>
                         <property name="active">True</property>
-                        <signal name="released" handler="show_general_settings"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1460,7 +1458,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="config_to_main_menu"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1613,7 +1610,6 @@
                                     <property name="can_focus">True</property>
                                     <property name="has_frame">False</property>
                                     <property name="invisible_char">●</property>
-                                    <signal name="changed" handler="on_change_imagedir"/>
                                   </widget>
                                 </child>
                                 <child>
@@ -1660,7 +1656,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="toggled" handler="change_fullscreen"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1696,7 +1691,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="toggled" handler="change_startup_with_review"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1755,7 +1749,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="change_skin"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -1775,7 +1768,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="change_skin"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -1843,7 +1835,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="change_font_size"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -1861,7 +1852,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="change_font_size"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -1934,7 +1924,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="clicked" handler="change_lang"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -1952,7 +1941,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="clicked" handler="change_lang"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -2003,7 +1991,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="clicked" handler="change_voice"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -2021,7 +2008,6 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="response_id">0</property>
-                                <signal name="clicked" handler="change_voice"/>
                                 <child>
                                   <placeholder/>
                                 </child>
@@ -2083,7 +2069,6 @@
                                 <property name="visible">True</property>
                                 <property name="adjustment">30 30 200 1 10 10</property>
                                 <property name="restrict_to_fill_level">False</property>
-                                <signal name="value_changed" handler="change_speed"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -2126,7 +2111,6 @@
                               <widget class="GtkHScrollbar" id="config_mode_tts_pitch_scrollbar">
                                 <property name="visible">True</property>
                                 <property name="adjustment">0 0 100 1 10 10</property>
-                                <signal name="value_changed" handler="change_pitch"/>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>

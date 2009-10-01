@@ -37,13 +37,31 @@ class ConfigurationWidget(ConfigurationDialog):
 
     def __init__(self, component_manager):
         ConfigurationDialog.__init__(self, component_manager)
-
-        self.w_tree = self.main_widget().w_tree
-        self.get_widget = get_widget = self.w_tree.get_widget
+        self.get_widget = self.main_widget().w_tree.get_widget
         self.conf = self.config()
-        self.current_size = int(self.conf['font_size'])
-        self.change_font_size()
+        self.current_size = self.conf['font_size']
         self.connections = []
+        self.languages = []
+        page = self.conf['last_settings_page']
+        if page == 0:
+            self.get_widget(\
+                "config_toolbar_general_settings_button").set_active(True)
+            self.show_general_settings_cb(None)
+        elif page == 1:
+            self.get_widget(\
+                "config_toolbar_skin_settings_button").set_active(True)
+            self.show_skin_settings_cb(None)
+        elif page == 2 and tts.is_available():
+            self.get_widget(\
+                "config_toolbar_tts_settings_button").set_active(True)
+            self.show_tts_settings_cb(None)
+        else:
+            self.get_widget(\
+                "config_toolbar_general_settings_button").set_active(True)
+            self.get_widget(\
+                "config_toolbar_tts_settings_button").set_sensitive(False)
+            self.show_general_settings_cb(None)
+
         self.connect_signals([
             ("checkbox_fullscreen_mode", "toggled", self.change_fullscreen_cb),
             ("checkbox_start_in_review_mode", "toggled", \
@@ -73,24 +91,11 @@ class ConfigurationWidget(ConfigurationDialog):
             ("config_mode_tts_lang_next_button", "clicked", \
                 self.change_lang_cb),
             ("config_mode_prev_skin_button", "clicked", self.change_skin_cb),
-            ("config_mode_next_skin_button", "clicked", self.change_skin_cb)])
-
-        selectors_dict = {
-            0: get_widget("config_toolbar_general_settings_button"),
-            1: get_widget("config_toolbar_skin_settings_button"),
-            2: get_widget("config_toolbar_tts_settings_button")}
-        page = self.conf['last_settings_page']
-        get_widget("config_mode_settings_switcher").set_current_page(page)
-        #FIXME: check tts available while activating radio button
-        selectors_dict[page].set_active(True)
-        tts_available = tts.is_available()
-        get_widget("config_toolbar_tts_settings_button").set_sensitive(\
-            tts_available)
-        if tts_available:
-            self.languages = [lang for lang in tts.get_languages()]
-        get_widget("config_mode_skin_preview_image").set_from_file(\
-            os.path.join(self.conf["theme_path"], \
-            os.path.split(self.conf["theme_path"])[1]))
+            ("config_mode_next_skin_button", "clicked", self.change_skin_cb),
+            ("config_mode_entry_imagedir", "changed", \
+                self.save_imagedir_value),
+            ("config_mode_entry_sounddir", "changed", \
+                self.save_sounddir_value)])
 
     def connect_signals(self, control):
         """Connect signals to widgets and save connection info."""
@@ -107,28 +112,6 @@ class ConfigurationWidget(ConfigurationDialog):
             widget.disconnect(cid)
         self.connections = []
 
-    def activate(self):
-        """Activate configuration mode."""
-
-        self.get_widget("checkbox_fullscreen_mode").set_active(\
-            self.conf['fullscreen'])
-        self.get_widget("checkbox_start_in_review_mode").set_active(\
-            self.conf['startup_with_review'])
-        self.get_widget("config_mode_entry_imagedir").set_text(\
-            self.conf['imagedir'])
-        self.get_widget("config_mode_entry_sounddir").set_text(\
-            self.conf['sounddir'])
-        self.get_widget("config_mode_tts_voice_label").set_text(\
-            self.conf['tts_voice'])
-        self.get_widget("config_mode_tts_speed_scrollbar").set_value(\
-            self.conf['tts_speed'])
-        self.change_speed_cb(self.get_widget("config_mode_tts_speed_scrollbar"))
-        self.get_widget("config_mode_tts_pitch_scrollbar").set_value(\
-            self.conf['tts_pitch'])
-        self.change_pitch_cb(self.get_widget("config_mode_tts_pitch_scrollbar"))
-        self.get_widget("config_mode_tts_lang_label").set_text(\
-            self.conf['tts_language'])
-
     def change_font_size(self):
         """Changes font size."""
 
@@ -137,25 +120,60 @@ class ConfigurationWidget(ConfigurationDialog):
         document.open_stream('text/html')
         text = """<html><style type="text/css"> *{font-size:%spx; \
             text-align:center;}</style><body>Font size: %s \
-            </body></html>""" % (self.current_size, self.current_size)
+            </body></html>""" % (self.current_size, int(self.current_size))
         document.write_stream(text)
         document.close_stream()
+
+    def save_imagedir_value(self, widget):
+        """Save current imagedir value."""
+
+        self.conf['imagedir'] = widget.get_text()
+
+    def save_sounddir_value(self, widget):
+        """Save current sounddir value."""
+
+        self.conf['sounddir'] = widget.get_text()
 
     # callbacks
     def show_general_settings_cb(self, widget):
         """Switches to the general settings page."""
 
         self.get_widget("config_mode_settings_switcher").set_current_page(0)
+        self.get_widget("checkbox_fullscreen_mode").set_active(\
+            self.conf['fullscreen'])
+        self.get_widget("checkbox_start_in_review_mode").set_active(\
+            self.conf['startup_with_review'])
+        self.get_widget("config_mode_entry_imagedir").set_text(\
+            self.conf['imagedir'])
+        self.get_widget("config_mode_entry_sounddir").set_text(\
+            self.conf['sounddir'])
         
     def show_tts_settings_cb(self, widget):
         """Switches to the tts settings page."""
 
         self.get_widget("config_mode_settings_switcher").set_current_page(2)
+        if not self.languages:
+            self.languages = [lang for lang in tts.get_languages()]
+        self.get_widget("config_mode_tts_voice_label").set_text(\
+            self.conf['tts_voice'])
+        self.get_widget("config_mode_tts_lang_label").set_text(\
+            self.conf['tts_language'])
+        self.get_widget("config_mode_tts_speed_scrollbar").set_value(\
+            self.conf['tts_speed'])
+        self.get_widget("config_mode_tts_pitch_scrollbar").set_value(\
+            self.conf['tts_pitch'])
+        self.change_speed_cb(self.get_widget("config_mode_tts_speed_scrollbar"))
+        self.change_pitch_cb(self.get_widget("config_mode_tts_pitch_scrollbar"))
 
     def show_skin_settings_cb(self, widget):
         """Switches to the skin settings page."""
 
         self.get_widget("config_mode_settings_switcher").set_current_page(1)
+        self.change_font_size()
+        preview_image = self.get_widget("config_mode_skin_preview_image")
+        if not preview_image.get_property('file'):
+            preview_image.set_from_file(os.path.join(self.conf["theme_path"], \
+            os.path.split(self.conf["theme_path"])[1]))
 
     def change_voice_cb(self, widget):
         """Changes TTS voice."""
@@ -163,7 +181,9 @@ class ConfigurationWidget(ConfigurationDialog):
         voices = {'Male': 'Female', 'Female': 'Male'}
         voice_label = self.get_widget("config_mode_tts_voice_label")
         voice = voice_label.get_text()
-        voice_label.set_text(voices[voice])
+        new_voice = voices[voice]
+        voice_label.set_text(new_voice)
+        self.conf['tts_voice'] = new_voice
 
     def change_lang_cb(self, widget):
         """Changes current TTS language."""
@@ -181,6 +201,7 @@ class ConfigurationWidget(ConfigurationDialog):
             else:
                 new_lang = self.languages[-1]
         finally:
+            self.conf['tts_language'] = new_lang
             self.get_widget("config_mode_tts_lang_label").set_text(new_lang)
 
     def change_skin_cb(self, widget):
@@ -188,7 +209,8 @@ class ConfigurationWidget(ConfigurationDialog):
 
         skins = {'rainbow': 'dark', 'dark': 'rainbow'}
         skin_preview_widget = self.get_widget("config_mode_skin_preview_image")
-        path, skin = os.path.split(skin_preview_widget.get_properties('file')[0])
+        path, skin = os.path.split(\
+            skin_preview_widget.get_properties('file')[0])
         path = os.path.split(path)[0]
         skin_preview_widget.set_from_file(os.path.join(os.path.join(\
             path, skins[skin]), skins[skin]))
@@ -198,6 +220,7 @@ class ConfigurationWidget(ConfigurationDialog):
         """Changes TTS speed."""
 
         value = int(widget.get_value())
+        self.conf['tts_speed'] = value
         self.get_widget("config_mode_tts_speed_label").set_text(\
             "    Speed: %s" % value)
 
@@ -205,6 +228,7 @@ class ConfigurationWidget(ConfigurationDialog):
         """Changes TTS pitch."""
 
         value = int(widget.get_value())
+        self.conf['tts_pitch'] = value
         self.get_widget("config_mode_tts_pitch_label").set_text(\
             "    Pitch: %s" % value)
 
@@ -238,28 +262,16 @@ class ConfigurationWidget(ConfigurationDialog):
     def config_to_main_menu_cb(self, widget):
         """ Return to main menu. """
 
-        if not os.path.exists( \
-            self.get_widget("config_mode_entry_imagedir").get_text()):
-            self.main_widget().information_box( \
+        if not os.path.exists(os.path.abspath(self.get_widget(\
+            "config_mode_entry_imagedir").get_text())):
+            self.main_widget().information_box(\
                 _("Image dir does not exist! Select another."))
             return
-        if not os.path.exists( \
-            self.get_widget("config_mode_entry_sounddir").get_text()):
-            self.main_widget().information_box( \
+        if not os.path.exists(os.path.abspath(self.get_widget(\
+            "config_mode_entry_sounddir").get_text())):
+            self.main_widget().information_box(\
                 _("Sound dir does not exist! Select another."))
             return
-        self.conf['imagedir'] = self.get_widget(\
-            "config_mode_entry_imagedir").get_text()
-        self.conf['sounddir'] = self.get_widget(\
-            "config_mode_entry_sounddir").get_text()
-        self.conf['tts_speed'] = int(self.get_widget(\
-            "config_mode_tts_speed_scrollbar").get_value())
-        self.conf['tts_pitch'] = int(self.get_widget(\
-            "config_mode_tts_pitch_scrollbar").get_value())
-        self.conf['tts_language'] = self.get_widget(\
-            "config_mode_tts_lang_label").get_text()
-        self.conf['tts_voice'] = self.get_widget(\
-            "config_mode_tts_voice_label").get_text()
         self.conf['last_settings_page'] = self.get_widget(\
             "config_mode_settings_switcher").get_current_page()
         self.conf.save()
