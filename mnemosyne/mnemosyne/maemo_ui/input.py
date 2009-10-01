@@ -40,6 +40,8 @@ from mnemosyne.libmnemosyne.card_types.cloze import Cloze
 
 _ = gettext.gettext
 
+FONT_DISTINCTION = 7
+
 class InputWidget(Component):
     """Input mode widget for Rainbow theme."""
     
@@ -101,7 +103,8 @@ class InputWidget(Component):
         }
 
         # Change default font
-        font = pango.FontDescription("Nokia Sans %s" % self.conf['font_size'])
+        font = pango.FontDescription("Nokia Sans %s" % \
+            (self.conf['font_size'] - FONT_DISTINCTION))
         for area in self.areas.values():
             area.modify_font(font)
 
