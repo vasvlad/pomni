@@ -48,7 +48,7 @@ class InputWidget(Component):
         Component.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
-        self.get_widget = self.w_tree.get_widget
+        self.get_widget = get_widget = self.w_tree.get_widget
         self.conf = self.config()
         self.connections = []
         self.connect_signals([\
@@ -85,13 +85,12 @@ class InputWidget(Component):
         self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
-        iconview_widget = self.w_tree.get_widget("iconview_widget")
+        iconview_widget = get_widget("iconview_widget")
         iconview_widget.set_model(self.liststore)
         iconview_widget.set_pixbuf_column(4)
         iconview_widget.set_text_column(0)
 
         # Widgets as attributes
-        get_widget = self.get_widget
         self.areas = {# Text areas
             "cloze": get_widget("cloze_text_w"),
             "answer":  get_widget("answer_text_w"),

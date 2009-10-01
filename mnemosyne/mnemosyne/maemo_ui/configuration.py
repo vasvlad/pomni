@@ -39,7 +39,7 @@ class ConfigurationWidget(ConfigurationDialog):
         ConfigurationDialog.__init__(self, component_manager)
 
         self.w_tree = self.main_widget().w_tree
-        self.get_widget = self.w_tree.get_widget
+        self.get_widget = get_widget = self.w_tree.get_widget
         self.conf = self.config()
         self.current_size = int(self.conf['font_size'])
         self.change_font_size()
@@ -75,7 +75,6 @@ class ConfigurationWidget(ConfigurationDialog):
             ("config_mode_prev_skin_button", "clicked", self.change_skin_cb),
             ("config_mode_next_skin_button", "clicked", self.change_skin_cb)])
 
-        get_widget = self.get_widget
         selectors_dict = {
             0: get_widget("config_toolbar_general_settings_button"),
             1: get_widget("config_toolbar_skin_settings_button"),

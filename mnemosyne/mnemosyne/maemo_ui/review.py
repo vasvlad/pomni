@@ -40,17 +40,16 @@ class ReviewWdgt(ReviewWidget):
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
         self.w_tree = self.main_widget().w_tree
-        self.get_widget = self.w_tree.get_widget
+        self.get_widget = get_widget = self.w_tree.get_widget
         self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in ['review_to_main_menu', 'get_answer', 'grade', 'speak', \
-            'delete_card', 'edit_card', 'preview_sound_in_review']]))
+            'delete_card', 'edit_card', 'preview_sound_in_review','add_card']]))
         self.next_is_image_card = False #Image card indicator
         self.sndtext = None
         self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
 
         # Widgets as attributes
-        get_widget = self.get_widget
         self.edit_button = get_widget("review_toolbar_edit_card_button")
         self.del_button = get_widget("review_toolbar_delete_card_button")
         self.question_container = get_widget("question_container")
@@ -169,6 +168,12 @@ class ReviewWdgt(ReviewWidget):
         """Hook for showing a right answer."""
 
         self.review_controller().show_answer()
+
+    def add_card_cb(self, widget):
+        """Hook for add new card."""
+
+        self.main_widget().show_mode("input")
+        self.controller().add_cards()
 
     def delete_card_cb(self, widget):
         """Hook for delete card."""
