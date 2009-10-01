@@ -91,13 +91,14 @@ class InputWidget(Component):
         iconview_widget.set_text_column(0)
 
         # Widgets as attributes
+        get_widget = self.get_widget
         self.areas = {# Text areas
-            "cloze": self.get_widget("cloze_text_w"),
-            "answer":  self.get_widget("answer_text_w"),
-            "foreign": self.get_widget("foreign_text_w"),
-            "question": self.get_widget("question_text_w"),
-            "translation": self.get_widget("translation_text_w"),
-            "pronunciation": self.get_widget("pronun_text_w")
+            "cloze": get_widget("cloze_text_w"),
+            "answer":  get_widget("answer_text_w"),
+            "foreign": get_widget("foreign_text_w"),
+            "question": get_widget("question_text_w"),
+            "translation": get_widget("translation_text_w"),
+            "pronunciation": get_widget("pronun_text_w")
         }
 
         # Change default font
@@ -106,47 +107,44 @@ class InputWidget(Component):
             area.modify_font(font)
 
         self.widgets = {# Other widgets
-            "CurrentCategory": self.get_widget("category_name_w"),
-            "SoundButton": self.get_widget("sound_content_button"),
-            "PictureButton": self.get_widget("picture_content_button"),
-            "SoundIndicator": self.get_widget("input_mode_snd_button"),
-            "CardTypeSwithcer": self.get_widget("card_type_switcher_w"),
-            "MediaDialog": self.get_widget("media_selection_dialog"),
-            "SoundContainer": self.get_widget("input_mode_snd_container"),
-            "QuestionContainer": self.get_widget(\
-                "input_mode_question_container"),
-            "NewCategory": self.get_widget(\
-                "input_mode_new_category_entry"),
-            "ChangeCategoryBlock": self.get_widget(\
+            "CurrentCategory": get_widget("category_name_w"),
+            "SoundButton": get_widget("sound_content_button"),
+            "PictureButton": get_widget("picture_content_button"),
+            "SoundIndicator": get_widget("input_mode_snd_button"),
+            "CardTypeSwithcer": get_widget("card_type_switcher_w"),
+            "MediaDialog": get_widget("media_selection_dialog"),
+            "SoundContainer": get_widget("input_mode_snd_container"),
+            "QuestionContainer": get_widget("input_mode_question_container"),
+            "NewCategory": get_widget("input_mode_new_category_entry"),
+            "ChangeCategoryBlock": get_widget(\
                 "input_mode_change_category_block"),
-            "AddCategoryBlock": self.get_widget(\
-                "input_mode_add_category_block")
+            "AddCategoryBlock": get_widget("input_mode_add_category_block")
         }
         # card_id: {"page": page_id, "selector": selector_widget, 
         # "widgets": [(field_name:text_area_widget)...]}
         self.selectors = {
             FrontToBack.id: {
             "page": 0, 
-            "selector": self.get_widget("front_to_back_mode_selector_w"),
+            "selector": get_widget("front_to_back_mode_selector_w"),
             "widgets": [('q', self.areas["question"]), 
                         ('a', self.areas["answer"])]
             },
             BothWays.id: {
             "page": 0,
-            "selector": self.get_widget("both_way_mode_selector_w"),
+            "selector": get_widget("both_way_mode_selector_w"),
             "widgets": [('q', self.areas["question"]), 
                         ('a', self.areas["answer"])]
             },
             ThreeSided.id: {
             "page": 1,
-            "selector": self.get_widget("three_side_mode_selector_w"),
+            "selector": get_widget("three_side_mode_selector_w"),
             "widgets": [('f', self.areas["foreign"]),
                         ('t', self.areas["translation"]),
                         ('p', self.areas["pronunciation"])]
             },
             Cloze.id: {
             "page": 2,
-            "selector": self.get_widget("cloze_mode_selector_w"),
+            "selector": get_widget("cloze_mode_selector_w"),
             "widgets": [('text', self.areas["cloze"])]
             }
         }
@@ -158,8 +156,7 @@ class InputWidget(Component):
         self.widget_card_id = dict((self.selectors[id]["selector"], id) \
             for id in self.selectors.keys())
 
-        self.set_card_type(self.get_widget( \
-            "front_to_back_mode_selector_w"))
+        self.set_card_type(get_widget("front_to_back_mode_selector_w"))
         self.compose_widgets()
 
         # Turn off hildon autocapitalization

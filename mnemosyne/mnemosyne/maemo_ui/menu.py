@@ -34,39 +34,35 @@ class MenuWidget(UiComponent):
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
-
-        self.w_tree = self.main_widget().w_tree
-        self.switcher = self.main_widget().switcher
-
-        self.w_tree.signal_autoconnect(\
-            dict([(mode, getattr(self, mode + "_cb")) \
-                for mode in ["input", "review", "configure", \
-                    "exit", "sync", "about"]]))
+        self._main_widget = self.main_widget()
+        self._main_widget.w_tree.signal_autoconnect(\
+            dict([(mode, getattr(self, mode + "_cb")) for mode in \
+                ['input', 'review', 'configure', 'exit', 'sync', 'about']]))
 
     # callbacks
     def input_cb(self, widget):
-        """Return to main menu."""
-        self.main_widget().input_()
+        """Go to input mode."""
+        self._main_widget.input_()
 
     def review_cb(self, widget):
         """Go to review mode."""
-        self.main_widget().review_()
+        self._main_widget.review_()
 
     def sync_cb(self, widget):
         """Go to sync mode."""
-        self.main_widget().sync_()
+        self._main_widget.sync_()
 
     def configure_cb(self, widget):
         """Go to configuration mode."""
-        self.main_widget().configure_()
+        self._main_widget.configure_()
 
     def about_cb(self, widget):
         """Go to about mode."""
-        self.main_widget().about_()
+        self._main_widget.about_()
 
     def exit_cb(self, widget):
         """Exit program."""
-        self.main_widget().exit_()
+        self._main_widget.exit_()
 
 
 # Local Variables:
