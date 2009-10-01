@@ -136,8 +136,8 @@ class ConfigurationWidget(ConfigurationDialog):
         document.clear()
         document.open_stream('text/html')
         text = """<html><style type="text/css"> *{font-size:%spx; \
-            text-align:center;}</style><body>Font size example \
-            </body></html>""" % self.current_size
+            text-align:center;}</style><body>Font size: %s \
+            </body></html>""" % (self.current_size, self.current_size)
         document.write_stream(text)
         document.close_stream()
 

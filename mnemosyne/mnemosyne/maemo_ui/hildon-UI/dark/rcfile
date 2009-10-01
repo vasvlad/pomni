@@ -1067,13 +1067,13 @@ widget "*.config_mode_tts_pitch_label" style "config-mode-scrollbars-label"
 
 style "config-mode-voice-label" {
     fg[NORMAL] = "#000000"
-    font_name = "Nokia Sans 15"
+    font_name = "Nokia Sans 16"
 }
 widget "*.config_mode_tts_voice_label" style "config-mode-voice-label"
 widget "*.config_mode_tts_lang_label" style "config-mode-voice-label"
 
 style "textareas" {
-    font_name = "Nokia Sans 20"
+    font_name = "Nokia Sans 22"
 }
 widget "*.config_mode_entry_imagedir" style "textareas"
 widget "*.config_mode_entry_sounddir" style "textareas"
