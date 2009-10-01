@@ -75,20 +75,21 @@ class ConfigurationWidget(ConfigurationDialog):
             ("config_mode_prev_skin_button", "clicked", self.change_skin_cb),
             ("config_mode_next_skin_button", "clicked", self.change_skin_cb)])
 
+        get_widget = self.get_widget
         selectors_dict = {
-            0: self.get_widget("config_toolbar_general_settings_button"),
-            1: self.get_widget("config_toolbar_skin_settings_button"),
-            2: self.get_widget("config_toolbar_tts_settings_button")}
+            0: get_widget("config_toolbar_general_settings_button"),
+            1: get_widget("config_toolbar_skin_settings_button"),
+            2: get_widget("config_toolbar_tts_settings_button")}
         page = self.conf['last_settings_page']
-        self.get_widget("config_mode_settings_switcher").set_current_page(page)
+        get_widget("config_mode_settings_switcher").set_current_page(page)
         #FIXME: check tts available while activating radio button
         selectors_dict[page].set_active(True)
         tts_available = tts.is_available()
-        self.get_widget("config_toolbar_tts_settings_button").set_sensitive(\
+        get_widget("config_toolbar_tts_settings_button").set_sensitive(\
             tts_available)
         if tts_available:
             self.languages = [lang for lang in tts.get_languages()]
-        self.get_widget("config_mode_skin_preview_image").set_from_file(\
+        get_widget("config_mode_skin_preview_image").set_from_file(\
             os.path.join(self.conf["theme_path"], \
             os.path.split(self.conf["theme_path"])[1]))
 

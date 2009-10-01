@@ -53,28 +53,27 @@ class SyncWidget(UiComponent):
                 "start_server_sync")]))
         self.conf = self.config()
         self.get_widget = self.w_tree.get_widget
+        get_widget = self.get_widget
 
-        self.client_progressbar = self.get_widget(\
-            "sync_mode_client_progressbar")
-        self.server_progressbar = self.get_widget(\
-            "sync_mode_server_progressbar")
+        self.client_progressbar = get_widget("sync_mode_client_progressbar")
+        self.server_progressbar = get_widget("sync_mode_server_progressbar")
 
-        self.get_widget("sync_mode_client_login_entry"). \
-            set_text(self.conf['client_login'])
-        self.get_widget("sync_mode_client_passwd_entry"). \
-            set_text(self.conf['client_passwd'])
-        self.get_widget("sync_mode_client_address_entry"). \
-            set_text(self.conf['client_sync_address'])
-        self.get_widget("sync_mode_client_port_entry"). \
-            set_text(self.conf['client_sync_port'])
-        self.get_widget("sync_mode_server_login_entry").\
-            set_text(self.conf['server_login'])
-        self.get_widget("sync_mode_server_passwd_entry").\
+        get_widget("sync_mode_client_login_entry").set_text(\
+            self.conf['client_login'])
+        get_widget("sync_mode_client_passwd_entry").set_text(\
+            self.conf['client_passwd'])
+        get_widget("sync_mode_client_address_entry").set_text(\
+            self.conf['client_sync_address'])
+        get_widget("sync_mode_client_port_entry").set_text(\
+            self.conf['client_sync_port'])
+        get_widget("sync_mode_server_login_entry").set_text(\
+            self.conf['server_login'])
+        get_widget("sync_mode_server_passwd_entry").\
             set_text(self.conf['server_passwd'])
-        self.get_widget("sync_mode_server_port_entry").\
-            set_text(self.conf['server_sync_port'])
-        self.get_widget("sync_mode_server_address_entry").\
-            set_text(self.conf['server_sync_address'])
+        get_widget("sync_mode_server_port_entry").set_text(\
+            self.conf['server_sync_port'])
+        get_widget("sync_mode_server_address_entry").set_text(\
+            self.conf['server_sync_address'])
 
     def complete_events(self):
         """Defreeze GTK UI."""

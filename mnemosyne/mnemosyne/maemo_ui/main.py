@@ -32,7 +32,6 @@ import urllib
 import gtkhtml2
 import urlparse
 import gobject
-gobject.threads_init()
 
 from mnemosyne.maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
@@ -79,11 +78,11 @@ class MainWdgt(MainWidget):
         w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
             for sig in ("window_state", "window_keypress")]))
 
-        self.question_dialog = w_tree.get_widget("question_dialog")
-        self.information_dialog = w_tree.get_widget("information_dialog")
-        self.question_dialog_label = w_tree.get_widget("question_dialog_label")
-        self.information_dialog_label = w_tree.get_widget(\
-            "information_dialog_label")
+        get_widget = w_tree.get_widget
+        self.question_dialog = get_widget("question_dialog")
+        self.information_dialog = get_widget("information_dialog")
+        self.question_dialog_label = get_widget("question_dialog_label")
+        self.information_dialog_label = get_widget("information_dialog_label")
 
         self.w_tree = w_tree
 
@@ -117,9 +116,7 @@ class MainWdgt(MainWidget):
                 self.review_()
             else:
                 self.menu_()
-        gtk.gdk.threads_enter()
         gtk.main()
-        gtk.gdk.threads_leave()
 
     def custom_handler(self, glade, function_name, widget_name, *args):
         """Hook for custom widgets."""

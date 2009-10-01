@@ -52,18 +52,19 @@ class ReviewWdgt(ReviewWidget):
         self.renderer = self.component_manager.get_current('renderer')
 
         # Widgets as attributes
-        self.edit_button = self.get_widget("review_toolbar_edit_card_button")
-        self.del_button = self.get_widget("review_toolbar_delete_card_button")
-        self.question_container = self.get_widget("question_container")
-        self.answer_container = self.get_widget("answer_container")
-        self.container_width = self.get_widget("question_text"). \
+        get_widget = self.get_widget
+        self.edit_button = get_widget("review_toolbar_edit_card_button")
+        self.del_button = get_widget("review_toolbar_delete_card_button")
+        self.question_container = get_widget("question_container")
+        self.answer_container = get_widget("answer_container")
+        self.container_width = get_widget("question_text"). \
             window.get_geometry()[2]
-        self.question_text = self.get_widget("question_text")
-        self.answer_text = self.get_widget("answer_text")
-        self.sound_container = self.get_widget("review_mode_snd_container")
-        self.sound_button = self.get_widget("review_mode_snd_button")
-        self.grades_table = self.get_widget("grades_table")
-        self.tts_button = self.get_widget("review_toolbar_tts_button")
+        self.question_text = get_widget("question_text")
+        self.answer_text = get_widget("answer_text")
+        self.sound_container = get_widget("review_mode_snd_container")
+        self.sound_button = get_widget("review_mode_snd_button")
+        self.grades_table = get_widget("grades_table")
+        self.tts_button = get_widget("review_toolbar_tts_button")
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
 
