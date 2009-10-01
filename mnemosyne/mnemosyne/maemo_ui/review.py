@@ -45,7 +45,7 @@ class ReviewWdgt(ReviewWidget):
             dict([(sig, getattr(self, sig + "_cb")) \
                 for sig in ["review_to_main_menu", "get_answer", "grade", 
                 "delete_card", "edit_card", "preview_sound_in_review", 
-                "speak"]]))
+                "speak", "add_card"]]))
         self.next_is_image_card = False #Image card indicator
         self.sndtext = None
         self.tts = None
@@ -171,6 +171,12 @@ class ReviewWdgt(ReviewWidget):
         """Hook for showing a right answer."""
 
         self.review_controller().show_answer()
+
+    def add_card_cb(self, widget):
+        """Hook for add new card."""
+
+        self.main_widget().show_mode("input")
+        self.controller().add_cards()
 
     def delete_card_cb(self, widget):
         """Hook for delete card."""
