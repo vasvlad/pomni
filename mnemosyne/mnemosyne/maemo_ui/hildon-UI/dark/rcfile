@@ -1251,42 +1251,42 @@ style "team-info-button" {
             function = OPTION
             state = NORMAL
             shadow = IN
-            overlay_file = "wrench_selected.png"
+            overlay_file = "human_selected.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            overlay_file = "wrench.png"
+            overlay_file = "human.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            overlay_file = "wrench_selected.png"
+            overlay_file = "human_selected.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            overlay_file = "wrench.png"
+            overlay_file = "human.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            overlay_file = "wrench_selected.png"
+            overlay_file = "human_selected.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            overlay_file = "wrench.png"
+            overlay_file = "human.png"
             overlay_stretch = FALSE
         }
     }
@@ -1300,42 +1300,42 @@ style "user-guide-button" {
             function = OPTION
             state = NORMAL
             shadow = IN
-            overlay_file = "wrench_selected.png"
+            overlay_file = "documentation_selected.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            overlay_file = "wrench.png"
+            overlay_file = "documentation.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            overlay_file = "wrench_selected.png"
+            overlay_file = "documentation_selected.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            overlay_file = "wrench.png"
+            overlay_file = "documentation.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            overlay_file = "wrench_selected.png"
+            overlay_file = "documentation_selected.png"
             overlay_stretch = FALSE
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            overlay_file = "wrench.png"
+            overlay_file = "documentation.png"
             overlay_stretch = FALSE
         }
     }
