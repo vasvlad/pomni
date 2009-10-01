@@ -34,29 +34,23 @@ class AboutWidget(UiComponent):
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
         self.w_tree = self.main_widget().w_tree
+        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+            for sig in ('about_to_main_menu', 'show_team_info', 'show_guide')]))
         self.get_widget = self.w_tree.get_widget
-        self.w_tree.signal_autoconnect(\
-            dict([(sig, getattr(self, sig + "_cb")) for sig in \
-                ("about_to_main_menu", "show_team_info", "show_guide")]))
-        self.renderer = self.component_manager.get_current('renderer')
         self.conf = self.config()
-        page = self.conf['last_about_page']
-        selectors_dict = { 0: self.get_widget("about_toolbar_team_button"),
-            1: self.get_widget("about_toolbar_guide_button")}
-        selectors_dict[page].set_active(True)
-        self.get_widget("about_mode_role_switcher").set_current_page(page)
-        self.get_widget("about_mode_logo_image").set_from_file(\
-            os.path.join(self.conf['theme_path'], "mnemosyne.png"))
-
-    def activate(self):
-        """Activate about mode."""
-
-        pass
+        self.renderer = self.component_manager.get_current('renderer')
+        if self.config()['last_about_page'] == 0:
+            self.show_team_info_cb(None)
+        else:
+            self.show_guide_cb(None)
 
     def show_team_info_cb(self, widget):
         """Show team info page."""
 
         self.get_widget("about_mode_role_switcher").set_current_page(0)
+        self.get_widget("about_toolbar_team_button").set_active(True)
+        self.get_widget("about_mode_logo_image").set_from_file(\
+            os.path.join(self.conf['theme_path'], "mnemosyne.png"))
 
     def show_guide_cb(self, widget):
         """Show user guide page."""
@@ -64,6 +58,7 @@ class AboutWidget(UiComponent):
         self.renderer.render_html(self.get_widget("about_mode_guide_text"), \
             "<html><b>Mnemosyne for Maemo user guide</b></html>")
         self.get_widget("about_mode_role_switcher").set_current_page(1)
+        self.get_widget("about_toolbar_guide_button").set_active(True)
 
     def about_to_main_menu_cb(self, widget):
         """Returns to main menu."""
