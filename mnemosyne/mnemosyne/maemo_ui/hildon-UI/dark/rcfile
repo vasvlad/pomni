@@ -211,7 +211,7 @@ style "toolbar-container" {
 widget "*.review_mode_toolbar_container" style "toolbar-container"
 
 style "speak-button" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -285,7 +285,7 @@ style "delete-card-button" {
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
 
 style "grade0" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -305,7 +305,7 @@ style "grade0" {
 widget "*.grade0" style "grade0"
 
 style "grade1" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -325,7 +325,7 @@ style "grade1" {
 widget "*.grade1" style "grade1"
 
 style "grade2" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -345,7 +345,7 @@ style "grade2" {
 widget "*.grade2" style "grade2"
 
 style "grade3" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -365,7 +365,7 @@ style "grade3" {
 widget "*.grade3" style "grade3"
 
 style "grade4" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -385,7 +385,7 @@ style "grade4" {
 widget "*.grade4" style "grade4"
 
 style "grade5" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
             state = INSENSITIVE
