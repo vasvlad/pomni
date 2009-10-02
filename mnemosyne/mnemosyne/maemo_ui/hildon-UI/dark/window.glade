@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Oct  1 23:26:34 2009 -->
+<!--Generated with glade3 3.4.5 on Fri Oct  2 14:59:46 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -320,15 +320,11 @@
               <widget class="GtkVBox" id="review_mode_widgets_vbox">
                 <property name="visible">True</property>
                 <property name="border_width">10</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <property name="spacing">10</property>
-                <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                 <child>
                   <widget class="GtkVBox" id="vbox8">
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="homogeneous">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkTable" id="review_mode_snd_container">
                         <property name="n_columns">10</property>
@@ -725,9 +721,7 @@
                 <child>
                   <widget class="GtkVBox" id="input_mode_categories_vbox">
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <property name="homogeneous">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkHBox" id="input_mode_change_category_block">
                         <property name="visible">True</property>
@@ -796,7 +790,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="create_new_category"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -816,7 +809,6 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="response_id">0</property>
-                            <signal name="clicked" handler="hide_add_category_block"/>
                             <child>
                               <placeholder/>
                             </child>
@@ -854,16 +846,12 @@
                       <widget class="GtkVBox" id="vbox1">
                         <property name="visible">True</property>
                         <property name="border_width">10</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <property name="spacing">10</property>
                         <property name="homogeneous">True</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <child>
                           <widget class="GtkVBox" id="vbox2">
                             <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="homogeneous">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkTable" id="input_mode_snd_container">
                                 <property name="visible">True</property>
@@ -881,7 +869,6 @@
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="response_id">0</property>
-                                    <signal name="released" handler="preview_sound_in_input"/>
                                     <child>
                                       <placeholder/>
                                     </child>
@@ -1129,7 +1116,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="input_to_main_menu"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1149,7 +1135,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="add_card"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1169,7 +1154,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="add_sound"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1189,7 +1173,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="add_picture"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1209,7 +1192,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="change_category"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1255,7 +1237,6 @@
                         <property name="can_focus">True</property>
                         <property name="response_id">0</property>
                         <property name="active">True</property>
-                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1276,7 +1257,6 @@
                         <property name="response_id">0</property>
                         <property name="active">True</property>
                         <property name="group">front_to_back_mode_selector_w</property>
-                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1297,7 +1277,6 @@
                         <property name="response_id">0</property>
                         <property name="active">True</property>
                         <property name="group">front_to_back_mode_selector_w</property>
-                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1318,7 +1297,6 @@
                         <property name="response_id">0</property>
                         <property name="active">True</property>
                         <property name="group">front_to_back_mode_selector_w</property>
-                        <signal name="released" handler="change_card_type"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1338,7 +1316,6 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="response_id">0</property>
-                        <signal name="clicked" handler="change_category"/>
                         <child>
                           <placeholder/>
                         </child>
@@ -1525,9 +1502,7 @@
                         <child>
                           <widget class="GtkVBox" id="config_mode_sounddir_vbox">
                             <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">1</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkHBox" id="config_mode_sounddir_label_container">
                                 <property name="visible">True</property>
@@ -1580,9 +1555,7 @@
                           <widget class="GtkVBox" id="config_mode_imagedir_vbox">
                             <property name="width_request">0</property>
                             <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">1</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkHBox" id="config_mode_imagedir_label_container">
                                 <property name="visible">True</property>
@@ -1639,10 +1612,8 @@
                     <child>
                       <widget class="GtkVBox" id="config_mode_checkboxes_vbox">
                         <property name="visible">True</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <property name="spacing">12</property>
                         <property name="homogeneous">True</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <child>
                           <widget class="GtkTable" id="config_mode_fullscreen_table">
                             <property name="visible">True</property>
@@ -2042,9 +2013,7 @@
                         <child>
                           <widget class="GtkVBox" id="config_mode_tts_speed_vbox">
                             <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">10</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkHBox" id="hbox5">
                                 <property name="visible">True</property>
@@ -2085,9 +2054,7 @@
                         <child>
                           <widget class="GtkVBox" id="config_mode_tts_pitch_vbox">
                             <property name="visible">True</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">10</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkHBox" id="hbox6">
                                 <property name="visible">True</property>
@@ -2314,8 +2281,6 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                     <child>
                       <widget class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <child>
                           <widget class="GtkTable" id="sync_mode_client_params_table">
                             <property name="visible">True</property>
@@ -2486,9 +2451,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                         </child>
                         <child>
                           <widget class="GtkVBox" id="sync_mode_client_status_table">
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">8</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkLabel" id="sync_mode_client_status_label">
                                 <property name="visible">True</property>
@@ -2556,8 +2519,6 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                     <child>
                       <widget class="GtkVBox" id="vbox6">
                         <property name="visible">True</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                         <child>
                           <widget class="GtkTable" id="sync_mode_server_params_table">
                             <property name="visible">True</property>
@@ -2725,9 +2686,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                         </child>
                         <child>
                           <widget class="GtkVBox" id="sync_mode_server_status_table">
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <property name="spacing">8</property>
-                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                             <child>
                               <widget class="GtkLabel" id="sync_mode_server_status_label">
                                 <property name="label" translatable="yes">Syncing...</property>
@@ -2892,8 +2851,6 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                 <child>
                   <widget class="GtkVBox" id="vbox7">
                     <property name="visible">True</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
                     <child>
                       <widget class="GtkHButtonBox" id="hbuttonbox1">
                         <property name="visible">True</property>
@@ -3210,9 +3167,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox3">
         <property name="visible">True</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <property name="spacing">5</property>
-        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
         <child>
           <widget class="GtkLabel" id="media_selection_dialog_label">
             <property name="visible">True</property>
