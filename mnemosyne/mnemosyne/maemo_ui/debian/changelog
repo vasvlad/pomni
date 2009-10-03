@@ -1,3 +1,12 @@
+mnemosyne (2.0.0~beta4) unstable; urgency=low
+
+  * added dark theme
+  * implemented About mode
+  * works on N900
+  * added dependency to python-osso 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 03 Oct 2009 23:19:19 +0300
+
 mnemosyne (2.0.0~beta3) unstable; urgency=low
 
   * implemented synchronization (Max)
