@@ -2810,7 +2810,7 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                               <widget class="GtkLabel" id="about_mode_program_name_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">&lt;span foreground='white' size='large'&gt;&lt;b&gt;Mnemosyne for Maemo&lt;/b&gt;&lt;/span&gt;
-&lt;span foreground='white' size='large'&gt;version 2.0.0 beta3&lt;/span&gt;</property>
+&lt;span foreground='white' size='large'&gt;version 2.0.0 beta4&lt;/span&gt;</property>
                                 <property name="use_markup">True</property>
                                 <property name="justify">GTK_JUSTIFY_CENTER</property>
                               </widget>
