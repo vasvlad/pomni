@@ -47,7 +47,7 @@ class "GtkWidget" style "general-widget"
 
 #----------------------------- Main Menu ------------------
 style "program-name-label" {
-    font_name = "Nokia Sans 14"
+    font_name = "Nokia Sans 15"
 }
 widget "*.program_name_label" style "program-name-label"
 
@@ -58,6 +58,7 @@ widget "*.menu_label_review" style "menu-label"
 widget "*.menu_label_input" style "menu-label"
 widget "*.menu_label_synh" style "menu-label"
 widget "*.menu_label_conf" style "menu-label"
+widget "*.menu_label_about" style "menu-label"
 widget "*.menu_label_exit" style "menu-label"
 
 style "menu-button-review" {
@@ -125,6 +126,21 @@ style "menu-button-conf" {
     }
 }
 widget "*.menu_button_conf" style "menu-button-conf"
+
+style "menu-button-about" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "about_small.png"
+        }
+        image {
+            function = BOX
+            file = "about_big.png"
+        }
+    }
+}
+widget "*.menu_button_about" style "menu-button-about"
 
 style "menu-button-exit" {
     engine "pixmap" {
@@ -616,6 +632,7 @@ widget "*.review_mode_vseparator2" style "vseparator"
 widget "*.config_mode_vseparator1" style "vseparator"
 widget "*.config_mode_vseparator2" style "vseparator"
 widget "*.sync_mode_vseparator1" style "vseparator"
+widget "*.about_mode_vseparator1" style "vseparator"
 
 style "hseparator" {
     engine "sapwood" {
@@ -1131,6 +1148,147 @@ widget "*.sync_mode_server_address_entry" style "sync-textarea"
 widget "*.sync_mode_server_login_entry" style "sync-textarea"
 widget "*.sync_mode_server_passwd_entry" style "sync-textarea"
 #----------------------------- Sync mode ------------------
+
+#----------------------------- About mode ------------------
+widget "*.about_mode_guite_container" style "html-container"
+
+style "team-info-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.about_toolbar_team_button" style "team-info-button"
+
+style "user-guide-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.about_toolbar_guide_button" style "user-guide-button"
+
+style "guide-inside-container" {
+    bg[NORMAL] = "#DDDDDD"
+}
+widget "*.about_mode_inside_container" style "guide-inside-container"
+
+style "guide-scrolls" {
+    xthickness = 0
+    ythickness = 0
+    GtkScrolledWindow::scrollbars-within-bevel = 0
+    GtkScrolledWindow::scrollbar-spacing = 0
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "increase_font_size.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "decrease_font_size.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        #image {
+        #    function = SLIDER
+        #    orientation = VERTICAL
+        #    file = "transparent.png"
+        #}
+        image {
+            function = BOX
+            file = "white.png"
+        }
+    }
+}
+widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
+#----------------------------- About mode ------------------
 
 
 #----------------------------- Dialogs ------------------
