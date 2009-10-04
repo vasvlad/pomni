@@ -92,6 +92,7 @@ class InputWidget(Component):
         iconview_widget.set_pixbuf_column(4)
         iconview_widget.set_text_column(0)
 
+        get_widget = self.get_widget
         # Widgets as attributes
         self.areas = {# Text areas
             "cloze": get_widget("cloze_text_w"),
