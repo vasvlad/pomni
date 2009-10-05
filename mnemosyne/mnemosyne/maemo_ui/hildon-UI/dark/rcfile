@@ -1233,6 +1233,9 @@ widget "*.sync_mode_information_label" style "sync-mode-label"
 widget "*.sync_mode_server_*_label" style "sync-mode-label"
 
 style "sync-textarea" {
+    GtkWidget::interior-focus = 0
+    GtkWidget::inner-border = {0,0,0,0}
+    GtkWidget::focus-line-width = 0
     font_name = "Nokia Sans 20"
 }
 widget "*.sync_mode_client_*_entry" style "sync-textarea"
