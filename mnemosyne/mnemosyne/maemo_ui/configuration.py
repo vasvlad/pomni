@@ -118,8 +118,9 @@ class ConfigurationWidget(ConfigurationDialog):
 
         self.renderer.render_html(self.get_widget("font_size_example"), \
             """<html><style type="text/css"> *{font-size:%spx; \
-            text-align:center;}</style><body>Font size: %s </body>\
-            </html>""" % (self.current_size, int(self.current_size)))
+            text-align:center;} body {background:#FFFFFF; color:#000000}\
+            </style><body>Font size: %s </body></html>""" % \
+            (self.current_size, int(self.current_size)))
 
     def save_imagedir_value(self, widget):
         """Save current imagedir value."""
