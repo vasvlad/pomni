@@ -57,7 +57,9 @@ class AboutWidget(UiComponent):
 
         #FIXME: load from html-file
         self.renderer.render_html(self.get_widget("about_mode_guide_text"), \
-            "<html><b>Mnemosyne for Maemo user guide</b></html>")
+            """<html><style type="text/css">*{font-size:22px;font-family:\
+                Nokia Sans} body {background:#FFFFFF;color:#000000}</style> \
+                <body><b>Mnemosyne for Maemo user guide</b></body></html>""")
         self.get_widget("about_mode_role_switcher").set_current_page(1)
         self.get_widget("about_toolbar_guide_button").set_active(True)
 
