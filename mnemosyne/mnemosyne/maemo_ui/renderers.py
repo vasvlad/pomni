@@ -48,8 +48,9 @@ class Html(Renderer):
         if card_type.id not in self._css:
             self._css[card_type.id] = """
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            <style type="text/css">*{font-size:30px;font-family:Nokia Sans}
-            table {height:100%;margin-left:auto;margin-right:auto;}\n"""
+            <style type="text/css">*{font-size:30px;font-family:Nokia Sans} \
+            body {background:#FFFFFF; color:#000000} table {height:100%; \
+            margin-left:auto;margin-right:auto;}\n"""
             for key in card_type.keys():
                 self._css[card_type.id] += "div#"+ key + \
                     " {text-align: center;}\n"
@@ -112,8 +113,9 @@ class Html(Renderer):
             margin_top = LARGE_HTML_MARGIN
         else:
             margin_top = NORMAL_HTML_MARGIN
-        html = "<html><p align=center style='margin-top:%spx; \
-            font-size:%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
+        html = "<html><style> body {background:#FFFFFF; color:#000000}" \
+            "</style> <p align=center style='margin-top:%spx; font-size:" \
+            "%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
         self.render_html(widget, html)
     
 
