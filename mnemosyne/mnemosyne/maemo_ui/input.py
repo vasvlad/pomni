@@ -102,6 +102,7 @@ class InputWidget(Component):
             "translation": get_widget("translation_text_w"),
             "pronunciation": get_widget("pronun_text_w")
         }
+        # Mandatory color setup fot GtkTextView
         for area in self.areas.values():
             area.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
             area.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
@@ -126,6 +127,12 @@ class InputWidget(Component):
                 "input_mode_change_category_block"),
             "AddCategoryBlock": get_widget("input_mode_add_category_block")
         }
+        # Mandatory color setup fot GtkEntry
+        self.widgets["NewCategory"].modify_base(gtk.STATE_NORMAL, \
+            gtk.gdk.color_parse("#FFFFFF"))
+        self.widgets["NewCategory"].modify_text(gtk.STATE_NORMAL, \
+            gtk.gdk.color_parse("#000000"))
+
         # card_id: {"page": page_id, "selector": selector_widget, 
         # "widgets": [(field_name:text_area_widget)...]}
         self.selectors = {

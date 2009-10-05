@@ -64,8 +64,12 @@ class SyncWidget(UiComponent):
             'sync_mode_server_passwd_entry': 'server_passwd', \
             'sync_mode_server_port_entry': 'server_sync_port', \
             'sync_mode_server_address_entry': 'server_sync_address'}
+        # Mandatory color setup for GtkEntry
         for widget_name, param_name in widgets_dict.items():
             get_widget(widget_name).set_text(self.conf[param_name])
+            widget = get_widget(widget_name)
+            widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
+            widget.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
     def complete_events(self):
         """Defreeze GTK UI."""

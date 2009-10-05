@@ -27,6 +27,7 @@ Hildon UI. Configuration Widget.
 import os
 import gettext
 import tts
+import gtk
 _ = gettext.gettext
 
 #from mnemosyne.libmnemosyne.ui_component import UiComponent
@@ -37,7 +38,7 @@ class ConfigurationWidget(ConfigurationDialog):
 
     def __init__(self, component_manager):
         ConfigurationDialog.__init__(self, component_manager)
-        self.get_widget = self.main_widget().w_tree.get_widget
+        self.get_widget = get_widget = self.main_widget().w_tree.get_widget
         self.conf = self.config()
         self.current_size = self.conf['font_size']
         self.connections = []
@@ -45,23 +46,26 @@ class ConfigurationWidget(ConfigurationDialog):
         self.renderer = self.component_manager.get_current('renderer')
         page = self.conf['last_settings_page']
         if page == 0:
-            self.get_widget(\
-                "config_toolbar_general_settings_button").set_active(True)
+            get_widget("config_toolbar_general_settings_button").\
+                set_active(True)
             self.show_general_settings_cb(None)
         elif page == 1:
-            self.get_widget(\
-                "config_toolbar_skin_settings_button").set_active(True)
+            get_widget("config_toolbar_skin_settings_button").set_active(True)
             self.show_skin_settings_cb(None)
         elif page == 2 and tts.is_available():
-            self.get_widget(\
-                "config_toolbar_tts_settings_button").set_active(True)
+            get_widget("config_toolbar_tts_settings_button").set_active(True)
             self.show_tts_settings_cb(None)
         else:
-            self.get_widget(\
-                "config_toolbar_general_settings_button").set_active(True)
-            self.get_widget(\
-                "config_toolbar_tts_settings_button").set_sensitive(False)
+            get_widget("config_toolbar_general_settings_button").\
+                set_active(True)
+            get_widget("config_toolbar_tts_settings_button").\
+                set_sensitive(False)
             self.show_general_settings_cb(None)
+        # Mandatory color setup for GtkEntry
+        for widget in (get_widget("config_mode_entry_imagedir"), \
+            get_widget("config_mode_entry_sounddir")):
+            widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
+            widget.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
         self.connect_signals([
             ("checkbox_fullscreen_mode", "toggled", self.change_fullscreen_cb),
