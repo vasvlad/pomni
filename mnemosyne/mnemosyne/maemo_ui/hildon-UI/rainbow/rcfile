@@ -984,6 +984,15 @@ widget "*.config_mode_entry_sounddir" style "textareas"
 
 
 #----------------------------- Sync mode ------------------
+widget "*.sync_mode_client_login_frame" style "html-container"
+widget "*.sync_mode_client_passwd_frame" style "html-container"
+widget "*.sync_mode_client_address_frame" style "html-container"
+widget "*.sync_mode_client_port_frame" style "html-container"
+widget "*.sync_mode_server_login_frame" style "html-container"
+widget "*.sync_mode_server_passwd_frame" style "html-container"
+widget "*.sync_mode_server_address_frame" style "html-container"
+widget "*.sync_mode_server_port_frame" style "html-container"
+
 style "sync-client" {
     engine "pixmap" {
         image {
