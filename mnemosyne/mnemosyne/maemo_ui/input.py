@@ -102,6 +102,9 @@ class InputWidget(Component):
             "translation": get_widget("translation_text_w"),
             "pronunciation": get_widget("pronun_text_w")
         }
+        for area in self.areas.values():
+            area.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
+            area.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
         # Change default font
         font = pango.FontDescription("Nokia Sans %s" % \
