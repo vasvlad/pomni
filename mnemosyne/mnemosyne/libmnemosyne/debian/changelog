@@ -1,3 +1,9 @@
+python-libmnemosyne (2.0.0-15) unstable; urgency=low
+
+  * got latest code from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Mon, 05 Oct 2009 20:47:27 +0300
+
 python-libmnemosyne (2.0.0-14) unstable; urgency=low
 
   * optimized SQLite.duplicates_for_fact function for speed (Max)
