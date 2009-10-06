@@ -164,7 +164,7 @@ class MainWdgt(MainWidget):
         self.activate_mode('about')
 
     @staticmethod
-    def exit_():
+    def exit_(window=None, event=None):
         """Exit from main gtk loop."""
         gtk.main_quit()
 
