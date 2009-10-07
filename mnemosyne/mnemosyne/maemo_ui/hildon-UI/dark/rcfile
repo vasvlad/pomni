@@ -72,6 +72,39 @@ style "html-container" {
     }
 }
 
+style "entry" {
+    GtkEntry::focus-line-width = 0
+    font_name = "Nokia Sans 21"
+    engine "sapwood" {
+		image {
+			function = SHADOW
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+		image {
+			function = FLAT_BOX
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+	}
+}
+
+style "textview" {
+    GtkTextView::focus-line-width = 0
+	engine "sapwood" {
+		image {
+			function = FOCUS
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+		image {
+			function = SHADOW
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+	}
+}
+
 # Style for "To Main Menu" button
 style "main-menu-button" {
     engine "sapwood" {
@@ -740,6 +773,13 @@ widget "*.input_mode_translate_container" style "html-container"
 widget "*.input_mode_cloze_container" style "html-container"
 widget "*.input_mode_new_category_entry_container" style "html-container"
 
+widget "*.question_text_w" style "textview"
+widget "*.answer_text_w" style "textview"
+widget "*.foreign_text_w" style "textview"
+widget "*.pronun_text_w" style "textview"
+widget "*.translation_text_w" style "textview"
+widget "*.cloze_text_w" style "textview"
+
 style "category-name-container" {
     engine "sapwood" {
         image {
@@ -754,11 +794,6 @@ style "category-name-container" {
 }
 widget "*.category_name_container" style "category-name-container"
 
-style "entry" {
-    fg[NORMAL] = "#000000"
-    fg[PRELIGHT] = "#000000"
-    font_name = "Nokia Sans 18"
-}
 widget "*.input_mode_new_category_entry" style "entry"
 
 style "category-label" {
@@ -1072,11 +1107,8 @@ style "config-mode-voice-label" {
 widget "*.config_mode_tts_voice_label" style "config-mode-voice-label"
 widget "*.config_mode_tts_lang_label" style "config-mode-voice-label"
 
-style "textareas" {
-    font_name = "Nokia Sans 22"
-}
-widget "*.config_mode_entry_imagedir" style "textareas"
-widget "*.config_mode_entry_sounddir" style "textareas"
+widget "*.config_mode_entry_imagedir" style "entry"
+widget "*.config_mode_entry_sounddir" style "entry"
 #----------------------------- Config mode ------------------
 
 
@@ -1232,14 +1264,8 @@ widget "*.sync_mode_client_*_label" style "sync-mode-label"
 widget "*.sync_mode_information_label" style "sync-mode-label"
 widget "*.sync_mode_server_*_label" style "sync-mode-label"
 
-style "sync-textarea" {
-    GtkWidget::interior-focus = 0
-    GtkWidget::inner-border = {0,0,0,0}
-    GtkWidget::focus-line-width = 0
-    font_name = "Nokia Sans 20"
-}
-widget "*.sync_mode_client_*_entry" style "sync-textarea"
-widget "*.sync_mode_server_*_entry" style "sync-textarea"
+widget "*.sync_mode_client_*_entry" style "entry"
+widget "*.sync_mode_server_*_entry" style "entry"
 #----------------------------- Sync mode ------------------
 
 
