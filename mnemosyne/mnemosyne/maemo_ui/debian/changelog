@@ -3,8 +3,11 @@ mnemosyne (2.0.0~beta5) unstable; urgency=low
   * corrected colors for GtkEntry and Html widgets (Max) 
   * changed widgets layout in Sync mode for Rainbow theme (Max) 
   * got latest code from upstream (Max) 
+  * fixed borders bugs for Fremantle (Max) 
+  * made workaround for non-blocking dialog
+  * window exit callback adopted for Fremantle
 
- -- Ed Bartosh <bartosh@gmail.com>  Mon, 05 Oct 2009 20:46:07 +0300
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 07 Oct 2009 22:00:17 +0300
 
 mnemosyne (2.0.0~beta4) unstable; urgency=low
 
