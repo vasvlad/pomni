@@ -55,8 +55,11 @@ class DefaultController(Controller):
         self.stopwatch().pause()
         review_controller = self.review_controller()
         fact = review_controller.card.fact
-        self.component_manager.get_current("edit_fact_dialog")\
-            (fact, self.component_manager).activate()
+        if not self.component_manager.get_current("edit_fact_dialog")\
+            (fact, self.component_manager).activate():
+            self.update_ui(review-controller)
+
+    def update_ui(self, review_controller):
         review_controller.card = \
             self.database().get_card(review_controller.card._id,
                                      id_is_internal=True)

@@ -499,6 +499,7 @@ class EditFactWidget(InputWidget, EditFactDialog):
         self.compose_widgets()
         self.set_widgets_data(self.fact)
         self.show_snd_container()
+        return True
 
     def update_card_cb(self, widget, event):
         """Update card in the database."""
@@ -515,6 +516,7 @@ class EditFactWidget(InputWidget, EditFactDialog):
 
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
+        self.controller().update_ui(self.review_controller())
 
     def input_to_main_menu_cb(self, widget):
         """Return to Review mode."""
