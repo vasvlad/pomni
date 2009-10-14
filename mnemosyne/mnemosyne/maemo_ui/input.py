@@ -425,13 +425,34 @@ class InputWidget(Component):
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
+class NonBlockingAddCardsDialog(AddCardsDialog):
+    """Non blocking variant of AddCardsDialog."""
 
-class AddCardsWidget(InputWidget, AddCardsDialog):
+    def add_cards(self):
+        """This part is the first part of add_cards
+           from default controller."""
+
+        self.stopwatch().pause()
+        self.component_manager.get_current("add_cards_dialog")\
+            (self.component_manager).activate()
+
+    def update_ui(self, review_controller):
+        """This part is called from add_card_cb, when card is added."""
+
+        self.database().save()
+        review_controller.reload_counters()
+        if review_controller.card is None:
+            review_controller.new_question()
+        else:
+            review_controller.update_status_bar()
+        self.stopwatch().unpause()
+
+class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
     """Add new card widget."""
 
     def __init__(self, component_manager):
         InputWidget.__init__(self, component_manager)
-        AddCardsDialog.__init__(self, component_manager)
+        NonBlockingAddCardsDialog.__init__(self, component_manager)
         self.connect_signals([\
             ("input_mode_toolbar_add_card_w", "button-press-event", \
                 self.add_card_cb),
@@ -475,9 +496,16 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
 
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
+        self.update_ui(self.review_controller())
 
-class BlockingEditFactDialog(EditFactDialog):
+class NonBlockingEditFactDialog(EditFactDialog):
+    """Non blocking variant of EditFactDialog
+       edit_current_card is splitted to two methods."""
+
     def edit_current_card(self):
+        """This part is the first part of edit_current_card
+           from default controller."""
+
         self.stopwatch().pause()
         review_controller = self.review_controller()
         fact = review_controller.card.fact
@@ -485,6 +513,8 @@ class BlockingEditFactDialog(EditFactDialog):
             (fact, self.component_manager).activate()
 
     def update_ui(self, review_controller):
+        """This part is called in callback, when editing is done."""
+
         review_controller.reload_counters()
         # Our current card could have disappeared from the database here,
         # e.g. when converting a front-to-back card to a cloze card, which
@@ -494,17 +524,18 @@ class BlockingEditFactDialog(EditFactDialog):
         review_controller.update_dialog(redraw_all=True)
         self.stopwatch().unpause()
 
-class EditFactWidget(InputWidget, BlockingEditFactDialog):
+class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
     """Edit current fact widget."""
 
     def __init__(self, fact, component_manager, allow_cancel=True):
         InputWidget.__init__(self, component_manager)
-        EditFactDialog.__init__(self, fact, component_manager, allow_cancel)
+        NonBlockingEditFactDialog.__init__(self, fact, 
+            component_manager, allow_cancel)
 
         self.fact = fact
         self.allow_cancel = allow_cancel
-        self.connect_signals([("input_mode_toolbar_add_card_w", "button-press-event",
-                    self.update_card_cb)])
+        self.connect_signals([("input_mode_toolbar_add_card_w", 
+            "button-press-event", self.update_card_cb)])
 
     def activate(self):
         """Activate input mode."""
