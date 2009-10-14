@@ -55,21 +55,20 @@ class DefaultController(Controller):
         self.stopwatch().pause()
         review_controller = self.review_controller()
         fact = review_controller.card.fact
-        if not self.component_manager.get_current("edit_fact_dialog")\
-            (fact, self.component_manager).activate():
-            self.update_ui(review-controller)
-
-    def update_ui(self, review_controller):
-        review_controller.card = \
-            self.database().get_card(review_controller.card._id,
-                                     id_is_internal=True)
+        self.component_manager.get_current("edit_fact_dialog")\
+            (fact, self.component_manager).activate()
         review_controller.reload_counters()
+        # Our current card could have disappeared from the database here,
+        # e.g. when converting a front-to-back card to a cloze card, which
+        # deletes the old cards and their learning history.
         if review_controller.card is None:
-            review_controller.update_status_bar()
-            review_controller.new_question()         
-        review_controller.update_dialog(redraw_all=True)
+            review_controller.new_question()
+        else:
+            review_controller.card = self.database().get_card(\
+                review_controller.card._id, id_is_internal=True)
+            review_controller.update_dialog(redraw_all=True)
         self.stopwatch().unpause()
-        
+
     def create_new_cards(self, fact_data, card_type, grade, tag_names,
                          check_for_duplicates=True, save=True):
 
