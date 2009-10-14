@@ -485,16 +485,15 @@ class BlockingEditFactDialog(EditFactDialog):
             (fact, self.component_manager).activate()
 
     def update_ui(self, review_controller):
-        review_controller.card = \
-            self.database().get_card(review_controller.card._id,
-                                     id_is_internal=True)
         review_controller.reload_counters()
-        if review_controller.card is None:
-            review_controller.update_status_bar()
-            review_controller.new_question()
+        # Our current card could have disappeared from the database here,
+        # e.g. when converting a front-to-back card to a cloze card, which
+        # deletes the old cards and their learning history.        
+        review_controller.card = self.database().get_card(\
+            review_controller.card._id, id_is_internal=True)    
         review_controller.update_dialog(redraw_all=True)
         self.stopwatch().unpause()
- 
+
 class EditFactWidget(InputWidget, BlockingEditFactDialog):
     """Edit current fact widget."""
 
