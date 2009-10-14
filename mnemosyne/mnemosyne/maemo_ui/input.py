@@ -476,8 +476,25 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
 
+class BlockingEditFactDialog(EditFactDialog):
+    def edit_current_card(self):
+        self.stopwatch().pause()
+        review_controller = self.review_controller()
+        fact = review_controller.card.fact
+        self.component_manager.get_current("edit_fact_dialog")\
+            (fact, self.component_manager).activate()
 
-class EditFactWidget(InputWidget, EditFactDialog):
+    def update_ui(self, review_controller):
+        review_controller.reload_counters()
+        # Our current card could have disappeared from the database here,
+        # e.g. when converting a front-to-back card to a cloze card, which
+        # deletes the old cards and their learning history.        
+        review_controller.card = self.database().get_card(\
+            review_controller.card._id, id_is_internal=True)    
+        review_controller.update_dialog(redraw_all=True)
+        self.stopwatch().unpause()
+
+class EditFactWidget(InputWidget, BlockingEditFactDialog):
     """Edit current fact widget."""
 
     def __init__(self, fact, component_manager, allow_cancel=True):
@@ -499,7 +516,6 @@ class EditFactWidget(InputWidget, EditFactDialog):
         self.compose_widgets()
         self.set_widgets_data(self.fact)
         self.show_snd_container()
-        return True
 
     def update_card_cb(self, widget, event):
         """Update card in the database."""
@@ -516,7 +532,7 @@ class EditFactWidget(InputWidget, EditFactDialog):
 
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
-        self.controller().update_ui(self.review_controller())
+        self.update_ui(self.review_controller())
 
     def input_to_main_menu_cb(self, widget):
         """Return to Review mode."""

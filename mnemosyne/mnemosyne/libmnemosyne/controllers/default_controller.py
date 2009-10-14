@@ -68,7 +68,7 @@ class DefaultController(Controller):
                 review_controller.card._id, id_is_internal=True)
             review_controller.update_dialog(redraw_all=True)
         self.stopwatch().unpause()
-        
+
     def create_new_cards(self, fact_data, card_type, grade, tag_names,
                          check_for_duplicates=True, save=True):
 
