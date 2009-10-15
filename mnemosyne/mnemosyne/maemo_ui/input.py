@@ -33,6 +33,7 @@ from gtk import ListStore
 from mnemosyne.libmnemosyne.ui_components.dialogs import \
     AddCardsDialog, EditFactDialog
 from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.libmnemosyne.utils import numeric_string_cmp
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
@@ -67,30 +68,26 @@ class InputWidget(Component):
                 self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked",
                 self.close_media_selection_dialog_cb),
-            #("input_mode_prev_category_w", "clicked", self.change_category_cb),
-            #("input_mode_next_category_w", "clicked", self.change_category_cb),
-            #("input_mode_add_new_category_w", "clicked", \
-            #    self.create_new_category_cb),
             ("sound_content_button", "clicked", self.add_sound_cb),
             ("tags_button", "clicked", self.show_tags_dialog_cb),
-            ("hide_tags_dialog", "clicked", self.hide_tags_dialog_cb),
             ("new_tag_button", "clicked", self.add_new_tag_cb),
-            #("category_name_container", "clicked", \
-            #    self.show_add_category_block_cb),
-            #("input_mode_close_add_category_block_w", "clicked",
-            #    self.hide_add_category_block_cb),
             ("input_mode_snd_button", "released", \
                 self.preview_sound_in_input_cb)])
 
         self.fact = None
+        self.tag_mode = False
         self.sounddir = None
         self.imagedir = None
         self.card_type = None
-        self.tags = sorted(self.database().get_tag_names())
+        self.tags = sorted(self.database().get_tag_names(), \
+            cmp=numeric_string_cmp)
         if not self.tags:
             self.tags = [_("<default>")]
-        self.last_selected_tags = self.conf["tags_of_last_added"]
-        print "init: last_selected_tags=", self.last_selected_tags
+        #FIXME: upstream exception?
+        try:
+            self.last_selected_tags = self.conf["tags_of_last_added"]
+        except:
+            self.last_selected_tags = _("<default>")
         self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
@@ -99,7 +96,6 @@ class InputWidget(Component):
         iconview_widget.set_pixbuf_column(4)
         iconview_widget.set_text_column(0)
 
-        get_widget = self.get_widget
         # Widgets as attributes
         self.areas = {# Text areas
             "cloze": get_widget("cloze_text_w"),
@@ -110,9 +106,9 @@ class InputWidget(Component):
             "pronunciation": get_widget("pronun_text_w")
         }
         # Mandatory color setup fot GtkTextView
-        for area in self.areas.values():
-            area.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
-            area.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
+        #for area in self.areas.values():
+        #    area.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
+        #    area.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
         # Change default font
         font = pango.FontDescription("Nokia Sans %s" % \
@@ -121,18 +117,18 @@ class InputWidget(Component):
             area.modify_font(font)
 
         self.widgets = {# Other widgets
-            #"CurrentCategory": get_widget("category_name_w"),
+            "TagsBox": get_widget("tags_box"),
+            "TagEntry": get_widget("new_tag_entry"),
+            "TagsButton": get_widget("tags_button"),
+            "CardTypesTable": get_widget("card_types_table"),
             "SoundButton": get_widget("sound_content_button"),
             "PictureButton": get_widget("picture_content_button"),
             "SoundIndicator": get_widget("input_mode_snd_button"),
-            "CardTypeSwithcer": get_widget("card_type_switcher_w"),
+            "CardTypeSwitcher": get_widget("card_type_switcher_w"),
+            "AddCardButton":get_widget("input_mode_toolbar_add_card_w"),
             "MediaDialog": get_widget("media_selection_dialog"),
             "SoundContainer": get_widget("input_mode_snd_container"),
             "QuestionContainer": get_widget("input_mode_question_container")
-            #"NewCategory": get_widget("input_mode_new_category_entry"),
-            #"ChangeCategoryBlock": get_widget(\
-            #    "input_mode_change_category_block"),
-            #"AddCategoryBlock": get_widget("input_mode_add_category_block")
         }
         # Mandatory color setup fot GtkEntry
         #self.widgets["NewCategory"].modify_base(gtk.STATE_NORMAL, \
@@ -217,7 +213,7 @@ class InputWidget(Component):
     def compose_widgets (self):
         """Switch to neccessary input page. It depends on card_type."""
 
-        self.widgets["CardTypeSwithcer"].set_current_page( \
+        self.widgets["CardTypeSwitcher"].set_current_page( \
             self.selectors[self.card_type.id]["page"])
         self.selectors[self.card_type.id]["selector"].set_active(True)
         state = self.card_type.id in (FrontToBack.id)
@@ -230,7 +226,7 @@ class InputWidget(Component):
         card_type_id = self.widget_card_id[widget]
         self.card_type = self.selectors[card_type_id]["card_type"]
 
-    def update_categories(self):
+    def update_tags(self, tags=None):
         """Update categories list content."""
 
         """
@@ -246,7 +242,8 @@ class InputWidget(Component):
                 self.categories_list.append("default category")
                 self.widgets["CurrentCategory"].set_text("default category")
         """
-        self.get_widget("tags_button").set_label(self.last_selected_tags)
+        if not tags:
+            self.get_widget("tags_button").set_label(self.last_selected_tags)
 
     def check_complete_input(self):
         """Check for non empty fields."""
@@ -261,72 +258,55 @@ class InputWidget(Component):
                 return False
         return True
 
-    def change_category_cb(self, widget):
-        """Change current category."""
-
-        if widget.name == "prev_category_w":
-            direction = -1
-        direction = 1
-        category_index = self.categories_list.index( \
-            self.widgets["CurrentCategory"].get_text())
-        try:
-            new_category = self.categories_list[category_index + direction]
-        except IndexError:
-            if direction:
-                new_category = self.categories_list[0]
-            else:
-                new_category = self.categories_list[len(self.categories_list)-1]
-        self.widgets["CurrentCategory"].set_text(new_category)
-
-    def create_new_category_cb(self, widget):
-        """Create new category."""
-
-        new_category = self.widgets["NewCategory"].get_text()
-        if new_category:
-            self.categories_list.append(new_category)
-            self.widgets["NewCategory"].set_text("")
-            self.widgets["CurrentCategory"].set_text(new_category)
-            self.hide_add_category_block_cb(None)
-
     def add_new_tag_cb(self, widget):
         """Creates new tag."""
 
-        tag = self.get_widget("new_tag_entry").get_text()
+        tag = self.widgets["TagEntry"].get_text()
         if tag and not tag in self.tags:
             self.tags.append(tag)
             tag_widget = gtk.CheckButton(tag)
             tag_widget.set_active(True)
             tag_widget.set_size_request(-1, 60)
+            self.widgets["TagsBox"].pack_start(tag_widget)
+            self.widgets["TagsBox"].reorder_child(tag_widget, 0)
             tag_widget.show()
-            self.get_widget("tags_box").pack_start(tag_widget)
-            self.get_widget("new_tag_entry").set_text("")
+            self.widgets["TagEntry"].set_text("")
 
     def show_tags_dialog_cb(self, widget):
         """Show tags dialog."""
 
-        self.get_widget("tags_button").hide()
-        self.get_widget("card_type_switcher_w").set_current_page(3)
-        self.get_widget("input_mode_toolbar").set_sensitive(False)
-        self.get_widget("card_types_table").set_sensitive(False)
+        self.tag_mode = True
+        self.widgets["TagsButton"].hide()
+        self.widgets["CardTypeSwitcher"].set_current_page(3)
+        self.widgets["PictureButton"].set_sensitive(False)
+        self.widgets["SoundButton"].set_sensitive(False)
+        self.widgets["AddCardButton"].set_sensitive(False)
+        self.widgets["CardTypesTable"].set_sensitive(False)
         for tag in self.tags:
             tag_widget = gtk.CheckButton(tag)
             tag_widget.set_active(tag in self.last_selected_tags)
             tag_widget.set_size_request(-1, 60)
             tag_widget.show()
-            self.get_widget("tags_box").pack_start(tag_widget)
+            self.widgets["TagsBox"].pack_start(tag_widget)
 
-    def hide_tags_dialog_cb(self, widget):
+    def hide_tags_dialog(self):
         """Hide tags dialog."""
 
-        self.last_selected_tags = ", ".join([tag_widget.get_label() for tag_widget in \
-            self.get_widget("tags_box").get_children() if tag_widget.get_active()])
-        self.get_widget("tags_button").set_label(self.last_selected_tags)
-        self.get_widget("tags_button").show()
-        self.get_widget("card_type_switcher_w").set_current_page(0)
-        self.get_widget("input_mode_toolbar").set_sensitive(True)
-        self.get_widget("card_types_table").set_sensitive(True)
-        for child in self.get_widget("tags_box").get_children():
-            self.get_widget("tags_box").remove(child)
+        self.last_selected_tags = ", ".join([tag_widget.get_label() \
+            for tag_widget in self.widgets["TagsBox"].get_children() if \
+                tag_widget.get_active()])
+        if not self.last_selected_tags:
+            self.last_selected_tags = _("<default>")
+        self.widgets["TagsButton"].set_label(self.last_selected_tags)
+        self.widgets["TagsButton"].show()
+        self.widgets["CardTypeSwitcher"].set_current_page(0)
+        self.widgets["PictureButton"].set_sensitive(True)
+        self.widgets["SoundButton"].set_sensitive(True)
+        self.widgets["AddCardButton"].set_sensitive(True)
+        self.widgets["CardTypesTable"].set_sensitive(True)
+        for child in self.widgets["TagsBox"].get_children():
+            self.widgets["TagsBox"].remove(child)
+        self.tag_mode = False
 
     def add_picture_cb(self, widget):
         """Show image selection dialog."""
@@ -471,10 +451,13 @@ class InputWidget(Component):
         #if self.added_new_cards:
             #self.review_controller().reset()
             #self.added_new_cards = False
-        self.disconnect_signals()
-        self.conf.save()
-        self.main_widget().soundplayer.stop()
-        self.main_widget().menu_()
+        if self.tag_mode:
+            self.hide_tags_dialog()            
+        else:
+            self.disconnect_signals()
+            self.conf.save()
+            self.main_widget().soundplayer.stop()
+            self.main_widget().menu_()
 
 
 class AddCardsWidget(InputWidget, AddCardsDialog):
@@ -498,7 +481,7 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
         """Activate input mode."""
 
         self.main_widget().soundplayer.stop()
-        self.update_categories()
+        self.update_tags()
         self.clear_widgets()
         self.show_snd_container()
 
@@ -520,7 +503,7 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
             return # Let the user try again to fill out the missing data.
 
         self.controller().create_new_cards(fact_data, self.card_type, -1, \
-            self.tags, save=True)
+            self.last_selected_tags.split(','), save=True)
         self.conf["tags_of_last_added"] = self.last_selected_tags
         self.clear_widgets()
         self.added_new_cards = True
@@ -561,7 +544,7 @@ class EditFactWidget(InputWidget, BlockingEditFactDialog):
         """Activate input mode."""
 
         self.main_widget().soundplayer.stop()
-        self.update_categories()
+        self.update_tags()
         self.clear_widgets()
         self.card_type = self.fact.card_type
         self.compose_widgets()
