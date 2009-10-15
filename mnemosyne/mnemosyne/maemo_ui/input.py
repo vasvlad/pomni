@@ -67,15 +67,18 @@ class InputWidget(Component):
                 self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked",
                 self.close_media_selection_dialog_cb),
-            ("input_mode_prev_category_w", "clicked", self.change_category_cb),
-            ("input_mode_next_category_w", "clicked", self.change_category_cb),
-            ("input_mode_add_new_category_w", "clicked", \
-                self.create_new_category_cb),
+            #("input_mode_prev_category_w", "clicked", self.change_category_cb),
+            #("input_mode_next_category_w", "clicked", self.change_category_cb),
+            #("input_mode_add_new_category_w", "clicked", \
+            #    self.create_new_category_cb),
             ("sound_content_button", "clicked", self.add_sound_cb),
-            ("category_name_container", "clicked", \
-                self.show_add_category_block_cb),
-            ("input_mode_close_add_category_block_w", "clicked",
-                self.hide_add_category_block_cb),
+            ("tags_button", "clicked", self.show_tags_dialog_cb),
+            ("hide_tags_dialog", "clicked", self.hide_tags_dialog_cb),
+            ("new_tag_button", "clicked", self.add_new_tag_cb),
+            #("category_name_container", "clicked", \
+            #    self.show_add_category_block_cb),
+            #("input_mode_close_add_category_block_w", "clicked",
+            #    self.hide_add_category_block_cb),
             ("input_mode_snd_button", "released", \
                 self.preview_sound_in_input_cb)])
 
@@ -83,7 +86,11 @@ class InputWidget(Component):
         self.sounddir = None
         self.imagedir = None
         self.card_type = None
-        self.categories_list = []
+        self.tags = sorted(self.database().get_tag_names())
+        if not self.tags:
+            self.tags = [_("<default>")]
+        self.last_selected_tags = self.conf["tags_of_last_added"]
+        print "init: last_selected_tags=", self.last_selected_tags
         self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
@@ -114,24 +121,24 @@ class InputWidget(Component):
             area.modify_font(font)
 
         self.widgets = {# Other widgets
-            "CurrentCategory": get_widget("category_name_w"),
+            #"CurrentCategory": get_widget("category_name_w"),
             "SoundButton": get_widget("sound_content_button"),
             "PictureButton": get_widget("picture_content_button"),
             "SoundIndicator": get_widget("input_mode_snd_button"),
             "CardTypeSwithcer": get_widget("card_type_switcher_w"),
             "MediaDialog": get_widget("media_selection_dialog"),
             "SoundContainer": get_widget("input_mode_snd_container"),
-            "QuestionContainer": get_widget("input_mode_question_container"),
-            "NewCategory": get_widget("input_mode_new_category_entry"),
-            "ChangeCategoryBlock": get_widget(\
-                "input_mode_change_category_block"),
-            "AddCategoryBlock": get_widget("input_mode_add_category_block")
+            "QuestionContainer": get_widget("input_mode_question_container")
+            #"NewCategory": get_widget("input_mode_new_category_entry"),
+            #"ChangeCategoryBlock": get_widget(\
+            #    "input_mode_change_category_block"),
+            #"AddCategoryBlock": get_widget("input_mode_add_category_block")
         }
         # Mandatory color setup fot GtkEntry
-        self.widgets["NewCategory"].modify_base(gtk.STATE_NORMAL, \
-            gtk.gdk.color_parse("#FFFFFF"))
-        self.widgets["NewCategory"].modify_text(gtk.STATE_NORMAL, \
-            gtk.gdk.color_parse("#000000"))
+        #self.widgets["NewCategory"].modify_base(gtk.STATE_NORMAL, \
+        #    gtk.gdk.color_parse("#FFFFFF"))
+        #self.widgets["NewCategory"].modify_text(gtk.STATE_NORMAL, \
+        #    gtk.gdk.color_parse("#000000"))
 
         # card_id: {"page": page_id, "selector": selector_widget, 
         # "widgets": [(field_name:text_area_widget)...]}
@@ -226,6 +233,7 @@ class InputWidget(Component):
     def update_categories(self):
         """Update categories list content."""
 
+        """
         if not self.categories_list:
             categories = dict([(i, name) for (i, name) in \
                 enumerate(self.database().tag_names())])
@@ -237,6 +245,8 @@ class InputWidget(Component):
             else:
                 self.categories_list.append("default category")
                 self.widgets["CurrentCategory"].set_text("default category")
+        """
+        self.get_widget("tags_button").set_label(self.last_selected_tags)
 
     def check_complete_input(self):
         """Check for non empty fields."""
@@ -277,6 +287,46 @@ class InputWidget(Component):
             self.widgets["NewCategory"].set_text("")
             self.widgets["CurrentCategory"].set_text(new_category)
             self.hide_add_category_block_cb(None)
+
+    def add_new_tag_cb(self, widget):
+        """Creates new tag."""
+
+        tag = self.get_widget("new_tag_entry").get_text()
+        if tag and not tag in self.tags:
+            self.tags.append(tag)
+            tag_widget = gtk.CheckButton(tag)
+            tag_widget.set_active(True)
+            tag_widget.set_size_request(-1, 60)
+            tag_widget.show()
+            self.get_widget("tags_box").pack_start(tag_widget)
+            self.get_widget("new_tag_entry").set_text("")
+
+    def show_tags_dialog_cb(self, widget):
+        """Show tags dialog."""
+
+        self.get_widget("tags_button").hide()
+        self.get_widget("card_type_switcher_w").set_current_page(3)
+        self.get_widget("input_mode_toolbar").set_sensitive(False)
+        self.get_widget("card_types_table").set_sensitive(False)
+        for tag in self.tags:
+            tag_widget = gtk.CheckButton(tag)
+            tag_widget.set_active(tag in self.last_selected_tags)
+            tag_widget.set_size_request(-1, 60)
+            tag_widget.show()
+            self.get_widget("tags_box").pack_start(tag_widget)
+
+    def hide_tags_dialog_cb(self, widget):
+        """Hide tags dialog."""
+
+        self.last_selected_tags = ", ".join([tag_widget.get_label() for tag_widget in \
+            self.get_widget("tags_box").get_children() if tag_widget.get_active()])
+        self.get_widget("tags_button").set_label(self.last_selected_tags)
+        self.get_widget("tags_button").show()
+        self.get_widget("card_type_switcher_w").set_current_page(0)
+        self.get_widget("input_mode_toolbar").set_sensitive(True)
+        self.get_widget("card_types_table").set_sensitive(True)
+        for child in self.get_widget("tags_box").get_children():
+            self.get_widget("tags_box").remove(child)
 
     def add_picture_cb(self, widget):
         """Show image selection dialog."""
@@ -422,6 +472,7 @@ class InputWidget(Component):
             #self.review_controller().reset()
             #self.added_new_cards = False
         self.disconnect_signals()
+        self.conf.save()
         self.main_widget().soundplayer.stop()
         self.main_widget().menu_()
 
@@ -430,8 +481,8 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
     """Add new card widget."""
 
     def __init__(self, component_manager):
-        InputWidget.__init__(self, component_manager)
         AddCardsDialog.__init__(self, component_manager)
+        InputWidget.__init__(self, component_manager)
         self.connect_signals([\
             ("input_mode_toolbar_add_card_w", "button-press-event", \
                 self.add_card_cb),
@@ -469,10 +520,10 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
             return # Let the user try again to fill out the missing data.
 
         self.controller().create_new_cards(fact_data, self.card_type, -1, \
-            [self.widgets["CurrentCategory"].get_text()])
+            self.tags, save=True)
+        self.conf["tags_of_last_added"] = self.last_selected_tags
         self.clear_widgets()
         self.added_new_cards = True
-
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
 
