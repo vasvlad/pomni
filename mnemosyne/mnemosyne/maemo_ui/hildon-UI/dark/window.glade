@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Oct 15 14:29:43 2009 -->
+<!--Generated with glade3 3.4.5 on Thu Oct 15 22:45:17 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -727,66 +727,46 @@
                 <child>
                   <widget class="GtkTable" id="card_types_table">
                     <property name="visible">True</property>
-                    <property name="n_rows">5</property>
+                    <property name="n_rows">4</property>
                     <child>
-                      <widget class="GtkButton" id="input_mode_next_category_w">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="response_id">0</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="x_options">GTK_EXPAND</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkRadioButton" id="cloze_mode_selector_w">
+                      <widget class="GtkRadioButton" id="front_to_back_mode_selector_w">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="response_id">0</property>
                         <property name="active">True</property>
-                        <property name="group">front_to_back_mode_selector_w</property>
                         <child>
                           <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="top_attach">4</property>
-                        <property name="bottom_attach">5</property>
-                        <property name="x_options"></property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkRadioButton" id="three_side_mode_selector_w">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="response_id">0</property>
-                        <property name="active">True</property>
-                        <property name="group">front_to_back_mode_selector_w</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">3</property>
-                        <property name="bottom_attach">4</property>
                         <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
                     <child>
                       <widget class="GtkRadioButton" id="both_way_mode_selector_w">
+                        <property name="width_request">80</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="response_id">0</property>
+                        <property name="active">True</property>
+                        <property name="group">front_to_back_mode_selector_w</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">1</property>
+                        <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkRadioButton" id="three_side_mode_selector_w">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
@@ -806,21 +786,22 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkRadioButton" id="front_to_back_mode_selector_w">
+                      <widget class="GtkRadioButton" id="cloze_mode_selector_w">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="response_id">0</property>
                         <property name="active">True</property>
+                        <property name="group">front_to_back_mode_selector_w</property>
                         <child>
                           <placeholder/>
                         </child>
                       </widget>
                       <packing>
-                        <property name="top_attach">1</property>
-                        <property name="bottom_attach">2</property>
-                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="top_attach">3</property>
+                        <property name="bottom_attach">4</property>
+                        <property name="x_options"></property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
                     </child>
@@ -854,8 +835,31 @@
                   <widget class="GtkTable" id="input_mode_toolbar">
                     <property name="visible">True</property>
                     <property name="n_rows">5</property>
+                    <property name="homogeneous">True</property>
                     <child>
-                      <widget class="GtkButton" id="input_mode_prev_category_w">
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="input_mode_toolbar_button_back_w">
+                        <property name="width_request">80</property>
+                        <property name="height_request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="response_id">0</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="top_attach">4</property>
+                        <property name="bottom_attach">5</property>
+                        <property name="x_options">GTK_EXPAND</property>
+                        <property name="y_options">GTK_EXPAND</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="picture_content_button">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
@@ -872,7 +876,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="picture_content_button">
+                      <widget class="GtkButton" id="sound_content_button">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
@@ -891,7 +895,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkButton" id="sound_content_button">
+                      <widget class="GtkButton" id="input_mode_toolbar_add_card_w">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
@@ -905,44 +909,6 @@
                       <packing>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
-                        <property name="x_options">GTK_EXPAND</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="input_mode_toolbar_add_card_w">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="response_id">0</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">3</property>
-                        <property name="bottom_attach">4</property>
-                        <property name="x_options">GTK_EXPAND</property>
-                        <property name="y_options">GTK_EXPAND</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="input_mode_toolbar_button_back_w">
-                        <property name="width_request">80</property>
-                        <property name="height_request">80</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="response_id">0</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="top_attach">4</property>
-                        <property name="bottom_attach">5</property>
                         <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
@@ -1225,6 +1191,7 @@
                         <child>
                           <widget class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
+                            <property name="border_width">10</property>
                             <child>
                               <widget class="GtkLabel" id="new_tag_label">
                                 <property name="visible">True</property>
@@ -1232,14 +1199,30 @@
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="fill">False</property>
                                 <property name="padding">10</property>
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkEntry" id="new_tag_entry">
+                              <widget class="GtkFrame" id="new_tag_frame">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">●</property>
+                                <property name="label_xalign">0</property>
+                                <property name="shadow_type">GTK_SHADOW_NONE</property>
+                                <child>
+                                  <widget class="GtkEntry" id="new_tag_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="has_frame">False</property>
+                                    <property name="invisible_char">●</property>
+                                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                                  </widget>
+                                </child>
+                                <child>
+                                  <placeholder/>
+                                  <packing>
+                                    <property name="type">label_item</property>
+                                  </packing>
+                                </child>
                               </widget>
                               <packing>
                                 <property name="position">1</property>
@@ -1247,17 +1230,20 @@
                             </child>
                             <child>
                               <widget class="GtkButton" id="new_tag_button">
-                                <property name="width_request">80</property>
-                                <property name="height_request">80</property>
+                                <property name="width_request">60</property>
+                                <property name="height_request">60</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="border_width">10</property>
-                                <property name="label" translatable="yes">+</property>
                                 <property name="response_id">0</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="fill">False</property>
                                 <property name="position">2</property>
                               </packing>
                             </child>
@@ -1267,49 +1253,52 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkScrolledWindow" id="scrolledwindow1">
+                          <widget class="GtkFrame" id="tags_frame">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
                             <property name="border_width">10</property>
-                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">GTK_SHADOW_NONE</property>
                             <child>
-                              <widget class="GtkViewport" id="viewport1">
+                              <widget class="GtkEventBox" id="tags_eventbox">
                                 <property name="visible">True</property>
-                                <property name="resize_mode">GTK_RESIZE_QUEUE</property>
-                                <property name="shadow_type">GTK_SHADOW_NONE</property>
                                 <child>
-                                  <widget class="GtkVBox" id="tags_box">
+                                  <widget class="GtkScrolledWindow" id="tags_scrolledwindow">
                                     <property name="visible">True</property>
-                                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
-                                    <property name="spacing">4</property>
-                                    <property name="homogeneous">True</property>
-                                    <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+                                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                                     <child>
-                                      <placeholder/>
+                                      <widget class="GtkViewport" id="tags_viewport">
+                                        <property name="visible">True</property>
+                                        <property name="resize_mode">GTK_RESIZE_QUEUE</property>
+                                        <property name="shadow_type">GTK_SHADOW_NONE</property>
+                                        <child>
+                                          <widget class="GtkVBox" id="tags_box">
+                                            <property name="visible">True</property>
+                                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                            <property name="spacing">4</property>
+                                            <property name="homogeneous">True</property>
+                                            <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                          </widget>
+                                        </child>
+                                      </widget>
                                     </child>
                                   </widget>
                                 </child>
                               </widget>
                             </child>
+                            <child>
+                              <placeholder/>
+                              <packing>
+                                <property name="type">label_item</property>
+                              </packing>
+                            </child>
                           </widget>
                           <packing>
                             <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkButton" id="hide_tags_dialog">
-                            <property name="height_request">80</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="border_width">10</property>
-                            <property name="label" translatable="yes">OK</property>
-                            <property name="response_id">0</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">2</property>
                           </packing>
                         </child>
                       </widget>
@@ -1344,6 +1333,8 @@
                   </widget>
                   <packing>
                     <property name="y_options"></property>
+                    <property name="x_padding">4</property>
+                    <property name="y_padding">4</property>
                   </packing>
                 </child>
               </widget>

@@ -110,6 +110,12 @@ style "main-menu-button" {
     engine "sapwood" {
         image {
             function = BOX
+            state = INSENSITIVE
+            overlay_file = "arrow_left_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
             overlay_file = "arrow_left.png"
             overlay_stretch = FALSE
         }
@@ -287,6 +293,12 @@ style "add-card-button" {
     engine "sapwood" {
         image {
             function = BOX
+            state = INSENSITIVE
+            overlay_file = "plus_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
             overlay_file = "plus.png"
             overlay_stretch = FALSE
         }
@@ -441,12 +453,13 @@ widget "*.grade5" style "grade5"
 
 #----------------------------- Input mode ------------------
 widget "*.input_mode_toolbar_container" style "toolbar-container"
+widget "*.new_tag_frame" style "html-container"
 
 style "cardtypes-container" {
     engine "sapwood" {
         image {
             function = BOX
-            file = "right_5.png"
+            file = "right_4.png"
         }
     }
 }
@@ -464,7 +477,6 @@ style "previous-category" {
 	    }
     }
 }
-widget "*.input_mode_prev_category_w" style "previous-category"
 
 style "next-category" {
     engine "sapwood" {
@@ -478,7 +490,6 @@ style "next-category" {
 	    }
     }
 }
-widget "*.input_mode_next_category_w" style "next-category"
 
 style "add-image-button" {
     engine "sapwood" {
@@ -522,7 +533,7 @@ widget "*.sound_content_button" style "add-music-button"
 
 widget "*.input_mode_toolbar_add_card_w" style "add-card-button"
 
-style "add-new-category-button" {
+style "add-new-tag-button" {
     engine "sapwood" {
         image {
             function = BOX
@@ -534,7 +545,7 @@ style "add-new-category-button" {
 	    }
     }
 }
-widget "*.input_mode_add_new_category_w" style "add-new-category-button"
+widget "*.new_tag_button" style "add-new-tag-button"
 
 style "close-new-category-block-button" {
     engine "sapwood" {
@@ -632,6 +643,18 @@ style "front-to-back-cardtype" {
             shadow = OUT
             file = "forward_disabled.png"
         }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "forward_disabled.png"
+        }
     }
 }
 widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
@@ -672,6 +695,18 @@ style "both-way-cardtype" {
         image {
             function = OPTION
             state = PRELIGHT
+            shadow = OUT
+            file = "both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
             shadow = OUT
             file = "both_disabled.png"
         }
@@ -718,6 +753,18 @@ style "three-side-cardtype" {
             shadow = OUT
             file = "trans_disabled.png"
         }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "trans_disabled.png"
+        }
     }
 }
 widget "*.three_side_mode_selector_w" style "three-side-cardtype"
@@ -761,6 +808,18 @@ style "cloze-cardtype" {
             shadow = OUT
             file = "close_disabled.png"
         }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "close_disabled.png"
+        }
     }
 }
 widget "*.cloze_mode_selector_w" style "cloze-cardtype"
@@ -794,15 +853,35 @@ style "category-name-container" {
 }
 widget "*.category_name_container" style "category-name-container"
 
-widget "*.input_mode_new_category_entry" style "entry"
+widget "*.new_tag_entry" style "entry"
 
-style "category-label" {
+style "tag-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
     font_name = "Nokia Sans 18"
 }
-widget "*.input_mode_new_category_label" style "category-label"
-widget "*.category_name_w" style "category-label"
+widget "*.input_mode_new_category_label" style "tag-label"
+widget "*.new_tag_label" style "tag-label"
+widget "*.tags_button.GtkLabel" style "tag-label"
+
+widget "*.tags_frame" style "html-container"
+
+style "tags-viewport" {
+    bg[NORMAL] = "#FFFFFF"
+}
+widget "*.tags_viewport" style "tags-viewport"
+
+style "tag-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "tag_button.png"
+            border = {10, 10, 10, 10}
+            stretch = TRUE
+        }
+    }
+}
+widget "*.tags_button" style "tag-button"
 #----------------------------- Input mode -----------------
 
 
@@ -1040,9 +1119,9 @@ widget "*.config_mode_font_size_example_container" style "html-container"
 
 style "config-checkboxes" {
     engine "sapwood" {
-	image {
-	    function = FOCUS
-	}
+	    image {
+	        function = FOCUS
+    	}
         image {
             function = BOX
             state = NORMAL
@@ -1083,6 +1162,7 @@ style "config-checkboxes" {
 }
 widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
+#class "GtkToggleButton" style "config-checkboxes"
 
 style "config-mode-label" {
     fg[NORMAL] = "#FFFFFF"
@@ -1409,6 +1489,7 @@ style "guide-scrolls" {
     }
 }
 widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
+widget "*.tags_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- About mode ------------------
 
 
@@ -1485,6 +1566,7 @@ widget "*.iconview_widget" style "icon-view"
 style "media-scrolls" {
     GtkRange::slider-width = 60
     GtkRange::stepper-size = 60
+    GtkRange::min-slider-length = 60
     GtkRange::trough-border = 0
     engine "pixmap" {
         image {
