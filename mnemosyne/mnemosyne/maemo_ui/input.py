@@ -79,15 +79,11 @@ class InputWidget(Component):
         self.sounddir = None
         self.imagedir = None
         self.card_type = None
+        self.selected_tags = None
         self.tags = sorted(self.database().get_tag_names(), \
             cmp=numeric_string_cmp)
         if not self.tags:
             self.tags = [_("<default>")]
-        #FIXME: upstream exception?
-        try:
-            self.last_selected_tags = self.conf["tags_of_last_added"]
-        except:
-            self.last_selected_tags = _("<default>")
         self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = ListStore(str, str, str, str, gtk.gdk.Pixbuf)
@@ -226,24 +222,14 @@ class InputWidget(Component):
         card_type_id = self.widget_card_id[widget]
         self.card_type = self.selectors[card_type_id]["card_type"]
 
-    def update_tags(self, tags=None):
-        """Update categories list content."""
+    def update_tags(self):
+        """Update active tags list."""
 
-        """
-        if not self.categories_list:
-            categories = dict([(i, name) for (i, name) in \
-                enumerate(self.database().tag_names())])
-            if categories.values():
-                for category in sorted(categories.values()):
-                    self.categories_list.append(category)
-                self.widgets["CurrentCategory"].set_text( \
-                    sorted(categories.values())[0])
-            else:
-                self.categories_list.append("default category")
-                self.widgets["CurrentCategory"].set_text("default category")
-        """
-        if not tags:
-            self.get_widget("tags_button").set_label(self.last_selected_tags)
+        selected_tags = [tag.strip() for tag in self.selected_tags.split(',') \
+            if tag.strip() in self.tags]
+        if not selected_tags:
+            selected_tags = [_("<default>")]
+        self.widgets["TagsButton"].set_label(", ".join(selected_tags))
 
     def check_complete_input(self):
         """Check for non empty fields."""
@@ -282,31 +268,31 @@ class InputWidget(Component):
         self.widgets["SoundButton"].set_sensitive(False)
         self.widgets["AddCardButton"].set_sensitive(False)
         self.widgets["CardTypesTable"].set_sensitive(False)
+        for child in self.widgets["TagsBox"].get_children():
+            self.widgets["TagsBox"].remove(child)
         for tag in self.tags:
             tag_widget = gtk.CheckButton(tag)
-            tag_widget.set_active(tag in self.last_selected_tags)
+            tag_widget.set_active(tag in self.selected_tags)
             tag_widget.set_size_request(-1, 60)
             tag_widget.show()
             self.widgets["TagsBox"].pack_start(tag_widget)
-
+    
     def hide_tags_dialog(self):
         """Hide tags dialog."""
 
-        self.last_selected_tags = ", ".join([tag_widget.get_label() \
-            for tag_widget in self.widgets["TagsBox"].get_children() if \
-                tag_widget.get_active()])
-        if not self.last_selected_tags:
-            self.last_selected_tags = _("<default>")
-        self.widgets["TagsButton"].set_label(self.last_selected_tags)
+        self.tag_mode = False
+        selected_tags = ", ".join([tag_widget.get_label() for tag_widget in \
+            self.widgets["TagsBox"].get_children() if tag_widget.get_active()])
+        if not selected_tags:
+            selected_tags = _("<default>")
+        self.widgets["TagsButton"].set_label(selected_tags)
         self.widgets["TagsButton"].show()
         self.widgets["CardTypeSwitcher"].set_current_page(0)
         self.widgets["PictureButton"].set_sensitive(True)
         self.widgets["SoundButton"].set_sensitive(True)
         self.widgets["AddCardButton"].set_sensitive(True)
         self.widgets["CardTypesTable"].set_sensitive(True)
-        for child in self.widgets["TagsBox"].get_children():
-            self.widgets["TagsBox"].remove(child)
-        self.tag_mode = False
+        return selected_tags
 
     def add_picture_cb(self, widget):
         """Show image selection dialog."""
@@ -432,32 +418,10 @@ class InputWidget(Component):
 
         self.widgets["MediaDialog"].hide()
 
-    def show_add_category_block_cb(self, widget):
-        """Show add category block."""
-
-        self.widgets["ChangeCategoryBlock"].hide()
-        self.widgets["AddCategoryBlock"].show()
-        self.widgets["NewCategory"].grab_focus()
-
-    def hide_add_category_block_cb(self, widget):
-        """Hide add category block."""
-
-        self.widgets["ChangeCategoryBlock"].show()
-        self.widgets["AddCategoryBlock"].hide()
-
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
-        #if self.added_new_cards:
-            #self.review_controller().reset()
-            #self.added_new_cards = False
-        if self.tag_mode:
-            self.hide_tags_dialog()            
-        else:
-            self.disconnect_signals()
-            self.conf.save()
-            self.main_widget().soundplayer.stop()
-            self.main_widget().menu_()
+        pass
 
 
 class AddCardsWidget(InputWidget, AddCardsDialog):
@@ -476,6 +440,11 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
             ("foreign_text_w", "button-press-event", self.clear_text_cb),
             ("translation_text_w", "button-press-event", self.clear_text_cb),
             ("pronun_text_w", "button-press-event", self.clear_text_cb)])
+        #FIXME: upstream exception?
+        try:
+            self.selected_tags = self.conf["tags_of_last_added"]
+        except:
+            self.selected_tags = _("<default>")
 
     def activate(self):
         """Activate input mode."""
@@ -503,12 +472,24 @@ class AddCardsWidget(InputWidget, AddCardsDialog):
             return # Let the user try again to fill out the missing data.
 
         self.controller().create_new_cards(fact_data, self.card_type, -1, \
-            self.last_selected_tags.split(','), save=True)
-        self.conf["tags_of_last_added"] = self.last_selected_tags
+            [tag.strip() for tag in self.selected_tags.split(',')], save=True)
         self.clear_widgets()
         self.added_new_cards = True
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
+
+    def input_to_main_menu_cb(self, widget):
+        """Return to main menu."""
+
+        if self.tag_mode:
+            self.selected_tags = self.hide_tags_dialog()            
+        else:
+            self.disconnect_signals()
+            self.conf["tags_of_last_added"] = self.selected_tags
+            self.conf.save()
+            self.main_widget().soundplayer.stop()
+            self.main_widget().menu_()
+
 
 class BlockingEditFactDialog(EditFactDialog):
     def edit_current_card(self):
@@ -528,17 +509,19 @@ class BlockingEditFactDialog(EditFactDialog):
         review_controller.update_dialog(redraw_all=True)
         self.stopwatch().unpause()
 
+
 class EditFactWidget(InputWidget, BlockingEditFactDialog):
     """Edit current fact widget."""
 
     def __init__(self, fact, component_manager, allow_cancel=True):
         InputWidget.__init__(self, component_manager)
         EditFactDialog.__init__(self, fact, component_manager, allow_cancel)
-
         self.fact = fact
+        self.selected_tags = self.database().cards_from_fact(fact)\
+            [0].tag_string()
         self.allow_cancel = allow_cancel
-        self.connect_signals([("input_mode_toolbar_add_card_w", "button-press-event",
-                    self.update_card_cb)])
+        self.connect_signals([("input_mode_toolbar_add_card_w", \
+            "button-press-event", self.update_card_cb)])
 
     def activate(self):
         """Activate input mode."""
@@ -559,11 +542,11 @@ class EditFactWidget(InputWidget, BlockingEditFactDialog):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
+        new_tags = [tag.strip() for tag in self.selected_tags.split(',')]
         self.controller().update_related_cards(self.fact, fact_data,
-          self.card_type, [self.widgets["CurrentCategory"].get_text()], None)
+          self.card_type, new_tags, None)
         self.review_controller().update_dialog(redraw_all=True)
         self.main_widget().activate_mode("review")
-
         self.main_widget().soundplayer.stop()
         self.show_snd_container()
         self.update_ui(self.review_controller())
@@ -571,9 +554,12 @@ class EditFactWidget(InputWidget, BlockingEditFactDialog):
     def input_to_main_menu_cb(self, widget):
         """Return to Review mode."""
 
-        self.disconnect_signals()
-        self.main_widget().soundplayer.stop()
-        self.main_widget().review_()
+        if self.tag_mode:
+            self.selected_tags = self.hide_tags_dialog()
+        else:
+            self.disconnect_signals()
+            self.main_widget().soundplayer.stop()
+            self.main_widget().review_()
 
 
 # Local Variables:
