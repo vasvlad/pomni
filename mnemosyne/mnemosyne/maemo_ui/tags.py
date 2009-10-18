@@ -25,9 +25,10 @@ Hildon UI: Tags widget.
 """
 
 from gtk import CheckButton
+from mnemosyne.maemo_ui.widgets import BaseHildonWidget
+from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
     DefaultCriterion
-from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 
 
 class NonBlockingActivateCardsDialog(ActivateCardsDialog):
@@ -51,38 +52,20 @@ class NonBlockingActivateCardsDialog(ActivateCardsDialog):
         self.stopwatch().unpause()
 
 
-class TagsWidget(NonBlockingActivateCardsDialog):
+class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
     """Activate cards widget."""
     
     def __init__(self, component_manager):
+        BaseHildonWidget.__init__(self, component_manager)
         NonBlockingActivateCardsDialog.__init__(self, component_manager)
-        self.get_widget = self.main_widget().w_tree.get_widget
-        self.connections = []
-        self.connect_signals([("tags_mode_main_menu_button", \
-            "clicked", self.tags_to_main_menu_cb)])
-        # tag.name: tag._id
+        self.connect_signals([("tags_mode_main_menu_button", "clicked", \
+            self.tags_to_main_menu_cb)])
         self.tags_dict = {}
 
     def activate(self):
         """Activate 'ActivateCardsDialog'."""
 
-        current_criterion = self.database().current_activity_criterion()
-        self.display_criterion(current_criterion)
-
-    def connect_signals(self, control):
-        """Connect signals to widgets and save connection info."""
-
-        for wname, signal, callback in control:
-            widget = self.get_widget(wname)
-            cid = widget.connect(signal, callback)
-            self.connections.append((widget, cid))
-
-    def disconnect_signals(self):
-        """Disconnect previously connected signals."""
-
-        for widget, cid in self.connections:
-            widget.disconnect(cid)
-        self.connections = []
+        self.display_criterion(self.database().current_activity_criterion())
 
     def display_criterion(self, criterion):
         """Display current criterion."""
