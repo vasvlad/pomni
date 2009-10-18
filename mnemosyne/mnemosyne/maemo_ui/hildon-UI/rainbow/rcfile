@@ -359,6 +359,11 @@ style "input-mode-add-card-button" {
     engine "pixmap" {
         image {
             function = BOX
+            state = INSENSITIVE
+            file = "input_mode_add_card_normal_disabled.png"
+        }
+        image {
+            function = BOX
             file = "input_mode_add_card_normal.png"
         }
     }
@@ -373,17 +378,19 @@ style "input-mode-add-category-button" {
         }
     }
 }
-widget "*.input_mode_add_new_category_w" style "input-mode-add-category-button"
+widget "*.new_tag_button" style "input-mode-add-category-button"
 
-style "input-mode-close-add-category-block-button" {
+style "input-mode-add-tags-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "input_mode_close_add_category_block.png"
+            file = "getanswerarea.png"
+            border = {13, 13, 13, 13}
+            stretch = TRUE
         }
     }
 }
-widget "*.input_mode_close_add_category_block_w" style "input-mode-close-add-category-block-button"
+widget "*.tags_button" style "input-mode-add-tags-button"
 
 style "snd-button" {
     engine "pixmap" {
@@ -428,26 +435,6 @@ style "snd-button" {
 widget "*.input_mode_snd_button" style "snd-button"
 widget "*.review_mode_snd_button" style "snd-button"
 
-style "input-mode-prev-category-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_prev_category.png"
-        }
-    }
-}
-widget "*.input_mode_prev_category_w" style "input-mode-prev-category-button"
-
-style "input-mode-next-category-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "input_mode_next_category.png"
-        }
-    }
-}
-widget "*.input_mode_next_category_w" style "input-mode-next-category-button"
-
 style "front-to-back-cardtype" {
     GtkRadioButton::indicator-size = 72
     engine "pixmap" {
@@ -485,6 +472,18 @@ style "front-to-back-cardtype" {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "front_to_back_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
             file = "front_to_back_card_type_unselected.png"
         }
     }
@@ -527,6 +526,18 @@ style "both-way-cardtype" {
         image {
             function = OPTION
             state = PRELIGHT
+            shadow = OUT
+            file = "both_way_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "both_way_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
             shadow = OUT
             file = "both_way_card_type_unselected.png"
         }
@@ -573,6 +584,18 @@ style "three-side-cardtype" {
             shadow = OUT
             file = "three_side_card_type_unselected.png"
         }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "three_side_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "three_side_card_type_unselected.png"
+        }
     }
 }
 widget "*.three_side_mode_selector_w" style "three-side-cardtype"
@@ -613,6 +636,18 @@ style "cloze-cardtype" {
         image {
             function = OPTION
             state = PRELIGHT
+            shadow = OUT
+            file = "cloze_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "cloze_card_type_unselected.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
             shadow = OUT
             file = "cloze_card_type_unselected.png"
         }
@@ -675,7 +710,6 @@ style "hseparator" {
         }
     }
 }
-widget "*.hseparator1" style "hseparator"
 
 widget "*.input_mode_answer_container" style "html-container"
 widget "*.input_mode_question_container" style "html-container"
@@ -700,15 +734,30 @@ style "category-name-container" {
         }
     }
 }
-widget "*.category_name_container" style "category-name-container"
+#widget "*.category_name_container" style "category-name-container"
 
-widget "*.input_mode_new_category_entry" style "entry"
+widget "*.new_tag_entry" style "entry"
 
 style "category-label" {
     font_name = "Nokia Sans 18"
 }
 widget "*.input_mode_new_category_label" style "category-label"
-widget "*.category_name_w" style "category-label"
+
+style "tags-button-label" = "category-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[SELECTED] = "#FFFFFF"
+    fg[ACTIVE] = "#FFFFFF"
+}
+widget "*.tags_button.GtkLabel" style "tags-button-label"
+
+widget "*.tags_frame" style "html-container"
+widget "*.new_tag_frame" style "html-container"
+
+style "tags-inside-container" {
+    bg[NORMAL] = "#FFFFFF"
+}
+widget "*.tags_eventbox" style "tags-inside-container"
+widget "*.tags_viewport" style "tags-inside-container"
 #----------------------------- Input mode -----------------
 
 
@@ -1322,6 +1371,7 @@ style "guide-scrolls" {
     }
 }
 widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
+widget "*.tags_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- About mode ------------------
 
 
