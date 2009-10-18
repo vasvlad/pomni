@@ -92,7 +92,7 @@ class MainWdgt(MainWidget):
     def activate_mode(self, mode):
         """Activate review or menu mode in lazy way."""
 
-        #self.show_mode(mode)
+        self.show_mode(mode)
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             if mode == "review":
@@ -135,14 +135,12 @@ class MainWdgt(MainWidget):
     def menu_(self):
         """Activate menu."""
 
-        self.show_mode('menu')
         self.activate_mode('menu')
 
     def tags_(self):
         """Activate 'Activate tags' mode."""
 
         if 'review' not in self.widgets:
-            self.show_mode('review')
             self.activate_mode('review')
         self.show_mode('tags')
         self.controller().activate_cards()
@@ -151,8 +149,6 @@ class MainWdgt(MainWidget):
         """Activate input mode."""
        
         if 'review' not in self.widgets:
-            # without this line "window" widget is not defined
-            self.show_mode("review")
             self.activate_mode('review')
         self.show_mode("input")
         self.controller().add_cards()
@@ -166,19 +162,16 @@ class MainWdgt(MainWidget):
     def review_(self):
         """Activate review mode."""
 
-        self.show_mode('review')
         self.activate_mode('review')
 
     def sync_(self):
         """Activate sync mode."""
 
-        self.show_mode('sync')
         self.activate_mode('sync')
 
     def about_(self):
         """Activate about mode."""
 
-        self.show_mode('about')
         self.activate_mode('about')
 
     @staticmethod
