@@ -30,6 +30,7 @@ import os
 import gtk.gdk
 from gtk import ListStore
 
+from mnemosyne.maemo_ui.widgets import BaseHildonWidget
 from mnemosyne.libmnemosyne.ui_components.dialogs import \
     AddCardsDialog, EditFactDialog
 from mnemosyne.libmnemosyne.component import Component
@@ -43,17 +44,15 @@ _ = gettext.gettext
 
 FONT_DISTINCTION = 7
 
-class InputWidget(Component):
+class InputWidget(BaseHildonWidget, Component):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
 
         Component.__init__(self, component_manager)
-
-        self.w_tree = self.main_widget().w_tree
-        self.get_widget = get_widget = self.w_tree.get_widget
+        BaseHildonWidget.__init__(self, component_manager)
         self.conf = self.config()
-        self.connections = []
+        get_widget = self.get_widget
         self.connect_signals([\
             ("input_mode_toolbar_button_back_w", "clicked", \
                 self.input_to_main_menu_cb),
@@ -178,21 +177,6 @@ class InputWidget(Component):
         # stock gtk doesn't have hildon properties
         except (TypeError, AttributeError): 
             pass # so, skip silently
-
-    def connect_signals(self, control):
-        """Connect signals to widgets and save connection info."""
-
-        for wname, signal, callback in control:
-            widget = self.get_widget(wname)
-            cid = widget.connect(signal, callback)
-            self.connections.append((widget, cid))
-
-    def disconnect_signals(self):
-        """Disconnect previously connected signals."""
-
-        for widget, cid in self.connections:
-            widget.disconnect(cid)
-        self.connections = []
 
     def show_snd_container(self):
         """Show or hide snd container. """
