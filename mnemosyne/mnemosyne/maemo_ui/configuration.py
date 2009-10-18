@@ -30,21 +30,22 @@ import tts
 import gtk
 _ = gettext.gettext
 
-#from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.maemo_ui.widgets import BaseHildonWidget
 from mnemosyne.libmnemosyne.ui_components.dialogs import ConfigurationDialog
 
-class ConfigurationWidget(ConfigurationDialog):
+class ConfigurationWidget(BaseHildonWidget, ConfigurationDialog):
     """Configuration Widget."""
 
     def __init__(self, component_manager):
         ConfigurationDialog.__init__(self, component_manager)
-        self.get_widget = get_widget = self.main_widget().w_tree.get_widget
+        BaseHildonWidget.__init__(self, component_manager)
         self.conf = self.config()
         self.current_size = self.conf['font_size']
         self.connections = []
         self.languages = []
         self.renderer = self.component_manager.get_current('renderer')
         page = self.conf['last_settings_page']
+        get_widget = self.get_widget
         if page == 0:
             get_widget("config_toolbar_general_settings_button").\
                 set_active(True)
@@ -101,21 +102,6 @@ class ConfigurationWidget(ConfigurationDialog):
                 self.save_imagedir_value),
             ("config_mode_entry_sounddir", "changed", \
                 self.save_sounddir_value)])
-
-    def connect_signals(self, control):
-        """Connect signals to widgets and save connection info."""
-
-        for wname, signal, callback in control:
-            widget = self.get_widget(wname)
-            cid = widget.connect(signal, callback)
-            self.connections.append((widget, cid))
-
-    def disconnect_signals(self):
-        """Disconnect previously connected signals."""
-
-        for widget, cid in self.connections:
-            widget.disconnect(cid)
-        self.connections = []
 
     def change_font_size(self):
         """Changes font size."""
