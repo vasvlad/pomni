@@ -33,7 +33,6 @@ from gtk import ListStore
 from mnemosyne.maemo_ui.widgets import BaseHildonWidget
 from mnemosyne.libmnemosyne.ui_components.dialogs import \
     AddCardsDialog, EditFactDialog
-from mnemosyne.libmnemosyne.component import Component
 from mnemosyne.libmnemosyne.utils import numeric_string_cmp
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
@@ -44,12 +43,11 @@ _ = gettext.gettext
 
 FONT_DISTINCTION = 7
 
-class InputWidget(BaseHildonWidget, Component):
+class InputWidget(BaseHildonWidget):
     """Input mode widget for Rainbow theme."""
     
     def __init__(self, component_manager):
 
-        Component.__init__(self, component_manager)
         BaseHildonWidget.__init__(self, component_manager)
         self.conf = self.config()
         get_widget = self.get_widget
@@ -100,10 +98,6 @@ class InputWidget(BaseHildonWidget, Component):
             "translation": get_widget("translation_text_w"),
             "pronunciation": get_widget("pronun_text_w")
         }
-        # Mandatory color setup fot GtkTextView
-        #for area in self.areas.values():
-        #    area.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
-        #    area.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
         # Change default font
         font = pango.FontDescription("Nokia Sans %s" % \
@@ -125,11 +119,6 @@ class InputWidget(BaseHildonWidget, Component):
             "SoundContainer": get_widget("input_mode_snd_container"),
             "QuestionContainer": get_widget("input_mode_question_container")
         }
-        # Mandatory color setup fot GtkEntry
-        #self.widgets["NewCategory"].modify_base(gtk.STATE_NORMAL, \
-        #    gtk.gdk.color_parse("#FFFFFF"))
-        #self.widgets["NewCategory"].modify_text(gtk.STATE_NORMAL, \
-        #    gtk.gdk.color_parse("#000000"))
 
         # card_id: {"page": page_id, "selector": selector_widget, 
         # "widgets": [(field_name:text_area_widget)...]}

@@ -41,7 +41,6 @@ class ConfigurationWidget(BaseHildonWidget, ConfigurationDialog):
         BaseHildonWidget.__init__(self, component_manager)
         self.conf = self.config()
         self.current_size = self.conf['font_size']
-        self.connections = []
         self.languages = []
         self.renderer = self.component_manager.get_current('renderer')
         page = self.conf['last_settings_page']
@@ -62,11 +61,6 @@ class ConfigurationWidget(BaseHildonWidget, ConfigurationDialog):
             get_widget("config_toolbar_tts_settings_button").\
                 set_sensitive(False)
             self.show_general_settings_cb(None)
-        # Mandatory color setup for GtkEntry
-        for widget in (get_widget("config_mode_entry_imagedir"), \
-            get_widget("config_mode_entry_sounddir")):
-            widget.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FFFFFF"))
-            widget.modify_text(gtk.STATE_NORMAL, gtk.gdk.color_parse("#000000"))
 
         self.connect_signals([
             ("checkbox_fullscreen_mode", "toggled", self.change_fullscreen_cb),

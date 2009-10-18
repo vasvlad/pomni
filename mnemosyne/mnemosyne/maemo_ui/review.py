@@ -24,12 +24,8 @@
 Hildon UI. Review widgets.
 """
 
-import gettext
-
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 from mnemosyne.maemo_ui import tts
-
-_ = gettext.gettext
 
 LARGE_CONTAINER_HEIGHT = 260
 NORMAL_CONTAINER_HEIGHT = 16

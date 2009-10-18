@@ -25,7 +25,6 @@ Main Widget.
 """
 
 import os
-import gettext
 import gtk
 import gtk.glade
 import urllib
@@ -36,7 +35,6 @@ import gobject
 from mnemosyne.maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
-_ = gettext.gettext
 
 class MainWdgt(MainWidget):
     """Main widget class."""
