@@ -224,6 +224,11 @@ widget "*.menu_button_exit" style "menu-button-exit"
 #----------------------------- Main Menu ------------------
 
 
+#----------------------------- Tags mode ------------------
+
+#----------------------------- Tags mode ------------------
+
+
 #----------------------------- Review mode ------------------
 widget "*.question_container" style "html-container"
 widget "*.answer_container" style "html-container"
@@ -865,11 +870,13 @@ widget "*.new_tag_label" style "tag-label"
 widget "*.tags_button.GtkLabel" style "tag-label"
 
 widget "*.tags_frame" style "html-container"
+widget "*.tags_mode_tags_frame" style "html-container"
 
 style "tags-viewport" {
     bg[NORMAL] = "#FFFFFF"
 }
 widget "*.tags_viewport" style "tags-viewport"
+widget "*.tags_mode_tags_viewport" style "tags-viewport"
 
 style "tag-button" {
     engine "pixmap" {
@@ -904,6 +911,7 @@ style "config-mode-toolbar-container" {
     }
 }
 widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
+widget "*.tags_mode_toolbar_container" style "config-mode-toolbar-container"
 
 style "labels-container" {
     engine "pixmap" {
@@ -1490,6 +1498,7 @@ style "guide-scrolls" {
 }
 widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
 widget "*.tags_scrolledwindow.*" style "guide-scrolls"
+widget "*.tags_mode_tags_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- About mode ------------------
 
 

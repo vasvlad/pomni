@@ -41,7 +41,7 @@ _ = gettext.gettext
 class MainWdgt(MainWidget):
     """Main widget class."""
 
-    menu, review, input, configuration, sync, about = range(6)
+    menu, review, input, configuration, sync, about, tags = range(7)
 
     def __init__(self, component_manager):
         MainWidget.__init__(self, component_manager)
@@ -92,7 +92,7 @@ class MainWdgt(MainWidget):
     def activate_mode(self, mode):
         """Activate review or menu mode in lazy way."""
 
-        self.show_mode(mode)
+        #self.show_mode(mode)
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             if mode == "review":
@@ -107,6 +107,9 @@ class MainWdgt(MainWidget):
             elif mode == "about":
                 from mnemosyne.maemo_ui.about import AboutWidget
                 widget = AboutWidget(self.component_manager)
+            elif mode == "tags":
+                from mnemosyne.maemo_ui.tags import TagsWidget
+                widget = TagsWidget(self.component_manager)
             self.widgets[mode] = widget
 
         widget.activate()
@@ -131,36 +134,51 @@ class MainWdgt(MainWidget):
     # modes
     def menu_(self):
         """Activate menu."""
+
+        self.show_mode('menu')
         self.activate_mode('menu')
+
+    def tags_(self):
+        """Activate 'Activate tags' mode."""
+
+        if 'review' not in self.widgets:
+            self.show_mode('review')
+            self.activate_mode('review')
+        self.show_mode('tags')
+        self.controller().activate_cards()
 
     def input_(self):
         """Activate input mode."""
        
-        # reset review controller if needed
-        if "review" not in self.widgets:
-            self.show_mode("review") # without this line 
-                                     # "window" widget is not defined 
-            self.review_controller().reset()
-            self.widgets["review"] = self.review_controller().widget
-
+        if 'review' not in self.widgets:
+            # without this line "window" widget is not defined
+            self.show_mode("review")
+            self.activate_mode('review')
         self.show_mode("input")
         self.controller().add_cards()
 
     def configure_(self):
         """Activate configure mode through main controller."""
-        self.show_mode("configuration")
+
+        self.show_mode('configuration')
         self.controller().configure()
 
     def review_(self):
         """Activate review mode."""
+
+        self.show_mode('review')
         self.activate_mode('review')
 
     def sync_(self):
         """Activate sync mode."""
+
+        self.show_mode('sync')
         self.activate_mode('sync')
 
     def about_(self):
         """Activate about mode."""
+
+        self.show_mode('about')
         self.activate_mode('about')
 
     @staticmethod

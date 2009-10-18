@@ -88,6 +88,7 @@ def app_factory(interface=None):
         app.components.append(("mnemosyne.maemo_ui.configuration", 
                                 "ConfigurationWidget"))
         app.components.append(("mnemosyne.maemo_ui.sync", "SyncWidget"))
+        app.components.append(("mnemosyne.maemo_ui.tags", "TagsWidget"))
 
         # Add necessary components
         app.components.append(\

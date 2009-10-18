@@ -36,10 +36,14 @@ class MenuWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self._main_widget = self.main_widget()
         self._main_widget.w_tree.signal_autoconnect(\
-            dict([(mode, getattr(self, mode + "_cb")) for mode in \
-                ['input', 'review', 'configure', 'exit', 'sync', 'about']]))
+            dict([(mode, getattr(self, mode + "_cb")) for mode in ['input', \
+                'review', 'configure', 'exit', 'sync', 'about', 'tags']]))
 
     # callbacks
+    def tags_cb(self, widget):
+        """Go to activate tags mode."""
+        self._main_widget.tags_()
+
     def input_cb(self, widget):
         """Go to input mode."""
         self._main_widget.input_()
