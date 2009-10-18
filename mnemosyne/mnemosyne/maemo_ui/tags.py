@@ -21,40 +21,42 @@
 #
 
 """
-Hildon UI: Activate tags widget.
+Hildon UI: Tags widget.
 """
 
-import gtk
-#from mnemosyne.libmnemosyne.ui_components.activity_criterion_widget import \
-#    ActivityCriterionWidget
+from gtk import CheckButton
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
     DefaultCriterion
 from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 
 
-class BlockingActivateCardsDialog(ActivateCardsDialog):
+class NonBlockingActivateCardsDialog(ActivateCardsDialog):
+    """Non blocking variant of ActivateCardsDialog."""
+
     def activate_cards(self):
-        print "activate_cards"
+        """This part is the first part of activate_cards
+           from default controller."""
+
         self.stopwatch().pause()
         self.component_manager.get_current("activate_cards_dialog") \
             (self.component_manager).activate()
 
-    def update_ui(self):
-        print "update_ui"
-        review_controller = self.review_controller()
+    def update_ui(self, review_controller):
+        """This part is called from tags_to_main_menu_cb,
+           when tags is selected."""
+
         review_controller.reset_but_try_to_keep_current_card()
         review_controller.reload_counters()
         review_controller.update_status_bar()
         self.stopwatch().unpause()
 
 
-class TagsWidget(BlockingActivateCardsDialog):
+class TagsWidget(NonBlockingActivateCardsDialog):
     """Activate cards widget."""
     
     def __init__(self, component_manager):
-        BlockingActivateCardsDialog.__init__(self, component_manager)
-        self.w_tree = self.main_widget().w_tree
-        self.get_widget = self.w_tree.get_widget
+        NonBlockingActivateCardsDialog.__init__(self, component_manager)
+        self.get_widget = self.main_widget().w_tree.get_widget
         self.connections = []
         self.connect_signals([("tags_mode_main_menu_button", \
             "clicked", self.tags_to_main_menu_cb)])
@@ -62,6 +64,8 @@ class TagsWidget(BlockingActivateCardsDialog):
         self.tags_dict = {}
 
     def activate(self):
+        """Activate 'ActivateCardsDialog'."""
+
         current_criterion = self.database().current_activity_criterion()
         self.display_criterion(current_criterion)
 
@@ -88,7 +92,7 @@ class TagsWidget(BlockingActivateCardsDialog):
             tags_box.remove(child)
         for tag in self.database().get_tags():
             self.tags_dict[tag.name] = tag._id
-            tag_widget = gtk.CheckButton(tag.name)
+            tag_widget = CheckButton(tag.name)
             tag_widget.set_active(tag._id in criterion.active_tag__ids)
             tag_widget.set_size_request(-1, 60)
             tag_widget.show()
@@ -109,6 +113,7 @@ class TagsWidget(BlockingActivateCardsDialog):
 
         self.disconnect_signals()
         self.database().set_current_activity_criterion(self.get_criterion())
+        self.update_ui(self.review_controller())
         self.main_widget().menu_()
 
 
