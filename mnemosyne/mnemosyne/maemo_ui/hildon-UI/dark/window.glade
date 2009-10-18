@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Oct 18 13:00:47 2009 -->
+<!--Generated with glade3 3.4.5 on Sun Oct 18 14:41:55 2009 -->
 <glade-interface>
   <widget class="GtkWindow" id="window">
     <property name="width_request">800</property>
@@ -812,6 +812,7 @@
                     <signal name="clicked" handler="show_add_category_block"/>
                   </widget>
                   <packing>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                     <property name="y_options"></property>
                     <property name="x_padding">4</property>
                     <property name="y_padding">4</property>
@@ -1077,7 +1078,7 @@
                         <child>
                           <widget class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
-                            <property name="border_width">10</property>
+                            <property name="border_width">30</property>
                             <child>
                               <widget class="GtkLabel" id="new_tag_label">
                                 <property name="visible">True</property>
@@ -1111,6 +1112,7 @@
                                 </child>
                               </widget>
                               <packing>
+                                <property name="padding">10</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -1141,7 +1143,7 @@
                         <child>
                           <widget class="GtkFrame" id="tags_frame">
                             <property name="visible">True</property>
-                            <property name="border_width">10</property>
+                            <property name="border_width">30</property>
                             <property name="label_xalign">0</property>
                             <property name="shadow_type">GTK_SHADOW_NONE</property>
                             <child>
@@ -3154,6 +3156,8 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                 <property name="right_attach">2</property>
                 <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                 <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                <property name="x_padding">20</property>
+                <property name="y_padding">20</property>
               </packing>
             </child>
             <child>
@@ -3172,6 +3176,18 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                     <property name="n_rows">5</property>
                     <property name="homogeneous">True</property>
                     <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
                       <widget class="GtkButton" id="tags_mode_main_menu_button">
                         <property name="width_request">80</property>
                         <property name="height_request">80</property>
@@ -3189,18 +3205,6 @@ of Mnemosyne program. You can use it as Server or Client.</property>
                         <property name="x_options">GTK_EXPAND</property>
                         <property name="y_options">GTK_EXPAND</property>
                       </packing>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </widget>
                 </child>
