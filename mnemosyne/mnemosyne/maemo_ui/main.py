@@ -154,6 +154,8 @@ class MainWdgt(MainWidget):
     def configure_(self):
         """Activate configure mode through main controller."""
 
+        if 'review' not in self.widgets:
+            self.activate_mode('review')
         self.show_mode('configuration')
         self.controller().configure()
 
