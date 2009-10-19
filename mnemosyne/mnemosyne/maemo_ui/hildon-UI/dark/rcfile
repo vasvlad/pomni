@@ -73,8 +73,10 @@ style "html-container" {
 }
 
 style "entry" {
-    GtkEntry::focus-line-width = 0
     font_name = "Nokia Sans 21"
+    text[NORMAL] = "#000000"
+    text[ACTIVE] = "#000000"
+    text[SELECTED] = "#000000"
     engine "sapwood" {
 		image {
 			function = SHADOW
@@ -90,7 +92,9 @@ style "entry" {
 }
 
 style "textview" {
-    GtkTextView::focus-line-width = 0
+    text[NORMAL] = "#000000"
+    text[ACTIVE] = "#000000"
+    text[SELECTED] = "#000000"
 	engine "sapwood" {
 		image {
 			function = FOCUS
@@ -105,8 +109,44 @@ style "textview" {
 	}
 }
 
-# Style for "To Main Menu" button
-style "main-menu-button" {
+style "viewport" {
+    bg[NORMAL] = "#FFFFFF"
+}
+
+style "scrolled-window" {
+    xthickness = 0
+    ythickness = 0
+    GtkScrolledWindow::scrollbars-within-bevel = 0
+    GtkScrolledWindow::scrollbar-spacing = 0
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "arrow_up_black.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_down_black.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        image {
+            function = SLIDER
+            orientation = VERTICAL
+            file = "transparent.png"
+        }
+        image {
+            function = BOX
+            file = "white.png"
+        }
+    }
+}
+
+style "to-main-menu-button" {
     engine "sapwood" {
         image {
             function = BOX
@@ -124,22 +164,64 @@ style "main-menu-button" {
         }
     }
 }
-widget "*.*main_menu_button" style "main-menu-button"
-widget "*.input_mode_toolbar_button_back_w" style "main-menu-button"
-#----------------------------- General settings ------------------
 
+style "media-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "media_play.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "media_play.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "media_play.png"
+        }
+    }
+}
 
-#----------------------------- Main Menu ------------------
-style "program-name-label" {
+style "white-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
     font_name = "Nokia Sans 18"
 }
-widget "*.program_name_label" style "program-name-label"
+#----------------------------- General settings ------------------
+
+
+#----------------------------- Main Menu ------------------
+widget "*.program_name_label" style "white-label"
 
 style "menu-label" {
     fg[NORMAL] = "#000000"
+    fg[ACTIVE] = "#000000"
     fg[PRELIGHT] = "#000000"
+    fg[SELECTED] = "#000000"
     font_name = "Nokia Sans Wide Bold 15.5"
 }
 widget "*.menu_label_*" style "menu-label"
@@ -224,14 +306,11 @@ widget "*.menu_button_exit" style "menu-button-exit"
 #----------------------------- Main Menu ------------------
 
 
-#----------------------------- Tags mode ------------------
-
-#----------------------------- Tags mode ------------------
-
-
 #----------------------------- Review mode ------------------
 widget "*.question_container" style "html-container"
 widget "*.answer_container" style "html-container"
+widget "*.review_mode_snd_button" style "media-button"
+widget "*.review_toolbar_main_menu_button" style "to-main-menu-button"
 
 style "grades-container" {
     engine "sapwood" {
@@ -247,7 +326,6 @@ style "toolbar-container" {
     engine "sapwood" {
         image {
             function = BOX
-            state = NORMAL
             file = "left_5.png"
         }
     }
@@ -255,7 +333,7 @@ style "toolbar-container" {
 widget "*.review_mode_toolbar_container" style "toolbar-container"
 
 style "speak-button" {
-    engine "pixmap" {
+    engine "sapwood" {
         image {
             function = BOX
             state = INSENSITIVE
@@ -458,7 +536,30 @@ widget "*.grade5" style "grade5"
 
 #----------------------------- Input mode ------------------
 widget "*.input_mode_toolbar_container" style "toolbar-container"
+widget "*.input_mode_toolbar_add_card_w" style "add-card-button"
+widget "*.input_mode_toolbar_button_back_w" style "to-main-menu-button"
+widget "*.input_mode_snd_button" style "media-button"
+widget "*.input_mode_answer_container" style "html-container"
+widget "*.input_mode_question_container" style "html-container"
+widget "*.input_mode_foreign_container" style "html-container"
+widget "*.input_mode_pronun_container" style "html-container"
+widget "*.input_mode_translate_container" style "html-container"
+widget "*.input_mode_cloze_container" style "html-container"
+widget "*.input_mode_new_category_entry_container" style "html-container"
 widget "*.new_tag_frame" style "html-container"
+widget "*.tags_frame" style "html-container"
+widget "*.question_text_w" style "textview"
+widget "*.answer_text_w" style "textview"
+widget "*.foreign_text_w" style "textview"
+widget "*.pronun_text_w" style "textview"
+widget "*.translation_text_w" style "textview"
+widget "*.cloze_text_w" style "textview"
+widget "*.new_tag_button" style "add-card-button"
+widget "*.new_tag_entry" style "entry"
+widget "*.tags_viewport" style "viewport"
+widget "*.tags_scrolledwindow.*" style "scrolled-window"
+widget "*.new_tag_label" style "white-label"
+widget "*.tags_button.GtkLabel" style "white-label"
 
 style "cardtypes-container" {
     engine "sapwood" {
@@ -470,31 +571,17 @@ style "cardtypes-container" {
 }
 widget "*.input_mode_cardtypes_container" style "cardtypes-container"
 
-style "previous-category" {
-    engine "sapwood" {
+style "tags-button" {
+    engine "pixmap" {
         image {
             function = BOX
-            overlay_file = "arrow_left.png"
-            overlay_stretch = FALSE
+            file = "tag_button.png"
+            border = {14, 14, 10, 10}
+            stretch = TRUE
         }
-	    image {
-	        function = FOCUS
-	    }
     }
 }
-
-style "next-category" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            overlay_file = "arrow_right.png"
-            overlay_stretch = FALSE
-        }
-	    image {
-	        function = FOCUS
-	    }
-    }
-}
+widget "*.tags_button" style "tags-button"
 
 style "add-image-button" {
     engine "sapwood" {
@@ -535,79 +622,6 @@ style "add-music-button" {
     }
 }
 widget "*.sound_content_button" style "add-music-button"
-
-widget "*.input_mode_toolbar_add_card_w" style "add-card-button"
-
-style "add-new-tag-button" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            overlay_file = "plus.png"
-            overlay_stretch = FALSE
-        }
-	    image {
-	        function = FOCUS
-	    }
-    }
-}
-widget "*.new_tag_button" style "add-new-tag-button"
-
-style "close-new-category-block-button" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            overlay_file = "close.png"
-            overlay_stretch = FALSE
-        }
-	    image {
-	        function = FOCUS
-	    }
-    }
-}
-widget "*.input_mode_close_add_category_block_w" style "close-new-category-block-button"
-
-style "snd-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = NORMAL
-            shadow = OUT
-            file = "media_play.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            shadow = OUT
-            file = "media_play.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            shadow = OUT
-            file = "media_play.png"
-        }
-    }
-}
-widget "*.input_mode_snd_button" style "snd-button"
-widget "*.review_mode_snd_button" style "snd-button"
 
 style "front-to-back-cardtype" {
     GtkRadioButton::indicator-size = 80
@@ -828,79 +842,54 @@ style "cloze-cardtype" {
     }
 }
 widget "*.cloze_mode_selector_w" style "cloze-cardtype"
-
-widget "*.input_mode_answer_container" style "html-container"
-widget "*.input_mode_question_container" style "html-container"
-widget "*.input_mode_foreign_container" style "html-container"
-widget "*.input_mode_pronun_container" style "html-container"
-widget "*.input_mode_translate_container" style "html-container"
-widget "*.input_mode_cloze_container" style "html-container"
-widget "*.input_mode_new_category_entry_container" style "html-container"
-
-widget "*.question_text_w" style "textview"
-widget "*.answer_text_w" style "textview"
-widget "*.foreign_text_w" style "textview"
-widget "*.pronun_text_w" style "textview"
-widget "*.translation_text_w" style "textview"
-widget "*.cloze_text_w" style "textview"
-
-style "category-name-container" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            file = "nothing.png"
-            stretch = TRUE
-        }
-        image {
-            function = FOCUS
-        }
-    }
-}
-widget "*.category_name_container" style "category-name-container"
-
-widget "*.new_tag_entry" style "entry"
-
-style "tag-label" {
-    fg[NORMAL] = "#FFFFFF"
-    fg[PRELIGHT] = "#FFFFFF"
-    font_name = "Nokia Sans 18"
-}
-widget "*.input_mode_new_category_label" style "tag-label"
-widget "*.new_tag_label" style "tag-label"
-widget "*.tags_button.GtkLabel" style "tag-label"
-
-widget "*.tags_frame" style "html-container"
-widget "*.tags_mode_tags_frame" style "html-container"
-
-style "tags-viewport" {
-    bg[NORMAL] = "#FFFFFF"
-}
-widget "*.tags_viewport" style "tags-viewport"
-widget "*.tags_mode_tags_viewport" style "tags-viewport"
-
-style "tag-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "tag_button.png"
-            border = {10, 10, 10, 10}
-            stretch = TRUE
-        }
-    }
-}
-widget "*.tags_button" style "tag-button"
 #----------------------------- Input mode -----------------
 
 
 #----------------------------- Config mode ------------------
-widget "*.config_mode_tts_lang_next_button" style "next-category"
-widget "*.config_mode_tts_voice_next_button" style "next-category"
-widget "*.config_mode_increase_font_size_buttton" style "next-category"
-widget "*.config_mode_next_skin_button" style "next-category"
-widget "*.config_mode_tts_lang_prev_button" style "previous-category"
-widget "*.config_mode_tts_voice_prev_button" style "previous-category"
-widget "*.config_mode_decrease_font_size_buttton" style "previous-category"
-widget "*.config_mode_prev_skin_button" style "previous-category"
+widget "*.config_toolbar_main_menu_button" style "to-main-menu-button"
+widget "*.config_mode_imagedir_container" style "html-container"
+widget "*.config_mode_sounddir_container" style "html-container"
+widget "*.config_mode_font_size_example_container" style "html-container"
+widget "*.config_mode_fullscreen_label" style "white-label"
+widget "*.config_mode_startup_with_review_label" style "white-label"
+widget "*.config_mode_label_imagedir" style "white-label"
+widget "*.config_mode_label_sounddir" style "white-label"
+widget "*.config_mode_entry_imagedir" style "entry"
+widget "*.config_mode_entry_sounddir" style "entry"
+
+style "left-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.config_mode_tts_lang_prev_button" style "left-arrow"
+widget "*.config_mode_tts_voice_prev_button" style "left-arrow"
+widget "*.config_mode_decrease_font_size_buttton" style "left-arrow"
+widget "*.config_mode_prev_skin_button" style "left-arrow"
+
+style "right-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.config_mode_tts_lang_next_button" style "right-arrow"
+widget "*.config_mode_tts_voice_next_button" style "right-arrow"
+widget "*.config_mode_increase_font_size_buttton" style "right-arrow"
+widget "*.config_mode_next_skin_button" style "right-arrow"
 
 style "config-mode-toolbar-container" {
     engine "sapwood" {
@@ -911,14 +900,13 @@ style "config-mode-toolbar-container" {
     }
 }
 widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
-widget "*.tags_mode_toolbar_container" style "config-mode-toolbar-container"
 
 style "labels-container" {
     engine "pixmap" {
         image {
             function = BOX
             file = "card_background.png"
-            border = {18,18,18,18}
+            border = {18, 18, 18, 18}
         }
     }
 }
@@ -1078,7 +1066,6 @@ style "tts-settings-button" {
 }
 widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
 
-
 style "config-scrollbars" {
     GtkScrollbar::fixed-slider-length = 1
     GtkScrollbar::min-slider-length = 34
@@ -1119,11 +1106,6 @@ style "config-scrollbars" {
 }
 widget "*.config_mode_tts_speed_scrollbar" style "config-scrollbars"
 widget "*.config_mode_tts_pitch_scrollbar" style "config-scrollbars"
-
-
-widget "*.config_mode_imagedir_container" style "html-container"
-widget "*.config_mode_sounddir_container" style "html-container"
-widget "*.config_mode_font_size_example_container" style "html-container"
 
 style "config-checkboxes" {
     engine "sapwood" {
@@ -1170,41 +1152,32 @@ style "config-checkboxes" {
 }
 widget "*.checkbox_fullscreen_mode" style "config-checkboxes"
 widget "*.checkbox_start_in_review_mode" style "config-checkboxes"
-#class "GtkToggleButton" style "config-checkboxes"
 
-style "config-mode-label" {
-    fg[NORMAL] = "#FFFFFF"
-    font_name = "Nokia Sans 17"
-}
-widget "*.config_mode_fullscreen_label" style "config-mode-label"
-widget "*.config_mode_startup_with_review_label" style "config-mode-label"
-widget "*.config_mode_label_imagedir" style "config-mode-label"
-widget "*.config_mode_label_sounddir" style "config-mode-label"
-
-style "config-mode-scrollbars-label" {
-    fg[NORMAL] = "#FFFFFF"
+style "config-mode-scrollbars-label" = "white-label"{
     font_name = "Nokia Sans 15"
 }
 widget "*.config_mode_tts_speed_label" style "config-mode-scrollbars-label"
 widget "*.config_mode_tts_pitch_label" style "config-mode-scrollbars-label"
 
-style "config-mode-voice-label" {
+style "config-mode-voice-label" = "white-label"{
     fg[NORMAL] = "#000000"
-    font_name = "Nokia Sans 16"
+    fg[PRELIGHT] = "#000000"
 }
 widget "*.config_mode_tts_voice_label" style "config-mode-voice-label"
 widget "*.config_mode_tts_lang_label" style "config-mode-voice-label"
-
-widget "*.config_mode_entry_imagedir" style "entry"
-widget "*.config_mode_entry_sounddir" style "entry"
 #----------------------------- Config mode ------------------
 
 
 #----------------------------- Sync mode ------------------
+widget "*.sync_toolbar_main_menu_button" style "to-main-menu-button"
 widget "*.sync_mode_toolbar_container" style "config-mode-toolbar-container"
-
 widget "*.sync_mode_client_*_container" style "html-container"
 widget "*.sync_mode_server_*_container" style "html-container"
+widget "*.sync_mode_client_*_label" style "white-label"
+widget "*.sync_mode_information_label" style "white-label"
+widget "*.sync_mode_server_*_label" style "white-label"
+widget "*.sync_mode_client_*_entry" style "entry"
+widget "*.sync_mode_server_*_entry" style "entry"
 
 style "sync-client" {
     engine "pixmap" {
@@ -1342,24 +1315,14 @@ style "sync-button" {
 }
 widget "*.sync_mode_client_start_button" style "sync-button"
 widget "*.sync_mode_server_start_button" style "sync-button"
-
-style "sync-mode-label" {
-    fg[NORMAL] = "#FFFFFF"
-    fg[PRELIGHT] = "#FFFFFF"
-    font_name = "Nokia Sans 18"
-}
-widget "*.sync_mode_client_*_label" style "sync-mode-label"
-widget "*.sync_mode_information_label" style "sync-mode-label"
-widget "*.sync_mode_server_*_label" style "sync-mode-label"
-
-widget "*.sync_mode_client_*_entry" style "entry"
-widget "*.sync_mode_server_*_entry" style "entry"
 #----------------------------- Sync mode ------------------
 
 
 #----------------------------- About mode ------------------
+widget "*.about_toolbar_main_menu_button" style "to-main-menu-button"
 widget "*.about_mode_toolbar_container" style "config-mode-toolbar-container"
 widget "*.about_mode_guite_container" style "html-container"
+widget "*.about_mode_guide_scrolledwindow.*" style "scrolled-window"
 
 style "team-info-button" {
     GtkRadioButton::indicator-size = 80
@@ -1459,47 +1422,21 @@ style "user-guide-button" {
 }
 widget "*.about_toolbar_guide_button" style "user-guide-button"
 
-style "guide-inside-container" {
+style "guide-inside-container" = "viewport"{
     bg[NORMAL] = "#DDDDDD"
 }
 widget "*.about_mode_inside_container" style "guide-inside-container"
-
-style "guide-scrolls" {
-    xthickness = 0
-    ythickness = 0
-    GtkScrolledWindow::scrollbars-within-bevel = 0
-    GtkScrolledWindow::scrollbar-spacing = 0
-    GtkRange::slider-width = 60
-    GtkRange::stepper-size = 60
-    GtkRange::trough-border = 0
-    engine "pixmap" {
-        image {
-            function = ARROW
-            overlay_file = "arrow_up_black.png"
-            overlay_stretch = FALSE
-            arrow_direction = UP
-        }
-        image {
-            function = ARROW
-            overlay_file = "arrow_down_black.png"
-            overlay_stretch = FALSE
-            arrow_direction = DOWN
-        }
-        image {
-            function = SLIDER
-            orientation = VERTICAL
-            file = "transparent.png"
-        }
-        image {
-            function = BOX
-            file = "white.png"
-        }
-    }
-}
-widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
-widget "*.tags_scrolledwindow.*" style "guide-scrolls"
-widget "*.tags_mode_tags_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- About mode ------------------
+
+
+#----------------------------- Tags mode ------------------
+widget "*.tags_mode_toolbar_container" style "config-mode-toolbar-container"
+widget "*.tags_mode_main_menu_button" style "to-main-menu-button"
+widget "*.tags_mode_tags_frame" style "html-container"
+widget "*.tags_mode_tags_eventbox" style "viewport"
+widget "*.tags_mode_tags_viewport" style "viewport"
+widget "*.tags_mode_tags_scrolledwindow.*" style "scrolled-window"
+#----------------------------- Tags mode ------------------
 
 
 #----------------------------- Dialogs ------------------
@@ -1515,19 +1452,15 @@ style "dialog" {
 }
 class "GtkDialog" style "dialog"
 
-style "dialog-label" {
-    fg[NORMAL] = "#FFFFFF"
+style "dialog-label" = "white-label" {
     font_name = "Nokia Sans 17"
-}
+} 
 widget "*.question_dialog_label" style "dialog-label"
 widget "*.information_dialog_label" style "dialog-label"
 widget "*.warning_dialog_label" style "dialog-label"
 widget "*.media_selection_dialog_label" style "dialog-label"
 
-style "dialog-button-label" {
-    fg[NORMAL] = "#FFFFFF"
-    fg[ACTIVE] = "#FFFFFF"
-    fg[PRELIGHT] = "#000000"
+style "dialog-button-label" = "white-label" {
     font_name = "Nokia Sans 16"
 }
 widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
