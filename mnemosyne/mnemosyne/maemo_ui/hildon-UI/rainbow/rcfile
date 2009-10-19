@@ -93,6 +93,28 @@ widget "*.menu_label_synh" style "menu-label"
 widget "*.menu_label_conf" style "menu-label"
 widget "*.menu_label_about" style "menu-label"
 widget "*.menu_label_exit" style "menu-label"
+widget "*.menu_label_tags" style "menu-label"
+
+style "menu-button-tags" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            file = "tags_small.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            file = "tags_big.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            file = "tags_big.png"
+        }
+    }
+}
+widget "*.menu_button_tags" style "menu-button-tags"
 
 style "menu-button-review" {
     engine "pixmap" {
@@ -1373,6 +1395,18 @@ style "guide-scrolls" {
 widget "*.about_mode_guide_scrolledwindow.*" style "guide-scrolls"
 widget "*.tags_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- About mode ------------------
+
+
+#----------------------------- Tags mode ------------------
+widget "*.tags_mode_vseparator" style "vseparator"
+widget "*.tags_mode_tags_frame" style "html-container"
+style "viewport" {
+    bg[NORMAL] = "#FFFFFF"
+}
+widget "*.tags_mode_tags_eventbox" style "viewport"
+widget "*.tags_mode_tags_viewport" style "viewport"
+widget "*.tags_mode_tags_scrolledwindow.*" style "guide-scrolls"
+#----------------------------- Tags mode ------------------
 
 
 #----------------------------- Dialogs ------------------
