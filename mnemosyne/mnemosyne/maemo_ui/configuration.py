@@ -39,7 +39,6 @@ class ConfigurationWidget(BaseHildonWidget, ConfigurationDialog):
     def __init__(self, component_manager):
         ConfigurationDialog.__init__(self, component_manager)
         BaseHildonWidget.__init__(self, component_manager)
-        self.conf = self.config()
         self.current_size = self.conf['font_size']
         self.languages = []
         self.renderer = self.component_manager.get_current('renderer')

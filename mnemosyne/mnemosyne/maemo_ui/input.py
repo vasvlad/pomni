@@ -49,7 +49,6 @@ class InputWidget(BaseHildonWidget):
     def __init__(self, component_manager):
 
         BaseHildonWidget.__init__(self, component_manager)
-        self.conf = self.config()
         get_widget = self.get_widget
         self.connect_signals([\
             ("input_mode_toolbar_button_back_w", "clicked", \

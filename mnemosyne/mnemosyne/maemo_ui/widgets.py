@@ -33,6 +33,7 @@ class BaseHildonWidget(UiComponent):
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
         self.connections = []
+        self.conf = self.config()
         self.w_tree = self.main_widget().w_tree
         self.get_widget = self.w_tree.get_widget
 
