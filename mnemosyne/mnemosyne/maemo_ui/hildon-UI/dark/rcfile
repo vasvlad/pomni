@@ -676,7 +676,7 @@ style "front-to-back-cardtype" {
         }
     }
 }
-widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
+widget "*.front_to_back_cardtype_button" style "front-to-back-cardtype"
 
 style "both-way-cardtype" {
     GtkRadioButton::indicator-size = 80
@@ -731,7 +731,7 @@ style "both-way-cardtype" {
         }
     }
 }
-widget "*.both_way_mode_selector_w" style "both-way-cardtype"
+widget "*.both_ways_cardtype_button" style "both-way-cardtype"
 
 style "three-side-cardtype" {
     GtkRadioButton::indicator-size = 80
@@ -786,7 +786,7 @@ style "three-side-cardtype" {
         }
     }
 }
-widget "*.three_side_mode_selector_w" style "three-side-cardtype"
+widget "*.three_sided_cardtype_button" style "three-side-cardtype"
 
 style "cloze-cardtype" {
     GtkRadioButton::indicator-size = 80
@@ -841,7 +841,75 @@ style "cloze-cardtype" {
         }
     }
 }
-widget "*.cloze_mode_selector_w" style "cloze-cardtype"
+widget "*.cloze_cardtype_button" style "cloze-cardtype"
+
+style "front-to-back-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "forward_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "forward_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}   
+widget "*.temporary_front_to_back_button" style "front-to-back-cardtype-button"
+
+style "both-ways-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "both_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "both_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}   
+widget "*.temporary_both-ways-button" style "both-ways-cardtype-button"
+
+style "three-sided-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "trans_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "trans_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}   
+widget "*.temporary_three_sided_button" style "three-sided-cardtype-button"
+
+style "cloze-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "close_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "close_active.png"
+            overlay_stretch = FALSE
+        }
+    }
+}   
+widget "*.temporary_cloze_button" style "cloze-cardtype-button"
 #----------------------------- Input mode -----------------
 
 

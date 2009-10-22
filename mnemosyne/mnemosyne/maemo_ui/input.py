@@ -23,7 +23,7 @@
 """
 Hildon UI: Input mode Widgets.
 """
-
+import time
 import gettext
 import pango
 import os
@@ -53,22 +53,27 @@ class InputWidget(BaseHildonWidget):
         self.connect_signals([\
             ("input_mode_toolbar_button_back_w", "clicked", \
                 self.input_to_main_menu_cb),
-            ("front_to_back_mode_selector_w", "released", \
-                self.change_card_type_cb),
-            ("both_way_mode_selector_w", "released", self.change_card_type_cb),
-            ("three_side_mode_selector_w", "released", \
-                self.change_card_type_cb),
-            ("cloze_mode_selector_w", "released", self.change_card_type_cb),
-            ("picture_content_button", "clicked", self.add_picture_cb),
+            #("front_to_back_mode_selector_w", "released", \
+            #    self.change_card_type_cb),
+            #("both_way_mode_selector_w", "released", self.change_card_type_cb),
+            #("three_side_mode_selector_w", "released", \
+            #    self.change_card_type_cb),
+            #("cloze_mode_selector_w", "released", self.change_card_type_cb),
+            #("picture_content_button", "clicked", self.add_picture_cb),
             ("image_selection_dialog_button_select", "clicked", \
                 self.select_item_cb),
-            ("image_selection_dialog_button_close", "clicked",
+            ("image_selection_dialog_button_close", "clicked", \
                 self.close_media_selection_dialog_cb),
-            ("sound_content_button", "clicked", self.add_sound_cb),
+            ("imput_mode_cardtype_button", "clicked", \
+                self.show_cardtype_dialog_cb),
             ("tags_button", "clicked", self.show_tags_dialog_cb),
             ("new_tag_button", "clicked", self.add_new_tag_cb),
             ("input_mode_snd_button", "released", \
-                self.preview_sound_in_input_cb)])
+                self.preview_sound_in_input_cb),
+            ("front_to_back_cardtype_button", "released", self.set_cardtype_cb),
+            ("both_ways_cardtype_button", "released", self.set_cardtype_cb),
+            ("three_sided_cardtype_button", "released", self.set_cardtype_cb),
+            ("cloze_cardtype_button", "released", self.set_cardtype_cb)])
 
         self.fact = None
         self.tag_mode = False
@@ -108,9 +113,8 @@ class InputWidget(BaseHildonWidget):
             "TagsBox": get_widget("tags_box"),
             "TagEntry": get_widget("new_tag_entry"),
             "TagsButton": get_widget("tags_button"),
-            "CardTypesTable": get_widget("card_types_table"),
-            "SoundButton": get_widget("sound_content_button"),
-            "PictureButton": get_widget("picture_content_button"),
+            "CardTypeButton": get_widget("imput_mode_cardtype_button"),
+            "ContentButton": get_widget("input_mode_content_button"),
             "SoundIndicator": get_widget("input_mode_snd_button"),
             "CardTypeSwitcher": get_widget("card_type_switcher_w"),
             "AddCardButton":get_widget("input_mode_toolbar_add_card_w"),
@@ -124,26 +128,26 @@ class InputWidget(BaseHildonWidget):
         self.selectors = {
             FrontToBack.id: {
             "page": 0, 
-            "selector": get_widget("front_to_back_mode_selector_w"),
+            "selector": get_widget("front_to_back_cardtype_button"),
             "widgets": [('q', self.areas["question"]), 
                         ('a', self.areas["answer"])]
             },
             BothWays.id: {
             "page": 0,
-            "selector": get_widget("both_way_mode_selector_w"),
+            "selector": get_widget("both_ways_cardtype_button"),
             "widgets": [('q', self.areas["question"]), 
                         ('a', self.areas["answer"])]
             },
             ThreeSided.id: {
             "page": 1,
-            "selector": get_widget("three_side_mode_selector_w"),
+            "selector": get_widget("three_sided_cardtype_button"),
             "widgets": [('f', self.areas["foreign"]),
                         ('t', self.areas["translation"]),
                         ('p', self.areas["pronunciation"])]
             },
             Cloze.id: {
             "page": 2,
-            "selector": get_widget("cloze_mode_selector_w"),
+            "selector": get_widget("cloze_cardtype_button"),
             "widgets": [('text', self.areas["cloze"])]
             }
         }
@@ -152,10 +156,12 @@ class InputWidget(BaseHildonWidget):
             self.selectors[card_type.id]["card_type"] = card_type
 
         # create {selector_widget:card_type.id} dict
-        self.widget_card_id = dict((self.selectors[id]["selector"], id) \
-            for id in self.selectors.keys())
+        #self.widget_card_id = dict((self.selectors[id]["selector"], id) \
+        #    for id in self.selectors.keys())
 
-        self.set_card_type(get_widget("front_to_back_mode_selector_w"))
+        self.get_widget("imput_mode_cardtype_button").set_name( \
+            "temporary_front_to_back_button")
+        self.card_type = self.selectors[FrontToBack.id]["card_type"]
         self.compose_widgets()
 
         # Turn off hildon autocapitalization
@@ -183,16 +189,10 @@ class InputWidget(BaseHildonWidget):
 
         self.widgets["CardTypeSwitcher"].set_current_page( \
             self.selectors[self.card_type.id]["page"])
-        self.selectors[self.card_type.id]["selector"].set_active(True)
-        state = self.card_type.id in (FrontToBack.id)
-        self.widgets["PictureButton"].set_sensitive(state)
-        self.widgets["SoundButton"].set_sensitive(state)
-
-    def set_card_type(self, widget):
-        """Set current card type."""
-
-        card_type_id = self.widget_card_id[widget]
-        self.card_type = self.selectors[card_type_id]["card_type"]
+        #self.selectors[self.card_type.id]["selector"].set_active(True)
+        #state = self.card_type.id in (FrontToBack.id)
+        #self.widgets["PictureButton"].set_sensitive(state)
+        #self.widgets["SoundButton"].set_sensitive(state)
 
     def update_tags(self):
         """Update active tags list."""
@@ -216,6 +216,36 @@ class InputWidget(BaseHildonWidget):
                 return False
         return True
 
+    def show_cardtype_dialog_cb(self, widget):
+        """Open CardType selection dialog."""
+
+        #FIXME: move this dialog to left-top corner of main window
+        for selector in self.selectors.values():
+            selector["selector"].set_active(\
+                self.card_type is selector["card_type"])
+        self.get_widget("cardtype_dialog").show()
+
+    def set_cardtype_cb(self, widget):
+        """Sets current cardtype."""
+
+        self.get_widget("cardtype_dialog").hide()
+        if widget.name == "front_to_back_cardtype_button":
+            self.card_type = self.selectors[FrontToBack.id]["card_type"]
+            self.widgets["CardTypeButton"].set_name( \
+                "temporary_front_to_back_button")
+        elif widget.name == "both_ways_cardtype_button":
+            self.card_type = self.selectors[BothWays.id]["card_type"]
+            self.widgets["CardTypeButton"].set_name( \
+                "temporary_both-ways-button")
+        elif widget.name == "three_sided_cardtype_button":
+            self.card_type = self.selectors[ThreeSided.id]["card_type"]
+            self.widgets["CardTypeButton"].set_name( \
+                "temporary_three_sided_button")
+        else:
+            self.card_type = self.selectors[Cloze.id]["card_type"]
+            self.widgets["CardTypeButton"].set_name("temporary_cloze_button")
+        self.compose_widgets()
+            
     def add_new_tag_cb(self, widget):
         """Creates new tag."""
 
@@ -236,10 +266,9 @@ class InputWidget(BaseHildonWidget):
         self.tag_mode = True
         self.widgets["TagsButton"].hide()
         self.widgets["CardTypeSwitcher"].set_current_page(3)
-        self.widgets["PictureButton"].set_sensitive(False)
-        self.widgets["SoundButton"].set_sensitive(False)
+        self.widgets["CardTypeButton"].set_sensitive(False)
+        self.widgets["ContentButton"].set_sensitive(False)
         self.widgets["AddCardButton"].set_sensitive(False)
-        self.widgets["CardTypesTable"].set_sensitive(False)
         for child in self.widgets["TagsBox"].get_children():
             self.widgets["TagsBox"].remove(child)
         for tag in self.tags:
@@ -260,10 +289,9 @@ class InputWidget(BaseHildonWidget):
         self.widgets["TagsButton"].set_label(selected_tags)
         self.widgets["TagsButton"].show()
         self.widgets["CardTypeSwitcher"].set_current_page(0)
-        self.widgets["PictureButton"].set_sensitive(True)
-        self.widgets["SoundButton"].set_sensitive(True)
+        self.widgets["CardTypeButton"].set_sensitive(True)
+        self.widgets["ContentButton"].set_sensitive(True)
         self.widgets["AddCardButton"].set_sensitive(True)
-        self.widgets["CardTypesTable"].set_sensitive(True)
         return selected_tags
 
     def add_picture_cb(self, widget):
