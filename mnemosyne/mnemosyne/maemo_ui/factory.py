@@ -56,6 +56,8 @@ class ConfigHook(Component):
             "tts_voice": "Male",
             "tts_speed": 100,
             "tts_pitch": 30,
+            "card_type_last_selected": "1",
+            "content_type_last_selected": "text",
             "times_loaded": 0}.iteritems():
 
             self.config().setdefault(key, value)
