@@ -30,7 +30,6 @@ import gtk.glade
 import urllib
 import gtkhtml2
 import urlparse
-import gobject
 
 from mnemosyne.maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
