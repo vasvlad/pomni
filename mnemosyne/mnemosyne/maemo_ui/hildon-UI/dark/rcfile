@@ -624,7 +624,7 @@ style "add-music-button" {
 widget "*.sound_content_button" style "add-music-button"
 
 style "front-to-back-cardtype" {
-    GtkRadioButton::indicator-size = 80
+    GtkRadioButton::indicator-size = 64
     engine "pixmap" {
         image {
             function = OPTION
@@ -679,7 +679,7 @@ style "front-to-back-cardtype" {
 widget "*.front_to_back_cardtype_button" style "front-to-back-cardtype"
 
 style "both-way-cardtype" {
-    GtkRadioButton::indicator-size = 80
+    GtkRadioButton::indicator-size = 64
     engine "pixmap" {
         image {
             function = OPTION
@@ -734,7 +734,7 @@ style "both-way-cardtype" {
 widget "*.both_ways_cardtype_button" style "both-way-cardtype"
 
 style "three-side-cardtype" {
-    GtkRadioButton::indicator-size = 80
+    GtkRadioButton::indicator-size = 64
     engine "pixmap" {
         image {
             function = OPTION
@@ -789,7 +789,7 @@ style "three-side-cardtype" {
 widget "*.three_sided_cardtype_button" style "three-side-cardtype"
 
 style "cloze-cardtype" {
-    GtkRadioButton::indicator-size = 80
+    GtkRadioButton::indicator-size = 64
     engine "pixmap" {
         image {
             function = OPTION
@@ -856,9 +856,12 @@ style "front-to-back-cardtype-button" {
             overlay_file = "forward_active.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }   
-widget "*.temporary_front_to_back_button" style "front-to-back-cardtype-button"
+widget "*.cardtype_1" style "front-to-back-cardtype-button"
 
 style "both-ways-cardtype-button" {
     engine "sapwood" {
@@ -873,9 +876,12 @@ style "both-ways-cardtype-button" {
             overlay_file = "both_active.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }   
-widget "*.temporary_both-ways-button" style "both-ways-cardtype-button"
+widget "*.cardtype_2" style "both-ways-cardtype-button"
 
 style "three-sided-cardtype-button" {
     engine "sapwood" {
@@ -890,9 +896,12 @@ style "three-sided-cardtype-button" {
             overlay_file = "trans_active.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }   
-widget "*.temporary_three_sided_button" style "three-sided-cardtype-button"
+widget "*.cardtype_3" style "three-sided-cardtype-button"
 
 style "cloze-cardtype-button" {
     engine "sapwood" {
@@ -907,9 +916,12 @@ style "cloze-cardtype-button" {
             overlay_file = "close_active.png"
             overlay_stretch = FALSE
         }
+	    image {
+	        function = FOCUS
+	    }
     }
 }   
-widget "*.temporary_cloze_button" style "cloze-cardtype-button"
+widget "*.cardtype_5" style "cloze-cardtype-button"
 #----------------------------- Input mode -----------------
 
 

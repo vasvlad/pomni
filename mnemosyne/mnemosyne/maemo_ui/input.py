@@ -23,7 +23,7 @@
 """
 Hildon UI: Input mode Widgets.
 """
-import time
+
 import gettext
 import pango
 import os
@@ -53,13 +53,6 @@ class InputWidget(BaseHildonWidget):
         self.connect_signals([\
             ("input_mode_toolbar_button_back_w", "clicked", \
                 self.input_to_main_menu_cb),
-            #("front_to_back_mode_selector_w", "released", \
-            #    self.change_card_type_cb),
-            #("both_way_mode_selector_w", "released", self.change_card_type_cb),
-            #("three_side_mode_selector_w", "released", \
-            #    self.change_card_type_cb),
-            #("cloze_mode_selector_w", "released", self.change_card_type_cb),
-            #("picture_content_button", "clicked", self.add_picture_cb),
             ("image_selection_dialog_button_select", "clicked", \
                 self.select_item_cb),
             ("image_selection_dialog_button_close", "clicked", \
@@ -110,15 +103,10 @@ class InputWidget(BaseHildonWidget):
             area.modify_font(font)
 
         self.widgets = {# Other widgets
-            "TagsBox": get_widget("tags_box"),
-            "TagEntry": get_widget("new_tag_entry"),
-            "TagsButton": get_widget("tags_button"),
             "CardTypeButton": get_widget("imput_mode_cardtype_button"),
             "ContentButton": get_widget("input_mode_content_button"),
-            "SoundIndicator": get_widget("input_mode_snd_button"),
             "CardTypeSwitcher": get_widget("card_type_switcher_w"),
             "AddCardButton":get_widget("input_mode_toolbar_add_card_w"),
-            "MediaDialog": get_widget("media_selection_dialog"),
             "SoundContainer": get_widget("input_mode_snd_container"),
             "QuestionContainer": get_widget("input_mode_question_container")
         }
@@ -155,15 +143,6 @@ class InputWidget(BaseHildonWidget):
         for card_type in self.card_types():
             self.selectors[card_type.id]["card_type"] = card_type
 
-        # create {selector_widget:card_type.id} dict
-        #self.widget_card_id = dict((self.selectors[id]["selector"], id) \
-        #    for id in self.selectors.keys())
-
-        self.get_widget("imput_mode_cardtype_button").set_name( \
-            "temporary_front_to_back_button")
-        self.card_type = self.selectors[FrontToBack.id]["card_type"]
-        self.compose_widgets()
-
         # Turn off hildon autocapitalization
         try:
             for widget in self.areas.values():
@@ -184,24 +163,21 @@ class InputWidget(BaseHildonWidget):
             self.widgets["QuestionContainer"].show()
             self.widgets["SoundContainer"].hide()
 
-    def compose_widgets (self):
-        """Switch to neccessary input page. It depends on card_type."""
+    def set_cardtype(self, card_type):
+        """Set current cardtype value and changes UI."""
 
-        self.widgets["CardTypeSwitcher"].set_current_page( \
-            self.selectors[self.card_type.id]["page"])
-        #self.selectors[self.card_type.id]["selector"].set_active(True)
-        #state = self.card_type.id in (FrontToBack.id)
-        #self.widgets["PictureButton"].set_sensitive(state)
-        #self.widgets["SoundButton"].set_sensitive(state)
+        self.card_type = card_type
+        self.widgets["CardTypeButton"].set_name("cardtype_%s" % card_type.id)
+        self.widgets["CardTypeSwitcher"].set_current_page(\
+            self.selectors[card_type.id]["page"])
 
     def update_tags(self):
         """Update active tags list."""
 
         selected_tags = [tag.strip() for tag in self.selected_tags.split(',') \
             if tag.strip() in self.tags]
-        if not selected_tags:
-            selected_tags = [_("<default>")]
-        self.widgets["TagsButton"].set_label(", ".join(selected_tags))
+        self.get_widget("tags_button").set_label( \
+            ", ".join(selected_tags) or _("<default>"))
 
     def check_complete_input(self):
         """Check for non empty fields."""
@@ -223,71 +199,69 @@ class InputWidget(BaseHildonWidget):
         for selector in self.selectors.values():
             selector["selector"].set_active(\
                 self.card_type is selector["card_type"])
+        x, y = self.get_widget("imput_mode_cardtype_button").window.get_origin()
+        self.get_widget("cardtype_dialog").move(x, y)
         self.get_widget("cardtype_dialog").show()
+        self.main_widget().soundplayer.stop()
 
     def set_cardtype_cb(self, widget):
-        """Sets current cardtype."""
+        """Sets current cardtype and close CardTypes dialog."""
 
         self.get_widget("cardtype_dialog").hide()
-        if widget.name == "front_to_back_cardtype_button":
-            self.card_type = self.selectors[FrontToBack.id]["card_type"]
-            self.widgets["CardTypeButton"].set_name( \
-                "temporary_front_to_back_button")
-        elif widget.name == "both_ways_cardtype_button":
-            self.card_type = self.selectors[BothWays.id]["card_type"]
-            self.widgets["CardTypeButton"].set_name( \
-                "temporary_both-ways-button")
-        elif widget.name == "three_sided_cardtype_button":
-            self.card_type = self.selectors[ThreeSided.id]["card_type"]
-            self.widgets["CardTypeButton"].set_name( \
-                "temporary_three_sided_button")
-        else:
-            self.card_type = self.selectors[Cloze.id]["card_type"]
-            self.widgets["CardTypeButton"].set_name("temporary_cloze_button")
-        self.compose_widgets()
-            
+        for selector in self.selectors.values():
+            if selector['selector'].name == widget.name:
+                selected_cardtype = selector['card_type']
+                break
+        self.set_cardtype(selected_cardtype)
+        self.show_snd_container()
+        self.clear_widgets()
+
     def add_new_tag_cb(self, widget):
         """Creates new tag."""
 
-        tag = self.widgets["TagEntry"].get_text()
+        tag_entry = self.get_widget("new_tag_entry")
+        tags_box = self.get_widget("tags_box")
         if tag and not tag in self.tags:
-            self.tags.append(tag)
-            tag_widget = gtk.CheckButton(tag)
+            self.tags.append(tag.get_text())
+            tag_widget = gtk.CheckButton(tag.get_text())
             tag_widget.set_active(True)
             tag_widget.set_size_request(-1, 60)
-            self.widgets["TagsBox"].pack_start(tag_widget)
-            self.widgets["TagsBox"].reorder_child(tag_widget, 0)
+            tags_box.pack_start(tag_widget)
+            tags_box.reorder_child(tag_widget, 0)
             tag_widget.show()
-            self.widgets["TagEntry"].set_text("")
+            tag_entry.set_text("")
 
     def show_tags_dialog_cb(self, widget):
         """Show tags dialog."""
 
         self.tag_mode = True
-        self.widgets["TagsButton"].hide()
+        tags_box = self.get_widget("tags_box")
+        self.get_widget("tags_button").hide()
         self.widgets["CardTypeSwitcher"].set_current_page(3)
         self.widgets["CardTypeButton"].set_sensitive(False)
         self.widgets["ContentButton"].set_sensitive(False)
         self.widgets["AddCardButton"].set_sensitive(False)
-        for child in self.widgets["TagsBox"].get_children():
-            self.widgets["TagsBox"].remove(child)
+        for child in tags_box.get_children():
+            tags_box.remove(child)
         for tag in self.tags:
             tag_widget = gtk.CheckButton(tag)
             tag_widget.set_active(tag in self.selected_tags)
             tag_widget.set_size_request(-1, 60)
             tag_widget.show()
-            self.widgets["TagsBox"].pack_start(tag_widget)
+            tags_box.pack_start(tag_widget)
     
     def hide_tags_dialog(self):
         """Hide tags dialog."""
 
         self.tag_mode = False
+        tags_box = self.get_widget("tags_box")
+        tags_button = self.get_widget("tags_button")
         selected_tags = ", ".join([tag_widget.get_label() for tag_widget in \
-            self.widgets["TagsBox"].get_children() if tag_widget.get_active()])
+            tags_box.get_children() if tag_widget.get_active()])
         if not selected_tags:
             selected_tags = _("<default>")
-        self.widgets["TagsButton"].set_label(selected_tags)
-        self.widgets["TagsButton"].show()
+        tags_button.set_label(selected_tags)
+        tags_button.show()
         self.widgets["CardTypeSwitcher"].set_current_page(0)
         self.widgets["CardTypeButton"].set_sensitive(True)
         self.widgets["ContentButton"].set_sensitive(True)
@@ -307,7 +281,7 @@ class InputWidget(BaseHildonWidget):
                     _("'Images' directory does not exist!"))
                 return
         if os.listdir(self.imagedir):
-            self.widgets["MediaDialog"].show()
+            self.get_widget("media_selection_dialog").show()
             for fname in os.listdir(self.imagedir):
                 if os.path.isfile(os.path.join(self.imagedir, fname)):
                     pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(\
@@ -323,7 +297,7 @@ class InputWidget(BaseHildonWidget):
         Set html-text with media path and type when user
         select media filefrom media selection dialog. 
         """
-        self.widgets["MediaDialog"].hide()
+        self.get_widget("media_selection_dialog").hide()
         item_index = self.w_tree.get_widget("iconview_widget"). \
             get_selected_items()[0]
         item_type = self.liststore.get_value( \
@@ -350,7 +324,7 @@ class InputWidget(BaseHildonWidget):
                     _("'Sounds' directory does not exist!"))
                 return     
         if os.listdir(self.sounddir):
-            self.widgets["MediaDialog"].show()
+            self.get_widget("media_selection_dialog").show()
             for fname in os.listdir(self.sounddir):
                 if os.path.isfile(os.path.join(self.sounddir, fname)):
                     sound_logo_file = os.path.join( \
@@ -389,15 +363,6 @@ class InputWidget(BaseHildonWidget):
             self.areas[caption].get_buffer().set_text( \
                 "Type %s here..." % caption.upper())
 
-    def change_card_type_cb(self, widget):
-        """Change cardtype when user choose it from cardtype column."""
-                
-        self.main_widget().soundplayer.stop()
-        self.clear_widgets()
-        self.show_snd_container()
-        self.set_card_type(widget)
-        self.compose_widgets()
-
     def preview_sound_in_input_cb(self, widget):
         """Preview sound in input mode."""
 
@@ -411,12 +376,12 @@ class InputWidget(BaseHildonWidget):
     def update_indicator(self):
         """Set non active state for widget."""
 
-        self.widgets["SoundIndicator"].set_active(False)
+        self.get_widget("input_mode_snd_button").set_active(False)
 
     def close_media_selection_dialog_cb(self, widget):
         """Close image selection dialog."""
 
-        self.widgets["MediaDialog"].hide()
+        self.get_widget("media_selection_dialog").hide()
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
@@ -473,9 +438,11 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         """Activate input mode."""
 
         self.main_widget().soundplayer.stop()
+        self.show_snd_container()
+        # FIXME: read last cardtype value from config
+        self.set_cardtype(self.selectors[FrontToBack.id]["card_type"])
         self.update_tags()
         self.clear_widgets()
-        self.show_snd_container()
 
     @staticmethod
     def clear_text_cb(widget, event):
@@ -561,12 +528,10 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         """Activate input mode."""
 
         self.main_widget().soundplayer.stop()
-        self.update_tags()
-        self.clear_widgets()
-        self.card_type = self.fact.card_type
-        self.compose_widgets()
-        self.set_widgets_data(self.fact)
         self.show_snd_container()
+        self.update_tags()
+        self.set_cardtype(self.fact.card_type)
+        self.set_widgets_data(self.fact)
 
     def update_card_cb(self, widget, event):
         """Update card in the database."""
