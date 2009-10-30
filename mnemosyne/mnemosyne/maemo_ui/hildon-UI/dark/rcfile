@@ -560,6 +560,7 @@ widget "*.input_mode_translate_container" style "html-container"
 widget "*.input_mode_cloze_container" style "html-container"
 widget "*.input_mode_new_category_entry_container" style "html-container"
 widget "*.new_tag_frame" style "html-container"
+widget "*.tags_eventbox" style "viewport"
 widget "*.tags_frame" style "html-container"
 widget "*.question_text_w" style "textview"
 widget "*.answer_text_w" style "textview"
@@ -1541,8 +1542,8 @@ style "user-guide-button" {
 }
 widget "*.about_toolbar_guide_button" style "user-guide-button"
 
-style "guide-inside-container" = "viewport"{
-    bg[NORMAL] = "#DDDDDD"
+style "guide-inside-container" = "viewport" {
+    bg[NORMAL] = "#FFFFFF"
 }
 widget "*.about_mode_inside_container" style "guide-inside-container"
 #----------------------------- About mode ------------------
