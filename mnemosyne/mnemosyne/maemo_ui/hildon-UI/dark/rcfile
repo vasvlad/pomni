@@ -226,6 +226,19 @@ style "menu-label" {
 }
 widget "*.menu_label_*" style "menu-label"
 
+style "menu-button-tags" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "tags.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_tags" style "menu-button-tags"
+
 style "menu-button-review" {
     engine "sapwood" {
         image {
@@ -952,6 +965,7 @@ widget "*.cardtype_5" style "cloze-cardtype-button"
 
 
 #----------------------------- Config mode ------------------
+widget "*.config_mode_toolbar_container" style "toolbar-container"
 widget "*.config_toolbar_main_menu_button" style "to-main-menu-button"
 widget "*.config_mode_imagedir_container" style "html-container"
 widget "*.config_mode_sounddir_container" style "html-container"
@@ -996,16 +1010,6 @@ widget "*.config_mode_tts_lang_next_button" style "right-arrow"
 widget "*.config_mode_tts_voice_next_button" style "right-arrow"
 widget "*.config_mode_increase_font_size_buttton" style "right-arrow"
 widget "*.config_mode_next_skin_button" style "right-arrow"
-
-style "config-mode-toolbar-container" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            file = "left_settings.png"
-        }
-    }
-}
-widget "*.config_mode_toolbar_container" style "config-mode-toolbar-container"
 
 style "labels-container" {
     engine "pixmap" {
@@ -1276,7 +1280,6 @@ widget "*.config_mode_tts_lang_label" style "config-mode-voice-label"
 
 #----------------------------- Sync mode ------------------
 widget "*.sync_toolbar_main_menu_button" style "to-main-menu-button"
-widget "*.sync_mode_toolbar_container" style "config-mode-toolbar-container"
 widget "*.sync_mode_client_*_container" style "html-container"
 widget "*.sync_mode_server_*_container" style "html-container"
 widget "*.sync_mode_client_*_label" style "white-label"
@@ -1284,6 +1287,16 @@ widget "*.sync_mode_information_label" style "white-label"
 widget "*.sync_mode_server_*_label" style "white-label"
 widget "*.sync_mode_client_*_entry" style "entry"
 widget "*.sync_mode_server_*_entry" style "entry"
+
+style "sync-toolbar-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "left_settings.png"
+        }
+    }
+}
+widget "*.sync_mode_toolbar_container" style "sync-toolbar-container"
 
 style "sync-client" {
     engine "pixmap" {
@@ -1426,7 +1439,7 @@ widget "*.sync_mode_server_start_button" style "sync-button"
 
 #----------------------------- About mode ------------------
 widget "*.about_toolbar_main_menu_button" style "to-main-menu-button"
-widget "*.about_mode_toolbar_container" style "config-mode-toolbar-container"
+widget "*.about_mode_toolbar_container" style "sync-toolbar-container"
 widget "*.about_mode_guite_container" style "html-container"
 widget "*.about_mode_guide_scrolledwindow.*" style "scrolled-window"
 
@@ -1536,12 +1549,21 @@ widget "*.about_mode_inside_container" style "guide-inside-container"
 
 
 #----------------------------- Tags mode ------------------
-widget "*.tags_mode_toolbar_container" style "config-mode-toolbar-container"
 widget "*.tags_mode_main_menu_button" style "to-main-menu-button"
 widget "*.tags_mode_tags_frame" style "html-container"
 widget "*.tags_mode_tags_eventbox" style "viewport"
 widget "*.tags_mode_tags_viewport" style "viewport"
 widget "*.tags_mode_tags_scrolledwindow.*" style "scrolled-window"
+
+style "tags-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "left_tags.png"
+        }
+    }
+}
+widget "*.tags_mode_toolbar_container" style "tags-container"
 #----------------------------- Tags mode ------------------
 
 
