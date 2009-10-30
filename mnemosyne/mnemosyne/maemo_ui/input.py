@@ -37,6 +37,7 @@ from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 from mnemosyne.libmnemosyne.card_types.both_ways import BothWays
 from mnemosyne.libmnemosyne.card_types.three_sided import ThreeSided
 from mnemosyne.libmnemosyne.card_types.cloze import Cloze
+Cloze.required_fields = ["text"]
 
 _ = gettext.gettext
 
