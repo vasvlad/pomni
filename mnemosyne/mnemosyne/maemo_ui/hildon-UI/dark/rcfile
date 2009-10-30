@@ -1600,33 +1600,23 @@ widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-la
 widget "*.categories_manager_dialog_button_close.GtkLabel" style "dialog-button-label"
 widget "*.categories_manager_dialog_button_create.GtkLabel" style "dialog-button-label"
 
-style "question-dialog-button-yes" {
+style "dialog-button" {
     engine "pixmap" {
         image {
             function = BOX
-            file = "button_left.png"
+            file = "button.png"
             border = {10,10,10,10}
         }
     }
 }
-widget "*.question_dialog_button_yes" style "question-dialog-button-yes"
-widget "*.information_dialog_button_ok" style "question-dialog-button-yes"
-widget "*.warning_dialog_button_ok" style "question-dialog-button-yes"
-widget "*.image_selection_dialog_button_select" style "question-dialog-button-yes"
-widget "*.categories_manager_dialog_button_create" style "question-dialog-button-yes"
-
-style "question-dialog-button-no" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            file = "button_right.png"
-            border = {10,10,10,10}
-        }
-    }
-}
-widget "*.question_dialog_button_no" style "question-dialog-button-no"
-widget "*.image_selection_dialog_button_close" style "question-dialog-button-no"
-widget "*.categories_manager_dialog_button_close" style "question-dialog-button-no"
+widget "*.question_dialog_button_yes" style "dialog-button"
+widget "*.information_dialog_button_ok" style "dialog-button"
+widget "*.warning_dialog_button_ok" style "dialog-button"
+widget "*.image_selection_dialog_button_select" style "dialog-button"
+widget "*.categories_manager_dialog_button_create" style "dialog-button"
+widget "*.question_dialog_button_no" style "dialog-button"
+widget "*.image_selection_dialog_button_close" style "dialog-button"
+widget "*.categories_manager_dialog_button_close" style "dialog-button"
 
 style "icon-view" {
     base[NORMAL] = "#333333"
