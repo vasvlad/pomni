@@ -604,12 +604,12 @@ style "text-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            overlay_file = "text_disabled.png"
+            overlay_file = "add_text_disabled.png"
             overlay_stretch = FALSE
         }
         image {
             function = BOX
-            overlay_file = "text_active.png"
+            overlay_file = "add_text.png"
             overlay_stretch = FALSE
         }
 	    image {
