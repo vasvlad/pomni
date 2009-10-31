@@ -245,10 +245,10 @@ class InputWidget(BaseHildonWidget):
         """Close TagsDialog."""
 
         self.tag_mode = False
-        tags_box = self.get_widget("tags_box")
         tags_button = self.get_widget("tags_button")
-        selected_tags = ", ".join([tag_widget.get_label() for tag_widget in \
-            tags_box.get_children() if tag_widget.get_active()])
+        selected_tags = ", ".join([hbox.get_children()[1].get_label() for \
+            hbox in self.get_widget("tags_box").get_children() \
+                if hbox.get_children()[0].get_active()])
         tags_button.set_label(selected_tags or _("<default>"))
         tags_button.show()
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
@@ -274,11 +274,8 @@ class InputWidget(BaseHildonWidget):
         for child in tags_box.get_children():
             tags_box.remove(child)
         for tag in self.tags:
-            tag_widget = gtk.CheckButton(tag)
-            tag_widget.set_active(tag in self.selected_tags)
-            tag_widget.set_size_request(-1, 60)
-            tag_widget.show()
-            tags_box.pack_start(tag_widget)
+            tags_box.pack_start(self.create_tag_checkbox( \
+                tag, tag in self.selected_tags))
 
     def add_new_tag_cb(self, widget):
         """Create new tag."""
@@ -288,12 +285,9 @@ class InputWidget(BaseHildonWidget):
         tags_box = self.get_widget("tags_box")
         if tag and not tag in self.tags:
             self.tags.append(tag)
-            tag_widget = gtk.CheckButton(tag)
-            tag_widget.set_active(True)
-            tag_widget.set_size_request(-1, 60)
+            tag_widget = self.create_tag_checkbox(tag, True)
             tags_box.pack_start(tag_widget)
             tags_box.reorder_child(tag_widget, 0)
-            tag_widget.show()
             tag_entry.set_text("")
 
     def show_cardtype_dialog_cb(self, widget):

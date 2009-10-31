@@ -1060,10 +1060,11 @@
                       <widget class="GtkVBox" id="vbox9">
                         <property name="visible">True</property>
                         <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
                         <child>
                           <widget class="GtkHBox" id="hbox3">
                             <property name="visible">True</property>
-                            <property name="border_width">30</property>
+                            <property name="border_width">10</property>
                             <child>
                               <widget class="GtkLabel" id="new_tag_label">
                                 <property name="visible">True</property>
@@ -1129,7 +1130,7 @@
                         <child>
                           <widget class="GtkFrame" id="tags_frame">
                             <property name="visible">True</property>
-                            <property name="border_width">30</property>
+                            <property name="border_width">10</property>
                             <property name="label_xalign">0</property>
                             <property name="shadow_type">none</property>
                             <child>

@@ -56,7 +56,7 @@ class BaseHildonWidget(UiComponent):
     def create_tag_checkbox(self, name, active):
         """Create Tag item - GtkHBox with gtk.ToggleButton and gtk.Label."""
 
-        hbox = gtk.HBox(homogeneous=False, spacing=20)
+        hbox = gtk.HBox(homogeneous=False, spacing=10)
         button = gtk.ToggleButton()
         button.set_size_request(64, 64)
         button.set_active(active)
