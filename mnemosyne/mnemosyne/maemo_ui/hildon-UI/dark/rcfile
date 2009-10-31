@@ -40,6 +40,56 @@
 # it is assigned to the actual widgets at the bottom of the file.
 
 #----------------------------- General settings ------------------
+style "toggle-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            overlay_file = "tag_checkbox_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "tag_checkbox_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "tag_checkbox_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "tag_checkbox_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "tag_checkbox_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "tag_checkbox_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+
 style "general-widget" {
     GtkWidget::image-spacing = 0
     GtkWidget::focus-line-width = 0
@@ -210,6 +260,11 @@ style "white-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
     font_name = "Nokia Sans 18"
+}
+
+style "black-label" = "white-label" {
+    fg[NORMAL] = "#000000"
+    fg[PRELIGHT] = "#000000"
 }
 #----------------------------- General settings ------------------
 
@@ -1555,6 +1610,8 @@ widget "*.tags_mode_tags_frame" style "html-container"
 widget "*.tags_mode_tags_eventbox" style "viewport"
 widget "*.tags_mode_tags_viewport" style "viewport"
 widget "*.tags_mode_tags_scrolledwindow.*" style "scrolled-window"
+widget "*.tag_label" style "black-label"
+widget "*.tag_check" style "toggle-button"
 
 style "tags-container" {
     engine "sapwood" {
