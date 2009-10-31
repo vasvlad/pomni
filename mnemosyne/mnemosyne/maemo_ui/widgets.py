@@ -24,6 +24,7 @@
 Hildon UI. Different widgets.
 """
 
+import gtk
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -52,4 +53,17 @@ class BaseHildonWidget(UiComponent):
             widget.disconnect(cid)
         self.connections = []
 
-       
+    def create_tag_checkbox(self, name, active):
+        """Create Tag item - GtkHBox with gtk.ToggleButton and gtk.Label."""
+
+        hbox = gtk.HBox(homogeneous=False, spacing=20)
+        button = gtk.ToggleButton()
+        button.set_size_request(64, 64)
+        button.set_active(active)
+        button.set_name("tag_check")
+        label = gtk.Label(name)
+        label.set_name("tag_label")
+        hbox.pack_start(button, False)
+        hbox.pack_start(label, False)
+        hbox.show_all()
+        return hbox
