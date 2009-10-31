@@ -57,6 +57,8 @@ class InputWidget(BaseHildonWidget):
                 self.show_media_dialog_cb),
             ("image_selection_dialog_button_select", "clicked", \
                 self.select_item_cb),
+            ("iconview_widget", "selection-changed", \
+                self.enable_select_button_cb),
             ("image_selection_dialog_button_close", "clicked", \
                 self.close_media_selection_dialog_cb),
             ("imput_mode_cardtype_button", "clicked", \
@@ -348,17 +350,14 @@ class InputWidget(BaseHildonWidget):
         if self.content_type == "text":
             if self.component_type == "add_cards_dialog":
                 widget.get_buffer().set_text("")
-        elif self.content_type == "image":
+        else:
+            ctype = self.content_type + 'dir'
+            setattr(self, ctype, self.conf[ctype])
             self.liststore.clear()
-            self.imagedir = self.conf['imagedir']
-            if not os.path.exists(self.imagedir):
-                self.imagedir = "./images" # on Desktop
-                if not os.path.exists(self.imagedir):
-                    self.main_widget().information_box( \
-                        _("'Images' directory does not exist!"))
-                    return
-            if os.listdir(self.imagedir):
-                self.get_widget("media_selection_dialog").show()
+            self.get_widget("image_selection_dialog_button_select"). \
+                set_sensitive(False)            
+            self.get_widget("media_selection_dialog").show()
+            if ctype == 'imagedir':
                 for fname in os.listdir(self.imagedir):
                     if os.path.isfile(os.path.join(self.imagedir, fname)):
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size( \
@@ -366,20 +365,7 @@ class InputWidget(BaseHildonWidget):
                         self.liststore.append(["", "img", fname, \
                             self.imagedir, pixbuf])
             else:
-                self.main_widget().information_box( \
-                    _("There are no files in 'Images' directory!"))
-        else:
-            self.main_widget().soundplayer.stop()
-            self.liststore.clear()
-            self.sounddir = self.conf['sounddir']
-            if not os.path.exists(self.sounddir):
-                self.sounddir = "./sounds" # on Desktop
-                if not os.path.exists(self.sounddir):
-                    self.main_widget().information_box( \
-                        _("'Sounds' directory does not exist!"))
-                    return     
-            if os.listdir(self.sounddir):
-                self.get_widget("media_selection_dialog").show()
+                self.main_widget().soundplayer.stop()
                 for fname in os.listdir(self.sounddir):
                     if os.path.isfile(os.path.join(self.sounddir, fname)):
                         sound_logo_file = os.path.join( \
@@ -388,9 +374,12 @@ class InputWidget(BaseHildonWidget):
                             sound_logo_file, 100, 100)
                         self.liststore.append([fname, "sound", fname, \
                             self.sounddir, pixbuf])
-            else:
-                self.main_widget().information_box( \
-                    _("There are no files in 'Sounds' directory!"))
+
+    def enable_select_button_cb(self, widget):
+        """If user has select item - enable Select button."""
+
+        self.get_widget("image_selection_dialog_button_select"). \
+            set_sensitive(True)
             
     def select_item_cb(self, widget):
         """Set html-text with media path and type when user

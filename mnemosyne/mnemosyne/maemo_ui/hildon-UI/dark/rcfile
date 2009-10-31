@@ -1591,6 +1591,7 @@ widget "*.media_selection_dialog_label" style "dialog-label"
 
 style "dialog-button-label" = "white-label" {
     font_name = "Nokia Sans 16"
+    fg[INSENSITIVE] = "#323232"
 }
 widget "*.question_dialog_button_yes.GtkLabel" style "dialog-button-label"
 widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
