@@ -24,7 +24,6 @@
 Hildon UI: Tags widget.
 """
 
-from gtk import CheckButton
 from mnemosyne.maemo_ui.widgets import BaseHildonWidget
 from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
@@ -75,20 +74,18 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
             tags_box.remove(child)
         for tag in self.database().get_tags():
             self.tags_dict[tag.name] = tag._id
-            tag_widget = CheckButton(tag.name)
-            tag_widget.set_active(tag._id in criterion.active_tag__ids)
-            tag_widget.set_size_request(-1, 60)
-            tag_widget.show()
-            tags_box.pack_start(tag_widget)
+            tags_box.pack_start(self.create_tag_checkbox( \
+                tag.name, tag._id in criterion.active_tag__ids))
 
     def get_criterion(self):
         """Build the criterion from the information the user entered."""
 
         criterion = DefaultCriterion(self.component_manager)
-        for tag_widget in self.get_widget("tags_mode_tags_box").get_children():
-            if tag_widget.get_active():
+        for hbox in self.get_widget("tags_mode_tags_box").get_children():
+            children = hbox.get_children()
+            if children[0].get_active():
                 criterion.active_tag__ids.add(\
-                    self.tags_dict[tag_widget.get_label()])
+                    self.tags_dict[children[1].get_label()])
         return criterion
 
     def tags_to_main_menu_cb(self, widget):
