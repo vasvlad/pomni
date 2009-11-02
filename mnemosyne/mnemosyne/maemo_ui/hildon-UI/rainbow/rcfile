@@ -47,6 +47,9 @@ class "GtkWidget" style "general-widget"
 
 style "tag-label" {
     font_name = "Nokia Sans 17"
+    fg[NORMAL] = "#000000"
+    fg[SELECTED] = "#000000"
+    fg[ACTIVE] = "#000000"
 }
 
 style "toggle-button" {
@@ -916,16 +919,6 @@ widget "*.pronun_text_w" style "textview"
 widget "*.translation_text_w" style "textview"
 widget "*.cloze_text_w" style "textview"
 
-style "category-name-container" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            file = "nothing.png"
-        }
-    }
-}
-#widget "*.category_name_container" style "category-name-container"
-
 widget "*.new_tag_entry" style "entry"
 
 style "category-label" {
@@ -1523,10 +1516,7 @@ style "user-guide-button" {
 }
 widget "*.about_toolbar_guide_button" style "user-guide-button"
 
-style "guide-inside-container" {
-    bg[NORMAL] = "#DDDDDD"
-}
-widget "*.about_mode_inside_container" style "guide-inside-container"
+widget "*.about_mode_inside_container" style "tags-inside-container"
 
 style "guide-scrolls" {
     xthickness = 0
@@ -1568,11 +1558,8 @@ widget "*.tags_scrolledwindow.*" style "guide-scrolls"
 #----------------------------- Tags mode ------------------
 widget "*.tags_mode_vseparator" style "vseparator"
 widget "*.tags_mode_tags_frame" style "html-container"
-style "viewport" {
-    bg[NORMAL] = "#FFFFFF"
-}
-widget "*.tags_mode_tags_eventbox" style "viewport"
-widget "*.tags_mode_tags_viewport" style "viewport"
+widget "*.tags_mode_tags_eventbox" style "tags-inside-container"
+widget "*.tags_mode_tags_viewport" style "tags-inside-container"
 widget "*.tags_mode_tags_scrolledwindow.*" style "guide-scrolls"
 widget "*.tag_check" style "toggle-button"
 widget "*.tag_label" style "tag-label"
