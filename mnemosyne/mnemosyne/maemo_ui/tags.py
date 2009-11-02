@@ -85,7 +85,7 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
             children = hbox.get_children()
             if children[0].get_active():
                 criterion.active_tag__ids.add(\
-                    self.tags_dict[children[1].get_label()])
+                    self.tags_dict[unicode(children[1].get_label())])
         return criterion
 
     def tags_to_main_menu_cb(self, widget):
