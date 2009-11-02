@@ -97,9 +97,12 @@ class Html(Renderer):
                 filename, os.path.join(self.config.mediadir(), filename))
         return text
 
-    def render_html(self, widget, text="<html><body> </body></html>"):
+    def render_html(self, widget, text=None):
         """Render html text and set it to widget."""
 
+        if not text:
+            text = "<html><style> body {background:#FFFFFF; color:#000000}" \
+                "</style><body> </body></html>"
         document = widget.document
         document.clear()
         document.open_stream('text/html')

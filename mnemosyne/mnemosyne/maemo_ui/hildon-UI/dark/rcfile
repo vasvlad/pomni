@@ -142,6 +142,7 @@ style "entry" {
 }
 
 style "textview" {
+    GtkTextView::focus-line-width = 0
     text[NORMAL] = "#000000"
     text[ACTIVE] = "#000000"
     text[SELECTED] = "#000000"
