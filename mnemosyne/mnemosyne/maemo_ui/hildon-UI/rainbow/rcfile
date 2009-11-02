@@ -377,6 +377,16 @@ widget "*.review_toolbar_delete_card_button" style "delete-card-button"
 
 
 #----------------------------- Input mode ------------------
+style "input-toolbar-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "transparent.png"
+        }
+    }
+}
+widget "*.input_mode_toolbar_container" style "input-toolbar-container"
+
 style "input-mode-add-card-button" {
     engine "pixmap" {
         image {
@@ -510,7 +520,27 @@ style "front-to-back-cardtype" {
         }
     }
 }
-widget "*.front_to_back_mode_selector_w" style "front-to-back-cardtype"
+widget "*.front_to_back_cardtype_button" style "front-to-back-cardtype"
+
+style "front-to-back-cardtype-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "front_to_back_card_type_unselected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "front_to_back_card_type_selected.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_1" style "front-to-back-cardtype-button"
 
 style "both-way-cardtype" {
     GtkRadioButton::indicator-size = 72
@@ -565,7 +595,27 @@ style "both-way-cardtype" {
         }
     }
 }
-widget "*.both_way_mode_selector_w" style "both-way-cardtype"
+widget "*.both_ways_cardtype_button" style "both-way-cardtype"
+
+style "both-ways-cardtype-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "both_way_card_type_unselected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "both_way_card_type_selected.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_2" style "both-ways-cardtype-button"
 
 style "three-side-cardtype" {
     GtkRadioButton::indicator-size = 72
@@ -620,7 +670,27 @@ style "three-side-cardtype" {
         }
     }
 }
-widget "*.three_side_mode_selector_w" style "three-side-cardtype"
+widget "*.three_sided_cardtype_button" style "three-side-cardtype"
+
+style "three-sided-cardtype-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "three_side_card_type_unselected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "three_side_card_type_selected.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_3" style "three-sided-cardtype-button"
 
 style "cloze-cardtype" {
     GtkRadioButton::indicator-size = 72
@@ -675,7 +745,48 @@ style "cloze-cardtype" {
         }
     }
 }
-widget "*.cloze_mode_selector_w" style "cloze-cardtype"
+widget "*.cloze_cardtype_button" style "cloze-cardtype"
+
+style "cloze-cardtype-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "cloze_card_type_unselected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "cloze_card_type_selected.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_5" style "cloze-cardtype-button"
+
+style "text-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "text_content_button.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "text_content_button.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.text_content_button" style "text-button"
+widget "*.contenttype_text" style "text-button"
 
 style "sound-content-button" {
     engine "pixmap" {
@@ -691,6 +802,7 @@ style "sound-content-button" {
     }
 }
 widget "*.sound_content_button" style "sound-content-button"
+widget "*.contenttype_sound" style "sound-content-button"
 
 style "picture-content-button" {
     engine "pixmap" {
@@ -705,7 +817,8 @@ style "picture-content-button" {
         }
     }
 }
-widget "*.picture_content_button" style "picture-content-button"
+widget "*.image_content_button" style "picture-content-button"
+widget "*.contenttype_image" style "picture-content-button"
 
 style "vseparator" {
     engine "sapwood" {
