@@ -726,49 +726,49 @@ style "front-to-back-cardtype" {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "forward_active.png"
+            file = "aligned_forward_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "forward_disabled.png"
+            file = "aligned_forward_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "forward_active.png"
+            file = "aligned_forward_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "forward_disabled.png"
+            file = "aligned_forward_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "forward_active.png"
+            file = "aligned_forward_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "forward_disabled.png"
+            file = "aligned_forward_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = IN
-            file = "forward_disabled.png"
+            file = "aligned_forward_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = OUT
-            file = "forward_disabled.png"
+            file = "aligned_forward_disabled.png"
         }
     }
 }
@@ -781,49 +781,49 @@ style "both-way-cardtype" {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "both_active.png"
+            file = "aligned_both_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "both_disabled.png"
+            file = "aligned_both_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "both_active.png"
+            file = "aligned_both_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "both_disabled.png"
+            file = "aligned_both_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "both_active.png"
+            file = "aligned_both_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "both_disabled.png"
+            file = "aligned_both_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = IN
-            file = "both_disabled.png"
+            file = "aligned_both_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = OUT
-            file = "both_disabled.png"
+            file = "aligned_both_disabled.png"
         }
     }
 }
@@ -836,49 +836,49 @@ style "three-side-cardtype" {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "trans_active.png"
+            file = "aligned_trans_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "trans_disabled.png"
+            file = "aligned_trans_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "trans_active.png"
+            file = "aligned_trans_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "trans_disabled.png"
+            file = "aligned_trans_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "trans_active.png"
+            file = "aligned_trans_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "trans_disabled.png"
+            file = "aligned_trans_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = IN
-            file = "trans_disabled.png"
+            file = "aligned_trans_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = OUT
-            file = "trans_disabled.png"
+            file = "aligned_trans_disabled.png"
         }
     }
 }
@@ -891,49 +891,49 @@ style "cloze-cardtype" {
             function = OPTION
             state = NORMAL
             shadow = IN
-            file = "close_active.png"
+            file = "aligned_close_active.png"
         }
         image {
             function = OPTION
             state = NORMAL
             shadow = OUT
-            file = "close_disabled.png"
+            file = "aligned_close_disabled.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = IN
-            file = "close_active.png"
+            file = "aligned_close_active.png"
         }
         image {
             function = OPTION
             state = ACTIVE
             shadow = OUT
-            file = "close_disabled.png"
+            file = "aligned_close_disabled.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = IN
-            file = "close_active.png"
+            file = "aligned_close_active.png"
         }
         image {
             function = OPTION
             state = PRELIGHT
             shadow = OUT
-            file = "close_disabled.png"
+            file = "aligned_close_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = IN
-            file = "close_disabled.png"
+            file = "aligned_close_disabled.png"
         }
         image {
             function = OPTION
             state = INSENSITIVE
             shadow = OUT
-            file = "close_disabled.png"
+            file = "aligned_close_disabled.png"
         }
     }
 }
