@@ -6,8 +6,11 @@ mnemosyne (2.0.0~beta5) unstable; urgency=low
   * fixed borders bugs for Fremantle (Max) 
   * window exit callback adopted for Fremantle
   * implemented non-blocking dialogs 
+  * implemented input and activation for tags (Max)
+  * fixed UI issues for N900 (Max)
+  * redesigned input mode (Max) 
 
- -- Ed Bartosh <bartosh@gmail.com>  Wed, 14 Oct 2009 23:43:40 +0300
+ -- Ed Bartosh <bartosh@gmail.com>  Tue, 03 Nov 2009 21:48:42 +0200
 
 mnemosyne (2.0.0~beta4) unstable; urgency=low
 
