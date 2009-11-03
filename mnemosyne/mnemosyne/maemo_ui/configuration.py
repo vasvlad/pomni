@@ -44,6 +44,8 @@ class ConfigurationWidget(BaseHildonWidget, ConfigurationDialog):
         self.renderer = self.component_manager.get_current('renderer')
         page = self.conf['last_settings_page']
         get_widget = self.get_widget
+        get_widget("config_toolbar_tts_settings_button"). \
+            set_sensitive(tts.is_available())
         if page == 0:
             get_widget("config_toolbar_general_settings_button").\
                 set_active(True)
