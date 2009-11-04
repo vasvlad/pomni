@@ -87,7 +87,7 @@ class InputWidget(BaseHildonWidget):
         self.card_type = None
         self.selected_tags = None
         self.tags = sorted(self.database().get_tag_names(), \
-            cmp=numeric_string_cmp) or [_("<default>")]
+            cmp=numeric_string_cmp) or [_("default")]
         self.added_new_cards = False
         #liststore = [text, type, filename, dirname, pixbuf]
         self.liststore = gtk.ListStore(str, str, str, str, gtk.gdk.Pixbuf)
@@ -196,7 +196,7 @@ class InputWidget(BaseHildonWidget):
         selected_tags = [tag.strip() for tag in self.selected_tags.split(',') \
             if tag.strip() in self.tags]
         self.get_widget("tags_button").set_label( \
-            ", ".join(selected_tags) or _("<default>"))
+            ", ".join(selected_tags) or _("default"))
 
     def check_complete_input(self):
         """Check for non empty fields."""
@@ -249,7 +249,7 @@ class InputWidget(BaseHildonWidget):
         selected_tags = ", ".join([hbox.get_children()[1].get_label() for \
             hbox in self.get_widget("tags_box").get_children() \
                 if hbox.get_children()[0].get_active()])
-        tags_button.set_label(selected_tags or _("<default>"))
+        tags_button.set_label(selected_tags or _("default"))
         tags_button.show()
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
         self.widgets["CardTypeButton"].set_sensitive(True)
@@ -456,7 +456,7 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         try:
             self.selected_tags = self.conf["tags_of_last_added"]
         except:
-            self.selected_tags = _("<default>")
+            self.selected_tags = _("default")
 
     def activate(self):
         """Activate input mode."""
