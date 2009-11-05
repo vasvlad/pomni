@@ -194,17 +194,15 @@ class InputWidget(BaseHildonWidget):
     def update_tags(self):
         """Update active tags list."""
 
-        selected_tags = [tag.strip() for tag in self.selected_tags.split(',') \
-            if tag.strip() in self.tags]
-        self.get_widget("tags_button").set_label( \
-            ", ".join(selected_tags) or self.default_tag_name)
+        self.get_widget("tags_button").set_label(', '.join( \
+            [tag.strip() for tag in self.selected_tags.split(',') \
+                if tag.strip() in self.tags]) or self.default_tag_name)
 
     def check_complete_input(self):
         """Check for non empty fields."""
 
-        pattern_list = [item for item in [_("<ANSWER>"), _("<QUESTION>"), \
-            _("<FOREIGN>"), _("<PRONUNCIATION>"), _("<TRANSLATION>"), \
-            _("<TEXT>"), ""]]
+        pattern_list = ["<%s>" % caption.upper() for caption in self.areas]
+        pattern_list.append("")
         for selector in self.selectors[self.card_type.id]["widgets"]:
             buf = selector[1].get_buffer()
             start, end = buf.get_bounds()
@@ -246,16 +244,15 @@ class InputWidget(BaseHildonWidget):
         """Close TagsDialog."""
 
         self.tag_mode = False
-        tags_button = self.get_widget("tags_button")
         selected_tags = ', '.join([hbox.get_children()[1].get_label() for \
             hbox in self.get_widget("tags_box").get_children() if \
             hbox.get_children()[0].get_active()]) or self.default_tag_name
+        tags_button = self.get_widget("tags_button")
         tags_button.set_label(selected_tags)
         tags_button.show()
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
-        self.widgets["CardTypeButton"].set_sensitive(True)
-        self.widgets["ContentButton"].set_sensitive(True)
-        self.widgets["AddCardButton"].set_sensitive(True)
+        for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
+            self.widgets[widget].set_sensitive(True)
         return selected_tags
 
     # Callbacks
@@ -269,9 +266,8 @@ class InputWidget(BaseHildonWidget):
         self.last_input_page = self.widgets["CardTypeSwitcher"]. \
             get_current_page()
         self.widgets["CardTypeSwitcher"].set_current_page(3)
-        self.widgets["CardTypeButton"].set_sensitive(False)
-        self.widgets["ContentButton"].set_sensitive(False)
-        self.widgets["AddCardButton"].set_sensitive(False)
+        for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
+            self.widgets[widget].set_sensitive(False)
         for child in tags_box.get_children():
             tags_box.remove(child)
         for tag in self.tags:
