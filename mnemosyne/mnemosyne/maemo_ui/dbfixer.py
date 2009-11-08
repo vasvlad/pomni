@@ -51,6 +51,7 @@ class DBFixer:
     def fix(self):
         """Checking existence of 'activity_criteria' table."""
 
+        #Upgrade from python-libmnemosyne 2.0.0-14 to 2.0.0-15
         if self.connection.execute("""SELECT name FROM sqlite_master 
             WHERE name='activity_criteria'""").fetchone() is None:
             self.connection.execute("""CREATE TABLE activity_criteria 
