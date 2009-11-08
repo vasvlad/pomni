@@ -9,8 +9,10 @@ mnemosyne (2.0.0~beta5) unstable; urgency=low
   * implemented input and activation for tags (Max)
   * fixed UI issues for N900 (Max)
   * redesigned input mode (Max) 
+  * implemented database format fixer (Max) 
+  * made dark theme default
 
- -- Ed Bartosh <bartosh@gmail.com>  Tue, 03 Nov 2009 21:48:42 +0200
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 08 Nov 2009 22:09:18 +0200
 
 mnemosyne (2.0.0~beta4) unstable; urgency=low
 
