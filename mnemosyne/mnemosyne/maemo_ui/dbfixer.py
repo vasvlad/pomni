@@ -33,7 +33,6 @@ class DBFixer:
         self.database = database
         self.connection = database.con
         self.component_manager = component_manager
-        self.fix()
 
     def fix_indexes(self):
         """Checking indexes existence and creating if needed."""
