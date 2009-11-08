@@ -35,7 +35,7 @@ class ConfigHook(Component):
     def run(self):
         """Entry point."""
         for key, value in {\
-            "theme_path": "/usr/share/mnemosyne/hildon-UI/rainbow",
+            "theme_path": "/usr/share/mnemosyne/hildon-UI/dark",
             "fullscreen": True,
             "font_size": 30.0,
             "startup_with_review": False,
