@@ -99,7 +99,8 @@ class MainWdgt(MainWidget):
     def activate_mode(self, mode):
         """Activate review or menu mode in lazy way."""
 
-        self.show_mode(mode)
+        #self.show_mode(mode)
+        #self.switcher.set_current_page(1)
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             if mode == "review":
@@ -208,7 +209,7 @@ class MainWdgt(MainWidget):
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
     # ui helpers
-    def create_gtkhtml(self, args):
+    def create_gtkhtml(self):
         """ Create gtkhtml2 widget """
 
         def request_url(document, url, stream):

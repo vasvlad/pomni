@@ -138,6 +138,9 @@ class MenuWidget(UiComponent):
         toplevel_table.show_all()
         container.append_page(toplevel_table)
 
+    def activate(self):
+        self._main_widget.switcher.set_current_page(1)
+
 
     # callbacks
     def tags_cb(self, widget):
