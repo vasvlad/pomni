@@ -345,7 +345,7 @@ style "menu-button-conf" {
         }
     }
 }
-widget "*.menu_button_conf" style "menu-button-conf"
+widget "*.menu_button_settings" style "menu-button-conf"
 
 style "menu-button-about" {
     engine "sapwood" {
