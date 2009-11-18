@@ -59,12 +59,19 @@ class MainWdgt(MainWidget):
         theme_path = self.config()["theme_path"]
         self.theme = theme_path.split("/")[-1]
         gtk.rc_parse(os.path.join(theme_path, "rcfile"))
-        gtk.glade.set_custom_handler(self.custom_handler)
-        w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
-        get_widget = w_tree.get_widget
+        #gtk.glade.set_custom_handler(self.custom_handler)
+        #w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
+        #get_widget = w_tree.get_widget
 
-        self.switcher = get_widget("switcher")
-        self.window = get_widget("window")
+        #self.switcher = get_widget("switcher")
+        #self.window = get_widget("window")
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.resize(800, 480)
+        self.window.set_name('window')
+        self.switcher = gtk.Notebook()
+        self.switcher.set_show_border(False)
+        self.switcher.set_show_tabs(False)
+        self.window.add(self.switcher)
 
         # fullscreen mode
         self.fullscreen = self.config()['fullscreen']
@@ -73,15 +80,18 @@ class MainWdgt(MainWidget):
 
         # connect signals to methods
         self.window.connect("delete_event", self.exit_)
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ("window_state", "window_keypress")]))
+        #w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
+        #    for sig in ("window_state", "window_keypress")]))
+        self.window.connect('window-state-event', self.window_state_cb)
+        self.window.connect('key-press-event', self.window_keypress_cb)
 
-        self.question_dialog = get_widget("question_dialog")
-        self.information_dialog = get_widget("information_dialog")
-        self.question_dialog_label = get_widget("question_dialog_label")
-        self.information_dialog_label = get_widget("information_dialog_label")
+        #self.question_dialog = get_widget("question_dialog")
+        #self.information_dialog = get_widget("information_dialog")
+        #self.question_dialog_label = get_widget("question_dialog_label")
+        #self.information_dialog_label = get_widget("information_dialog_label")
 
-        self.w_tree = w_tree
+        #self.w_tree = w_tree
+        self.window.show_all()
 
     def show_mode(self, mode):
         self.switcher.set_current_page(getattr(self, mode))
