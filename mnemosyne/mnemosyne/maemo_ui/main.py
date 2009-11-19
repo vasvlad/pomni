@@ -26,7 +26,6 @@ Main Widget.
 
 import os
 import gtk
-import gtk.glade
 import urllib
 import gtkhtml2
 import urlparse
@@ -70,16 +69,10 @@ class MainWdgt(MainWidget):
         self.fullscreen = self.config()['fullscreen']
         if self.fullscreen:
             self.window.fullscreen()
-
         # connect signals to methods
         self.window.connect("delete_event", self.exit_)
         self.window.connect('window-state-event', self.window_state_cb)
         self.window.connect('key-press-event', self.window_keypress_cb)
-
-        #self.question_dialog = get_widget("question_dialog")
-        #self.information_dialog = get_widget("information_dialog")
-        #self.question_dialog_label = get_widget("question_dialog_label")
-        #self.information_dialog_label = get_widget("information_dialog_label")
 
         self.window.show_all()
 
@@ -121,13 +114,6 @@ class MainWdgt(MainWidget):
             else:
                 self.menu_()
         gtk.main()
-
-    def custom_handler(self, glade, function_name, widget_name, *args):
-        """Hook for custom widgets."""
-
-        if glade and widget_name and  hasattr(self, function_name):
-            handler = getattr(self, function_name)
-            return handler(args)
 
     # modes
     def menu_(self, mode=None):
@@ -221,9 +207,22 @@ class MainWdgt(MainWidget):
     def information_box(self, message):
         """Show Information message."""
 
-        self.information_dialog_label.set_text('\n' + message + '\n')
-        self.information_dialog.run()
-        self.information_dialog.hide()
+        dialog = gtk.Dialog(parent=self.window, flags=gtk.DIALOG_MODAL|\
+            gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
+        dialog.set_decorated(False)
+        button_ok = dialog.add_button('OK', gtk.RESPONSE_OK)
+        button_ok.set_size_request(120, 80)
+        button_ok.set_name('dialog_button')
+        label = gtk.Label()
+        label.set_justify(gtk.JUSTIFY_CENTER)
+        label.set_name('information_dialog_label')
+        label.set_text('\n   ' + message.replace('.', '.   \n').replace( \
+            ',', ',\n') + '\n')
+        label.show()
+        dialog.vbox.pack_start(label)
+        dialog.action_area.set_layout(gtk.BUTTONBOX_SPREAD)
+        dialog.run()
+        dialog.destroy()
 
     def error_box(self, message):
         """Error message."""
@@ -244,7 +243,8 @@ class MainWdgt(MainWidget):
         button_no.set_name('dialog_button')
         label = gtk.Label()
         label.set_name('question_dialog_label')
-        label.set_text('\n' + question.replace("?", "?\n").replace(",", ",\n"))
+        label.set_text('\n' + question.replace('?', '?\n').replace(',', ',\n') \
+            + '\n')
         label.show()
         dialog.vbox.pack_start(label)
         dialog.vbox.set_spacing(2)

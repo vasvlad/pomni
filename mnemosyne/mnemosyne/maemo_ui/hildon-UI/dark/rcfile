@@ -1652,13 +1652,6 @@ style "dialog-button-label" = "white-label" {
     fg[INSENSITIVE] = "#323232"
 }
 widget "*.dialog_button.GtkLabel" style "dialog-button-label"
-#widget "*.question_dialog_button_no.GtkLabel" style "dialog-button-label"
-#widget "*.information_dialog_button_ok.GtkLabel" style "dialog-button-label"
-#widget "*.warning_dialog_button_ok.GtkLabel" style "dialog-button-label"
-#widget "*.image_selection_dialog_button_close.GtkLabel" style "dialog-button-label"
-#widget "*.image_selection_dialog_button_select.GtkLabel" style "dialog-button-label"
-#widget "*.categories_manager_dialog_button_close.GtkLabel" style "dialog-button-label"
-#widget "*.categories_manager_dialog_button_create.GtkLabel" style "dialog-button-label"
 
 style "dialog-button" {
     engine "pixmap" {
@@ -1670,13 +1663,6 @@ style "dialog-button" {
     }
 }
 widget "*.dialog_button" style "dialog-button"
-#widget "*.information_dialog_button_ok" style "dialog-button"
-#widget "*.warning_dialog_button_ok" style "dialog-button"
-#widget "*.image_selection_dialog_button_select" style "dialog-button"
-#widget "*.categories_manager_dialog_button_create" style "dialog-button"
-#widget "*.question_dialog_button_no" style "dialog-button"
-#widget "*.image_selection_dialog_button_close" style "dialog-button"
-#widget "*.categories_manager_dialog_button_close" style "dialog-button"
 
 style "icon-view" {
     base[NORMAL] = "#333333"
