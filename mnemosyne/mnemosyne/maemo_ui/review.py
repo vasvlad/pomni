@@ -41,6 +41,14 @@ class ReviewWdgt(ReviewWidget):
         self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
 
+        def create_button(name, callback, event='clicked', width=80, height=80):
+            button = gtk.Button()
+            button.set_size_request(width, height)
+            button.set_name(name)
+            button.connect(event, callback)
+            return button
+
+        # create widgets
         toplevel_table = gtk.Table(rows=1, columns=3)
         toolbar_container = gtk.Notebook()
         toolbar_container.set_show_tabs(False)
@@ -63,65 +71,29 @@ class ReviewWdgt(ReviewWidget):
         answer_text = self.main_widget().create_gtkhtml()
         question_text = self.main_widget().create_gtkhtml()
         # create toolbar buttons
-        tts_button = gtk.Button()
-        tts_button.set_size_request(80, 80)
-        tts_button.set_name('review_toolbar_tts_button')
-        edit_button = gtk.Button()
-        edit_button.set_size_request(80, 80)
-        edit_button.set_name('review_toolbar_edit_card_button')
-        add_button = gtk.Button()
-        add_button.set_size_request(80, 80)
-        add_button.set_name('review_toolbar_add_card_button')
-        delete_button = gtk.Button()
-        delete_button.set_size_request(80, 80)
-        delete_button.set_name('review_toolbar_delete_card_button')
-        menu_button = gtk.Button()
-        menu_button.set_size_request(80, 80)
-        menu_button.set_name('review_toolbar_main_menu_button')
-        menu_button.connect('clicked', self.review_to_main_menu_cb)
+        buttons = {}
+        buttons[0] = create_button('review_toolbar_tts_button', self.speak_cb)
+        buttons[1] = create_button('review_toolbar_edit_card_button', \
+            self.edit_card_cb)
+        buttons[2] = create_button('review_toolbar_add_card_button', \
+            self.add_card_cb)
+        buttons[3] = create_button('review_toolbar_delete_card_button', \
+            self.delete_card_cb)
+        buttons[4] = create_button('review_toolbar_main_menu_button', \
+           self.review_to_main_menu_cb) 
         # create grades buttons
-        grade0_button = gtk.Button()
-        grade0_button.set_size_request(80, 80)
-        grade0_button.set_name('grade0')
-        grade1_button = gtk.Button()
-        grade1_button.set_size_request(80, 80)
-        grade1_button.set_name('grade1')
-        grade2_button = gtk.Button()
-        grade2_button.set_size_request(80, 80)
-        grade2_button.set_name('grade2')
-        grade3_button = gtk.Button()
-        grade3_button.set_size_request(80, 80)
-        grade3_button.set_name('grade3')
-        grade4_button = gtk.Button()
-        grade4_button.set_size_request(80, 80)
-        grade4_button.set_name('grade4')
-        grade5_button = gtk.Button()
-        grade5_button.set_size_request(80, 80)
-        grade5_button.set_name('grade5')
-        # packing
-        toolbar_table.attach(tts_button, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        toolbar_table.attach(edit_button, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        toolbar_table.attach(add_button, 0, 1, 2, 3, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        toolbar_table.attach(delete_button, 0, 1, 3, 4, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        toolbar_table.attach(menu_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
+        grades = {}
+        for num in range(6):
+            grades[num] = create_button('grade%s' % num, self.grade_cb)
+        # packing toolbar buttons
+        for pos in buttons.keys():
+            toolbar_table.attach(buttons[pos], 0, 1, pos, pos + 1, \
+                xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
         toolbar_container.add(toolbar_table)
-        grades_table.attach(grade0_button, 0, 1, 5, 6, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        grades_table.attach(grade1_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        grades_table.attach(grade2_button, 0, 1, 3, 4, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        grades_table.attach(grade3_button, 0, 1, 2, 3, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        grades_table.attach(grade4_button, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        grades_table.attach(grade5_button, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
+        # packing grades buttons
+        for pos in grades.keys():
+            grades_table.attach(grades[pos], 0, 1, 5 - pos, 6 - pos, \
+                xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
         grades_container.add(grades_table)
         toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
             xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
@@ -140,11 +112,10 @@ class ReviewWdgt(ReviewWidget):
             xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
             yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30)
         toplevel_table.show_all()
-        self.main_widget().switcher.insert_page(toplevel_table, position=0)
-        self.main_widget().switcher.set_current_page(0)
+        self.main_widget().switcher.insert_page(toplevel_table, position=1)
         # create class attributes
-        self.edit_button, self.del_button, self.tts_button = edit_button, \
-            delete_button, tts_button
+        self.tts_button, self.edit_button, self.del_button = buttons[0], \
+            buttons[1], buttons[3]
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
         self.question_container, self.answer_container = question_container, \
@@ -155,22 +126,11 @@ class ReviewWdgt(ReviewWidget):
         self.sound_button = sound_button
         self.grades_table = grades_table
         # connect signals
-        menu_button.connect('clicked', self.review_to_main_menu_cb)
         answer_text.connect('button-press-event', self.get_answer_cb)
-        grade0_button.connect('clicked', self.grade_cb)
-        grade1_button.connect('clicked', self.grade_cb)
-        grade2_button.connect('clicked', self.grade_cb)
-        grade3_button.connect('clicked', self.grade_cb)
-        grade4_button.connect('clicked', self.grade_cb)
-        grade5_button.connect('clicked', self.grade_cb)
-        tts_button.connect('clicked', self.speak_cb)
-        delete_button.connect('clicked', self.delete_card_cb)
-        edit_button.connect('clicked', self.edit_card_cb)
         sound_button.connect('released', self.preview_sound_in_review_cb)
-        add_button.connect('clicked', self.add_card_cb)
 
     def activate(self):
-        self.main_widget().switcher.set_current_page(0)
+        self.main_widget().switcher.set_current_page(1)
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
