@@ -233,10 +233,23 @@ class MainWdgt(MainWidget):
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""
 
-        self.question_dialog_label.set_text( \
-            '\n'  + question.replace("?", "?\n").replace(",", ",\n"))
-        response = self.question_dialog.run()
-        self.question_dialog.hide()
+        dialog = gtk.Dialog(parent=self.window, flags=gtk.DIALOG_MODAL|\
+            gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
+        dialog.set_decorated(False)
+        button_yes = dialog.add_button('YES', gtk.RESPONSE_YES)
+        button_yes.set_size_request(120, 80)
+        button_yes.set_name('dialog_button')
+        button_no = dialog.add_button('NO', gtk.RESPONSE_REJECT)
+        button_no.set_size_request(120, 80)
+        button_no.set_name('dialog_button')
+        label = gtk.Label()
+        label.set_name('question_dialog_label')
+        label.set_text('\n' + question.replace("?", "?\n").replace(",", ",\n"))
+        label.show()
+        dialog.vbox.pack_start(label)
+        dialog.vbox.set_spacing(2)
+        response = dialog.run()
+        dialog.destroy()
         if response == gtk.RESPONSE_YES:
             return False
         return True
