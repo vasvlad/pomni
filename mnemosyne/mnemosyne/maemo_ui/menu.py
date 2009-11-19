@@ -85,30 +85,43 @@ class MenuWidget(UiComponent):
     # callbacks
     def tags_cb(self, widget):
         """Go to activate tags mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.tags_()
 
     def input_cb(self, widget):
         """Go to input mode."""
+        
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.input_()
 
     def review_cb(self, widget):
         """Go to review mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.review_()
 
     def sync_cb(self, widget):
         """Go to sync mode."""
+        
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.sync_()
 
     def settings_cb(self, widget):
         """Go to configuration mode."""
+        
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.configure_()
 
     def about_cb(self, widget):
         """Go to about mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.about_()
 
     def exit_cb(self, widget):
         """Exit program."""
+
         self._main_widget.exit_()
 
 

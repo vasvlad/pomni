@@ -115,6 +115,12 @@ class MainWdgt(MainWidget):
                 self.menu_()
         gtk.main()
 
+    def kill_menu_object(self):
+        """Removes MenuWidget object from memory."""
+
+        if 'menu' in self.widgets:
+            del self.widgets['menu']
+
     # modes
     def menu_(self, mode=None):
         """Activate menu."""
@@ -126,6 +132,7 @@ class MainWdgt(MainWidget):
     def tags_(self):
         """Activate 'Activate tags' mode."""
 
+        self.kill_menu_object()
         if 'review' not in self.widgets:
             self.create_mode('review')
         self.controller().activate_cards()
@@ -149,6 +156,7 @@ class MainWdgt(MainWidget):
     def review_(self):
         """Activate review mode."""
 
+        self.kill_menu_object()
         self.activate_mode('review')
 
     def sync_(self):
@@ -159,6 +167,7 @@ class MainWdgt(MainWidget):
     def about_(self):
         """Activate about mode."""
 
+        self.kill_menu_object()
         self.activate_mode('about')
 
     @staticmethod
