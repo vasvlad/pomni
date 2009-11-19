@@ -62,7 +62,7 @@ class MainWdgt(MainWidget):
         self.window.set_name('window')
         self.switcher = gtk.Notebook()
         self.switcher.set_show_border(False)
-        #self.switcher.set_show_tabs(False)
+        self.switcher.set_show_tabs(False)
         self.window.add(self.switcher)
 
         # fullscreen mode
@@ -119,6 +119,8 @@ class MainWdgt(MainWidget):
     def menu_(self, mode=None):
         """Activate menu."""
 
+        if mode is not None:
+            del self.widgets[mode]
         self.activate_mode('menu')
 
     def tags_(self):

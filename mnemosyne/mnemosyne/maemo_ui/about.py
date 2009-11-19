@@ -25,6 +25,7 @@ Hildon UI. About Widget.
 """
 
 import os
+import gtk
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -33,41 +34,89 @@ class AboutWidget(UiComponent):
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
-        w_tree = self.main_widget().w_tree
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ('about_to_main_menu', 'show_team_info', 'show_guide')]))
-        self.get_widget = w_tree.get_widget
-        self.conf = self.config()
-        self.renderer = self.component_manager.get_current('renderer')
-        if self.config()['last_about_page'] == 0:
-            self.show_team_info_cb(None)
-        else:
-            self.show_guide_cb(None)
+        # create widgets
+        toplevel_table = gtk.Table(rows=1, columns=2)
+        toolbar_container = gtk.Notebook()
+        toolbar_container.set_show_tabs(False)
+        toolbar_container.set_size_request(82, 480)
+        toolbar_container.set_name('tags_mode_toolbar_container')
+        toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+        menu_button = gtk.Button()
+        menu_button.set_size_request(80, 80)
+        menu_button.set_name('about_toolbar_main_menu_button')
+        menu_button.connect('clicked', self.about_to_main_menu_cb)
+        info_container = gtk.Notebook()
+        info_container.set_show_border(False)
+        info_container.set_show_tabs(False)
+        info_box = gtk.VBox()
+        hbutton_box = gtk.HButtonBox()
+        text_box = gtk.HBox()
+        logo_box = gtk.HBox()
+        label_left = gtk.Label()
+        label_left.set_use_markup(True)
+        label_left.set_markup("<span foreground='white' size='small'><b>" \
+            "Developers:</b></span>\n<span foreground='white' size='small'>" \
+            "Max Usachev |</span> <span foreground='#299BFC' size='small'>" \
+            "maxusachev@gmail.com</span>\n<span foreground='white' size=" \
+            "'small'>Ed Bartosh |</span> <span foreground='#299BFC' size=" \
+            "'small'>bartosh@gmail.com</span>\n<span foreground='white' " \
+            "size='small'>Vlad Vasiliev |</span> <span foreground='#299BFC' " \
+            "size='small'>vlad@gas.by</span>\n\n<span foreground='white' " \
+            "size='small'><b>Designer:</b>\n</span><span foreground='white' " \
+            "size='small'>Andrew Zhilin |</span> <span foreground='#299BFC' " \
+            "size='small'>drew.zhilin@gmail.com</span>\n\n<span foreground=" \
+            "'white' size='small'><b>Development team:</b></span>\n<span " \
+            "foreground='#299BFC' size='small'>pomni@googlegroups.com</span>")
+        label_right = gtk.Label()
+        label_right.set_use_markup(True)
+        label_right.set_markup("<span foreground='white' size='small'><b>" \
+            "Special Thanks To:</b></span>\n<span foreground='white' size=" \
+            "'small'>Peter Bienstman</span>\n<span foreground='#299BFC' size=" \
+            "'small'>Peter.Bienstman@ugent.be</span>\n<span foreground=" \
+            "'#299BFC' size='small'>http://www.mnemosyne-proj.org/</span>" \
+            "\n<span size='x-large'></span><span foreground='white' size=" \
+            "'small'>\nGSoC 2009</span>\n<span foreground='#299BFC' size='"\
+            "small'>http://socghop.appspot.com/</span>\n<span size='x-large'>" \
+            "</span><span foreground='white' size='small'>\nMaemo community" \
+            "</span>\n<span foreground='#299BFC' size='small'>" \
+            "http://maemo.org/</span>")
+        logo = gtk.Image()
+        logo.set_from_file(os.path.join(self.config()['theme_path'], \
+            "mnemosyne.png"))
+        program_label = gtk.Label()
+        program_label.set_justify(gtk.JUSTIFY_CENTER)
+        program_label.set_use_markup(True)
+        program_label.set_markup("<span foreground='white' size='large'><b>" \
+            "Mnemosyne for Maemo</b></span>\n<span foreground='white' size=" \
+            "'large'>version 2.0.0 beta5</span>")
+        # packing widgets
+        logo_box.pack_start(logo, expand=False, fill=False, padding=10)
+        logo_box.pack_end(program_label, expand=False, fill=False)
+        hbutton_box.pack_start(logo_box)
+        text_box.pack_start(label_left)
+        text_box.pack_end(label_right)
+        info_box.pack_start(hbutton_box, expand=False)
+        info_box.pack_end(text_box)
+        info_container.append_page(info_box)
+        toolbar_table.attach(menu_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
+            yoptions=gtk.EXPAND)
+        toolbar_container.append_page(toolbar_table)
+        toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
+            xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+        toplevel_table.attach(info_container, 1, 2, 0, 1, \
+            xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+            yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+        toplevel_table.show_all()
+        self.page = self.main_widget().switcher.append_page(toplevel_table)
 
-    def show_team_info_cb(self, widget):
-        """Show team info page."""
+    def activate(self):
+        """Set necessary switcher page."""
 
-        self.get_widget("about_mode_role_switcher").set_current_page(0)
-        self.get_widget("about_toolbar_team_button").set_active(True)
-        self.get_widget("about_mode_logo_image").set_from_file(\
-            os.path.join(self.conf['theme_path'], "mnemosyne.png"))
-
-    def show_guide_cb(self, widget):
-        """Show user guide page."""
-
-        #FIXME: load from html-file
-        self.renderer.render_html(self.get_widget("about_mode_guide_text"), \
-            """<html><style type="text/css">*{font-size:22px;font-family:\
-                Nokia Sans} body {background:#FFFFFF;color:#000000}</style> \
-                <body><b>Mnemosyne for Maemo user guide</b></body></html>""")
-        self.get_widget("about_mode_role_switcher").set_current_page(1)
-        self.get_widget("about_toolbar_guide_button").set_active(True)
-
+        self.main_widget().switcher.set_current_page(self.page)
+        
     def about_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
-        self.conf['last_about_page'] = self.get_widget(\
-            "about_mode_role_switcher").get_current_page()
-        self.conf.save()
-        self.main_widget().menu_()
+        self.main_widget().switcher.remove_page(self.page)
+        self.main_widget().menu_('about')
        
