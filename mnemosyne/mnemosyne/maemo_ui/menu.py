@@ -75,11 +75,12 @@ class MenuWidget(UiComponent):
         toplevel_table.attach(buttons_table, 0, 1, 1, 2, \
             xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
         toplevel_table.show_all()
-        self._main_widget.switcher.insert_page(toplevel_table, position=0)
+        self.page = self._main_widget.switcher.append_page(toplevel_table)
 
     def activate(self):
         """Activates necessary switcher page."""
-        self._main_widget.switcher.set_current_page(0)
+
+        self._main_widget.switcher.set_current_page(self.page)
 
     # callbacks
     def tags_cb(self, widget):

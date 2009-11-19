@@ -95,7 +95,7 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
             yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
             xpadding=30, ypadding=30)
         toplevel_table.show_all()
-        self.main_widget().switcher.insert_page(toplevel_table, position=2)
+        self.page = self.main_widget().switcher.append_page(toplevel_table)
         # creatig attributes
         self.tags_box = tags_box
         # connecting signals
@@ -104,7 +104,7 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
     def activate(self):
         """Activate 'ActivateCardsDialog'."""
 
-        self.main_widget().switcher.set_current_page(2)
+        self.main_widget().switcher.set_current_page(self.page)
         self.display_criterion(self.database().current_activity_criterion())
 
     def display_criterion(self, criterion):
@@ -134,5 +134,5 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
 
         self.database().set_current_activity_criterion(self.get_criterion())
         self.update_ui(self.review_controller())
-        self.main_widget().switcher.remove_page(2)
+        self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_()

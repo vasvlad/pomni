@@ -112,7 +112,7 @@ class ReviewWdgt(ReviewWidget):
             xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
             yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30)
         toplevel_table.show_all()
-        self.main_widget().switcher.insert_page(toplevel_table, position=1)
+        self.page = self.main_widget().switcher.append_page(toplevel_table)
         # create class attributes
         self.tts_button, self.edit_button, self.del_button = buttons[0], \
             buttons[1], buttons[3]
@@ -130,7 +130,9 @@ class ReviewWdgt(ReviewWidget):
         sound_button.connect('released', self.preview_sound_in_review_cb)
 
     def activate(self):
-        self.main_widget().switcher.set_current_page(1)
+        """Set necessary switcher page."""
+
+        self.main_widget().switcher.set_current_page(self.page)
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
