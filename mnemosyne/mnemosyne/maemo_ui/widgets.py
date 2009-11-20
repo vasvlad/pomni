@@ -35,11 +35,12 @@ class BaseHildonWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self.connections = []
         self.conf = self.config()
-        self.w_tree = self.main_widget().w_tree
-        self.get_widget = self.w_tree.get_widget
+        #self.w_tree = self.main_widget().w_tree
+        #self.w_tree = self.main_widget().w_tree
+        #self.get_widget = self.w_tree.get_widget
 
+    """
     def connect_signals(self, control):
-        """Connect signals to widgets and save connection info."""
 
         for wname, signal, callback in control:
             widget = self.get_widget(wname)
@@ -47,11 +48,12 @@ class BaseHildonWidget(UiComponent):
             self.connections.append((widget, cid))
 
     def disconnect_signals(self):
-        """Disconnect previously connected signals."""
 
         for widget, cid in self.connections:
             widget.disconnect(cid)
         self.connections = []
+
+    """
 
     def create_tag_checkbox(self, name, active):
         """Create Tag item - GtkHBox with gtk.ToggleButton and gtk.Label."""

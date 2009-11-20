@@ -140,9 +140,9 @@ class MainWdgt(MainWidget):
     def input_(self):
         """Activate input mode."""
        
+        self.kill_menu_object()
         if 'review' not in self.widgets:
             self.create_mode('review')
-        self.show_mode("input")
         self.controller().add_cards()
 
     def configure_(self):
