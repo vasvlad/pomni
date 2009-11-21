@@ -128,6 +128,8 @@ class ReviewWdgt(ReviewWidget):
         # connect signals
         answer_text.connect('button-press-event', self.get_answer_cb)
         sound_button.connect('released', self.preview_sound_in_review_cb)
+        # hide necessary widgets
+        sound_container.hide()
 
     def activate(self):
         """Set necessary switcher page."""
