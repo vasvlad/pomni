@@ -162,6 +162,7 @@ class MainWdgt(MainWidget):
     def sync_(self):
         """Activate sync mode."""
 
+        self.kill_menu_object()
         self.activate_mode('sync')
 
     def about_(self):
