@@ -49,43 +49,34 @@ class InputWidget(BaseHildonWidget):
     def __init__(self, component_manager):
 
         BaseHildonWidget.__init__(self, component_manager)
-        """
-        self.connect_signals([\
-            ("image_selection_dialog_button_select", "clicked", \
-                self.select_item_cb),
-            ("iconview_widget", "selection-changed", \
-                self.enable_select_button_cb),
-            ("image_selection_dialog_button_close", "clicked", \
-                self.close_media_selection_dialog_cb),
-            ("input_mode_snd_button", "released", \
-                self.preview_sound_in_input_cb),
-        """
+        self.default_tag_name = _("<default>")
+        self.content_type = None
+        self.last_input_page = None
+        self.fact = None
+        self.tag_mode = False
+        self.sounddir = None
+        self.imagedir = None
+        self.card_type = None
+        self.selected_tags = None
+        self.tags = sorted(self.database().get_tag_names(), \
+            cmp=numeric_string_cmp) or [self.default_tag_name]
+        self.added_new_cards = False
+
         # create widgets
+        create_button = self.create_button
         toplevel_table = gtk.Table(rows=1, columns=2)
-        toolbar_container = gtk.Notebook()
-        toolbar_container.set_show_tabs(False)
-        toolbar_container.set_size_request(82, 480)
-        toolbar_container.set_name('input_mode_toolbar_container')
+        toolbar_container = self.create_toolbar_container( \
+            'input_mode_toolbar_container')
         toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
-        card_type_button = gtk.Button()
-        card_type_button.set_size_request(80, 80)
-        card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
-        content_button = gtk.Button()
-        content_button.set_size_request(80, 80)
-        content_button.connect('clicked', self.show_content_dialog_cb)
-        add_card_button = gtk.Button()
-        add_card_button.set_size_request(80, 80)
-        add_card_button.set_name('input_mode_toolbar_add_card_w')
-        menu_button = gtk.Button()
-        menu_button.set_size_request(80, 80)
-        menu_button.set_name('input_mode_toolbar_button_back_w')
-        menu_button.connect('clicked', self.input_to_main_menu_cb)
+        card_type_button = create_button(None, self.show_cardtype_dialog_cb)
+        content_button = create_button(None, self.show_content_dialog_cb)
+        add_card_button = create_button('input_mode_toolbar_add_card_w')
+        menu_button = create_button('input_mode_toolbar_button_back_w', \
+            self.input_to_main_menu_cb)
         widgets_table = gtk.Table(rows=2, columns=1)
         widgets_table.set_row_spacings(14)
-        tags_button = gtk.Button()
-        tags_button.set_size_request(-1, 60)
-        tags_button.set_name('tags_button')
-        tags_button.connect('clicked', self.show_tags_dialog_cb)
+        tags_button = create_button('tags_button', self.show_tags_dialog_cb, \
+            width=-1, height=60)
         card_type_switcher = gtk.Notebook()
         card_type_switcher.set_show_tabs(False)
         card_type_switcher.set_show_border(False)
@@ -93,42 +84,49 @@ class InputWidget(BaseHildonWidget):
         sound_box = gtk.VBox()
         sound_box.set_homogeneous(True)
         sound_container = gtk.Table(rows=1, columns=3, homogeneous=True)
-        sound_button = gtk.Button()
+        sound_button = gtk.ToggleButton()
+        sound_button.set_name('input_mode_snd_button')
+        sound_button.connect('released', self.preview_sound_in_input_cb)
         question_container = gtk.Frame()
         question_container.set_name('input_mode_question_container')
         question_text = gtk.TextView()
         question_text.set_justification(gtk.JUSTIFY_CENTER)
-        question_text.connect('button_press_event', self.show_media_dialog_cb)
+        question_text.set_wrap_mode(gtk.WRAP_WORD)
+        question_text.connect('button_release_event', self.show_media_dialog_cb)
         answer_container = gtk.Frame()
         answer_container.set_name('input_mode_answer_container')
         answer_text = gtk.TextView()
         answer_text.set_justification(gtk.JUSTIFY_CENTER)
+        answer_text.set_wrap_mode(gtk.WRAP_WORD)
         three_sided_box = gtk.VBox(spacing=10)
         foreign_container = gtk.Frame()
         foreign_container.set_name('input_mode_foreign_container')
         foreign_text = gtk.TextView()
         foreign_text.set_justification(gtk.JUSTIFY_CENTER)
+        foreign_text.set_wrap_mode(gtk.WRAP_WORD)
         pronunciation_container = gtk.Frame()
         pronunciation_container.set_name('input_mode_pronun_container')
         pronunciation_text = gtk.TextView()
         pronunciation_text.set_justification(gtk.JUSTIFY_CENTER)
+        pronunciation_text.set_wrap_mode(gtk.WRAP_WORD)
         translation_container = gtk.Frame()
         translation_container.set_name('input_mode_translate_container')
         translation_text = gtk.TextView()
         translation_text.set_justification(gtk.JUSTIFY_CENTER)
+        translation_text.set_wrap_mode(gtk.WRAP_WORD)
         cloze_box = gtk.VBox()
         cloze_container = gtk.Frame()
         cloze_container.set_name('input_mode_cloze_container')
         cloze_text = gtk.TextView()
         cloze_text.set_justification(gtk.JUSTIFY_CENTER)
-        tags_layout = gtk.VBox(spacing=8)
-        new_tag_box = gtk.VBox()
+        cloze_text.set_wrap_mode(gtk.WRAP_WORD)
+        tags_layout = gtk.VBox(spacing=26)
+        new_tag_box = gtk.HBox()
         new_tag_label = gtk.Label()
         new_tag_label.set_text('New tag: ')
         new_tag_label.set_name('new_tag_label')
-        new_tag_button = gtk.Button()
-        new_tag_button.set_size_request(60, 60)
-        new_tag_button.connect('clicked', self.add_new_tag_cb)
+        new_tag_button = create_button('new_tag_button', self.add_new_tag_cb, \
+            width=60, height=60)
         new_tag_frame = gtk.Frame()
         new_tag_frame.set_name('new_tag_frame')
         new_tag_entry = gtk.Entry()
@@ -139,21 +137,13 @@ class InputWidget(BaseHildonWidget):
         tags_eventbox.set_visible_window(True)
         tags_eventbox.set_name('tags_eventbox')
         tags_scrolledwindow = gtk.ScrolledWindow()
+        tags_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, \
+            gtk.POLICY_AUTOMATIC)
         tags_scrolledwindow.set_name('tags_scrolledwindow')
         tags_viewport = gtk.Viewport()
         tags_viewport.set_name('tags_viewport')
         tags_box = gtk.VBox()
         tags_box.set_homogeneous(True)
-        # create button for ContentType dialog
-        text_content_button = gtk.Button()
-        text_content_button.set_size_request(72, 72)
-        text_content_button.connect('clicked', self.set_content_type_cb)
-        image_content_button = gtk.Button()
-        image_content_button.set_size_request(72, 72)
-        image_content_button.connect('clicked', self.set_content_type_cb)
-        sound_content_button = gtk.Button()
-        sound_content_button.set_size_request(72, 72)
-        sound_content_button.connect('clicked', self.set_content_type_cb)
         # packing widgets
         toolbar_table.attach(card_type_button, 0, 1, 0, 1, \
             xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
@@ -175,7 +165,7 @@ class InputWidget(BaseHildonWidget):
         card_type_switcher.append_page(two_sided_box)
         card_type_switcher.append_page(three_sided_box)
         card_type_switcher.append_page(cloze_box)
-        #card_type_switcher.append_page(tags_layout)
+        card_type_switcher.append_page(tags_layout)
         sound_container.attach(sound_button, 1, 2, 0, 1, \
             xoptions=gtk.EXPAND|gtk.FILL, \
             yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
@@ -196,7 +186,7 @@ class InputWidget(BaseHildonWidget):
         new_tag_frame.add(new_tag_entry)
         new_tag_box.pack_start(new_tag_label, expand=False, fill=False, \
             padding=10)
-        new_tag_box.pack_start(new_tag_frame, expand=False, fill=False, \
+        new_tag_box.pack_start(new_tag_frame, expand=True, fill=True, \
             padding=10)
         new_tag_box.pack_end(new_tag_button, expand=False, fill=False)
         tags_viewport.add(tags_box)
@@ -204,7 +194,7 @@ class InputWidget(BaseHildonWidget):
         tags_eventbox.add(tags_scrolledwindow)
         tags_frame.add(tags_eventbox)
         tags_layout.pack_start(new_tag_box, expand=False, fill=False)
-        tags_layout.pack_end(tags_frame, expand=False, fill=False)
+        tags_layout.pack_end(tags_frame, expand=True, fill=True)
         toplevel_table.attach(widgets_table, 1, 2, 0, 1, \
             xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30, \
             yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, ypadding=30)
@@ -212,27 +202,6 @@ class InputWidget(BaseHildonWidget):
         # hide necessary widgets
         sound_container.hide()
         self.page = self.main_widget().switcher.append_page(toplevel_table)
-        # create attributes
-        self.tags_button = tags_button
-        
-        self.default_tag_name = _("<default>")
-        self.content_type = None
-        self.last_input_page = None
-        self.fact = None
-        self.tag_mode = False
-        self.sounddir = None
-        self.imagedir = None
-        self.card_type = None
-        self.selected_tags = None
-        self.tags = sorted(self.database().get_tag_names(), \
-            cmp=numeric_string_cmp) or [self.default_tag_name]
-        self.added_new_cards = False
-        #liststore = [text, type, filename, dirname, pixbuf]
-        #self.liststore = gtk.ListStore(str, str, str, str, gtk.gdk.Pixbuf)
-        #iconview_widget = get_widget("iconview_widget")
-        #iconview_widget.set_model(self.liststore)
-        #iconview_widget.set_pixbuf_column(4)
-        #iconview_widget.set_text_column(0)
 
         # Widgets as attributes
         self.areas = {"cloze": cloze_text, "answer":  answer_text,
@@ -246,41 +215,40 @@ class InputWidget(BaseHildonWidget):
             area.modify_font(font)
 
         self.widgets = {# Other widgets
+            "TagsButton": tags_button,
+            "NewTagEntry": new_tag_entry,
+            "TagsBox": tags_box,
             "CardTypeButton": card_type_button,
             "ContentButton": content_button,
             "CardTypeSwitcher": card_type_switcher,
             "AddCardButton": add_card_button,
             "SoundContainer": sound_container,
-            "QuestionContainer": question_container}
+            "SoundButton": sound_button,
+            "QuestionContainer": question_container,
+            "ToolbarContainer": toolbar_container}
 
         # card_id: {"page": page_id, "selector": selector_widget, 
         # "widgets": [(field_name:text_area_widget)...]}
         self.selectors = {
             FrontToBack.id: {
-            "page": 0, 
-            "selector": None,
-            "widgets": [('q', self.areas["question"]), 
-                        ('a', self.areas["answer"])]
-            },
+                "page": 0, 
+                "selector": None,
+                "widgets": [('q', question_text), ('a', answer_text)]},
             BothWays.id: {
-            "page": 0,
-            "selector": None,
-            "widgets": [('q', self.areas["question"]), 
-                        ('a', self.areas["answer"])]
-            },
+                "page": 0,
+                "selector": None,
+                "widgets": [('q', question_text), ('a', answer_text)]},
             ThreeSided.id: {
-            "page": 1,
-            "selector": None,
-            "widgets": [('f', self.areas["foreign"]),
-                        ('t', self.areas["translation"]),
-                        ('p', self.areas["pronunciation"])]
-            },
+                "page": 1,
+                "selector": None,
+                "widgets": [('f', foreign_text), ('t', translation_text),
+                    ('p', pronunciation_text)]},
             Cloze.id: {
-            "page": 2,
-            "selector": None,
-            "widgets": [('text', self.areas["cloze"])]
-            }
+                "page": 2,
+                "selector": None,
+                "widgets": [('text', self.areas["cloze"])]}
         }
+
         # add card_type to selectors subdict
         for card_type in self.card_types():
             self.selectors[card_type.id]["card_type"] = card_type
@@ -325,7 +293,7 @@ class InputWidget(BaseHildonWidget):
     def update_tags(self):
         """Update active tags list."""
 
-        self.tags_button.set_label(', '.join( \
+        self.widgets["TagsButton"].set_label(', '.join( \
             [tag.strip() for tag in self.selected_tags.split(',') \
                 if tag.strip() in self.tags]) or self.default_tag_name)
 
@@ -369,18 +337,17 @@ class InputWidget(BaseHildonWidget):
     def update_indicator(self):
         """Set non active state for widget."""
 
-        self.get_widget("input_mode_snd_button").set_active(False)
+        self.widgets["SoundButton"].set_active(False)
 
     def hide_tags_dialog(self):
         """Close TagsDialog."""
 
         self.tag_mode = False
         selected_tags = ', '.join([hbox.get_children()[1].get_label() for \
-            hbox in self.get_widget("tags_box").get_children() if \
+            hbox in self.widgets["TagsBox"].get_children() if \
             hbox.get_children()[0].get_active()]) or self.default_tag_name
-        tags_button = self.get_widget("tags_button")
-        tags_button.set_label(selected_tags)
-        tags_button.show()
+        self.widgets["TagsButton"].set_label(selected_tags)
+        self.widgets["TagsButton"].show()
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
         for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
             self.widgets[widget].set_sensitive(True)
@@ -392,8 +359,8 @@ class InputWidget(BaseHildonWidget):
         """Show TagsDialog."""
 
         self.tag_mode = True
-        tags_box = self.get_widget("tags_box")
-        self.get_widget("tags_button").hide()
+        tags_box = self.widgets["TagsBox"]
+        self.widgets["TagsButton"].hide()
         self.last_input_page = self.widgets["CardTypeSwitcher"]. \
             get_current_page()
         self.widgets["CardTypeSwitcher"].set_current_page(3)
@@ -408,9 +375,9 @@ class InputWidget(BaseHildonWidget):
     def add_new_tag_cb(self, widget):
         """Create new tag."""
 
-        tag_entry = self.get_widget("new_tag_entry")
+        tag_entry = self.widgets["NewTagEntry"]
         tag = tag_entry.get_text()
-        tags_box = self.get_widget("tags_box")
+        tags_box = self.widgets["TagsBox"]
         if tag and not tag in self.tags:
             self.tags.append(tag)
             tag_widget = self.create_tag_checkbox(tag, True)
@@ -421,27 +388,20 @@ class InputWidget(BaseHildonWidget):
     def show_cardtype_dialog_cb(self, widget):
         """Open CardTypeDialog."""
 
-        front_to_back_cardtype_button = gtk.RadioButton(None)
-        front_to_back_cardtype_button.set_size_request(72, 72)
-        front_to_back_cardtype_button.set_name('front_to_back_cardtype_button')
-        front_to_back_cardtype_button.connect('released', self.set_card_type_cb)
-        self.selectors[FrontToBack.id]['selector'] = front_to_back_cardtype_button
-        both_ways_cardtype_button = gtk.RadioButton(front_to_back_cardtype_button)
-        both_ways_cardtype_button.set_size_request(72, 72)
-        both_ways_cardtype_button.set_name('both_ways_cardtype_button')
-        both_ways_cardtype_button.connect('released', self.set_card_type_cb)
-        self.selectors[BothWays.id]['selector'] = both_ways_cardtype_button
-        three_sided_cardtype_button = gtk.RadioButton(front_to_back_cardtype_button)
-        three_sided_cardtype_button.set_size_request(72, 72)
-        three_sided_cardtype_button.set_name('three_sided_cardtype_button')
-        three_sided_cardtype_button.connect('released', self.set_card_type_cb)
-        self.selectors[ThreeSided.id]['selector'] = three_sided_cardtype_button
-        cloze_cardtype_button = gtk.RadioButton(front_to_back_cardtype_button)
-        cloze_cardtype_button.set_size_request(72, 72)
-        cloze_cardtype_button.set_name('cloze_cardtype_button')
-        cloze_cardtype_button.connect('released', self.set_card_type_cb)
-        self.selectors[Cloze.id]['selector'] = cloze_cardtype_button
         self.main_widget().soundplayer.stop()
+        create_button = self.create_radio_button
+        button = create_button(None, 'front_to_back_cardtype_button', \
+            self.set_card_type_cb)
+        self.selectors[FrontToBack.id]['selector'] = button
+        button = create_button(button, 'both_ways_cardtype_button', \
+            self.set_card_type_cb)
+        self.selectors[BothWays.id]['selector'] = button
+        button = create_button(button, 'three_sided_cardtype_button', \
+            self.set_card_type_cb)
+        self.selectors[ThreeSided.id]['selector'] = button
+        button = create_button(button, 'cloze_cardtype_button', \
+            self.set_card_type_cb)
+        self.selectors[Cloze.id]['selector'] = button
         dialog = gtk.Dialog()
         dialog.set_decorated(False)
         dialog.set_has_separator(False)
@@ -455,26 +415,45 @@ class InputWidget(BaseHildonWidget):
             if self.card_type is selector['card_type']:
                 widget.set_active(True)
             buttons_table.attach(widget, index, index + 1, 0, 1, \
-                xoptions=gtk.EXPAND)
+                xoptions=gtk.EXPAND, xpadding=6)
             index += 1
         dialog.vbox.pack_start(buttons_table, expand=True, fill=False, \
             padding=12)
         buttons_table.show_all()
         dialog.run()
-        #dialog.destroy()
 
     def show_content_dialog_cb(self, widget):
         """Open ContentDialog."""
 
-        get_widget = self.get_widget
-        pos_x, pos_y = self.widgets["ContentButton"].window.get_origin()
-        get_widget("content_dialog").move(pos_x, pos_y + get_widget( \
-            "input_mode_toolbar_container").get_size_request()[1]/5)
-        state = self.card_type.id in (FrontToBack.id)
-        get_widget("sound_content_button").set_sensitive(state)
-        get_widget("image_content_button").set_sensitive(state)
-        get_widget("content_dialog").show()
         self.main_widget().soundplayer.stop()
+        create_button = self.create_button
+        text_content_button = create_button('text_content_button', \
+            self.set_content_type_cb, width=72, height=72)
+        image_content_button = create_button('image_content_button', \
+            self.set_content_type_cb, width=72, height=72)
+        sound_content_button = create_button('sound_content_button', \
+            self.set_content_type_cb, width=72, height=72)
+        dialog = gtk.Dialog()
+        dialog.set_decorated(False)
+        dialog.set_has_separator(False)
+        pos_x, pos_y = self.widgets["ContentButton"].window.get_origin()
+        dialog.move(pos_x, pos_y + \
+            self.widgets["ToolbarContainer"].get_size_request()[1]/5)
+        state = self.card_type.id in (FrontToBack.id)
+        sound_content_button.set_sensitive(state)
+        image_content_button.set_sensitive(state)
+        buttons_table = gtk.Table(rows=1, columns=3, homogeneous=True)
+        buttons_table.set_col_spacings(16)
+        buttons_table.attach(text_content_button, 0, 1, 0, 1, \
+                xoptions=gtk.EXPAND, xpadding=10)
+        buttons_table.attach(sound_content_button, 1, 2, 0, 1, \
+                xoptions=gtk.EXPAND, xpadding=10)
+        buttons_table.attach(image_content_button, 2, 3, 0, 1, \
+                xoptions=gtk.EXPAND, xpadding=10)
+        buttons_table.show_all()
+        dialog.vbox.pack_start(buttons_table, expand=True, fill=False, \
+            padding=8)
+        dialog.run()
 
     def set_card_type_cb(self, widget):
         """Sets current Card type and close CardTypesDialog."""
@@ -493,9 +472,9 @@ class InputWidget(BaseHildonWidget):
     def set_content_type_cb(self, widget):
         """Sets current content type and close ContentDialog."""
 
-        self.get_widget("content_dialog").hide()
+        widget.get_parent().get_parent().get_parent().destroy()
         self.set_content_type(widget.name)
-        self.get_widget("question_text_w").get_buffer().set_text("<QUESTION>")
+        self.areas['question'].get_buffer().set_text("<QUESTION>")
         self.show_snd_container()
 
     def show_media_dialog_cb(self, widget, event):
@@ -505,19 +484,56 @@ class InputWidget(BaseHildonWidget):
             if self.component_type == "add_cards_dialog":
                 widget.get_buffer().set_text("")
         else:
+            def enable_select_button_cb(widget, select_button):
+                """If user has select item - enable Select button."""
+                select_button.set_sensitive(True)
+
             ctype = self.content_type + 'dir'
             setattr(self, ctype, self.conf[ctype])
-            self.liststore.clear()
-            self.get_widget("image_selection_dialog_button_select"). \
-                set_sensitive(False)            
-            self.get_widget("media_selection_dialog").show()
+            #liststore = [text, type, filename, dirname, pixbuf]
+            liststore = gtk.ListStore(str, str, str, str, gtk.gdk.Pixbuf)
+            dialog = gtk.Dialog()
+            dialog.set_decorated(False)
+            dialog.set_has_separator(False)
+            dialog.resize(510, 420)
+            width, height = dialog.get_size()
+            dialog.move((gtk.gdk.screen_width() - width)/2, \
+                (gtk.gdk.screen_height() - height)/2)
+            iconview_widget = gtk.IconView()
+            iconview_widget.set_name('iconview_widget')
+            iconview_widget.set_model(liststore)
+            iconview_widget.set_pixbuf_column(4)
+            iconview_widget.set_text_column(0)
+            label = gtk.Label('Select media')
+            label.set_name('media_selection_dialog_label')
+            scrolledwindow_widget = gtk.ScrolledWindow()
+            scrolledwindow_widget.set_policy(gtk.POLICY_NEVER, \
+                gtk.POLICY_AUTOMATIC)
+            scrolledwindow_widget.set_name('scrolledwindow_widget')
+            scrolledwindow_widget.add(iconview_widget)
+            widgets_table = gtk.Table(rows=1, columns=1)
+            widgets_table.attach(scrolledwindow_widget, 0, 1, 0, 1, \
+                xpadding=12, ypadding=12)
+            dialog.vbox.pack_start(label, expand=False, fill=False, padding=5)
+            dialog.vbox.pack_start(widgets_table)
+            dialog.vbox.show_all()
+            select_button = dialog.add_button('Select', gtk.RESPONSE_OK)
+            select_button.set_size_request(232, 60)
+            select_button.set_sensitive(False)            
+            select_button.set_name('dialog_button')
+            iconview_widget.connect('selection-changed', \
+                enable_select_button_cb, select_button)
+            cancel_button = dialog.add_button('Cancel', gtk.RESPONSE_REJECT)
+            cancel_button.set_size_request(232, 60)
+            cancel_button.set_name('dialog_button')
+            dialog.action_area.set_layout(gtk.BUTTONBOX_SPREAD)
             if ctype == 'imagedir':
                 for fname in os.listdir(self.imagedir):
                     if os.path.isfile(os.path.join(self.imagedir, fname)):
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size( \
                             os.path.join(self.imagedir, fname), 100, 100)
-                        self.liststore.append(["", "img", fname, \
-                            self.imagedir, pixbuf])
+                        liststore.append(["", "img", fname, self.imagedir, \
+                            pixbuf])
             else:
                 self.main_widget().soundplayer.stop()
                 for fname in os.listdir(self.sounddir):
@@ -526,32 +542,22 @@ class InputWidget(BaseHildonWidget):
                             self.conf["theme_path"], "soundlogo.png")
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size( \
                             sound_logo_file, 100, 100)
-                        self.liststore.append([fname, "sound", fname, \
+                        liststore.append([fname, "sound", fname, \
                             self.sounddir, pixbuf])
-
-    def enable_select_button_cb(self, widget):
-        """If user has select item - enable Select button."""
-
-        self.get_widget("image_selection_dialog_button_select"). \
-            set_sensitive(True)
-            
-    def select_item_cb(self, widget):
-        """Set html-text with media path and type when user
-           select media filefrom media selection dialog."""
-
-        self.get_widget("media_selection_dialog").hide()
-        item_index = self.w_tree.get_widget("iconview_widget"). \
-            get_selected_items()[0]
-        item_type = self.liststore.get_value( \
-            self.liststore.get_iter(item_index), 1)
-        item_fname = self.liststore.get_value( \
-            self.liststore.get_iter(item_index), 2)
-        item_dirname = self.liststore.get_value( \
-            self.liststore.get_iter(item_index), 3)
-        question_text = """<%s src="%s">""" % \
-            (item_type, os.path.abspath(os.path.join(item_dirname, item_fname)))
-        self.areas["question"].get_buffer().set_text(question_text)
-        self.show_snd_container()
+            response = dialog.run()
+            if response == gtk.RESPONSE_OK:
+                item_index = iconview_widget.get_selected_items()[0]
+                item_type = liststore.get_value( \
+                    liststore.get_iter(item_index), 1)
+                item_fname = liststore.get_value( \
+                    liststore.get_iter(item_index), 2)
+                item_dirname = liststore.get_value( \
+                    liststore.get_iter(item_index), 3)
+                question_text = """<%s src="%s">""" % (item_type, \
+                    os.path.abspath(os.path.join(item_dirname, item_fname)))
+                self.areas["question"].get_buffer().set_text(question_text)
+                self.show_snd_container()
+            dialog.destroy()
 
     def preview_sound_in_input_cb(self, widget):
         """Listen sound in input mode."""
@@ -562,11 +568,6 @@ class InputWidget(BaseHildonWidget):
             self.main_widget().soundplayer.play(text, self)
         else:
             self.main_widget().soundplayer.stop()
-
-    def close_media_selection_dialog_cb(self, widget):
-        """Close MediaDialog."""
-
-        self.get_widget("media_selection_dialog").hide()
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
@@ -604,12 +605,10 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         InputWidget.__init__(self, component_manager)
         NonBlockingAddCardsDialog.__init__(self, component_manager)
         # connect signals
-        self.widgets['AddCardButton'].connect('button-press-event', \
-            self.add_card_cb),
+        self.widgets['AddCardButton'].connect('clicked', self.add_card_cb)
         for name in ('answer', 'foreign', 'pronunciation', 'translation', \
             'cloze'):
             self.areas[name].connect('button_press_event', self.clear_text_cb)
-        #FIXME: upstream exception?
         try:
             self.selected_tags = self.conf["tags_of_last_added"]
         except:
@@ -634,7 +633,7 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
 
         widget.get_buffer().set_text("")
 
-    def add_card_cb(self, widget, event):
+    def add_card_cb(self, widget):
         """Add card to database."""
 
         # check for empty fields
@@ -660,11 +659,10 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         if self.tag_mode:
             self.selected_tags = self.hide_tags_dialog()            
         else:
-            #self.disconnect_signals()
             #self.conf["tags_of_last_added"] = self.selected_tags
-            #self.conf["card_type_last_selected"] = self.card_type.id
-            #self.conf["content_type_last_selected"] = self.content_type
-            #self.conf.save()
+            self.conf["card_type_last_selected"] = self.card_type.id
+            self.conf["content_type_last_selected"] = self.content_type
+            self.conf.save()
             self.main_widget().soundplayer.stop()
             self.main_widget().switcher.remove_page(self.page)
             self.main_widget().menu_()
@@ -709,8 +707,7 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.selected_tags = self.database().cards_from_fact(fact)\
             [0].tag_string()
         self.allow_cancel = allow_cancel
-        self.connect_signals([("input_mode_toolbar_add_card_w", 
-            "button-press-event", self.update_card_cb)])
+        self.widgets['AddCardButton'].connect('clicked', self.update_card_cb)
 
     def activate(self):
         """Activate input mode."""
@@ -731,8 +728,9 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.set_widgets_data(self.fact)
         self.update_tags()
         self.show_snd_container()
+        self.main_widget().switcher.set_current_page(self.page)
 
-    def update_card_cb(self, widget, event):
+    def update_card_cb(self, widget):
         """Update card in the database."""
 
         try:
@@ -755,8 +753,8 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         if self.tag_mode:
             self.selected_tags = self.hide_tags_dialog()
         else:
-            self.disconnect_signals()
             self.main_widget().soundplayer.stop()
+            self.main_widget().switcher.remove_page(self.page)
             self.main_widget().review_()
 
 

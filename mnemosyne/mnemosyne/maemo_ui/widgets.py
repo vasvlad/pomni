@@ -54,6 +54,41 @@ class BaseHildonWidget(UiComponent):
         self.connections = []
 
     """
+    def create_button(self, name=None, callback=None, event='clicked', \
+        width=80, height=80, label=None):
+        """Creates gtkButton widget."""
+
+        button = gtk.Button()
+        button.set_size_request(width, height)
+        if name is not None:
+            button.set_name(name)
+        if callback is not None:
+            button.connect(event, callback)
+        if label is not None:
+            button.set_label(label)
+        return button
+
+    def create_radio_button(self, group=None, name=None, callback=None, \
+        event='released', width=72, height=72):
+        """Creates gtkRadioButton widget."""
+
+        button = gtk.RadioButton(group)
+        button.set_size_request(width, height)
+        if name is not None:
+            button.set_name(name)
+        if callback is not None:
+            button.connect(event, callback)
+        return button
+
+    def create_toolbar_container(self, name, show_tabs=False, width=82, \
+        height=480):
+        """Creates toolbar container."""
+
+        container = gtk.Notebook()
+        container.set_show_tabs(show_tabs)
+        container.set_size_request(width, height)
+        container.set_name(name)
+        return container
 
     def create_tag_checkbox(self, name, active):
         """Create Tag item - GtkHBox with gtk.ToggleButton and gtk.Label."""

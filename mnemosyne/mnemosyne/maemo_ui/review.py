@@ -241,7 +241,6 @@ class ReviewWdgt(ReviewWidget):
     def add_card_cb(self, widget):
         """Hook for add new card."""
 
-        self.main_widget().show_mode("input")
         self.controller().add_cards()
 
     def delete_card_cb(self, widget):
@@ -254,7 +253,6 @@ class ReviewWdgt(ReviewWidget):
         """Hook for edit card."""
 
         self.main_widget().soundplayer.stop()
-        self.main_widget().show_mode("input")
         self.controller().edit_current_card()
 
     def grade_cb(self, widget):
