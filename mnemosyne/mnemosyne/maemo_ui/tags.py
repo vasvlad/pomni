@@ -24,8 +24,7 @@
 Hildon UI: Tags widget.
 """
 
-import gtk
-from mnemosyne.maemo_ui.widgets import BaseHildonWidget
+from mnemosyne.maemo_ui.widgets import create_tags_ui, create_tag_checkbox
 from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
     DefaultCriterion
@@ -52,52 +51,14 @@ class NonBlockingActivateCardsDialog(ActivateCardsDialog):
         self.stopwatch().unpause()
 
 
-class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
+class TagsWidget(NonBlockingActivateCardsDialog):
     """Activate cards widget."""
     
     def __init__(self, component_manager):
         NonBlockingActivateCardsDialog.__init__(self, component_manager)
+        self.page, self.tags_box, menu_button = create_tags_ui( \
+            self.main_widget().switcher)
         self.tags_dict = {}
-        # create widgets
-        toplevel_table = gtk.Table(rows=1, columns=2)
-        toolbar_container = gtk.Notebook()
-        toolbar_container.set_show_tabs(False)
-        toolbar_container.set_size_request(82, 420)
-        toolbar_container.set_name('tags_mode_toolbar_container')
-        toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
-        menu_button = gtk.Button()
-        menu_button.set_size_request(80, 80)
-        menu_button.set_name('tags_mode_main_menu_button')
-        tags_frame = gtk.Frame()
-        tags_frame.set_name('tags_mode_tags_frame')
-        tags_eventbox = gtk.EventBox()
-        tags_eventbox.set_visible_window(True)
-        tags_eventbox.set_name('tags_mode_tags_eventbox')
-        tags_scrolledwindow = gtk.ScrolledWindow()
-        tags_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, \
-            gtk.POLICY_AUTOMATIC)
-        tags_scrolledwindow.set_name('tags_mode_tags_scrolledwindow')
-        tags_viewport = gtk.Viewport()
-        tags_viewport.set_name('tags_mode_tags_viewport')
-        tags_box = gtk.VBox()
-        # packing
-        tags_viewport.add(tags_box)
-        tags_scrolledwindow.add(tags_viewport)
-        tags_eventbox.add(tags_scrolledwindow)
-        tags_frame.add(tags_eventbox)
-        toolbar_table.attach(menu_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
-            yoptions=gtk.EXPAND)
-        toolbar_container.add(toolbar_table)
-        toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
-            xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-        toplevel_table.attach(tags_frame, 1, 2, 0, 1, \
-            xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-            yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-            xpadding=30, ypadding=30)
-        toplevel_table.show_all()
-        self.page = self.main_widget().switcher.append_page(toplevel_table)
-        # creatig attributes
-        self.tags_box = tags_box
         # connecting signals
         menu_button.connect('clicked', self.tags_to_main_menu_cb)
 
@@ -115,7 +76,7 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
             tags_box.remove(child)
         for tag in self.database().get_tags():
             self.tags_dict[tag.name] = tag._id
-            tags_box.pack_start(self.create_tag_checkbox( \
+            tags_box.pack_start(create_tag_checkbox( \
                 tag.name, tag._id in criterion.active_tag__ids))
 
     def get_criterion(self):
