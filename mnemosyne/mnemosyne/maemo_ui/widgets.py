@@ -25,7 +25,30 @@ Hildon UI. Different widgets.
 """
 
 import gtk
+import urllib
+import gtkhtml2
+import urlparse
 from mnemosyne.libmnemosyne.ui_component import UiComponent
+
+def create_gtkhtml():
+    """ Create gtkhtml2 widget """
+
+    def request_url(document, url, stream):
+        """Get content from url."""
+        uri = urlparse.urljoin("", url)
+        fpurl = self.htmlopener.open(uri)
+        stream.write(fpurl.read())
+        fpurl.close()
+        stream.close()
+
+    view = gtkhtml2.View()
+    document = gtkhtml2.Document()
+    document.connect('request_url', request_url)
+    view.set_document(document)
+    view.document = document
+    view.show()
+    return view
+
 
 
 def create_tags_ui(main_switcher):
@@ -72,6 +95,83 @@ def create_tags_ui(main_switcher):
     return main_switcher.append_page(toplevel_table), tags_box, menu_button
 
 
+
+def create_review_ui(main_switcher):
+    """Creates ReviewWidget UI."""
+
+    def create_button(name, width=80, height=80):
+        button = gtk.Button()
+        button.set_size_request(width, height)
+        button.set_name(name)
+        return button
+
+    toplevel_table = gtk.Table(rows=1, columns=3)
+    # create toolbar container   
+    toolbar_container = gtk.Notebook()
+    toolbar_container.set_show_tabs(False)
+    toolbar_container.set_size_request(82, 480)
+    toolbar_container.set_name('review_mode_toolbar_container')
+    # create grades container
+    grades_container = gtk.Notebook()
+    grades_container.set_show_tabs(False)
+    grades_container.set_size_request(82, 480)
+    grades_container.set_name('review_mode_grades_container')
+    toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+    grades_table = gtk.Table(rows=6, columns=1, homogeneous=True)
+    widgets_box = gtk.VBox(spacing=10)
+    question_box = gtk.VBox(homogeneous=True)
+    sound_container = gtk.Table(rows=1, columns=10, homogeneous=True)
+    sound_button = gtk.Button()
+    answer_container = gtk.Frame()
+    answer_container.set_name('answer_container')
+    question_container = gtk.Frame()
+    question_container.set_name('question_container')
+    answer_text = create_gtkhtml()
+    question_text = create_gtkhtml()
+    # create toolbar buttons
+    buttons = {}
+    buttons[0] = create_button('review_toolbar_tts_button')
+    buttons[1] = create_button('review_toolbar_edit_card_button')
+    buttons[2] = create_button('review_toolbar_add_card_button')
+    buttons[3] = create_button('review_toolbar_delete_card_button')
+    buttons[4] = create_button('review_toolbar_main_menu_button') 
+    # create grades buttons
+    grades = {}
+    for num in range(6):
+        grades[num] = create_button('grade%s' % num)
+    # packing toolbar buttons
+    for pos in buttons.keys():
+        toolbar_table.attach(buttons[pos], 0, 1, pos, pos + 1, \
+            xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toolbar_container.add(toolbar_table)
+    # packing grades buttons
+    for pos in grades.keys():
+        grades_table.attach(grades[pos], 0, 1, 5 - pos, 6 - pos, \
+            xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    grades_container.add(grades_table)
+    toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+    toplevel_table.attach(grades_container, 3, 4, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+    question_container.add(question_text)
+    answer_container.add(answer_text)
+    sound_container.attach(sound_button, 3, 7, 0, 1, \
+        xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, \
+        yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+    question_box.pack_start(sound_container)
+    question_box.pack_end(question_container)
+    widgets_box.pack_start(question_box)
+    widgets_box.pack_end(answer_container)
+    toplevel_table.attach(widgets_box, 2, 3, 0, 1, ypadding=30,
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30)
+    toplevel_table.show_all()
+    # hide necessary widgets
+    sound_container.hide()
+    return main_switcher.append_page(toplevel_table), buttons[0], buttons[1], \
+        buttons[3], question_container, answer_container, question_text, \
+        answer_text, sound_container, sound_button, grades_table, \
+        grades.values(), buttons.values()
 
 
 

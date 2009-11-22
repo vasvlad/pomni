@@ -24,8 +24,8 @@
 Hildon UI. Review widgets.
 """
 
-import gtk
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
+from mnemosyne.maemo_ui.widgets import create_review_ui
 from mnemosyne.maemo_ui import tts
 
 LARGE_CONTAINER_HEIGHT = 260
@@ -40,96 +40,24 @@ class ReviewWdgt(ReviewWidget):
         self.sndtext = None
         self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
-
-        def create_button(name, callback, event='clicked', width=80, height=80):
-            button = gtk.Button()
-            button.set_size_request(width, height)
-            button.set_name(name)
-            button.connect(event, callback)
-            return button
-
-        # create widgets
-        toplevel_table = gtk.Table(rows=1, columns=3)
-        toolbar_container = gtk.Notebook()
-        toolbar_container.set_show_tabs(False)
-        toolbar_container.set_size_request(82, 480)
-        toolbar_container.set_name('review_mode_toolbar_container')
-        grades_container = gtk.Notebook()
-        grades_container.set_show_tabs(False)
-        grades_container.set_size_request(82, 480)
-        grades_container.set_name('review_mode_grades_container')
-        toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
-        grades_table = gtk.Table(rows=6, columns=1, homogeneous=True)
-        widgets_box = gtk.VBox(spacing=10)
-        question_box = gtk.VBox(homogeneous=True)
-        sound_container = gtk.Table(rows=1, columns=10, homogeneous=True)
-        sound_button = gtk.Button()
-        answer_container = gtk.Frame()
-        answer_container.set_name('answer_container')
-        question_container = gtk.Frame()
-        question_container.set_name('question_container')
-        answer_text = self.main_widget().create_gtkhtml()
-        question_text = self.main_widget().create_gtkhtml()
-        # create toolbar buttons
-        buttons = {}
-        buttons[0] = create_button('review_toolbar_tts_button', self.speak_cb)
-        buttons[1] = create_button('review_toolbar_edit_card_button', \
-            self.edit_card_cb)
-        buttons[2] = create_button('review_toolbar_add_card_button', \
-            self.add_card_cb)
-        buttons[3] = create_button('review_toolbar_delete_card_button', \
-            self.delete_card_cb)
-        buttons[4] = create_button('review_toolbar_main_menu_button', \
-           self.review_to_main_menu_cb) 
-        # create grades buttons
-        grades = {}
-        for num in range(6):
-            grades[num] = create_button('grade%s' % num, self.grade_cb)
-        # packing toolbar buttons
-        for pos in buttons.keys():
-            toolbar_table.attach(buttons[pos], 0, 1, pos, pos + 1, \
-                xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
-        toolbar_container.add(toolbar_table)
-        # packing grades buttons
-        for pos in grades.keys():
-            grades_table.attach(grades[pos], 0, 1, 5 - pos, 6 - pos, \
-                xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
-        grades_container.add(grades_table)
-        toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
-            xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-        toplevel_table.attach(grades_container, 3, 4, 0, 1, \
-            xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-        question_container.add(question_text)
-        answer_container.add(answer_text)
-        sound_container.attach(sound_button, 3, 7, 0, 1, \
-            xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, \
-            yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-        question_box.pack_start(sound_container)
-        question_box.pack_end(question_container)
-        widgets_box.pack_start(question_box)
-        widgets_box.pack_end(answer_container)
-        toplevel_table.attach(widgets_box, 2, 3, 0, 1, ypadding=30,
-            xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-            yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30)
-        toplevel_table.show_all()
-        self.page = self.main_widget().switcher.append_page(toplevel_table)
-        # create class attributes
-        self.tts_button, self.edit_button, self.del_button = buttons[0], \
-            buttons[1], buttons[3]
+        self.page, self.tts_button, self.edit_button, self.del_button, \
+            self.question_container, self.answer_container, \
+            self.question_text, self.answer_text, self.sound_container, \
+            self.sound_button, self.grades_table, grades, toolbar_buttons = \
+            create_review_ui(self.main_widget().switcher)            
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
-        self.question_container, self.answer_container = question_container, \
-            answer_container
-        self.question_text, self.answer_text = question_text, answer_text
-        self.container_width = question_text.window.get_geometry()[2]
-        self.sound_container = sound_container
-        self.sound_button = sound_button
-        self.grades_table = grades_table
+        self.container_width = self.question_text.window.get_geometry()[2]
         # connect signals
-        answer_text.connect('button-press-event', self.get_answer_cb)
-        sound_button.connect('released', self.preview_sound_in_review_cb)
-        # hide necessary widgets
-        sound_container.hide()
+        self.answer_text.connect('button-press-event', self.get_answer_cb)
+        self.sound_button.connect('released', self.preview_sound_in_review_cb)
+        for grade_button in grades:
+            grade_button.connect('clicked', self.grade_cb)
+        toolbar_buttons[0].connect('clicked', self.speak_cb)
+        toolbar_buttons[1].connect('clicked', self.edit_card_cb)
+        toolbar_buttons[2].connect('clicked', self.add_card_cb)
+        toolbar_buttons[3].connect('clicked', self.delete_card_cb)
+        toolbar_buttons[4].connect('clicked', self.review_to_main_menu_cb)
 
     def activate(self):
         """Set necessary switcher page."""
