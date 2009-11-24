@@ -203,7 +203,7 @@ class MainWdgt(MainWidget):
         button_ok.set_name('dialog_button')
         label = gtk.Label()
         label.set_justify(gtk.JUSTIFY_CENTER)
-        label.set_name('information_dialog_label')
+        label.set_name('dialog_label')
         label.set_text('\n   ' + message.replace('.', '.   \n').replace( \
             ',', ',\n') + '\n')
         label.show()
@@ -230,7 +230,7 @@ class MainWdgt(MainWidget):
         button_no.set_size_request(120, 80)
         button_no.set_name('dialog_button')
         label = gtk.Label()
-        label.set_name('question_dialog_label')
+        label.set_name('dialog_label')
         label.set_text('\n' + question.replace('?', '?\n').replace(',', ',\n') \
             + '\n')
         label.show()
