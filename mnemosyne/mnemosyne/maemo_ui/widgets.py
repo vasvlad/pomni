@@ -404,7 +404,6 @@ def create_configuration_ui(main_switcher):
     sounddir_container = gtk.Frame()
     sounddir_container.set_name('config_mode_sounddir_container')
     sounddir_entry = gtk.Entry()
-    #sounddir_entry.connect('changed', self.save_sounddir_value)
     sounddir_entry.set_name('config_mode_entry_sounddir')
     imagedir_box = gtk.VBox()
     imagedir_box.set_spacing(1)
@@ -414,14 +413,12 @@ def create_configuration_ui(main_switcher):
     imagedir_container = gtk.Frame()
     imagedir_container.set_name('config_mode_imagedir_container')
     imagedir_entry = gtk.Entry()
-    #imagedir_entry.connect('changed', self.save_imagedir_value)
     imagedir_entry.set_name('config_mode_entry_imagedir')
     checkboxes_box = gtk.VBox(homogeneous=True)
     checkboxes_box.set_spacing(12)
     fullscreen_table = gtk.Table(rows=1, columns=2)
     fullscreen_table.set_col_spacings(10)
     fullscreen_checkbox = gtk.ToggleButton()
-    #fullscreen_checkbox.connect('toggled', self.change_fullscreen_cb)
     fullscreen_checkbox.set_size_request(64, 64)
     fullscreen_checkbox.set_name('checkbox_fullscreen_mode')
     fullscreen_label = gtk.Label('Start in Fullscreen mode')
@@ -429,8 +426,6 @@ def create_configuration_ui(main_switcher):
     start_with_review_table = gtk.Table(rows=1, columns=2)
     start_with_review_table.set_col_spacings(10)
     start_with_review_checkbox = gtk.ToggleButton()
-    #start_with_review_checkbox.connect('toggled', \
-    #    self.change_startup_with_review_cb)
     start_with_review_checkbox.set_size_request(64, 64)
     start_with_review_checkbox.set_name('checkbox_start_in_review_mode')
     start_with_review_label = gtk.Label('Open Review mode at startup')
@@ -478,7 +473,6 @@ def create_configuration_ui(main_switcher):
     tts_speed_scrollbar.set_adjustment(gtk.Adjustment(lower=30, upper=200))
     tts_speed_scrollbar.set_increments(step=1, page=10)
     tts_speed_scrollbar.set_update_policy(gtk.UPDATE_CONTINUOUS)
-    #tts_speed_scrollbar.connect('value-changed', self.change_speed_cb)
     tts_speed_scrollbar.set_name('config_mode_tts_speed_scrollbar')
     tts_pitch_box = gtk.VBox()
     tts_pitch_box.set_spacing(10)
@@ -489,7 +483,6 @@ def create_configuration_ui(main_switcher):
     tts_pitch_scrollbar.set_update_policy(gtk.UPDATE_CONTINUOUS)
     tts_pitch_scrollbar.set_adjustment(gtk.Adjustment(lower=0, upper=100))
     tts_pitch_scrollbar.set_increments(step=1, page=10)
-    #tts_pitch_scrollbar.connect('value-changed', self.change_pitch_cb)
     tts_pitch_scrollbar.set_name('config_mode_tts_pitch_scrollbar')
     # packing widgets
     toolbar_table.attach(general_settings_button, 0, 1, 0, 1, \
@@ -598,6 +591,203 @@ def create_configuration_ui(main_switcher):
         tts_lang_prev_button, tts_lang_next_button, menu_button, \
         font_size_decrease_button, font_size_increase_button, \
         tts_voice_prev_button, tts_voice_next_button
+
+
+def create_sync_ui(main_switcher):
+    """Creates SyncWidget UI."""
+
+    toplevel_table = gtk.Table(rows=1, columns=2)
+    toolbar_container = gtk.Notebook()
+    toolbar_container.set_show_tabs(False)
+    toolbar_container.set_size_request(82, 480)
+    toolbar_container.set_name('sync_mode_toolbar_container')
+    toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+    client_mode_button = gtk.ToggleButton()
+    client_mode_button.set_size_request(80, 80)
+    client_mode_button.set_name('sync_toolbar_client_mode_button')
+    server_mode_button = gtk.ToggleButton()
+    server_mode_button.set_size_request(80, 80)
+    server_mode_button.set_name('sync_toolbar_server_mode_button')
+    menu_button = create_button('sync_toolbar_main_menu_button')
+    role_switcher = gtk.Notebook()
+    role_switcher.set_show_tabs(False)
+    role_switcher.set_show_border(False)
+    information_label = gtk.Label('This mode allows you to sync your ' \
+        'database with another copy of Mnemosyne program. You can use it' \
+        'as Server or Client.')
+    information_label.set_line_wrap(True)
+    information_label.set_justify(gtk.JUSTIFY_CENTER)
+    information_label.set_name('sync_mode_information_label')
+    client_table = gtk.Table(rows=2, columns=1)
+    server_table = gtk.Table(rows=2, columns=1)
+    client_start_button = gtk.ToggleButton()
+    client_start_button.set_size_request(72, 72)
+    client_start_button.set_name('sync_mode_client_start_button')
+    server_start_button = gtk.ToggleButton()
+    server_start_button.set_size_request(72, 72)
+    server_start_button.set_name('sync_mode_server_start_button')
+    client_box = gtk.VBox()
+    client_params_table = gtk.Table(rows=4, columns=2)
+    client_params_table.set_row_spacings(10)
+    client_params_table.set_col_spacings(10)
+    client_status_table = gtk.VBox()
+    client_status_label = gtk.Label()
+    client_status_label.set_name('sync_mode_client_status_label')
+    client_progressbar = gtk.ProgressBar()
+    client_progressbar.set_name('sync_mode_client_progressbar')
+    client_login_label = gtk.Label('Login:')
+    client_login_label.set_name('sync_mode_client_login_label')
+    client_passwd_label = gtk.Label('Password:')
+    client_passwd_label.set_name('sync_mode_client_passwd_label')
+    client_address_label = gtk.Label('Server address:')
+    client_address_label.set_name('sync_mode_client_address_label')
+    client_port_label = gtk.Label('Server port:')
+    client_port_label.set_name('sync_mode_client_port_label')
+    client_login_entry_container = gtk.Frame()
+    client_login_entry_container.set_name( \
+        'sync_mode_client_login_entry_container')
+    client_passwd_entry_container = gtk.Frame()
+    client_passwd_entry_container.set_name( \
+        'sync_mode_client_passwd_entry_container')
+    client_address_entry_container = gtk.Frame()
+    client_address_entry_container.set_name( \
+        'sync_mode_client_address_entry_container')
+    client_port_entry_container = gtk.Frame()
+    client_port_entry_container.set_name( \
+        'sync_mode_client_port_entry_container')
+    client_login_entry = gtk.Entry()
+    client_login_entry.set_name('sync_mode_client_login_entry')
+    client_passwd_entry = gtk.Entry()
+    client_passwd_entry.set_name('sync_mode_client_passwd_entry')
+    client_address_entry = gtk.Entry()
+    client_address_entry.set_name('sync_mode_client_address_entry')
+    client_port_entry = gtk.Entry()
+    client_port_entry.set_name('sync_mode_client_port_entry')
+    server_box = gtk.VBox()
+    server_params_table = gtk.Table(rows=4, columns=2)
+    server_params_table.set_row_spacings(10)
+    server_params_table.set_col_spacings(10)
+    server_status_table = gtk.VBox()
+    server_status_label = gtk.Label()
+    server_status_label.set_name('sync_mode_server_status_label')
+    server_progressbar = gtk.ProgressBar()
+    server_progressbar.set_name('sync_mode_server_progressbar')
+    server_login_label = gtk.Label('Login:')
+    server_login_label.set_name('sync_mode_server_login_label')
+    server_passwd_label = gtk.Label('Password:')
+    server_passwd_label.set_name('sync_mode_server_passwd_label')
+    server_address_label = gtk.Label('IP address:')
+    server_address_label.set_name('sync_mode_server_address_label')
+    server_port_label = gtk.Label('Port:')
+    server_port_label.set_name('sync_mode_server_port_label')
+    server_login_entry_container = gtk.Frame()
+    server_login_entry_container.set_name( \
+        'sync_mode_server_login_entry_container')
+    server_passwd_entry_container = gtk.Frame()
+    server_passwd_entry_container.set_name( \
+        'sync_mode_server_passwd_entry_container')
+    server_address_entry_container = gtk.Frame()
+    server_address_entry_container.set_name( \
+        'sync_mode_server_address_entry_container')
+    server_port_entry_container = gtk.Frame()
+    server_port_entry_container.set_name( \
+        'sync_mode_server_port_entry_container')
+    server_login_entry = gtk.Entry()
+    server_login_entry.set_name('sync_mode_server_login_entry')
+    server_passwd_entry = gtk.Entry()
+    server_passwd_entry.set_name('sync_mode_server_passwd_entry')
+    server_address_entry = gtk.Entry()
+    server_address_entry.set_name('sync_mode_server_address_entry')
+    server_port_entry = gtk.Entry()
+    server_port_entry.set_name('sync_mode_server_port_entry')
+    # packing widgets
+    toolbar_table.attach(client_mode_button, 0, 1, 0, 1, \
+        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toolbar_table.attach(server_mode_button, 0, 1, 1, 2, \
+        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toolbar_table.attach(menu_button, 0, 1, 4, 5, \
+        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toolbar_container.add(toolbar_table)
+    toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+    role_switcher.append_page(information_label)
+    client_login_entry_container.add(client_login_entry)
+    client_passwd_entry_container.add(client_passwd_entry)
+    client_address_entry_container.add(client_address_entry)
+    client_port_entry_container.add(client_port_entry)
+    client_params_table.attach(client_login_label, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    client_params_table.attach(client_login_entry_container, 1, 2, 0, 1, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    client_params_table.attach(client_passwd_label, 0, 1, 1, 2, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    client_params_table.attach(client_passwd_entry_container, 1, 2, 1, 2, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    client_params_table.attach(client_address_label, 0, 1, 2, 3, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    client_params_table.attach(client_address_entry_container, 1, 2, 2, 3, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    client_params_table.attach(client_port_label, 0, 1, 3, 4, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    client_params_table.attach(client_port_entry_container, 1, 2, 3, 4, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    client_status_table.pack_start(client_status_label, expand=False, \
+        fill=False)
+    client_status_table.pack_end(client_progressbar, expand=False, \
+        fill=False)
+    client_box.pack_start(client_params_table, expand=False, fill=True)
+    client_box.pack_end(client_status_table, expand=True, fill=True)
+    client_table.attach(client_start_button, 0, 1, 1, 2, \
+        xoptions=gtk.EXPAND, yoptions=gtk.SHRINK, ypadding=4)
+    client_table.attach(client_box, 0, 1, 0, 1, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    role_switcher.append_page(client_table)
+    server_login_entry_container.add(server_login_entry)
+    server_passwd_entry_container.add(server_passwd_entry)
+    server_address_entry_container.add(server_address_entry)
+    server_port_entry_container.add(server_port_entry)
+    server_params_table.attach(server_login_label, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    server_params_table.attach(server_login_entry_container, 1, 2, 0, 1, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    server_params_table.attach(server_passwd_label, 0, 1, 1, 2, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    server_params_table.attach(server_passwd_entry_container, 1, 2, 1, 2, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    server_params_table.attach(server_address_label, 0, 1, 2, 3, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    server_params_table.attach(server_address_entry_container, 1, 2, 2, 3, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    server_params_table.attach(server_port_label, 0, 1, 3, 4, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
+    server_params_table.attach(server_port_entry_container, 1, 2, 3, 4, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    server_status_table.pack_start(server_status_label, expand=False, \
+        fill=False)
+    server_status_table.pack_end(server_progressbar, expand=False, \
+        fill=False)
+    server_box.pack_start(server_params_table, expand=False, fill=True)
+    server_box.pack_end(server_status_table, expand=True, fill=True)
+    server_table.attach(server_start_button, 0, 1, 1, 2, \
+        xoptions=gtk.EXPAND, yoptions=gtk.SHRINK, ypadding=4)
+    server_table.attach(server_box, 0, 1, 0, 1, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL)
+    role_switcher.append_page(server_table)
+    toplevel_table.attach(role_switcher, 1, 2, 0, 1, xpadding=14, \
+        ypadding=14, xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, \
+        yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
+    toplevel_table.show_all()
+    # hide necessary widgets
+    client_status_table.hide()
+    server_status_table.hide()
+    return main_switcher.append_page(toplevel_table), client_progressbar, \
+        server_progressbar, client_start_button, server_start_button, \
+        role_switcher, client_mode_button, server_mode_button, \
+        client_status_label, server_status_label, client_login_entry, \
+        client_passwd_entry, client_address_entry, client_port_entry, \
+        server_login_entry, server_passwd_entry, server_address_entry, \
+        server_port_entry, menu_button, client_params_table, \
+        server_params_table
 
 
 def create_about_ui(main_switcher, image_name):
