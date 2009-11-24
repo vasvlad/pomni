@@ -51,6 +51,50 @@ def create_gtkhtml():
     return view
 
 
+def create_menu_ui(main_switcher):
+    """Creates MenuWidget UI."""
+
+    toplevel_table = gtk.Table(rows=2, columns=1)
+    app_name_label = gtk.Label('Mnemosyne for Maemo')
+    app_name_label.set_name('program_name_label')
+    buttons_table = gtk.Table(rows=2, columns=1)
+    buttons_table.set_row_spacings(14)
+    row1 = gtk.Table(rows=1, columns=6)
+    row1.set_col_spacings(14)
+    row2 = gtk.Table(rows=1, columns=5)
+    row2.set_col_spacings(14)
+    buttons = {}
+    for button_name in ('tags', 'review', 'input', 'settings', 'sync', \
+        'about', 'exit'):
+        button = gtk.Button()
+        button.set_size_request(110, 155)
+        button.set_name('menu_button_%s' % button_name)
+        button_table = gtk.Table(rows=4, columns=1, homogeneous=True)
+        button_label = gtk.Label(button_name.capitalize())
+        button_label.set_name('menu_label_%s' % button_name)
+        button_table.attach(button_label, 0, 1, 3, 4)
+        button.add(button_table)
+        buttons[button_name] = button
+    # packing
+    row1.attach(buttons['tags'], 1, 2, 0, 1)
+    row1.attach(buttons['review'], 2, 3, 0, 1)
+    row1.attach(buttons['input'], 3, 4, 0, 1)
+    row1.attach(buttons['settings'], 4, 5, 0, 1)
+    row2.attach(buttons['sync'], 1, 2, 0, 1)
+    row2.attach(buttons['about'], 2, 3, 0, 1)
+    row2.attach(buttons['exit'], 3, 4, 0, 1)
+    buttons_table.attach(row1, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
+        yoptions=gtk.EXPAND)
+    buttons_table.attach(row2, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
+        yoptions=gtk.EXPAND)
+    toplevel_table.attach(app_name_label, 0, 1, 0, 1, \
+        yoptions=gtk.SHRINK, ypadding=10)
+    toplevel_table.attach(buttons_table, 0, 1, 1, 2, \
+        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toplevel_table.show_all()
+    return main_switcher.append_page(toplevel_table), buttons
+
+
 def create_tags_ui(main_switcher):
     """Creates TagsWidget UI."""
 
