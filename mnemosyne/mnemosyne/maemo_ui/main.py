@@ -26,9 +26,6 @@ Main Widget.
 
 import os
 import gtk
-import urllib
-import gtkhtml2
-import urlparse
 
 from mnemosyne.maemo_ui.sound import SoundPlayer
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
@@ -45,7 +42,6 @@ class MainWdgt(MainWidget):
             self.question_dialog_label = self.information_dialog = \
             self.information_dialog_label  = self.theme = \
             self.fullscreen = None
-        self.htmlopener = urllib.FancyURLopener()
         self.widgets = {}
         self.soundplayer = SoundPlayer()
 
@@ -194,26 +190,6 @@ class MainWdgt(MainWidget):
 
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
-
-    # ui helpers
-    def create_gtkhtml(self):
-        """ Create gtkhtml2 widget """
-
-        def request_url(document, url, stream):
-            """Get content from url."""
-            uri = urlparse.urljoin("", url)
-            fpurl = self.htmlopener.open(uri)
-            stream.write(fpurl.read())
-            fpurl.close()
-            stream.close()
-
-        view = gtkhtml2.View()
-        document = gtkhtml2.Document()
-        document.connect('request_url', request_url)
-        view.set_document(document)
-        view.document = document
-        view.show()
-        return view
 
     # Main Widget API
     def information_box(self, message):

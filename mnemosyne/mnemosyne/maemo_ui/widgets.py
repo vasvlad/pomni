@@ -25,8 +25,8 @@ Hildon UI. Different widgets.
 """
 
 import gtk
-import urllib
 import gtkhtml2
+import urllib
 import urlparse
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
@@ -37,7 +37,7 @@ def create_gtkhtml():
     def request_url(document, url, stream):
         """Get content from url."""
         uri = urlparse.urljoin("", url)
-        fpurl = self.htmlopener.open(uri)
+        fpurl = urllib.FancyURLopener().open(uri)
         stream.write(fpurl.read())
         fpurl.close()
         stream.close()
