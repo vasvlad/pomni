@@ -42,7 +42,7 @@ class MenuWidget(UiComponent):
         buttons['review'].connect('clicked', self.review_cb)
         buttons['input'].connect('clicked', self.input_cb)
         buttons['settings'].connect('clicked', self.settings_cb)
-        buttons['sync'].connect('clicked', self.sync_cb)
+        #buttons['sync'].connect('clicked', self.sync_cb)
         buttons['about'].connect('clicked', self.about_cb)
         buttons['exit'].connect('clicked', self.exit_cb)
 
