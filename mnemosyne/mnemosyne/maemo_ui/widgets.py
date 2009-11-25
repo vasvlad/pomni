@@ -895,7 +895,7 @@ def create_media_dialog_ui():
     iconview_widget.set_pixbuf_column(4)
     iconview_widget.set_text_column(0)
     label = gtk.Label('Select media')
-    label.set_name('media_selection_dialog_label')
+    label.set_name('white_label')
     scrolledwindow_widget = gtk.ScrolledWindow()
     scrolledwindow_widget.set_policy(gtk.POLICY_NEVER, \
         gtk.POLICY_AUTOMATIC)
@@ -903,8 +903,8 @@ def create_media_dialog_ui():
     scrolledwindow_widget.add(iconview_widget)
     widgets_table = gtk.Table(rows=1, columns=1)
     widgets_table.attach(scrolledwindow_widget, 0, 1, 0, 1, \
-        xpadding=12, ypadding=12)
-    dialog.vbox.pack_start(label, expand=False, fill=False, padding=5)
+        xpadding=14, ypadding=14)
+    dialog.vbox.pack_start(label, expand=False, fill=False, padding=4)
     dialog.vbox.pack_start(widgets_table)
     dialog.vbox.show_all()
     select_button = dialog.add_button('Select', gtk.RESPONSE_OK)
@@ -917,6 +917,7 @@ def create_media_dialog_ui():
     cancel_button.set_size_request(232, 60)
     cancel_button.set_name('dialog_button')
     dialog.action_area.set_layout(gtk.BUTTONBOX_SPREAD)
+    dialog.action_area.set_homogeneous(True)
     return dialog, liststore, iconview_widget
 
 
