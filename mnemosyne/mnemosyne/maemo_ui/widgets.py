@@ -21,14 +21,13 @@
 #
 
 """
-Hildon UI. Different widgets.
+Hildon UI. UI factory.
 """
 
 import gtk
 import gtkhtml2
 import urllib
 import urlparse
-from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
 def create_gtkhtml():
@@ -49,6 +48,19 @@ def create_gtkhtml():
     view.document = document
     view.show()
     return view
+
+
+def create_main_ui():
+    """Creates MainWidget UI."""
+
+    window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+    window.resize(800, 480)
+    window.set_name('window')
+    switcher = gtk.Notebook()
+    switcher.set_show_border(False)
+    switcher.set_show_tabs(False)
+    window.add(switcher)
+    return window, switcher
 
 
 def create_menu_ui(main_switcher):
@@ -975,32 +987,52 @@ def create_content_dialog_ui(callback, content_button, toolbar_container, \
     dialog.run()
 
 
-class BaseHildonWidget(UiComponent):
-    """Base widget."""
+def create_question_dialog(window, text):
+    """Create QuestionDialog UI."""
 
-    def __init__(self, component_manager):
-        UiComponent.__init__(self, component_manager)
-        self.connections = []
-        self.conf = self.config()
-        #self.w_tree = self.main_widget().w_tree
-        #self.w_tree = self.main_widget().w_tree
-        #self.get_widget = self.w_tree.get_widget
+    dialog = gtk.Dialog(parent=window, flags=gtk.DIALOG_MODAL|\
+            gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
+    dialog.set_decorated(False)
+    button_yes = dialog.add_button('YES', gtk.RESPONSE_YES)
+    button_yes.set_size_request(120, 80)
+    button_yes.set_name('dialog_button')
+    button_no = dialog.add_button('NO', gtk.RESPONSE_REJECT)
+    button_no.set_size_request(120, 80)
+    button_no.set_name('dialog_button')
+    label = gtk.Label()
+    label.set_name('dialog_label')
+    label.set_text('\n' + text.replace('?', '?\n').replace(',', ',\n') + '\n')
+    label.show()
+    dialog.vbox.pack_start(label)
+    dialog.vbox.set_spacing(2)
+    response = dialog.run()
+    dialog.destroy()
+    if response == gtk.RESPONSE_YES:
+        return False
+    return True
 
-    """
-    def connect_signals(self, control):
 
-        for wname, signal, callback in control:
-            widget = self.get_widget(wname)
-            cid = widget.connect(signal, callback)
-            self.connections.append((widget, cid))
+def create_information_dialog(window, text):
+    """Create InformationDialog UI."""
+    
+    dialog = gtk.Dialog(parent=window, flags=gtk.DIALOG_MODAL|\
+        gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
+    dialog.set_decorated(False)
+    button_ok = dialog.add_button('OK', gtk.RESPONSE_OK)
+    button_ok.set_size_request(120, 80)
+    button_ok.set_name('dialog_button')
+    label = gtk.Label()
+    label.set_justify(gtk.JUSTIFY_CENTER)
+    label.set_name('dialog_label')
+    label.set_text('\n   ' + text.replace('.', '.   \n').replace( \
+        ',', ',\n') + '\n')
+    label.show()
+    dialog.vbox.pack_start(label)
+    dialog.action_area.set_layout(gtk.BUTTONBOX_SPREAD)
+    dialog.run()
+    dialog.destroy()
 
-    def disconnect_signals(self):
 
-        for widget, cid in self.connections:
-            widget.disconnect(cid)
-        self.connections = []
-
-    """
 def create_button(name=None, callback=None, event='clicked', \
     width=80, height=80, label=None):
     """Creates gtkButton widget."""

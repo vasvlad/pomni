@@ -26,44 +26,32 @@ Main Widget.
 
 import os
 import gtk
-
 from mnemosyne.maemo_ui.sound import SoundPlayer
+from mnemosyne.maemo_ui.widgets import create_main_ui, \
+    create_question_dialog, create_information_dialog
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 
 class MainWdgt(MainWidget):
     """Main widget class."""
 
-    menu, review, input, configuration, sync, about, tags = range(7)
-
     def __init__(self, component_manager):
         MainWidget.__init__(self, component_manager)
-        self.switcher = self.question_dialog = self.window = self.w_tree = \
-            self.question_dialog_label = self.information_dialog = \
-            self.information_dialog_label  = self.theme = \
-            self.fullscreen = None
+        self.window = None
+        self.switcher = None
         self.widgets = {}
         self.soundplayer = SoundPlayer()
 
     def activate(self):
         """Basic UI setup."""
 
-        # Load the glade file for current theme
-        theme_path = self.config()["theme_path"]
-        self.theme = theme_path.split("/")[-1]
-        gtk.rc_parse(os.path.join(theme_path, "rcfile"))
-
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.resize(800, 480)
-        self.window.set_name('window')
-        self.switcher = gtk.Notebook()
-        self.switcher.set_show_border(False)
-        self.switcher.set_show_tabs(False)
-        self.window.add(self.switcher)
-
+        # load styles
+        gtk.rc_parse(os.path.join(self.config()["theme_path"], "rcfile"))
+        # create main window
+        self.window, self.switcher = create_main_ui()
         # fullscreen mode
-        self.fullscreen = self.config()['fullscreen']
-        if self.fullscreen:
+        fullscreen = self.config()['fullscreen']
+        if fullscreen:
             self.window.fullscreen()
         # connect signals to methods
         self.window.connect("delete_event", self.exit_)
@@ -195,22 +183,7 @@ class MainWdgt(MainWidget):
     def information_box(self, message):
         """Show Information message."""
 
-        dialog = gtk.Dialog(parent=self.window, flags=gtk.DIALOG_MODAL|\
-            gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
-        dialog.set_decorated(False)
-        button_ok = dialog.add_button('OK', gtk.RESPONSE_OK)
-        button_ok.set_size_request(120, 80)
-        button_ok.set_name('dialog_button')
-        label = gtk.Label()
-        label.set_justify(gtk.JUSTIFY_CENTER)
-        label.set_name('dialog_label')
-        label.set_text('\n   ' + message.replace('.', '.   \n').replace( \
-            ',', ',\n') + '\n')
-        label.show()
-        dialog.vbox.pack_start(label)
-        dialog.action_area.set_layout(gtk.BUTTONBOX_SPREAD)
-        dialog.run()
-        dialog.destroy()
+        create_information_dialog(self.window, message)
 
     def error_box(self, message):
         """Error message."""
@@ -220,27 +193,8 @@ class MainWdgt(MainWidget):
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""
 
-        dialog = gtk.Dialog(parent=self.window, flags=gtk.DIALOG_MODAL|\
-            gtk.DIALOG_DESTROY_WITH_PARENT|gtk.DIALOG_NO_SEPARATOR)
-        dialog.set_decorated(False)
-        button_yes = dialog.add_button('YES', gtk.RESPONSE_YES)
-        button_yes.set_size_request(120, 80)
-        button_yes.set_name('dialog_button')
-        button_no = dialog.add_button('NO', gtk.RESPONSE_REJECT)
-        button_no.set_size_request(120, 80)
-        button_no.set_name('dialog_button')
-        label = gtk.Label()
-        label.set_name('dialog_label')
-        label.set_text('\n' + question.replace('?', '?\n').replace(',', ',\n') \
-            + '\n')
-        label.show()
-        dialog.vbox.pack_start(label)
-        dialog.vbox.set_spacing(2)
-        response = dialog.run()
-        dialog.destroy()
-        if response == gtk.RESPONSE_YES:
-            return False
-        return True
+        return create_question_dialog(self.window, question) 
+        
 
 
 # Local Variables:
