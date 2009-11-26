@@ -202,7 +202,7 @@ class ConfigurationWidget(ConfigurationDialog):
 
         min_size = 10
         max_size = 60
-        if widget.name == "config_mode_decrease_font_size_buttton":
+        if widget.name == "down_arrow":
             if self.current_size > min_size:
                 self.current_size -= 1
         else:

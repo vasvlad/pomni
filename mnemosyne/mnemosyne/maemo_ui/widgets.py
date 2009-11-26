@@ -456,9 +456,9 @@ def create_configuration_ui(main_switcher):
     font_size_example_container.set_size_request(-1, 140)
     font_size_example_container.set_name('html_container')
     font_size = create_gtkhtml()
-    font_size_decrease_button = create_button('main_menu_button', None, \
+    font_size_decrease_button = create_button('down_arrow', None, \
         width=64, height=64)
-    font_size_increase_button = create_button('right_arrow', None, width=64, \
+    font_size_increase_button = create_button('up_arrow', None, width=64, \
         height=64)
     tts_settings_table = gtk.Table(rows=2, columns=1, homogeneous=True)
     tts_settings_table1 = gtk.Table(rows=2, columns=1, homogeneous=True)

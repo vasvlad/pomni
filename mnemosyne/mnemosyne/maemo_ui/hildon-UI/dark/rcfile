@@ -1026,6 +1026,34 @@ style "right-arrow" {
 }
 widget "*.right_arrow" style "right-arrow"
 
+style "down-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_down.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.down_arrow" style "down-arrow"
+
+style "up-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_up.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.up_arrow" style "up-arrow"
+
 style "labels-container" {
     engine "pixmap" {
         image {
