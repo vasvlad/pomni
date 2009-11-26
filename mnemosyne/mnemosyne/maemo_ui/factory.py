@@ -79,23 +79,6 @@ def app_factory(interface=None):
         raise NotImplementedError('cmd ui has to be redesigned')
 
     if not interface or interface == "hildon":
-        app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
-                                  "GetTextTranslator"))
-        app.components.append(("mnemosyne.maemo_ui.renderers", "Html"))
-        app.components.append(("mnemosyne.maemo_ui.main", "MainWdgt"))
-        app.components.append(("mnemosyne.maemo_ui.menu", "MenuWidget"))
-        app.components.append(("mnemosyne.maemo_ui.review", "ReviewWdgt"))
-        app.components.append(("mnemosyne.maemo_ui.input", "AddCardsWidget"))
-        app.components.append(("mnemosyne.maemo_ui.input", "EditFactWidget"))
-        app.components.append(("mnemosyne.maemo_ui.configuration", 
-                                "ConfigurationWidget"))
-        app.components.append(("mnemosyne.maemo_ui.sync", "SyncWidget"))
-        app.components.append(("mnemosyne.maemo_ui.tags", "TagsWidget"))
-
-        # Add necessary components
-        app.components.append(\
-            ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
-
         # Remove unused components
         app.components.remove(\
             ("mnemosyne.libmnemosyne.card_types.map", "MapPlugin"))
@@ -103,7 +86,7 @@ def app_factory(interface=None):
             ("mnemosyne.libmnemosyne.card_types.cloze", "ClozePlugin"))
         app.components.remove(\
             ("mnemosyne.libmnemosyne.plugins.cramming_plugin", \
-                "CrammingPlugin"))
+            "CrammingPlugin"))
         app.components.remove(\
             ("mnemosyne.libmnemosyne.renderers.html_css", "HtmlCss"))
         app.components.remove(\
@@ -112,6 +95,27 @@ def app_factory(interface=None):
             ("mnemosyne.libmnemosyne.filters.expand_paths", "ExpandPaths"))
         app.components.remove(\
             ("mnemosyne.libmnemosyne.filters.latex", "Latex"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.filters.html5_media", "Html5Media"))
+        app.components.remove(\
+            ("mnemosyne.libmnemosyne.file_formats.mnemosyne1_mem", \
+            "Mnemosyne1Mem"))
+
+        # Add necessary components
+        app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
+                                  "GetTextTranslator"))
+        app.components.append(("mnemosyne.maemo_ui.renderers", "Html"))
+        app.components.append(("mnemosyne.maemo_ui.main", "MainWdgt"))
+        app.components.append(("mnemosyne.maemo_ui.menu", "MenuWidget"))
+        app.components.append(("mnemosyne.maemo_ui.review", "ReviewWdgt"))
+        app.components.append(("mnemosyne.maemo_ui.input", "AddCardsWidget"))
+        app.components.append(("mnemosyne.maemo_ui.input", "EditFactWidget"))
+        app.components.append(\
+            ("mnemosyne.maemo_ui.configuration", "ConfigurationWidget"))
+        #app.components.append(("mnemosyne.maemo_ui.sync", "SyncWidget"))
+        app.components.append(("mnemosyne.maemo_ui.tags", "TagsWidget"))
+        app.components.append(\
+            ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
         return app
 
     # add next gui here
