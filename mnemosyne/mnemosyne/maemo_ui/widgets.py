@@ -88,9 +88,9 @@ def create_menu_ui(main_switcher):
         button.add(button_table)
         buttons[button_name] = button
     # packing
-    row1.attach(buttons['tags'], 1, 2, 0, 1)
-    row1.attach(buttons['review'], 2, 3, 0, 1)
-    row1.attach(buttons['input'], 3, 4, 0, 1)
+    row1.attach(buttons['review'], 1, 2, 0, 1)
+    row1.attach(buttons['input'], 2, 3, 0, 1)
+    row1.attach(buttons['tags'], 3, 4, 0, 1)
     row2.attach(buttons['settings'], 1, 2, 0, 1)
     #row2.attach(buttons['sync'], 1, 2, 0, 1)
     row2.attach(buttons['about'], 2, 3, 0, 1)
