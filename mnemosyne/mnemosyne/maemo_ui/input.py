@@ -64,14 +64,15 @@ class InputWidget(UiComponent):
         self.tags = sorted(self.database().get_tag_names(), \
             cmp=numeric_string_cmp) or [self.default_tag_name]
         self.added_new_cards = False
-        self.main_widget().soundplayer.stop()
+        self._main_widget = self.main_widget()
+        self._main_widget.soundplayer.stop()
         # create widgets
         self.page, card_type_button, content_button, menu_button, tags_button, \
             sound_button, question_text, answer_text, foreign_text, \
             pronunciation_text, translation_text, cloze_text, new_tag_button, \
             new_tag_entry, tags_box, card_type_switcher, add_card_button, \
             sound_container, question_container, toolbar_container = \
-            create_input_ui(self.main_widget().switcher)
+            create_input_ui(self._main_widget.switcher)
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
@@ -142,8 +143,7 @@ class InputWidget(UiComponent):
     def show_snd_container(self):
         """Show or hide PlaySound button. """
                     
-        start, end = self.areas["question"].get_buffer().get_bounds()
-        text = self.areas["question"].get_buffer().get_text(start, end)
+        text = self.get_textview_text(self.areas["question"])
         if "sound src=" in text:
             self.widgets["QuestionContainer"].hide()
             self.widgets["SoundContainer"].show()
@@ -192,8 +192,7 @@ class InputWidget(UiComponent):
 
         fact = {}
         for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
-            start, end = widget.get_buffer().get_bounds()
-            fact[fact_key] = widget.get_buffer().get_text(start, end)
+            fact[fact_key] = self.get_textview_text(widget)
         if check_for_required:
             for required in self.card_type.required_fields:
                 if not fact[required]:
@@ -211,6 +210,12 @@ class InputWidget(UiComponent):
 
         for caption in self.areas:
             self.areas[caption].get_buffer().set_text("<%s>" % caption.upper())
+
+    def get_textview_text(self, widget):
+        """Returns current text in textview."""
+
+        start, end = widget.get_buffer().get_bounds()
+        return widget.get_buffer().get_text(start, end)
 
     def update_indicator(self):
         """Set non active state for widget."""
@@ -266,7 +271,7 @@ class InputWidget(UiComponent):
     def show_cardtype_dialog_cb(self, widget):
         """Open CardTypeDialog."""
 
-        self.main_widget().soundplayer.stop()
+        self._main_widget.soundplayer.stop()
         create_card_type_dialog_ui(self.selectors, FrontToBack.id, \
             BothWays.id, ThreeSided.id, Cloze.id, self.widgets[ \
             'CardTypeButton'], self.card_type, self.set_card_type_cb)
@@ -274,7 +279,7 @@ class InputWidget(UiComponent):
     def show_content_dialog_cb(self, widget):
         """Open ContentDialog."""
 
-        self.main_widget().soundplayer.stop()
+        self._main_widget.soundplayer.stop()
         create_content_dialog_ui(self.set_content_type_cb, self.widgets[ \
             "ContentButton"], self.widgets["ToolbarContainer"], \
             self.card_type, FrontToBack.id)
@@ -306,7 +311,9 @@ class InputWidget(UiComponent):
 
         if self.content_type == "text":
             if self.component_type == "add_cards_dialog":
-                widget.get_buffer().set_text("")
+                if self.get_textview_text(widget) in ["<%s>" % caption.upper() \
+                    for caption in self.areas]:
+                    widget.get_buffer().set_text("")
         else:
             ctype = self.content_type + 'dir'
             setattr(self, ctype, self.conf[ctype])
@@ -319,7 +326,7 @@ class InputWidget(UiComponent):
                         liststore.append(["", "img", fname, self.imagedir, \
                             pixbuf])
             else:
-                self.main_widget().soundplayer.stop()
+                self._main_widget.soundplayer.stop()
                 for fname in os.listdir(self.sounddir):
                     if os.path.isfile(os.path.join(self.sounddir, fname)):
                         sound_logo_file = os.path.join( \
@@ -347,11 +354,10 @@ class InputWidget(UiComponent):
         """Listen sound in input mode."""
 
         if widget.get_active():
-            start, end = self.areas["question"].get_buffer().get_bounds()
-            text = self.areas["question"].get_buffer().get_text(start, end)
-            self.main_widget().soundplayer.play(text, self)
+            self._main_widget.soundplayer.play( \
+                self.get_textview_text(self.areas["question"]), self)
         else:
-            self.main_widget().soundplayer.stop()
+            self._main_widget.soundplayer.stop()
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
@@ -407,13 +413,14 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         self.set_content_type(self.conf["content_type_last_selected"])
         self.update_tags()
         self.clear_widgets()
-        self.main_widget().switcher.set_current_page(self.page)
+        self._main_widget.switcher.set_current_page(self.page)
 
-    @staticmethod
-    def clear_text_cb(widget, event):
+    def clear_text_cb(self, widget, event):
         """Clear textview content."""
 
-        widget.get_buffer().set_text("")
+        if self.get_textview_text(widget) in ["<%s>" % caption.upper() \
+            for caption in self.areas]:
+            widget.get_buffer().set_text("")
 
     def add_card_cb(self, widget):
         """Add card to database."""
@@ -431,7 +438,7 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             [tag.strip() for tag in self.selected_tags.split(',')], save=True)
         self.clear_widgets()
         self.added_new_cards = True
-        self.main_widget().soundplayer.stop()
+        self._main_widget.soundplayer.stop()
         self.show_snd_container()
         self.update_ui(self.review_controller())
 
@@ -445,9 +452,9 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.conf["card_type_last_selected"] = self.card_type.id
             self.conf["content_type_last_selected"] = self.content_type
             self.conf.save()
-            self.main_widget().soundplayer.stop()
-            self.main_widget().switcher.remove_page(self.page)
-            self.main_widget().menu_()
+            self._main_widget.soundplayer.stop()
+            self._main_widget.switcher.remove_page(self.page)
+            self._main_widget.menu_()
 
 
 class NonBlockingEditFactDialog(EditFactDialog):
@@ -508,7 +515,7 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.set_widgets_data(self.fact)
         self.update_tags()
         self.show_snd_container()
-        self.main_widget().switcher.set_current_page(self.page)
+        self._main_widget.switcher.set_current_page(self.page)
 
     def update_card_cb(self, widget):
         """Update card in the database."""
@@ -522,8 +529,8 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.controller().update_related_cards(self.fact, fact_data,
           self.card_type, new_tags, None)
         self.review_controller().update_dialog(redraw_all=True)
-        self.main_widget().activate_mode("review")
-        self.main_widget().soundplayer.stop()
+        self._main_widget.activate_mode("review")
+        self._main_widget.soundplayer.stop()
         self.show_snd_container()
         self.update_ui(self.review_controller())
 
@@ -533,9 +540,9 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         if self.tag_mode:
             self.selected_tags = self.hide_tags_dialog()
         else:
-            self.main_widget().soundplayer.stop()
-            self.main_widget().switcher.remove_page(self.page)
-            self.main_widget().review_()
+            self._main_widget.soundplayer.stop()
+            self._main_widget.switcher.remove_page(self.page)
+            self._main_widget.review_()
 
 
 # Local Variables:
