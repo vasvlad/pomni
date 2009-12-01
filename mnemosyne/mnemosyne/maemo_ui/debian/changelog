@@ -1,3 +1,10 @@
+mnemosyne (2.0.0~beta6) unstable; urgency=low
+
+  * got rid of glade (Max)
+  * removed demo database from the package
+
+ -- Ed Bartosh <Ed Bartosh <bartosh@gmail.com>>  Tue, 01 Dec 2009 20:00:16 +0200
+
 mnemosyne (2.0.0~beta5) unstable; urgency=low
 
   * corrected colors for GtkEntry and Html widgets (Max) 

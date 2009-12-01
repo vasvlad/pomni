@@ -12,7 +12,7 @@ DEST="$DESTDIR/$FNAME"
 
 if [ "$1" = "configure" -a -r $SRC -a -d $DOC_DIR ]; then
     [ -d $DESTDIR ] || mkdir $DESTDIR
-    [ -f $DEST ] || (cp $SRC $DEST && chown -R $USER:$GROUP $DESTDIR 2>/dev/null)
+    #[ -f $DEST ] || (cp $SRC $DEST && chown -R $USER:$GROUP $DESTDIR 2>/dev/null)
 fi
 
 [ -z "$2" ] && gtk-update-icon-cache -f /usr/share/icons/hicolor
