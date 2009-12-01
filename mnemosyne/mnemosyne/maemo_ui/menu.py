@@ -24,48 +24,73 @@
 Hildon UI. Menu widgets.
 """
 
+from mnemosyne.maemo_ui.widgets import create_menu_ui
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 class MenuWidget(UiComponent):
     """Main menu widget."""
 
     component_type = "menu_widget"
-    review, input, configuration = range(1, 4)
 
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager)
         self._main_widget = self.main_widget()
-        self._main_widget.w_tree.signal_autoconnect(\
-            dict([(mode, getattr(self, mode + "_cb")) for mode in ['input', \
-                'review', 'configure', 'exit', 'sync', 'about', 'tags']]))
+        # create widgets
+        self.page, buttons = create_menu_ui(self._main_widget.switcher)
+        # connect signals
+        buttons['tags'].connect('clicked', self.tags_cb)
+        buttons['review'].connect('clicked', self.review_cb)
+        buttons['input'].connect('clicked', self.input_cb)
+        buttons['settings'].connect('clicked', self.settings_cb)
+        #buttons['sync'].connect('clicked', self.sync_cb)
+        buttons['about'].connect('clicked', self.about_cb)
+        buttons['exit'].connect('clicked', self.exit_cb)
+
+    def activate(self):
+        """Activates necessary switcher page."""
+
+        self._main_widget.switcher.set_current_page(self.page)
 
     # callbacks
     def tags_cb(self, widget):
         """Go to activate tags mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.tags_()
 
     def input_cb(self, widget):
         """Go to input mode."""
+        
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.input_()
 
     def review_cb(self, widget):
         """Go to review mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.review_()
 
     def sync_cb(self, widget):
         """Go to sync mode."""
+        
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.sync_()
 
-    def configure_cb(self, widget):
+    def settings_cb(self, widget):
         """Go to configuration mode."""
+        
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.configure_()
 
     def about_cb(self, widget):
         """Go to about mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
         self._main_widget.about_()
 
     def exit_cb(self, widget):
         """Exit program."""
+
         self._main_widget.exit_()
 
 

@@ -24,7 +24,7 @@
 Hildon UI: Tags widget.
 """
 
-from mnemosyne.maemo_ui.widgets import BaseHildonWidget
+from mnemosyne.maemo_ui.widgets import create_tags_ui, create_tag_checkbox
 from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
     DefaultCriterion
@@ -51,37 +51,39 @@ class NonBlockingActivateCardsDialog(ActivateCardsDialog):
         self.stopwatch().unpause()
 
 
-class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
+class TagsWidget(NonBlockingActivateCardsDialog):
     """Activate cards widget."""
     
     def __init__(self, component_manager):
-        BaseHildonWidget.__init__(self, component_manager)
         NonBlockingActivateCardsDialog.__init__(self, component_manager)
-        self.connect_signals([("tags_mode_main_menu_button", "clicked", \
-            self.tags_to_main_menu_cb)])
+        self.page, self.tags_box, menu_button = create_tags_ui( \
+            self.main_widget().switcher)
         self.tags_dict = {}
+        # connecting signals
+        menu_button.connect('clicked', self.tags_to_main_menu_cb)
 
     def activate(self):
         """Activate 'ActivateCardsDialog'."""
 
+        self.main_widget().switcher.set_current_page(self.page)
         self.display_criterion(self.database().current_activity_criterion())
 
     def display_criterion(self, criterion):
         """Display current criterion."""
 
-        tags_box = self.get_widget("tags_mode_tags_box")
+        tags_box = self.tags_box
         for child in tags_box.get_children():
             tags_box.remove(child)
         for tag in self.database().get_tags():
             self.tags_dict[tag.name] = tag._id
-            tags_box.pack_start(self.create_tag_checkbox( \
+            tags_box.pack_start(create_tag_checkbox( \
                 tag.name, tag._id in criterion.active_tag__ids))
 
     def get_criterion(self):
         """Build the criterion from the information the user entered."""
 
         criterion = DefaultCriterion(self.component_manager)
-        for hbox in self.get_widget("tags_mode_tags_box").get_children():
+        for hbox in self.tags_box.get_children():
             children = hbox.get_children()
             if children[0].get_active():
                 criterion.active_tag__ids.add(\
@@ -91,9 +93,7 @@ class TagsWidget(BaseHildonWidget, NonBlockingActivateCardsDialog):
     def tags_to_main_menu_cb(self, widget):
         """Return to main menu."""
 
-        self.disconnect_signals()
         self.database().set_current_activity_criterion(self.get_criterion())
         self.update_ui(self.review_controller())
+        self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_()
-
-

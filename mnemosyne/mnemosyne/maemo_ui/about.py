@@ -25,6 +25,7 @@ Hildon UI. About Widget.
 """
 
 import os
+from mnemosyne.maemo_ui.widgets import create_about_ui
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -32,42 +33,21 @@ class AboutWidget(UiComponent):
     """About Widget."""
 
     def __init__(self, component_manager):
-        UiComponent.__init__(self, component_manager)
-        w_tree = self.main_widget().w_tree
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ('about_to_main_menu', 'show_team_info', 'show_guide')]))
-        self.get_widget = w_tree.get_widget
-        self.conf = self.config()
-        self.renderer = self.component_manager.get_current('renderer')
-        if self.config()['last_about_page'] == 0:
-            self.show_team_info_cb(None)
-        else:
-            self.show_guide_cb(None)
+        UiComponent.__init__(self, component_manager, )
+        # create widgets
+        self.page, menu_button = create_about_ui(self.main_widget().switcher, \
+            os.path.join(self.config()['theme_path'], "mnemosyne.png"))
+        # connect signals
+        menu_button.connect('clicked', self.about_to_main_menu_cb)
 
-    def show_team_info_cb(self, widget):
-        """Show team info page."""
+    def activate(self):
+        """Set necessary switcher page."""
 
-        self.get_widget("about_mode_role_switcher").set_current_page(0)
-        self.get_widget("about_toolbar_team_button").set_active(True)
-        self.get_widget("about_mode_logo_image").set_from_file(\
-            os.path.join(self.conf['theme_path'], "mnemosyne.png"))
-
-    def show_guide_cb(self, widget):
-        """Show user guide page."""
-
-        #FIXME: load from html-file
-        self.renderer.render_html(self.get_widget("about_mode_guide_text"), \
-            """<html><style type="text/css">*{font-size:22px;font-family:\
-                Nokia Sans} body {background:#FFFFFF;color:#000000}</style> \
-                <body><b>Mnemosyne for Maemo user guide</b></body></html>""")
-        self.get_widget("about_mode_role_switcher").set_current_page(1)
-        self.get_widget("about_toolbar_guide_button").set_active(True)
-
+        self.main_widget().switcher.set_current_page(self.page)
+        
     def about_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
-        self.conf['last_about_page'] = self.get_widget(\
-            "about_mode_role_switcher").get_current_page()
-        self.conf.save()
-        self.main_widget().menu_()
+        self.main_widget().switcher.remove_page(self.page)
+        self.main_widget().menu_('about')
        

@@ -25,6 +25,7 @@ Hildon UI. Review widgets.
 """
 
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
+from mnemosyne.maemo_ui.widgets import create_review_ui
 from mnemosyne.maemo_ui import tts
 
 LARGE_CONTAINER_HEIGHT = 260
@@ -35,31 +36,33 @@ class ReviewWdgt(ReviewWidget):
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
-        self.w_tree = self.main_widget().w_tree
-        self.get_widget = get_widget = self.w_tree.get_widget
-        self.w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ['review_to_main_menu', 'get_answer', 'grade', 'speak', \
-            'delete_card', 'edit_card', 'preview_sound_in_review','add_card']]))
         self.next_is_image_card = False #Image card indicator
         self.sndtext = None
         self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
-
-        # Widgets as attributes
-        self.edit_button = get_widget("review_toolbar_edit_card_button")
-        self.del_button = get_widget("review_toolbar_delete_card_button")
-        self.question_container = get_widget("question_container")
-        self.answer_container = get_widget("answer_container")
-        self.container_width = get_widget("question_text"). \
-            window.get_geometry()[2]
-        self.question_text = get_widget("question_text")
-        self.answer_text = get_widget("answer_text")
-        self.sound_container = get_widget("review_mode_snd_container")
-        self.sound_button = get_widget("review_mode_snd_button")
-        self.grades_table = get_widget("grades_table")
-        self.tts_button = get_widget("review_toolbar_tts_button")
+        self.page, self.tts_button, self.edit_button, self.del_button, \
+            self.question_container, self.answer_container, \
+            self.question_text, self.answer_text, self.sound_container, \
+            self.sound_button, self.grades_table, grades, toolbar_buttons = \
+            create_review_ui(self.main_widget().switcher)            
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
+        self.container_width = self.question_text.window.get_geometry()[2]
+        # connect signals
+        self.answer_text.connect('button-press-event', self.get_answer_cb)
+        self.sound_button.connect('released', self.preview_sound_in_review_cb)
+        for grade_button in grades:
+            grade_button.connect('clicked', self.grade_cb)
+        toolbar_buttons[0].connect('clicked', self.speak_cb)
+        toolbar_buttons[1].connect('clicked', self.edit_card_cb)
+        toolbar_buttons[2].connect('clicked', self.add_card_cb)
+        toolbar_buttons[3].connect('clicked', self.delete_card_cb)
+        toolbar_buttons[4].connect('clicked', self.review_to_main_menu_cb)
+
+    def activate(self):
+        """Set necessary switcher page."""
+
+        self.main_widget().switcher.set_current_page(self.page)
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
@@ -168,7 +171,6 @@ class ReviewWdgt(ReviewWidget):
     def add_card_cb(self, widget):
         """Hook for add new card."""
 
-        self.main_widget().show_mode("input")
         self.controller().add_cards()
 
     def delete_card_cb(self, widget):
@@ -181,7 +183,6 @@ class ReviewWdgt(ReviewWidget):
         """Hook for edit card."""
 
         self.main_widget().soundplayer.stop()
-        self.main_widget().show_mode("input")
         self.controller().edit_current_card()
 
     def grade_cb(self, widget):

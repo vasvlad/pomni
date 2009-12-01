@@ -26,70 +26,49 @@ Main Widget.
 
 import os
 import gtk
-import gtk.glade
-import urllib
-import gtkhtml2
-import urlparse
-
 from mnemosyne.maemo_ui.sound import SoundPlayer
+from mnemosyne.maemo_ui.widgets import create_main_ui, \
+    create_question_dialog, create_information_dialog
 from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 
 class MainWdgt(MainWidget):
     """Main widget class."""
 
-    menu, review, input, configuration, sync, about, tags = range(7)
-
     def __init__(self, component_manager):
         MainWidget.__init__(self, component_manager)
-        self.switcher = self.question_dialog = self.window = self.w_tree = \
-            self.question_dialog_label = self.information_dialog = \
-            self.information_dialog_label  = self.theme = \
-            self.fullscreen = None
-        self.htmlopener = urllib.FancyURLopener()
+        self.window = None
+        self.switcher = None
         self.widgets = {}
         self.soundplayer = SoundPlayer()
 
     def activate(self):
-        """Basic UI setup. 
-           Load theme glade file, assign gtk window callbacks.
-        """
+        """Basic UI setup."""
 
-        # Load the glade file for current theme
-        theme_path = self.config()["theme_path"]
-        self.theme = theme_path.split("/")[-1]
-        gtk.rc_parse(os.path.join(theme_path, "rcfile"))
-        gtk.glade.set_custom_handler(self.custom_handler)
-        w_tree = gtk.glade.XML(os.path.join(theme_path, "window.glade"))
-        get_widget = w_tree.get_widget
-
-        self.switcher = get_widget("switcher")
-        self.window = get_widget("window")
-
+        # load styles
+        gtk.rc_parse(os.path.join(self.config()["theme_path"], "rcfile"))
+        # create main window
+        self.window, self.switcher = create_main_ui()
         # fullscreen mode
-        self.fullscreen = self.config()['fullscreen']
-        if self.fullscreen:
+        fullscreen = self.config()['fullscreen']
+        if fullscreen:
             self.window.fullscreen()
-
         # connect signals to methods
         self.window.connect("delete_event", self.exit_)
-        w_tree.signal_autoconnect(dict([(sig, getattr(self, sig + "_cb")) \
-            for sig in ("window_state", "window_keypress")]))
+        self.window.connect('window-state-event', self.window_state_cb)
+        self.window.connect('key-press-event', self.window_keypress_cb)
 
-        self.question_dialog = get_widget("question_dialog")
-        self.information_dialog = get_widget("information_dialog")
-        self.question_dialog_label = get_widget("question_dialog_label")
-        self.information_dialog_label = get_widget("information_dialog_label")
-
-        self.w_tree = w_tree
-
-    def show_mode(self, mode):
-        self.switcher.set_current_page(getattr(self, mode))
+        self.window.show_all()
 
     def activate_mode(self, mode):
-        """Activate review or menu mode in lazy way."""
+        """Activate mode in lazy way."""
 
-        self.show_mode(mode)
+        widget = self.create_mode(mode)
+        widget.activate()
+
+    def create_mode(self, mode):
+        """Create widget object for selected mode."""
+
         widget = self.widgets.get(mode, None)
         if not widget: # lazy widget creation
             if mode == "review":
@@ -108,8 +87,7 @@ class MainWdgt(MainWidget):
                 from mnemosyne.maemo_ui.tags import TagsWidget
                 widget = TagsWidget(self.component_manager)
             self.widgets[mode] = widget
-
-        widget.activate()
+        return widget
 
     def start(self, mode):
         """UI entry point. Activates specified mode."""
@@ -121,56 +99,60 @@ class MainWdgt(MainWidget):
                 self.menu_()
         gtk.main()
 
-    def custom_handler(self, glade, function_name, widget_name, *args):
-        """Hook for custom widgets."""
+    def kill_menu_object(self):
+        """Removes MenuWidget object from memory."""
 
-        if glade and widget_name and  hasattr(self, function_name):
-            handler = getattr(self, function_name)
-            return handler(args)
+        if 'menu' in self.widgets:
+            del self.widgets['menu']
 
     # modes
-    def menu_(self):
+    def menu_(self, mode=None):
         """Activate menu."""
 
+        if mode is not None:
+            del self.widgets[mode]
         self.activate_mode('menu')
 
     def tags_(self):
         """Activate 'Activate tags' mode."""
 
+        self.kill_menu_object()
         if 'review' not in self.widgets:
-            self.activate_mode('review')
-        self.show_mode('tags')
+            self.create_mode('review')
         self.controller().activate_cards()
 
     def input_(self):
         """Activate input mode."""
        
+        self.kill_menu_object()
         if 'review' not in self.widgets:
-            self.activate_mode('review')
-        self.show_mode("input")
+            self.create_mode('review')
         self.controller().add_cards()
 
     def configure_(self):
         """Activate configure mode through main controller."""
 
+        self.kill_menu_object()
         if 'review' not in self.widgets:
-            self.activate_mode('review')
-        self.show_mode('configuration')
+            self.create_mode('review')
         self.controller().configure()
 
     def review_(self):
         """Activate review mode."""
 
+        self.kill_menu_object()
         self.activate_mode('review')
 
     def sync_(self):
         """Activate sync mode."""
 
+        self.kill_menu_object()
         self.activate_mode('sync')
 
     def about_(self):
         """Activate about mode."""
 
+        self.kill_menu_object()
         self.activate_mode('about')
 
     @staticmethod
@@ -197,33 +179,11 @@ class MainWdgt(MainWidget):
         self.fullscreen = bool(event.new_window_state & \
             gtk.gdk.WINDOW_STATE_FULLSCREEN)
 
-    # ui helpers
-    def create_gtkhtml(self, args):
-        """ Create gtkhtml2 widget """
-
-        def request_url(document, url, stream):
-            """Get content from url."""
-            uri = urlparse.urljoin("", url)
-            fpurl = self.htmlopener.open(uri)
-            stream.write(fpurl.read())
-            fpurl.close()
-            stream.close()
-
-        view = gtkhtml2.View()
-        document = gtkhtml2.Document()
-        document.connect('request_url', request_url)
-        view.set_document(document)
-        view.document = document
-        view.show()
-        return view
-
     # Main Widget API
     def information_box(self, message):
         """Show Information message."""
 
-        self.information_dialog_label.set_text('\n' + message + '\n')
-        self.information_dialog.run()
-        self.information_dialog.hide()
+        create_information_dialog(self.window, message)
 
     def error_box(self, message):
         """Error message."""
@@ -233,13 +193,8 @@ class MainWdgt(MainWidget):
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""
 
-        self.question_dialog_label.set_text( \
-            '\n'  + question.replace("?", "?\n").replace(",", ",\n"))
-        response = self.question_dialog.run()
-        self.question_dialog.hide()
-        if response == gtk.RESPONSE_YES:
-            return False
-        return True
+        return create_question_dialog(self.window, question) 
+        
 
 
 # Local Variables:
