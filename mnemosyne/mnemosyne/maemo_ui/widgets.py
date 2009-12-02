@@ -859,7 +859,7 @@ def create_about_ui(main_switcher, image_name):
     program_label.set_use_markup(True)
     program_label.set_markup("<span foreground='white' size='large'><b>" \
         "Mnemosyne for Maemo</b></span>\n<span foreground='white' size=" \
-        "'large'>version 2.0.0 beta5</span>")
+        "'large'>version 2.0.0 beta6</span>")
     # packing widgets
     logo_box.pack_start(logo, expand=False, fill=False, padding=10)
     logo_box.pack_end(program_label, expand=False, fill=False)
