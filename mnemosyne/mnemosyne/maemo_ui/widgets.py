@@ -820,38 +820,30 @@ def create_about_ui(main_switcher, image_name):
     label_left.set_use_markup(True)
     label_left.set_markup("<span foreground='white' size='small'><b>" \
         "Developers:</b></span>\n<span foreground='white' size='small'>" \
-        "Max Usachev |</span> <a href='mailto:maxusachev@gmail.com'>" \
-        "<span foreground='#299BFC' size='small' underline='none'>" \
-        "maxusachev@gmail.com</span></a>\n<span foreground='white' size=" \
-        "'small'>Ed Bartosh |</span> <a href='mailto:bartosh@gmail.com'>" \
-        "<span foreground='#299BFC' size='small' underline='none'>" \
-        "bartosh@gmail.com</span></a>\n<span foreground='white' " \
-        "size='small'>Vlad Vasiliev |</span> <a href='mailto:vlad@gas.by'>" \
-        "<span foreground='#299BFC' size='small' underline='none'>vlad@gas.by" \
-        "</span></a>\n\n<span foreground='white' size='small'><b>Designer:" \
-        "</b>\n</span><span foreground='white' size='small'>Andrew Zhilin |" \
-        "</span> <a href='mailto:drew.zhilin@gmail.com'><span foreground=" \
-        "'#299BFC' size='small' underline='none'>drew.zhilin@gmail.com</span>" \
-        "</a>\n\n<span foreground='white' size='small'><b>Development team:" \
-        "</b></span>\n<a href='mailto:pomni@googlegroups.com'><span foreground"\
-        "='#299BFC' size='small' underline='none'>pomni@googlegroups.com" \
-        "</span></a>")
+        "Max Usachev |</span> <span foreground='#299BFC' size='small'>" \
+        "maxusachev@gmail.com</span>\n<span foreground='white' size=" \
+        "'small'>Ed Bartosh |</span> <span foreground='#299BFC' size=" \
+        "'small'>bartosh@gmail.com</span>\n<span foreground='white' " \
+        "size='small'>Vlad Vasiliev |</span> <span foreground='#299BFC' " \
+        "size='small'>vlad@gas.by</span>\n\n<span foreground='white' " \
+        "size='small'><b>Designer:</b>\n</span><span foreground='white' " \
+        "size='small'>Andrew Zhilin |</span> <span foreground='#299BFC' " \
+        "size='small'>drew.zhilin@gmail.com</span>\n\n<span foreground=" \
+        "'white' size='small'><b>Development team:</b></span>\n<span " \
+        "foreground='#299BFC' size='small'>pomni@googlegroups.com</span>")
     label_right = gtk.Label()
     label_right.set_use_markup(True)
     label_right.set_markup("<span foreground='white' size='small'><b>" \
         "Special Thanks To:</b></span>\n<span foreground='white' size=" \
-        "'small'>Peter Bienstman</span>\n<a href='mailto:Peter.Bienstman" \
-        "@ugent.be'><span foreground='#299BFC' size='small' underline='none'>" \
-        "Peter.Bienstman@ugent.be</span></a>\n<a href='http://www.mnemosyne-" \
-        "proj.org'><span foreground='#299BFC' size='small' underline='none'>" \
-        "http://www.mnemosyne-proj.org/</span></a>\n<span size='x-large'>" \
-        "</span><span foreground='white' size='small'>\nGSoC 2009</span>\n" \
-        "<a href='http://socghop.appspot.com'><span foreground='#299BFC' "\
-        "size='small' underline='none'>http://socghop.appspot.com/</span></a>" \
-        "\n\n<span size='x-large'></span><span foreground='white' size=" \
-        "'small'>\nMaemo community</span>\n<a href='http://maemo.org'><span " \
-        "foreground='#299BFC' size='small' underline='none'>http://maemo.org/" \
-        "</span></a>")
+        "'small'>Peter Bienstman</span>\n<span foreground='#299BFC' size=" \
+        "'small'>Peter.Bienstman@ugent.be</span>\n<span foreground=" \
+        "'#299BFC' size='small'>http://www.mnemosyne-proj.org/</span>" \
+        "\n<span size='x-large'></span><span foreground='white' size=" \
+        "'small'>\nGSoC 2009</span>\n<span foreground='#299BFC' size='"\
+        "small'>http://socghop.appspot.com/</span>\n\n<span size='x-large'>" \
+        "</span><span foreground='white' size='small'>\nMaemo community" \
+        "</span>\n<span foreground='#299BFC' size='small'>" \
+        "http://maemo.org/</span>")
     logo = gtk.Image()
     logo.set_from_file(image_name)
     program_label = gtk.Label()
