@@ -27,6 +27,7 @@ Hildon UI: Input mode classes.
 import gettext
 import gtk
 import gtk.glade
+import os
 
 
 from mnemosyne.libmnemosyne.component_manager import database, config, \
@@ -45,6 +46,15 @@ class HildonUiControllerInput(HildonBaseController):
         self.w_tree.signal_autoconnect(\
             dict([(sig, getattr(self, sig + "_cb")) for sig in signals]))
 
+        self.fact = None
+        self.update = None
+
+    def activate(self, fact = None):
+        """ Start input window. """
+
+        self.fact = fact
+        self.update = fact is not None
+
 
 class EternalControllerInput(HildonUiControllerInput):
     """ Eternal Input mode controller """
@@ -57,10 +67,8 @@ class EternalControllerInput(HildonUiControllerInput):
 
         self.fields_container = None
         self.card_type = None
-        self.fact = None
-        self.update = None
         self.edit_boxes = {}
-        
+
         self.categories = self.w_tree.get_widget("categories")
         self.liststore = gtk.ListStore(str)
         self.categories.set_model(self.liststore)
@@ -131,8 +139,14 @@ class EternalControllerInput(HildonUiControllerInput):
     def activate(self, fact = None):
         """ Start input window. """
 
-        self.fact = fact
-        self.update = fact is not None
+        HildonUiControllerInput.activate(self, fact)
+
+
+        # Hide or Visible delete button
+        if (self.fact):
+            self.input_toolbar_delete_card_button.set_property('visible', True)
+        else:
+            self.input_toolbar_delete_card_button.set_property('visible', False)
 
         card_type_by_id = dict([(card_type.id, card_type) \
             for card_type in card_types()])
@@ -161,9 +175,10 @@ class EternalControllerInput(HildonUiControllerInput):
         self.liststore.clear()
         for category in category_names_by_id.values():
             self.liststore.append([category])
-        
+
         if category_names_by_id.values():
-            self.categories.get_child().set_text(category_names_by_id.values()[0])
+            self.categories.get_child().\
+            set_text(category_names_by_id.values()[0])
 
     def add_card_cb(self, widget):
         """ Add card to database. """
@@ -251,12 +266,18 @@ class RainbowControllerInput(HildonUiControllerInput):
     def __init__(self, w_tree):
         """ Initialization items of input window. """
 
-        signals = ["add_card", "change_card_type", "input_to_main_menu"]
+        signals = ["add_card", "change_card_type", "input_to_main_menu", \
+            "enable_add_picture_button", "disable_add_picture_button", \
+            "add_picture", "select_item", "close_image_selection_dialog"]
         HildonUiControllerInput.__init__(self, w_tree, signals)
         self.update = None
+        self.input_toolbar_add_picture_button.set_sensitive(False)
         self.categories_liststore = gtk.ListStore(str)
         self.categories.set_model(self.categories_liststore)
         self.categories.set_text_column(0)
+        self.images_liststore = gtk.ListStore(str, gtk.gdk.Pixbuf)
+        self.iconview_widget.set_model(self.images_liststore)
+        self.iconview_widget.set_pixbuf_column(1)
         self.init_listboxes()
         self.layout()
 
@@ -265,14 +286,14 @@ class RainbowControllerInput(HildonUiControllerInput):
             for widget in (self.question_box_text, self.answer_box_text,
                            self.pronun_box_text):
                 widget.set_property("hildon-input-mode", 'full')
-        except (TypeError, AttributeError): # stock gtk doesn't have hildon properties
+        except (TypeError, AttributeError): # stock gtk doesn't have
+                                            # hildon properties
             pass # so, skip silently
-
 
     def layout (self):
         """ Hides or shows neccessary widgets. It depends on card_type. """
 
-        if self.card_type:        
+        if self.card_type:
             self.answer_box.set_property('visible', True)
             self.pronun_box.set_property('visible', False)
             if self.card_type.name == _("Foreign word with pronunciation"):
@@ -295,6 +316,7 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.set_card_type()
         self.clear_widgets()
+        self.input_toolbar_add_picture_button.set_sensitive(False)
         self.layout()
 
     def update_categories(self):
@@ -334,9 +356,14 @@ class RainbowControllerInput(HildonUiControllerInput):
 
     def activate(self, fact = None):
         """ Start input window. """
-        
-        self.fact = fact
-        self.update = fact is not None
+
+        HildonUiControllerInput.activate(self, fact)
+
+        # Hide or Visible delete button
+        if (self.fact):
+            self.input_toolbar_delete_card_button.set_property('visible', True)
+        else:
+            self.input_toolbar_delete_card_button.set_property('visible', False)
 
         self.update_categories()
         self.clear_widgets()
@@ -362,7 +389,7 @@ class RainbowControllerInput(HildonUiControllerInput):
         else: #Create new card
             main.create_new_cards(fact_data, self.card_type, 0, [\
                 self.categories.get_child().get_text()], True)
-                
+
         # Card saved in main.create_new_cards
         #database().save(config()['path'])
         self.clear_widgets()
@@ -421,6 +448,65 @@ class RainbowControllerInput(HildonUiControllerInput):
 
         self.switcher.set_current_page(self.main_menu)
 
+    def add_picture_cb(self, widget):
+        """ Show image selection dialog. """
+
+        def resize_image(pixbuf):
+            x_ratio = pixbuf.get_width() / 64.0
+            y_ratio = pixbuf.get_height() / 64.0
+            new_width = int(pixbuf.get_width() / x_ratio)
+            new_height = int(pixbuf.get_height() / y_ratio)
+            return pixbuf.scale_simple(\
+                new_width, new_height, gtk.gdk.INTERP_BILINEAR)
+
+        self.images_liststore.clear()
+        self.imagedir = config()['imagedir']
+        if not os.path.exists(self.imagedir):
+            self.imagedir = "./images" # on Desktop
+            if not os.path.exists(self.imagedir):
+                ui_controller_main().widget.information_box(\
+                    _("'Images' directory does not exist!"), "OK")
+                return                
+        if os.listdir(self.imagedir):
+            for file in os.listdir(self.imagedir):
+                if os.path.isfile(os.path.join(self.imagedir, file)):
+                    pixbuf = gtk.gdk.pixbuf_new_from_file(\
+                        os.path.join(self.imagedir, file))
+                    self.images_liststore.append([file, resize_image(pixbuf)])
+            self.image_selection_dialog.show()
+        else:
+            ui_controller_main().widget.information_box(\
+                _("There are no files in 'Images' directory!"), "OK")
+            
+    def select_item_cb(self, widget):
+        """ 
+        Set html-text with image path when user
+        select image from image selection dialog. 
+        """
+
+        self.image_selection_dialog.hide()
+        item_index = self.iconview_widget.get_selected_items()[0]
+        item_text = self.images_liststore.get_value(\
+            self.images_liststore.get_iter(item_index),0)
+        self.question_box_text.get_buffer().set_text(\
+            "<img src='%s'>" % os.path.join(self.imagedir, item_text))
+       
+    def close_image_selection_dialog_cb(self, widget):
+        
+        self.image_selection_dialog.hide()
+
+    def enable_add_picture_button_cb(self, widget, event):
+        """ Enable Add picture button when activate
+            Question widget. Is depends on card-type. """
+
+        if self.card_type.name == _("Front-to-back and back-to-front") or \
+            self.card_type.name == _("Front-to-back only"):
+            self.input_toolbar_add_picture_button.set_sensitive(True)
+
+    def disable_add_picture_button_cb(self, widget, event):
+        """ Disable Add picture button Question widget. """
+
+        self.input_toolbar_add_picture_button.set_sensitive(False)
 
 # Local Variables:
 # mode: python
