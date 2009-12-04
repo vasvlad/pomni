@@ -4,20 +4,24 @@
 
 import os
 import re
-from mnemosyne.libmnemosyne.component_manager import config
+import cgi
+import sys
+import shutil
+import traceback
 
+def expand_path(p, prefix):
 
-def expand_path(p, prefix=None):
+    """Make relative path 'p' absolute having prefix 'prefix' and normalise
+    slashes.
 
-    """Make relative path absolute and normalise slashes."""
-    
-    # By default, make paths relative to the database location.
-    if prefix == None:
-        prefix = os.path.dirname(config()["path"])
-    # If there was no dirname in the last statement, it was a relative
-    # path and we set the prefix to the basedir.
-    if prefix == '':
-        prefix = config().basedir
+    """
+
+    # normpath does not convert Windows separators to Unix separators, so we
+    # need to do that here.
+    p = p.replace("\\", "/")
+    prefix = prefix.replace("\\", "/")
+    # We write our own code to do os.path.isabs, so that the testsuite can run
+    # under Linux as well.
     if (    ( (len(p) > 1) and p[0] == "/") \
          or ( (len(p) > 2) and p[1] == ":") ): # Unix or Windows absolute path.
         return os.path.normpath(p)
@@ -25,23 +29,19 @@ def expand_path(p, prefix=None):
         return os.path.normpath(os.path.join(prefix, p))
 
 
-def contract_path(p, prefix=None):
+def contract_path(p, prefix):
 
-    """Make absolute path relative and normalise slashes."""
+    """Make absolute path 'p' relative to prefix 'prefix' and normalise
+    slashes.
 
-    # By default, make paths relative to the database location.
-    if prefix == None:
-        prefix = os.path.dirname(config()["path"])
-    # If there was no dirname in the last statement, it was a relative
-    # path and we set the prefix to the basedir.
-    if prefix == '':
-        prefix = config().basedir
+    """
+
     # Normalise paths and convert everything to lowercase on Windows.
     p = os.path.normpath(p)
     prefix = os.path.normpath(prefix)
     if ( (len(p) > 2) and p[1] == ":"):
         p = p.lower()
-        prefix = prefix.lower()
+        prefix = prefix.lower()       
     # Do the actual detection.
     if (    ( (len(p) > 1) and p[0] == "/") \
          or ( (len(p) > 2) and p[1] == ":") ): # Unix or Windows absolute path.
@@ -51,6 +51,30 @@ def contract_path(p, prefix=None):
             return p            
     else:
         return p
+
+
+def copy_file_to_dir(filename, dirname):
+
+    """If the file is not in the directory, copy it there. Return the relative
+    path to that file inside the directory.
+
+    """
+
+    filename = os.path.abspath(filename)
+    dirname = os.path.abspath(dirname)
+    if filename.startswith(dirname):
+        return filename.replace(dirname, "")[1:]
+    dest_path = os.path.join(dirname, os.path.basename(filename))
+    if os.path.exists(dest_path):
+        prefix, suffix = dest_path.rsplit(".", 1)
+        count = 0
+        while True:
+            count += 1
+            dest_path = "%s_%d_.%s" % (prefix, count, suffix)
+            if not os.path.exists(dest_path):
+                break
+    shutil.copy(filename, dest_path)
+    return contract_path(dest_path, dirname)
 
 
 def numeric_string_cmp(s1, s2):
@@ -73,3 +97,53 @@ def numeric_string_cmp(s1, s2):
     atoi = lambda s: int(s) if s.isdigit() else s
     scan = lambda s: tuple(atoi(str) for str in re.split('(\d+)', s))
     return cmp(scan(s1), scan(s2))
+
+
+def traceback_string():
+    
+    """Like traceback.print_exc(), but returns a string."""
+
+    type, value, tb = sys.exc_info()
+    body = "\nTraceback (innermost last):\n"
+    list = traceback.format_tb(tb, limit=None) + \
+           traceback.format_exception_only(type, value)
+    body = body + "%-20s %s" % ("".join(list[:-1]), list[-1])
+    return body
+
+
+def mangle(string):
+
+    """Massage string such that it can be used as an identifier."""
+
+    string = cgi.escape(string).encode("ascii", "xmlcharrefreplace")
+    if string[0].isdigit():
+        string = "_" + string
+    new_string = ""
+    for char in string:
+        if char.isalnum() or char == "_":
+            new_string += char    
+    return new_string
+
+
+class CompareOnId(object):
+
+    """When pulling the same object twice from an SQL database, the resulting
+    Python objects will be separate entities. That's why we need to compare
+    them on id.
+
+    """
+  
+    def __eq__(self, other):
+        if isinstance(other, CompareOnId):
+            return self.id == other.id
+        return NotImplemented  # So Python can try other.__eq__(self)
+    
+    def __ne__(self, other):
+
+        """Not automatically overridden by overriding __eq__!"""
+        
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
+

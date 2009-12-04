@@ -7,32 +7,24 @@
 import gettext
 _ = gettext.gettext
 
-import sys
 import os
-import locale
+import sys
+
 from optparse import OptionParser
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtGui import QApplication
 
-from mnemosyne.libmnemosyne import initialise, finalise
-from mnemosyne.libmnemosyne.component_manager import config
-from mnemosyne.libmnemosyne.exceptions import MnemosyneError
-from mnemosyne.pyqt_ui.main_window import MainWindow, prefix
-#from mnemosyne.pyqt_ui.plugin import * # To be picked up by py2exe.
-
-#Disable sound until Ubuntu includes Phonon.
-#import mnemosyne.pyqt_ui.sound
+from mnemosyne.libmnemosyne import Mnemosyne
 
 # Parse options.
 
 parser = OptionParser()
-parser.usage = "%prog [<database.mem>]"
+parser.usage = "%prog [<database_file>]"
 parser.add_option("-d", "--datadir", dest="datadir",
-                  help="data directory", default=None)
+                  help=_("data directory"), default=None)
 (options, args) = parser.parse_args()
 
-# Check if we have to override the basedir determined in mnemosyne.core,
+# Check if we have to override the basedir determined in libmnemosyne,
 # either because we explicitly specified a datadir on the command line,
 # or because there is a .mnemosyne directory present in the current directory.
 # The latter is handy when Mnemosyne is run from a USB key, so that there
@@ -43,65 +35,94 @@ if options.datadir != None:
 elif os.path.exists(os.path.join(os.getcwdu(), ".mnemosyne")):
     basedir = os.path.abspath(os.path.join(os.getcwdu(), ".mnemosyne"))
 else:
-    basedir = os.path.abspath.join(os.environ['HOME'], ".mnemosyne")
+    basedir = os.path.abspath(os.path.join(os.environ['HOME'], ".mnemosyne"))
+    
 # Filename argument.
 if len(args) > 0:
     filename = os.path.abspath(args[0])
 else:
     filename = None
-# Create main application.
+
+# Load the Mnemosyne library.
+mnemosyne = Mnemosyne()
+
+# Initialise GUI toolkit.
 a = QApplication(sys.argv)
+a.setApplicationName("Mnemosyne")
+# TODO: install translator for Qt messages.
 # Under Windows, move out of library.zip to get the true prefix.
-if sys.platform == "win32":
-    prefix = os.path.split(prefix)[0]
-    prefix = os.path.split(prefix)[0]
-    prefix = os.path.split(prefix)[0]
-# Get the locale from the user's config.py, to install the translator as
-# soon as possible.
-loc = str(QLocale().name()) # Default to system locale.
-sys.path.insert(0, basedir)
-config_file_c = os.path.join(basedir, "config.pyc")
-if os.path.exists(config_file_c):
-    os.remove(config_file_c)
-try:
-    # TODO: check if this does not interfere with component_manager.config()
-    import config as user_config
-    if user_config.locale != None:
-        loc = user_config.locale
-except:
-    pass
-# Install translator for Qt messages.
-translator = QTranslator(a)
-translator.load("qt_"+loc+".qm", os.path.join(prefix,'locale'))
-a.installTranslator(translator)
-# Check if there is another instance of Mnemosyne running.
-if os.path.exists(os.path.join(basedir, "MNEMOSYNE_LOCK")):
-    status = QMessageBox.warning(None,
-             a.trUtf8("Mnemosyne"),
-             a.trUtf8("Either Mnemosyne didn't shut down properly,\n" +
-                      "or another copy of Mnemosyne is still running.\n" +
-                      "Continuing in the latter case could lead to data " +
-                      "loss!\n"),
-             a.trUtf8("&Exit"), a.trUtf8("&Continue"),
-             QString(), 0, -1)
-    if status == 0 or status == -1:
-        sys.exit()
+# from mnemosyne.pyqt_ui.main_window import prefix
+#if sys.platform == "win32":
+#    prefix = os.path.split(prefix)[0]
+#    prefix = os.path.split(prefix)[0]
+#    prefix = os.path.split(prefix)[0]
+#translator = QTranslator(a)
+#translator.load("qt_" + loc + ".qm", os.path.join(prefix, 'locale'))
+#a.installTranslator(translator)
 
-try:
-    initialise(basedir)
-except MnemosyneError, event:
-    QMessageBox.critical(None, _("Mnemosyne"), event.msg,
-                                 _("&OK"), "", "", 0, -1)
+# Add other components we need. The translator should obviously come first,
+# and the UI components should come in the order they should be instantiated,
+# but apart from that, the order does not matter.
+mnemosyne.components.insert(0, ("mnemosyne.libmnemosyne.translator",
+                             "GetTextTranslator"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.main_window",
+                             "MainWindow"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.review_wdgt",
+                             "ReviewWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.configuration",
+                             "PyQtConfiguration"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.add_cards_dlg",
+                             "AddCardsDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.edit_fact_dlg",
+                             "EditFactDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.activate_cards_dlg",
+                             "ActivateCardsDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.cloned_card_types_list_dlg",
+                             "ClonedCardTypesListDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.card_appearance_dlg",
+                             "CardAppearanceDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.activate_plugins_dlg",
+                             "ActivatePluginsDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_dlg",
+                             "StatisticsDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.card_type_wdgt_generic",
+                             "GenericCardTypeWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_wdgts_plotting",
+                             "ScheduleWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_wdgts_plotting",
+                             "RetentionScoreWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_wdgts_plotting",
+                             "GradesWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_wdgts_plotting",
+                             "EasinessWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_wdgts_plotting",
+                             "CardsAddedWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.statistics_wdgt_html",
+                             "HtmlStatisticsWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.criterion_wdgt_default",
+                             "DefaultCriterionWdgt"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.progress_dlg",
+                             "ProgressDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.mp3_clip_prevention",
+                             "Mp3ClipPrevention"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.configuration_dlg",
+                             "ConfigurationDlg"))
+mnemosyne.components.append(("mnemosyne.pyqt_ui.configuration_wdgt_main",
+                             "ConfigurationWdgtMain"))
+mnemosyne.extra_components_for_plugin["CrammingPlugin"] = \
+                            [("mnemosyne.pyqt_ui.review_wdgt_cramming",
+                             "ReviewWdgtCramming")]
 
-# Main widget.
-w = MainWindow(filename)
-w.show()
+# Run Mnemosyne.
+mnemosyne.initialise(basedir=basedir, filename=filename)
+mnemosyne.main_widget().show()
+mnemosyne.main_widget().raise_() # Needed for OSX.
 # TODO: check first run wizard.
-if config()["first_run"] == True:
-    w.productTour()
-    config()["first_run"] = False
-elif config()["show_daily_tips"] == True:
-    w.Tip()
-w.raise_() # Needed for OSX.
+#if config()["first_run"] == True:
+#    w.productTour()
+#    config()["first_run"] = False
+#elif config()["show_daily_tips"] == True:
+#    w.Tip()
+
 a.exec_()
-finalise()
+mnemosyne.finalise()

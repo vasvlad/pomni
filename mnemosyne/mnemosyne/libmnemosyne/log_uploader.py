@@ -3,22 +3,27 @@
 #
 
 import os
-import sets
+import bz2
 import traceback
 import time
 import urllib2
 import random
 from threading import Thread
 
-from mnemosyne.libmnemosyne.component_manager import config, log
+from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.libmnemosyne.component import Component
 
 
-class LogUploader(Thread):
+class LogUploader(Thread, Component):
+
+    def __init__(self, component_manager):
+        Thread.__init__(self)
+        Component.__init__(self, component_manager)
     
     def upload(self, filename):
         
         """Upload a single file to our serverside CGI script.
-        Based on code by Jeff Bauer, Aaron Watters, Jim Fulton
+        Based on code by Jeff Bauer, Aaron Watters, Jim Fulton.
         
         """
 
@@ -26,7 +31,7 @@ class LogUploader(Thread):
         # PUT, but then we need to change the server side script which would
         # cause problems with backwards compatibility.
     
-        host, port = config()["upload_server"].split(":")
+        host, port = self.config()["upload_server"].split(":")
         uri = '/cgi-bin/cgiupload.py'
         boundary = '%s%s_%s_%s' % \
                     ('-----', int(time.time()), os.getpid(),
@@ -44,7 +49,7 @@ class LogUploader(Thread):
         total.append('--%s\n' % boundary)
         total.append(("\n--%s\n" % boundary).join(part))
         total.append('\n--%s--\n' % boundary)
-        query = ''.joinfields(total)
+        query = ''.join(total)
         contentType = 'multipart/form-data; boundary=%s' % boundary
         contentLength = str(len(query))
         headers = {'Accept' : '*/*',
@@ -56,11 +61,22 @@ class LogUploader(Thread):
         html = response.read()
 
     def run(self):
-        basedir = config().basedir
+        basedir = self.config().basedir
         join = os.path.join
+        dir = os.listdir(unicode(join(basedir, "history")))
+        # Compress files which haven't been compressed yet (e.g. because they
+        # come from a mobile device).
+        for filename in [x for x in dir if x.endswith(".txt")]:
+            filename = os.path.join(basedir, "history", filename)
+            compressed_filename = filename.replace(".txt", ".bz2")
+            compressed_file = bz2.BZ2File(compressed_filename, "w")
+            for l in file(filename):
+                compressed_file.write(l)
+            compressed_file.close()
+            os.remove(filename)
         # Find out which files haven't been uploaded yet.
         dir = os.listdir(unicode(join(basedir, "history")))
-        history_files = [x for x in dir if x[-4:] == ".bz2"]
+        history_files = [x for x in dir if x.endswith(".bz2")]
         uploaded = None
         try:
             upload_log = file(join(basedir, "history", "uploaded"))
@@ -68,20 +84,19 @@ class LogUploader(Thread):
             upload_log.close()
         except:
             uploaded = []
-        to_upload = sets.Set(history_files) - sets.Set(uploaded)
+        to_upload = set(history_files) - set(uploaded)
         if len(to_upload) == 0:
             return
         # Upload them to our server.
         upload_log = file(join(basedir, "history", "uploaded"), 'a')
         try:
             for f in to_upload:
-                print "Uploading", f, "...",
+                print _("Uploading"), f, "...",
                 filename = join(basedir, "history", f)
                 self.upload(filename)
                 print >> upload_log, f
-                log().uploaded(filename)
-                print "done!"           
+                print _("done!")           
         except:
-            log().uploading_failed()
+            print _("Upload failed")
             traceback.print_exc()
         upload_log.close()

@@ -2,9 +2,7 @@
 # both_ways.py <Peter.Bienstman@UGent.be>
 #
 
-import gettext
-_ = gettext.gettext
-
+from mnemosyne.libmnemosyne.translator import _
 from mnemosyne.libmnemosyne.card import Card
 from mnemosyne.libmnemosyne.card_type import CardType
 from mnemosyne.libmnemosyne.fact_view import FactView
@@ -16,33 +14,30 @@ class BothWays(CardType):
     id = "2"
     name = _("Front-to-back and back-to-front")
 
-    def __init__(self, language_name=""):
-        CardType.__init__(self)
-            
-        # List and name the keys.
-        self.fields.append(("q", _("Question")))
-        self.fields.append(("a", _("Answer")))
-        
-        # Front-to-back.
-        v = FactView(1, _("Front-to-back"))
-        v.q_fields = ["q"]
-        v.a_fields = ["a"]
-        v.required_fields = ["q"]
-        self.fact_views.append(v)
-        
-        # Back-to-front.
-        v = FactView(2, _("Back-to-front"))
-        v.q_fields = ["a"]
-        v.a_fields = ["q"]
-        v.required_fields = ["a"]
-        self.fact_views.append(v)
-        
-        # The question field needs to be unique. As for duplicates is the answer
-        # field, these are better handled through a synonym detection plugin.
-        self.unique_fields = ["q"]
+    # List and name the keys.
+    fields = [("q", _("Question")),
+              ("a", _("Answer"))]
+    
+    # Front-to-back.
+    v1 = FactView("2::1", _("Front-to-back"))
+    v1.q_fields = ["q"]
+    v1.a_fields = ["a"]
 
+    # Back-to-front.
+    v2 = FactView("2::2", _("Back-to-front"))
+    v2.q_fields = ["a"]
+    v2.a_fields = ["q"]
+    
+    fact_views = [v1, v2]
+    required_fields = ["q"]
+    unique_fields = ["q"]
+
+
+from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
 
 class FrontToBackToBothWays(CardTypeConverter):
+
+    used_for = (FrontToBack, BothWays)
 
     def convert(self, cards, old_card_type, new_card_type, correspondence):
         # Update front-to-back view to corresponding view in new type.
@@ -56,6 +51,8 @@ class FrontToBackToBothWays(CardTypeConverter):
  
 class BothWaysToFrontToBack(CardTypeConverter):
 
+    used_for = (BothWays, FrontToBack)
+
     def convert(self, cards, old_card_type, new_card_type, correspondence):
         new_cards, updated_cards, deleted_cards = [], [], []
         for card in cards:
@@ -67,4 +64,3 @@ class BothWaysToFrontToBack(CardTypeConverter):
             if card.fact_view == old_card_type.fact_views[1]:
                 deleted_cards = [card]
         return new_cards, updated_cards, deleted_cards
-        

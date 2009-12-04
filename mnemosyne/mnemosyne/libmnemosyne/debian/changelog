@@ -1,3 +1,39 @@
+python-libmnemosyne (2.0.0-15) unstable; urgency=low
+
+  * got latest code from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Tue, 06 Oct 2009 20:37:24 +0300
+
+python-libmnemosyne (2.0.0-14) unstable; urgency=low
+
+  * optimized SQLite.duplicates_for_fact function for speed (Max)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 12 Aug 2009 23:03:03 +0300
+
+python-libmnemosyne (2.0.0-13) unstable; urgency=low
+
+  * made sync-related changes (Max)
+
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 12 Aug 2009 23:00:25 +0300
+
+python-libmnemosyne (2.0.0-12) unstable; urgency=low
+
+  * got latest code from upstream 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sat, 18 Jul 2009 15:23:42 +0300
+
+python-libmnemosyne (2.0.0-11) unstable; urgency=low
+
+  * used setuptools.get_packages for collecting package names 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Fri, 03 Jul 2009 19:27:47 +0300
+
+python-libmnemosyne (2.0.0-10) unstable; urgency=low
+
+  * massive update from upstream. API break 
+
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 31 May 2009 15:42:26 +0300
+
 python-libmnemosyne (2.0.0-9) unstable; urgency=low
 
   * updated from upstream 

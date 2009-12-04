@@ -1,0 +1,1532 @@
+# pixmap_path "<dir 1>:<dir 2>:<dir 3>:..."
+#
+#pixmap_path "/usr/include/X11R6/pixmaps:./"
+#
+# style <name> [= <name>]
+# {
+#   <option>
+# }
+#
+# widget <widget_set> style <style_name>
+# widget_class <widget_class_set> style <style_name>
+
+# Here is a list of all the possible states.  Note that some do not apply to
+# certain widgets.
+#
+# NORMAL - The normal state of a widget, without the mouse over top of
+# it, and not being pressed, etc.
+#
+# PRELIGHT - When the mouse is over top of the widget, colors defined
+# using this state will be in effect.
+#
+# ACTIVE - When the widget is pressed or clicked it will be active, and
+# the attributes assigned by this tag will be in effect.
+#
+# INSENSITIVE - When a widget is set insensitive, and cannot be
+# activated, it will take these attributes.
+#
+# SELECTED - When an object is selected, it takes these attributes.
+#
+# Given these states, we can set the attributes of the widgets in each of
+# these states using the following directives.
+#
+# fg - Sets the foreground color of a widget.
+# fg - Sets the background color of a widget.
+# bg_pixmap - Sets the background of a widget to a tiled pixmap.
+# font - Sets the font to be used with the given widget.
+#
+
+# This sets a style called "button".  The name is not really important, as
+# it is assigned to the actual widgets at the bottom of the file.
+
+#----------------------------- General settings ------------------
+style "toggle-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            overlay_file = "tag_checkbox_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "tag_checkbox_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "tag_checkbox_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "tag_checkbox_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "tag_checkbox_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "tag_checkbox_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.tag_indicator" style "toggle-button"
+
+style "general-widget" {
+    GtkWidget::image-spacing = 0
+    GtkWidget::focus-line-width = 0
+}
+class "GtkWidget" style "general-widget"
+
+# Style for Main window
+style "main-window" {
+    engine "sapwood"{
+        image {
+            function = FLAT_BOX
+            file = "general.png"
+        }
+    }
+}
+widget "window" style "main-window"
+
+style "html-container" {
+    xthickness = 10
+    ythickness = 10
+    engine "sapwood" {
+        image {
+            function = SHADOW
+            file = "card_background.png"
+            border = {14,14,14,14}
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.html_container" style "html-container"
+
+style "one-button-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "one_button_toolbar.png"
+        }
+    }
+}
+widget "*.one_button_container" style "one-button-container"
+
+style "three-button-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "left_settings.png"
+        }
+    }
+}
+widget "*.three_button_container" style "three-button-container"
+
+style "entry" {
+    font_name = "Nokia Sans 21"
+    text[NORMAL] = "#000000"
+    text[ACTIVE] = "#000000"
+    text[SELECTED] = "#000000"
+    engine "sapwood" {
+		image {
+			function = SHADOW
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+		image {
+			function = FLAT_BOX
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+	}
+}
+widget "*.entry_widget" style "entry"
+
+style "textview" {
+    GtkTextView::focus-line-width = 0
+    text[NORMAL] = "#000000"
+    text[ACTIVE] = "#000000"
+    text[SELECTED] = "#000000"
+	engine "sapwood" {
+		image {
+			function = FOCUS
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+		image {
+			function = SHADOW
+			file = "white.png"
+			border = {0,0,0,0}
+		}
+	}
+}
+widget "*.textview_widget" style "textview"
+
+style "viewport" {
+    bg[NORMAL] = "#FFFFFF"
+}
+widget "*.viewport_widget" style "viewport"
+
+style "scrolled-window" {
+    xthickness = 0
+    ythickness = 0
+    GtkScrolledWindow::scrollbars-within-bevel = 0
+    GtkScrolledWindow::scrollbar-spacing = 0
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "arrow_up_black.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_down_black.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        image {
+            function = SLIDER
+            orientation = VERTICAL
+            file = "transparent.png"
+        }
+        image {
+            function = BOX
+            file = "white.png"
+        }
+    }
+}
+widget "*.scrolled_window" style "scrolled-window"
+
+style "to-main-menu-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "arrow_left_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.main_menu_button" style "to-main-menu-button"
+
+style "media-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "media_play.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "media_play.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "media_stop.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "media_play.png"
+        }
+    }
+}
+widget "*.media_button" style "media-button"
+
+style "white-label" {
+    fg[NORMAL] = "#FFFFFF"
+    fg[PRELIGHT] = "#FFFFFF"
+    font_name = "Nokia Sans 18"
+}
+widget "*.white_label" style "white-label"
+
+style "black-label" = "white-label" {
+    fg[NORMAL] = "#000000"
+    fg[PRELIGHT] = "#000000"
+}
+widget "*.black_label" style "black-label"
+#----------------------------- General settings ------------------
+
+
+#----------------------------- Main Menu ------------------
+widget "*.program_name_label" style "white-label"
+
+style "menu-label" {
+    fg[NORMAL] = "#000000"
+    fg[ACTIVE] = "#000000"
+    fg[PRELIGHT] = "#000000"
+    fg[SELECTED] = "#000000"
+    font_name = "Nokia Sans Wide Bold 15.5"
+}
+widget "*.menu_label_*" style "menu-label"
+
+style "menu-button-tags" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "tags.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_tags" style "menu-button-tags"
+
+style "menu-button-review" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "learn.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_review" style "menu-button-review"
+
+style "menu-button-input" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "input.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_input" style "menu-button-input"
+
+style "menu-button-sync" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "sync.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_sync" style "menu-button-sync"
+
+style "menu-button-conf" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "settings.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_settings" style "menu-button-conf"
+
+style "menu-button-about" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "about.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_about" style "menu-button-about"
+
+style "menu-button-exit" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "quit.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_exit" style "menu-button-exit"
+#----------------------------- Main Menu ------------------
+
+
+#----------------------------- Review mode ------------------
+style "grades-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "right_6.png"
+        }
+    }
+}
+widget "*.grades_container" style "grades-container"
+
+style "toolbar-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "left_5.png"
+        }
+    }
+}
+widget "*.toolbar_container" style "toolbar-container"
+
+style "speak-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "speaker_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.review_toolbar_tts_button" style "speak-button"
+
+style "edit-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "edit_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "edit.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.review_toolbar_edit_card_button" style "edit-button"
+
+style "plus-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "plus_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "plus.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.plus_button" style "plus-button"
+
+style "delete-card-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "trash_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "trash.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+
+style "grade0" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "0_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "0_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+    	    function = FOCUS
+        }
+    }
+}
+widget "*.grade0" style "grade0"
+
+style "grade1" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "1_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "1_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.grade1" style "grade1"
+
+style "grade2" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "2_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "2_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.grade2" style "grade2"
+
+style "grade3" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "3_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "3_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.grade3" style "grade3"
+
+style "grade4" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "4_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "4_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.grade4" style "grade4"
+
+style "grade5" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "5_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "5_active.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.grade5" style "grade5"
+#----------------------------- Review mode ------------------
+
+
+#----------------------------- Input mode ------------------
+widget "*.tags_button.GtkLabel" style "white-label"
+
+style "tags-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "tag_button.png"
+            border = {6, 6, 6, 6}
+            stretch = TRUE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.tags_button" style "tags-button"
+
+style "text-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_text_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_text.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.text_content_button" style "text-button"
+widget "*.contenttype_text" style "text-button"
+
+style "add-image-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_image_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_image.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.image_content_button" style "add-image-button"
+widget "*.contenttype_image" style "add-image-button"
+
+style "add-music-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "add_music_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "add_music.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.sound_content_button" style "add-music-button"
+widget "*.contenttype_sound" style "add-music-button"
+
+style "front-to-back-cardtype" {
+    GtkRadioButton::indicator-size = 40
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "aligned_forward_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "aligned_forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "aligned_forward_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "aligned_forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "aligned_forward_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "aligned_forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "aligned_forward_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "aligned_forward_disabled.png"
+        }
+    }
+}
+widget "*.front_to_back_cardtype_button" style "front-to-back-cardtype"
+
+style "both-way-cardtype" {
+    GtkRadioButton::indicator-size = 40
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "aligned_both_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "aligned_both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "aligned_both_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "aligned_both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "aligned_both_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "aligned_both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "aligned_both_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "aligned_both_disabled.png"
+        }
+    }
+}
+widget "*.both_ways_cardtype_button" style "both-way-cardtype"
+
+style "three-side-cardtype" {
+    GtkRadioButton::indicator-size = 40
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "aligned_trans_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "aligned_trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "aligned_trans_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "aligned_trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "aligned_trans_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "aligned_trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "aligned_trans_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "aligned_trans_disabled.png"
+        }
+    }
+}
+widget "*.three_sided_cardtype_button" style "three-side-cardtype"
+
+style "cloze-cardtype" {
+    GtkRadioButton::indicator-size = 40
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            file = "aligned_close_active.png"
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            file = "aligned_close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            file = "aligned_close_active.png"
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            file = "aligned_close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            file = "aligned_close_active.png"
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            file = "aligned_close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = IN
+            file = "aligned_close_disabled.png"
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            shadow = OUT
+            file = "aligned_close_disabled.png"
+        }
+    }
+}
+widget "*.cloze_cardtype_button" style "cloze-cardtype"
+
+style "front-to-back-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "forward_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "forward_active.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_1" style "front-to-back-cardtype-button"
+
+style "both-ways-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "both_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "both_active.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_2" style "both-ways-cardtype-button"
+
+style "three-sided-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "trans_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "trans_active.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_3" style "three-sided-cardtype-button"
+
+style "cloze-cardtype-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "close_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "close_active.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}   
+widget "*.cardtype_5" style "cloze-cardtype-button"
+#----------------------------- Input mode -----------------
+
+
+#----------------------------- Config mode ------------------
+style "right-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.right_arrow" style "right-arrow"
+
+style "down-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_down.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.down_arrow" style "down-arrow"
+
+style "up-arrow" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            overlay_file = "arrow_up.png"
+            overlay_stretch = FALSE
+        }
+	    image {
+	        function = FOCUS
+	    }
+    }
+}
+widget "*.up_arrow" style "up-arrow"
+
+style "labels-container" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "card_background.png"
+            border = {18, 18, 18, 18}
+        }
+    }
+}
+widget "*.labels_container" style "labels-container"
+
+style "general-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "wrench_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "wrench.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_general_settings_button" style "general-settings-button"
+
+style "skin-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "brush_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "brush.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_skin_settings_button" style "skin-settings-button"
+
+style "tts-settings-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "speaker_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "speaker.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = INSENSITIVE
+            overlay_file = "speaker_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.config_toolbar_tts_settings_button" style "tts-settings-button"
+
+style "config-scrollbar" {
+    GtkScrollbar::fixed-slider-length = 1
+    GtkScrollbar::min-slider-length = 34
+    GtkRange::slider-width = 34
+    GtkRange::stepper-size = 64
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = SLIDER
+            file = "slide_pin.png"
+            border = {0,0,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            orientation = HORIZONTAL
+            file = "slide_line.png"
+            border = {59,59,0,0}
+            stretch = TRUE
+        }
+        image {
+            function = BOX
+            detail = "hscrollbar"
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_left.png"
+            overlay_stretch = FALSE
+            arrow_direction = LEFT
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_right.png"
+            overlay_stretch = FALSE
+            arrow_direction = RIGHT
+        }
+    }
+}
+widget "*.config_scrollbar" style "config-scrollbar"
+
+style "config-checkbox" {
+    engine "sapwood" {
+	    image {
+	        function = FOCUS
+    	}
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "checkbox_checked.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "checkbox.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "checkbox_checked.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "checkbox.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "checkbox_checked.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "checkbox.png"
+        }
+    }
+}
+widget "*.config_checkbox" style "config-checkbox"
+
+style "config-scrollbars-label" = "white-label" {
+    font_name = "Nokia Sans 15"
+}
+widget "*.config_scrollbar_label" style "config-scrollbars-label"
+
+style "config-tts-label" = "white-label" {
+    fg[NORMAL] = "#000000"
+    fg[PRELIGHT] = "#000000"
+}
+widget "*.config_tts_label" style "config-tts-label"
+#----------------------------- Config mode ------------------
+
+
+#----------------------------- Sync mode ------------------
+style "sync-client" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "client_icon.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "client_icon.png"
+        }
+    }
+}
+widget "*.sync_toolbar_client_mode_button" style "sync-client"
+    
+style "sync-server" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "server_icon.png"
+        }
+        image {
+            function = BOX
+            state = INSENSITIVE
+            file = "server_icon.png"
+        }
+    }
+}
+widget "*.sync_toolbar_server_mode_button" style "sync-server"
+
+style "sync-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = IN
+            file = "stop_sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = NORMAL
+            shadow = OUT
+            file = "sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = IN
+            file = "stop_sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = ACTIVE
+            shadow = OUT
+            file = "sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = IN
+            file = "stop_sync_icon.png"
+        }
+        image {
+            function = BOX
+            state = PRELIGHT
+            shadow = OUT
+            file = "sync_icon.png"
+        }
+    }
+}
+widget "*.sync_button" style "sync-button"
+#----------------------------- Sync mode ------------------
+
+
+#----------------------------- Dialogs ------------------
+style "dialog" {
+    engine "sapwood" {
+        image {
+            function = FLAT_BOX
+            shaped = TRUE
+            file = "background.png"
+            border = {12,12,12,12}
+        }
+    }
+}
+class "GtkDialog" style "dialog"
+
+style "dialog-label" = "white-label" {
+    font_name = "Nokia Sans 17"
+} 
+widget "*.dialog_label" style "dialog-label"
+
+style "dialog-button-label" = "white-label" {
+    font_name = "Nokia Sans 16"
+    fg[INSENSITIVE] = "#323232"
+}
+widget "*.dialog_button.GtkLabel" style "dialog-button-label"
+
+style "dialog-button" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            file = "button.png"
+            border = {10,10,10,10}
+        }
+    }
+}
+widget "*.dialog_button" style "dialog-button"
+
+style "icon-view" {
+    base[NORMAL] = "#333333"
+}
+widget "*.iconview_widget" style "icon-view"
+
+style "media-scrolls" {
+    GtkRange::slider-width = 60
+    GtkRange::stepper-size = 60
+    GtkRange::min-slider-length = 60
+    GtkRange::trough-border = 0
+    engine "pixmap" {
+        image {
+            function = ARROW
+            overlay_file = "arrow_up.png"
+            overlay_stretch = FALSE
+            arrow_direction = UP
+        }
+        image {
+            function = ARROW
+            overlay_file = "arrow_down.png"
+            overlay_stretch = FALSE
+            arrow_direction = DOWN
+        }
+        image {
+            function = SLIDER
+            orientation = VERTICAL
+            file = "scroll.png"
+        }
+        image {
+            function = BOX
+            file = "scrollbar.png"
+        }
+        image {
+            function = BOX
+            detail = "vscrollbar"
+        }
+    }
+}
+widget "*.scrolledwindow_widget.*" style "media-scrolls"
+#----------------------------- Dialogs ------------------

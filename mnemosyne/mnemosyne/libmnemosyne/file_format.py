@@ -1,50 +1,22 @@
-##############################################################################
 #
 # file_format.py <Peter.Bienstman@UGent.be>
 #
-##############################################################################
+
+from mnemosyne.libmnemosyne.component import Component
 
 
+class FileFormat(Component):
 
-##############################################################################
-#
-# FileFormat
-#
-##############################################################################
-
-class FileFormat(object):
-
-    ##########################################################################
-    #
-    # __init__
-    #
-    # The filename filter has to be given in Qt format, e. g.
-    #  XML Files (*.xml *XML)".
-    #
-    ##########################################################################
-
-    def __init__(self, name, description, filename_filter):
-
-        self.name            = name
-        self.description     = description
-        self.filename_filter = filename_filter
-        self.import_possible = import_possible
-        self.export_possible = export_possible
-
-
-
-    ##########################################################################
-    #
-    # Functions to be implemented by the actual file format.
-    #
-    ##########################################################################
-
-    def do_import(self, filename, default_cat_name,
-                  reset_learning_data=False):
+    component_type = "file_format"
+    description = ""
+    filename_filter = "" # E.g. "XML Files (*.xml *XML)"
+    import_possible = False
+    export_possible = False
+    
+    def do_import(self, filename, tag_name=None, reset_learning_data=False):
         raise NotImplementedError
 
-    def do_export(self, filename, default_cat_name,
-                  reset_learning_data=False):
+    def do_export(self, filename, tag_name=None, reset_learning_data=False):
         raise NotImplementedError    
 
 
@@ -119,10 +91,10 @@ def unanonymise_id(card):
 #
 ##############################################################################
 
-def import_file(filename, fformat_name, default_cat_name,
+def import_file(filename, fformat_name, default_tag_name,
                 reset_learning_data=False):
 
-    global load_failed, revision_queue, anon_to_id
+    global load_failed, queue, anon_to_id
 
     # If no database is active, create one.
 
@@ -131,7 +103,7 @@ def import_file(filename, fformat_name, default_cat_name,
 
     # Call import function according to file format name.
 
-    default_cat = get_category_by_name(default_cat_name)
+    default_tag = get_tag_by_name(default_cat_name)
     fformat = get_file_format_from_name(fformat_name)
     imported_cards = fformat.import_function(filename, default_cat,
                                              reset_learning_data)
@@ -150,11 +122,11 @@ def import_file(filename, fformat_name, default_cat_name,
         else:
             cards.append(card)
             if card.is_due_for_retention_rep():
-                revision_queue[0:0] = [card]
+                queue[0:0] = [card]
             log().imported_card(card) 
     # Clean up.
 
-    remove_category_if_unused(default_cat)
+    remove_tag_if_unused(default_tag)
 
     load_failed = False
 

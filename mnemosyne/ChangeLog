@@ -10,15 +10,78 @@ This version uses a different database format. Before upgrading, export your
 old data as xml. After upgrade, create a new database and import the old data
 from the xml file.
 
--Qt4 (window scroll bar, webkit)
--sql backend
--card types, consistend editing or reverse and three sided cards
+This is essentially a complete rewrite of the old 1.x codebase, with a new,
+clean design, consisting of components that can be swapped in and out very
+easily, which allows plugin writers maximum flexibility.
 
-
--Danish translation by Randi H.
--Esperanto translation by jchthys.	
+-Support for what is called card types. The main user visible changes are that
+ editing a vice versa card or three sided card will automatically update the
+ related card. There is also support for N-sided cards.
+-Each individual field in a card can now have its own font, colour, ... which
+ can be set through the GUI. No more need for hacks like 'increase size of 
+ non-latin characters'. Background colour is also configurable per card type.
+-Whereas in Mnemosyne 1.x, a card could belong to only one category, now a card
+ can have multiple tags.
+-Added card type for maps, and for cloze deletion.
+-Plugins can now be turned on and off through the GUI.
+-Move from Qt3 to Qt4 as GUI toolkit, which has better performance and 
+ eliminates many interface quirks.
+-Windows use scroll bar when the data does not fit.
+-The widget that displays the cards is now a full webbrowser, with e.g. 
+ support for Javascript, animated gifs, ...	
+-Move to SQL as the storage backend, resulting in improved speed and memory
+ usage, as well as better scalability for large decks. Majority of work done
+ by Ed Bartosh.
+-when importing a sound or an image, a copy is made to the .mnemosyne directory. 
+ This saves some confusing explaining to new users about the difference between 
+ relative and absolute paths.
+-Mnemosyne now saves after each reviewed card.
+-'Activate cards' is completely revamped and is much more flexible. Also, sets of
+ active cards can be now be saved for easier later recall.
+-Avoid showing the same card twice in a row.
+-added option "learn new related cards in same session"
+-warn if the user memorises over 15 new cards in a session.
+-hooked up the machinery to allow embedding video in cards, but on my machine
+ only the sound plays. Hopefully, later versions of Qt will fix this.
+-added option to control whether media (sound/video) gets started automatically
+ when displaying a card.
+-added option to display a media control (play/pause/slider)
+-improved backup scheme. Users can now restore from backups using the 
+ File - Open menu, as opposed to first decompressing a file outside of Mnemosyne.
+-The learing history is now stored in an SQL database, allowing to calculate
+ more statistics
+-Graphical statistics (Mike Appleby)
+-The plugin mechanism encompasses also the statistics, configuration and card
+ activation screens.
+-Cards which are failed during learning ahead are now periodically brought
+ back in the learning process.
+-Added cramming scheduler plugin, which goes through your cards in random
+ order and does not affect the normal scheduler data. It is visually
+ distinguished from the regular scheduler by having only two grade buttons
+ (Right and Wrong)
+-Windows Mobile client
+-Maemo client
+-When leaving the program open overnight, the display will update at the
+ roll over point.
+-Intelligent sorting of categories containing numbers, so that you no longer
+ have to call a category 'Lesson 01' instead of 'Lesson '1 to get the correct
+ ordering (Mike Appleby).
+-Uses Phonon as sound backend instead of PyGame (Louis Cyphre).
 	
+-Updated German translation by Dimitri Scheftner
+-Updated French translation by Christophe Méalarès and Yannick Voglaire.
+-Hungarian translation by bkil
 
+MNEMOSYNE 1.2.1 : 2009-04-11
+
+-Fix bug so that vice versa cards now always start with grade 0.
+-Fix problems with missing locale under some unix systems.
+-Fix hang under Spanish translation.
+-Danish translation by Randi H.
+-Esperanto translation by jchthys.
+-Updated Japanese translation by Patrick Kenny.
+
+	
 MNEMOSYNE 1.2 : 2008-11-25
 
 -Improved support for unicode in filenames and directories.

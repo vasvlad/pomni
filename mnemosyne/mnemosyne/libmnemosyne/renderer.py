@@ -2,10 +2,18 @@
 # renderer.py <Peter.Bienstman@UGent.be>
 #
 
-from mnemosyne.libmnemosyne.component_manager import config
+from mnemosyne.libmnemosyne.component import Component
 
 
-class Renderer(object):
+class Renderer(Component):
+
+    """Renders the contents of the Fact behind a Card to a suitable format.
+
+    "used_for" = card_type class
+
+    """
+
+    component_type = "renderer"
 
     def update(self, card_type):
 
@@ -25,20 +33,17 @@ class Renderer(object):
             raise KeyError
         if property_name == "background_colour" or \
                property_name == "alignment":
-            config()[property_name][card_type.id] = property
-            print "Setting property", property_name, config()[property_name]           
+            self.config()[property_name][card_type.id] = property
             return
-        config()[property_name].setdefault(card_type.id, {})
+        self.config()[property_name].setdefault(card_type.id, {})
         for key in card_type.keys():
-            config()[property_name][card_type.id].setdefault(key, None)
+            self.config()[property_name][card_type.id].setdefault(key, None)
         if not fact_key:
             keys = card_type.keys()
         else:
             keys = [fact_key]
         for key in keys:
-            config()[property_name][card_type.id][key] = property
-        print "Setting property", property_name, config()[property_name]
-
+            self.config()[property_name][card_type.id][key] = property
         
     def render_card_fields(self, card, fields):
         

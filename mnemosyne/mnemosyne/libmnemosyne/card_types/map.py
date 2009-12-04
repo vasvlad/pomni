@@ -2,45 +2,47 @@
 # map.py <Peter.Bienstman@UGent.be>
 #
 
-import gettext
-_ = gettext.gettext
-
+from mnemosyne.libmnemosyne.translator import _
 from mnemosyne.libmnemosyne.card_type import CardType
 from mnemosyne.libmnemosyne.plugin import Plugin
 from mnemosyne.libmnemosyne.fact_view import FactView
 
 
-class Map(CardType, Plugin):
+class Map(CardType):
 
     id = "4"
     name = _("Map")
-    description = _("A card type for learning locations on a map")
-    provides = "card_type"
-        
-    def __init__(self):
-        CardType.__init__(self)
 
-        # List and name the keys.
-        self.fields.append(("loc", _("Location")))
-        self.fields.append(("blank", _("Blank map")))
-        self.fields.append(("marked", _("Marked map")))
-        
-        # Recognition.
-        v = FactView(1, _("Recognition"))
-        v.q_fields = ["marked"]
-        v.a_fields = ["loc"]
-        v.required_fields = ["marked", "loc"]
-        self.fact_views.append(v)
+    # List and name the keys.
+    fields = [("loc", _("Location")),
+              ("blank", _("Blank map")),
+              ("marked", _("Marked map"))]
 
-        # Production.
-        v = FactView(2, _("Production"))
-        v.q_fields = ["loc", "blank"]
-        v.a_fields = ["marked"]
-        v.required_fields = ["loc", "blank", "marked"]
-        v.a_on_top_of_q = True
-        self.fact_views.append(v)
+    # Recognition.
+    v1 = FactView("4::1", _("Recognition"))
+    v1.q_fields = ["_", "marked"]
+    v1.a_fields = ["loc", "marked",]
+    v1.a_on_top_of_q = True
     
-        # The following field needs to be unique.
-        self.unique_fields = ["loc"]
+    # Production.
+    v2 = FactView("4::2", _("Production"))
+    v2.q_fields = ["loc", "blank"]
+    v2.a_fields = ["loc", "marked"]
+    v2.a_on_top_of_q = True
 
-   
+    fact_views = [v1, v2]
+    unique_fields = ["loc"]
+    required_fields = ["loc", "blank", "marked"]
+    
+    def question(self, card):
+        # Insert a blank line to improve layout.
+        card.fact["_"] = "<br>"
+        return CardType.question(self, card)
+
+
+class MapPlugin(Plugin):
+    
+    name = _("Map")
+    description = _("A card type for learning locations on a map")
+    components = [Map]
+

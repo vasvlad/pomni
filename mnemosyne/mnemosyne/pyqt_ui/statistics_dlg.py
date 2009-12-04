@@ -1,101 +1,129 @@
-##############################################################################
 #
-# Widget to show basic statistics
+# statistics_dlg.py <Peter.Bienstman@UGent.be>
 #
-# <Peter.Bienstman@UGent.be>
-#
-##############################################################################
 
-from qt import *
-from mnemosyne.core import *
-from statistics_frm import *
+from PyQt4 import QtCore, QtGui
 
+from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.libmnemosyne.component import Component
+from mnemosyne.libmnemosyne.ui_components.dialogs import StatisticsDialog
 
 
-##############################################################################
-#
-# ListItem
-#
-##############################################################################
+class StatisticsDlg(QtGui.QDialog, StatisticsDialog):
 
-class ListItem(QListViewItem):
-    def __init__(self, parent, name, number):
-        QListViewItem.__init__(self, parent, name, str(number))
-        self.setMultiLinesEnabled(1)
+    """A tab widget containing several statistics pages. The number and names
+    of the tab pages are determined at run time.
 
-    def compare(self, item, column, ascending):
-        if column == 0:
-            return self.key(0,ascending).compare(item.key(0,ascending))
-        else: # Funny casts for Windows compatibility.
-            return int(str(self.text(1))) - int(str(item.text(1)))
+    """
+
+    def __init__(self, component_manager):
+        StatisticsDialog.__init__(self, component_manager)
+        QtGui.QDialog.__init__(self, self.main_widget())
+        self.setWindowTitle(_("Statistics"))
+        self.vbox_layout = QtGui.QVBoxLayout(self)
+        self.tab_widget = QtGui.QTabWidget(self.main_widget())
+        page_index = 0
+        for page in self.statistics_pages():
+            page = page(self.component_manager)
+            self.tab_widget.addTab(StatisticsPageWdgt(component_manager, self,
+                page, page_index), page.name)
+            page_index += 1
+        self.vbox_layout.addWidget(self.tab_widget)       
+        self.button_layout = QtGui.QHBoxLayout()
+        self.button_layout.addItem(QtGui.QSpacerItem(20, 20,
+            QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum))
+        self.ok_button = QtGui.QPushButton(_("&OK"), self)
+        self.button_layout.addWidget(self.ok_button)
+        self.vbox_layout.addLayout(self.button_layout)
+        self.connect(self.ok_button, QtCore.SIGNAL("clicked()"), self.accept)
+        self.connect(self.tab_widget, QtCore.SIGNAL("currentChanged(int)"),
+                     self.display_page)
+        page_index = self.config()["last_statistics_page"]
+        if page_index >= self.tab_widget.count():
+            page_index = 0
+        self.tab_widget.setCurrentIndex(page_index)
+        self.display_page(page_index)
+           
+    def activate(self):
+        self.exec_()
+
+    def closeEvent(self, event):
+        self.config()["statistics_dlg_size"] = (self.width(), self.height())
+        
+    def accept(self):
+        self.config()["statistics_dlg_size"] = (self.width(), self.height())
+        return QtGui.QDialog.accept(self)        
+        
+    def display_page(self, page_index):
+        page = self.tab_widget.widget(page_index)
+        self.config()["last_variant_for_statistics_page"].setdefault(page_index, 0)
+        variant_index = self.config()["last_variant_for_statistics_page"][page_index]
+        if variant_index >= page.combobox.count():
+            variant_index = 0
+        page.combobox.setCurrentIndex(variant_index)
+        page.display_variant(variant_index)
+        self.config()["last_statistics_page"] = page_index
+
+        # TODO: suffers from screen corruption
+        #width, height = self.config()["statistics_dlg_size"]
+        #if width:
+        #    self.resize(width, height)
 
 
+class StatisticsPageWdgt(QtGui.QWidget, Component):
 
-##############################################################################
-#
-# StatisticsDlg
-#
-##############################################################################
+    """A page in the StatisticsDlg tab widget. This page widget only contains
+    a combobox to select different variants of the page. The widget that
+    displays the statistics information itself is only generated when it
+    becomes visible.
 
-class StatisticsDlg(StatisticsFrm):
+    """
 
-    ##########################################################################
-    #
-    # __init__
-    #
-    ##########################################################################
+    def __init__(self, component_manager, parent, statistics_page, page_index):
+        Component.__init__(self, component_manager)        
+        QtGui.QWidget.__init__(self, parent)
+        self.statistics_page = statistics_page
+        self.page_index = page_index
+        self.vbox_layout = QtGui.QVBoxLayout(self)
+        self.combobox = QtGui.QComboBox(self)
+        self.variant_ids = []
+        self.variant_widgets = []
+        self.current_variant_widget = None
+        variants = statistics_page.variants
+        if not variants:
+            variants = [(0, "Default")]
+        for variant_id, variant_name in variants:
+            self.variant_ids.append(variant_id)
+            self.variant_widgets.append(None)
+            self.combobox.addItem(unicode(variant_name))
+        if len(self.variant_ids) <= 1 or \
+           self.statistics_page.show_variants_in_combobox == False:
+            self.combobox.hide()
+        self.vbox_layout.addWidget(self.combobox)
+        self.connect(self.combobox, QtCore.SIGNAL("currentIndexChanged(int)"),
+                     self.display_variant)
+        
+    def display_variant(self, variant_index):
 
-    def __init__(self, parent=None, name=None, modal=0):
+        """Lazy creation of the actual widget that displays the statistics."""
 
-        StatisticsFrm.__init__(self,parent,name,modal,
-                              Qt.WStyle_MinMax | Qt.WStyle_SysMenu)
-
-        # Schedule information.
-
-        text = self.trUtf8("Scheduled cards for next week:\n\n")
-
-        old_cumulative = 0
-        for days in range(0,8):
-            cumulative = scheduled_items(days)
-            text.append(self.trUtf8("In")).\
-                 append(QString(" " + str(days) + " ")).\
-                 append(self.trUtf8("day(s) :")).\
-                 append(QString(" " + str(cumulative-old_cumulative) + "\n"))
-            old_cumulative = cumulative
-
-        self.schedule_info.setText(text)
-
-        # Grade information.
-
-        text = self.trUtf8("Number of cards with the following grades:\n\n")
-
-        grades = [0, 0, 0, 0, 0, 0]
-        for item in get_items():
-            if item.is_in_active_category():
-                grades[item.grade] += 1
-
-        norm = sum(grades)
-        if norm == 0:
-            norm = 1 # Avoid division by zero.
-
-        for grade in range(0,6):
-            text.append(self.trUtf8("Grade")).\
-                 append(QString(" " + str(grade) + " : " \
-                    + str(grades[grade]) + " ("\
-                    + ("%.1f" % (100.*grades[grade] / norm)) + " %)\n"))
-
-        self.grades_info.setText(text)
-
-        # Category information.
-
-        categories = {}
-        for item in get_items():
-            name = item.cat.name
-            if name not in categories.keys():
-                categories[name] = 1
-            else:
-                categories[name] += 1
-
-        for cat in categories.keys():
-            ListItem(self.category_info, cat, categories[cat])
-
+        # Hide the previous widget if there was once.
+        if self.current_variant_widget:
+            self.vbox_layout.removeWidget(self.current_variant_widget)
+            self.current_variant_widget.hide()
+        # Create widget if it has not been shown before.
+        if not self.variant_widgets[variant_index]:
+            self.statistics_page.prepare_statistics\
+                (self.variant_ids[variant_index])
+            widget_class = self.component_manager.get_current(\
+                "statistics_widget", used_for=self.statistics_page.__class__)
+            widget = widget_class(self.component_manager, self,
+                self.statistics_page)
+            widget.show_statistics(self.variant_ids[variant_index])
+            self.variant_widgets[variant_index] = widget
+        # Show the widget created earlier.
+        self.current_variant_widget = self.variant_widgets[variant_index]
+        self.vbox_layout.addWidget(self.current_variant_widget)
+        self.current_variant_widget.show()
+        self.config()["last_variant_for_statistics_page"][self.page_index] = \
+           variant_index
