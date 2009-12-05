@@ -390,6 +390,19 @@ style "menu-button-about" {
 }
 widget "*.menu_button_about" style "menu-button-about"
 
+style "menu-button-statistics" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "statistics.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_statistics" style "menu-button-statistics"
+
 style "menu-button-exit" {
     engine "sapwood" {
         image {

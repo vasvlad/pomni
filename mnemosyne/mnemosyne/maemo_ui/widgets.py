@@ -77,7 +77,7 @@ def create_menu_ui(main_switcher):
     row2.set_col_spacings(28)
     buttons = {}
     for button_name in ('tags', 'review', 'input', 'settings', \
-        'about', 'exit'):
+        'statistics', 'about', 'exit'):
         button = gtk.Button()
         button.set_size_request(110, 155)
         button.set_name('menu_button_%s' % button_name)
@@ -92,9 +92,10 @@ def create_menu_ui(main_switcher):
     row1.attach(buttons['input'], 2, 3, 0, 1)
     row1.attach(buttons['tags'], 3, 4, 0, 1)
     row2.attach(buttons['settings'], 1, 2, 0, 1)
-    #row2.attach(buttons['sync'], 1, 2, 0, 1)
-    row2.attach(buttons['about'], 2, 3, 0, 1)
-    row2.attach(buttons['exit'], 3, 4, 0, 1)
+#    row2.attach(buttons['sync'], 1, 2, 0, 1)
+    row2.attach(buttons['statistics'], 2, 3, 0, 1)
+    row2.attach(buttons['about'], 3, 4, 0, 1)
+    row2.attach(buttons['exit'], 5, 6, 0, 1)
     buttons_table.attach(row1, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
         yoptions=gtk.EXPAND)
     buttons_table.attach(row2, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
@@ -871,6 +872,35 @@ def create_about_ui(main_switcher, image_name):
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), menu_button
+
+def create_statistics_ui(main_switcher, image_name):
+    """Creates MaemoStatisticsWidget UI."""
+
+    toplevel_table = gtk.Table(rows=1, columns=2)
+    toolbar_container = gtk.Notebook()
+    toolbar_container.set_show_tabs(False)
+    toolbar_container.set_size_request(82, 480)
+    toolbar_container.set_name('one_button_container')
+    toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+    menu_button = gtk.Button()
+    menu_button.set_size_request(80, 80)
+    menu_button.set_name('main_menu_button')
+    info_container = gtk.Notebook()
+    info_container.set_show_border(False)
+    info_container.set_show_tabs(False)
+    info_box = gtk.VBox()
+    info_container.append_page(info_box)
+    toolbar_table.attach(menu_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
+        yoptions=gtk.EXPAND)
+    toolbar_container.append_page(toolbar_table)
+    toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+    toplevel_table.attach(info_container, 1, 2, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+    toplevel_table.show_all()
+    return main_switcher.append_page(toplevel_table), menu_button
+
 
 
 def create_media_dialog_ui():

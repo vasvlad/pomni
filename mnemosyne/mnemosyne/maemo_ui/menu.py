@@ -43,6 +43,7 @@ class MenuWidget(UiComponent):
         buttons['input'].connect('clicked', self.input_cb)
         buttons['settings'].connect('clicked', self.settings_cb)
         #buttons['sync'].connect('clicked', self.sync_cb)
+        buttons['statistics'].connect('clicked', self.statistics_cb)
         buttons['about'].connect('clicked', self.about_cb)
         buttons['exit'].connect('clicked', self.exit_cb)
 
@@ -81,6 +82,12 @@ class MenuWidget(UiComponent):
         
         self._main_widget.switcher.remove_page(self.page)
         self._main_widget.configure_()
+
+    def statistics_cb(self, widget):
+        """Go to statistics mode."""
+
+        self._main_widget.switcher.remove_page(self.page)
+        self._main_widget.statistics_()
 
     def about_cb(self, widget):
         """Go to about mode."""
