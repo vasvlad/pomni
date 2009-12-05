@@ -44,6 +44,7 @@ class ConfigHook(Component):
             "sounddir": "/home/user/MyDocs/.sounds",
             "last_settings_page": 0,
             "last_about_page": 0,
+            "last_selected_grade": 1,
             "server_login": "mnemosyne",
             "server_passwd": "mnemosyne",
             "server_sync_port": "",
