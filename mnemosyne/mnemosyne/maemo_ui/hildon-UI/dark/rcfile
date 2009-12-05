@@ -526,6 +526,17 @@ style "grade0" {
 }
 widget "*.grade0" style "grade0"
 
+style "grade0_disabled" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "0_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade0_disabled" style 'grade0_disabled'
+
 style "grade1" {
     engine "pixmap" {
         image {
@@ -545,6 +556,17 @@ style "grade1" {
     }
 }
 widget "*.grade1" style "grade1"
+
+style "grade1_disabled" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "1_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade1_disabled" style 'grade1_disabled'
 
 style "grade2" {
     engine "pixmap" {
@@ -566,6 +588,17 @@ style "grade2" {
 }
 widget "*.grade2" style "grade2"
 
+style "grade2_disabled" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "2_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade2_disabled" style 'grade2_disabled'
+
 style "grade3" {
     engine "pixmap" {
         image {
@@ -585,6 +618,17 @@ style "grade3" {
     }
 }
 widget "*.grade3" style "grade3"
+
+style "grade3_disabled" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "3_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade3_disabled" style 'grade3_disabled'
 
 style "grade4" {
     engine "pixmap" {
@@ -606,6 +650,17 @@ style "grade4" {
 }
 widget "*.grade4" style "grade4"
 
+style "grade4_disabled" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "4_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade4_disabled" style 'grade4_disabled'
+
 style "grade5" {
     engine "pixmap" {
         image {
@@ -625,6 +680,17 @@ style "grade5" {
     }
 }
 widget "*.grade5" style "grade5"
+
+style "grade5_disabled" {
+    engine "pixmap" {
+        image {
+            function = BOX
+            overlay_file = "5_disabled.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.grade5_disabled" style 'grade5_disabled'
 #----------------------------- Review mode ------------------
 
 

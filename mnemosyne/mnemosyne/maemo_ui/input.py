@@ -71,8 +71,8 @@ class InputWidget(UiComponent):
             sound_button, question_text, answer_text, foreign_text, \
             pronunciation_text, translation_text, cloze_text, new_tag_button, \
             new_tag_entry, tags_box, card_type_switcher, add_card_button, \
-            sound_container, question_container, toolbar_container = \
-            create_input_ui(self._main_widget.switcher)
+            sound_container, question_container, toolbar_container, \
+            self.grades = create_input_ui(self._main_widget.switcher)
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
@@ -81,6 +81,8 @@ class InputWidget(UiComponent):
         sound_button.connect('released', self.preview_sound_in_input_cb)
         question_text.connect('button_release_event', self.show_media_dialog_cb)
         new_tag_button.connect('clicked', self.add_new_tag_cb)
+        for button in self.grades.values():
+            button.connect('clicked', self.set_current_grade_cb)
 
         # Widgets as attributes
         self.areas = {"cloze": cloze_text, "answer":  answer_text,
@@ -175,6 +177,20 @@ class InputWidget(UiComponent):
             [tag.strip() for tag in self.selected_tags.split(',') \
                 if tag.strip() in self.tags]) or self.default_tag_name)
 
+    def set_current_grade(self, grade=None):
+        """Activate selected grade button."""
+
+        if not grade:
+            for num in range(6):
+                self.grades[num].set_name('grade%s' % num)
+                self.grades[num].set_sensitive(False)
+        else:
+            for num in range(6):
+                self.grades[num].set_name('grade%s_disabled' % num)
+                self.grades[num].set_sensitive(True)
+            self.grades[grade].set_name('grade%s' % grade)
+            self.last_selected_grade = grade
+
     def check_complete_input(self):
         """Check for non empty fields."""
 
@@ -234,6 +250,8 @@ class InputWidget(UiComponent):
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
         for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
             self.widgets[widget].set_sensitive(True)
+        for widget in self.grades.values():
+            widget.set_sensitive(True)
         return selected_tags
 
     # Callbacks
@@ -249,6 +267,8 @@ class InputWidget(UiComponent):
         self.widgets["CardTypeSwitcher"].set_current_page(3)
         for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
             self.widgets[widget].set_sensitive(False)
+        for widget in self.grades.values():
+            widget.set_sensitive(False)
         for child in tags_box.get_children():
             tags_box.remove(child)
         for tag in self.tags:
@@ -305,6 +325,11 @@ class InputWidget(UiComponent):
         self.set_content_type(widget.name)
         self.areas['question'].get_buffer().set_text(_("<QUESTION>"))
         self.show_snd_container()
+
+    def set_current_grade_cb(self, widget):
+        """Sets current grade value."""
+
+        self.set_current_grade(int(widget.name[5]))
 
     def show_media_dialog_cb(self, widget, event):
         """Open MediaDialog."""
@@ -401,8 +426,10 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.areas[name].connect('button_press_event', self.clear_text_cb)
         try:
             self.selected_tags = self.conf["tags_of_last_added"]
+            self.last_selected_grade = self.conf['last_selected_grade']
         except:
             self.selected_tags = self.default_tag_name
+            self.last_selected_grade = 0
 
     def activate(self):
         """Activate input mode."""
@@ -412,6 +439,7 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.conf["card_type_last_selected"]]["card_type"])
         self.set_content_type(self.conf["content_type_last_selected"])
         self.update_tags()
+        self.set_current_grade(self.last_selected_grade)
         self.clear_widgets()
         self._main_widget.switcher.set_current_page(self.page)
 
@@ -434,7 +462,11 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        self.controller().create_new_cards(fact_data, self.card_type, -1, \
+        if self.last_selected_grade in (0, 1):
+            grade = -1
+        else:
+            grade = self.last_selected_grade
+        self.controller().create_new_cards(fact_data, self.card_type, grade, \
             [tag.strip() for tag in self.selected_tags.split(',')], save=True)
         self.clear_widgets()
         self.added_new_cards = True
@@ -449,6 +481,7 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.selected_tags = self.hide_tags_dialog()            
         else:
             self.conf["tags_of_last_added"] = self.selected_tags
+            self.conf["last_selected_grade"] = self.last_selected_grade
             self.conf["card_type_last_selected"] = self.card_type.id
             self.conf["content_type_last_selected"] = self.content_type
             self.conf.save()
@@ -514,6 +547,7 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.set_content_type(content_type)
         self.set_widgets_data(self.fact)
         self.update_tags()
+        self.set_current_grade()
         self.show_snd_container()
         self._main_widget.switcher.set_current_page(self.page)
 
