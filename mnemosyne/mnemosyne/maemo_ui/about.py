@@ -25,7 +25,7 @@ Hildon UI. About Widget.
 """
 
 import os
-from mnemosyne.maemo_ui.widgets import create_about_ui
+import mnemosyne.maemo_ui.widgets.about as widgets
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -35,8 +35,9 @@ class AboutWidget(UiComponent):
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager, )
         # create widgets
-        self.page, menu_button = create_about_ui(self.main_widget().switcher, \
-            os.path.join(self.config()['theme_path'], "mnemosyne.png"))
+        self.page, menu_button = \
+            widgets.create_about_ui(self.main_widget().switcher,
+                os.path.join(self.config()['theme_path'], "mnemosyne.png"))
         # connect signals
         menu_button.connect('clicked', self.about_to_main_menu_cb)
 

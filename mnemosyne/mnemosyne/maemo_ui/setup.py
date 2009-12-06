@@ -16,7 +16,7 @@ setup(name=PKG,
     author="Pomni Development team",
     author_email="pomni@googlegroups.com",
     license='GPL 2',
-    packages=["mnemosyne.maemo_ui"],
+    packages=["mnemosyne.maemo_ui", "mnemosyne.maemo_ui.widgets"],
     package_dir={'mnemosyne.maemo_ui': ''},
     data_files = [(os.path.join('share/%s/' % PKG, path), \
         [os.path.join(path, fname) for fname in files]) \

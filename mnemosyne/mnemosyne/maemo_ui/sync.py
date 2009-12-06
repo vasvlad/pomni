@@ -34,6 +34,8 @@ from libSM2sync.server import Server
 from libSM2sync.client import Client
 from libSM2sync.sync import UIMessenger
 from mnemosyne.maemo_ui.widgets import create_sync_ui
+import mnemosyne.maemo_ui.widgets.sync as widgets
+
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -58,7 +60,8 @@ class SyncWidget(UiComponent):
             self.client_port_entry, self.server_login_entry, \
             self.server_passwd_entry, self.server_address_entry, \
             self.server_port_entry, self.menu_button, self.client_table, \
-            self.server_table = create_sync_ui(self.main_widget().switcher)
+            self.server_table = \
+                widgets.create_sync_ui(self.main_widget().switcher)
         # connect signals
         self.client_mode_button.connect('pressed', self.activate_client_mode_cb)
         self.server_mode_button.connect('pressed', self.activate_server_mode_cb)
