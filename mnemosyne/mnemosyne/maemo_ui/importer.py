@@ -70,20 +70,14 @@ def makeImportedModule(name, pathname, desc, scope):
         # we don't add any docs for the module in case the
         # user tries accessing '__doc__'
         def __hasattr__(self, key):
-            #print '__hasattr__', self, key
             mod = _loadModule()
             return hasattr(mod, key)
 
         def __getattr__(self, key):
-            #print '__getattr__', self, key
             mod = _loadModule()
-            #print 'mod:', mod
-            rv = getattr(mod, key)
-            #print 'result:', rv
-            return rv
+            return getattr(mod, key)
 
         def __setattr__(self, key, value):
-            #print '__setattr__', self, key, value
             mod = _loadModule()
             return setattr(mod, key, value)
 
@@ -121,20 +115,16 @@ class OnDemandLoader(object):
             sys.modules[fullname] = mod
         return mod
 
-class Finder(object):
-    """ Return Importer object (see PEP 302).
+class OnDemandImporter(object):
+    """ The on-demand importer imports a module proxy that
+        inserts the desired module into the calling scope only when
+        an attribute from the module is actually used.
     """
     __skip = ['_gtk', 'pangocairo']
 
     def find_module(self, fullname, path=None):
-        #print 'find_module', fullname, path
-        #for part in fullname.split('.'):
-        #    if part in self.__skip:
-        #        print 'skipping', fullname
-        #        return None # load normally
 
         if fullname.split('.')[-1] in self.__skip:
-            #print 'skipped', fullname
             return None
 
         origName = fullname
@@ -162,7 +152,6 @@ class Finder(object):
 
         try:
             file, pathname, desc = imp.find_module(fullname, path)
-            #print 'OnDemandLoader', origName, file, pathname, desc
             return OnDemandLoader(origName, file, pathname, desc, global_scope)
         except ImportError:
             # don't return an import error.  That will stop
@@ -170,6 +159,5 @@ class Finder(object):
             return None
 
 def install():
-    sys.meta_path.append(Finder())
-
+    sys.meta_path.append(OnDemandImporter())
 
