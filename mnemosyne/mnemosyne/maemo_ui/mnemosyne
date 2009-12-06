@@ -43,11 +43,11 @@ from mnemosyne.version import version
 
 # register OSSO DBUS service if applicable
 try:
-    import osso  
+    import osso
 except ImportError:
     pass
 else:
-    SERV = osso.Context("org.mnemosyneproj.mnemosyne", version, False)  
+    SERV = osso.Context("org.mnemosyneproj.mnemosyne", version, False)
 
 def parse_commandline(argv):
     """ Parse commandline, check options """
