@@ -70,14 +70,6 @@ def app_factory(interface=None):
     app = Mnemosyne()
     app.components.append(("mnemosyne.maemo_ui.factory", "ConfigHook"))
 
-    if interface == 'cmd':
-        #from maemo_ui.cmd_ui import CmdUiControllerReview, CommandlineUI
-
-        #component_manager.register("ui_controller_review",
-        #                           CmdUiControllerReview())
-        #component_manager.register("renderer", TextRenderer())
-        raise NotImplementedError('cmd ui has to be redesigned')
-
     if not interface or interface == "hildon":
         # Remove unused components
         app.components.remove(\
