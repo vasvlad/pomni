@@ -36,53 +36,45 @@ class MaemoStatisticsWidget(UiComponent):
 
 
     def __init__(self, component_manager):
+        self.statistics_text = ""
         UiComponent.__init__(self, component_manager, )
-        self.html = ""
+        self.prepare_statistics()
         # create widgets
         self.page, menu_button = create_statistics_ui(self.main_widget().switcher, \
-            os.path.join(self.config()['theme_path'], "mnemosyne.png"))
+            self.statistics_text)
         # connect signals
         menu_button.connect('clicked', self.statistics_to_main_menu_cb)
 
     def prepare_statistics(self):
         card = self.review_controller().card
-        self.html = """<html<body>
-        <style type="text/css">
-        table { height: 100%;
-                margin-left: auto; margin-right: auto;
-                text-align: center}
-        body  { background-color: white;
-                margin: 0;
-                padding: 0;
-                border: thin solid #8F8F8F; }
-        </style></head><table><tr><td>"""
+        self.statistics_text = """<span  foreground='white'\
+        size="large">"""
         if not card:
-            self.html += "No current card."
+            self.statistics_text += "No current card."
         elif card.grade == -1:
-            self.html += "Unseen card, no statistics available yet."
+            self.statistics_text += "Unseen card, no statistics available yet."
         else:
-            self.html += "Grade" + ": %d<br>" % card.grade
-            self.html += "Easiness" + ": %1.2f<br>" % card.easiness
-            self.html += "Repetitions" + ": %d<br>" \
+            self.statistics_text += "Grade" + ": %d\n" % card.grade
+            self.statistics_text += "Easiness" + ": %1.2f\n" % card.easiness
+            self.statistics_text += "Repetitions" + ": %d\n" \
                 % (card.acq_reps + card.ret_reps)
-            self.html += "Lapses" + ": %d<br>" % card.lapses
-            self.html += "Interval" + ": %d<br>" \
+            self.statistics_text += "Lapses" + ": %d\n" % card.lapses
+            self.statistics_text += "Interval" + ": %d\n" \
                 % (card.interval / DAY)
-            self.html += "Last repetition" + ": %s<br>" \
+            self.statistics_text += "Last repetition" + ": %s\n" \
                 % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))           
-            self.html += "Next repetition" + ": %s<br>" \
+            self.statistics_text += "Next repetition" + ": %s\n" \
                 % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
-            self.html += "Average thinking time (secs)" + ": %d<br>" \
+            self.statistics_text += "Average thinking time (secs)" + ": %d\n" \
                 % self.database().average_thinking_time(card)
-            self.html += "Total thinking time (secs)" + ": %d<br>" \
+            self.statistics_text += "Total thinking time (secs)" + ": %d\n" \
                 % self.database().total_thinking_time(card)
-        self.html += "</td></tr></table></body></html>"
+        self.statistics_text += "</span>"
 
     def activate(self):
         """Set necessary switcher page."""
         print "activate"
-        self.prepare_statistics()
-        print self.html
+        print self.statistics_text
         self.main_widget().switcher.set_current_page(self.page)
         
     def statistics_to_main_menu_cb(self, widget):

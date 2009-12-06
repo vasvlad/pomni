@@ -873,9 +873,9 @@ def create_about_ui(main_switcher, image_name):
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), menu_button
 
-def create_statistics_ui(main_switcher, image_name):
+def create_statistics_ui(main_switcher, statistics_text):
     """Creates MaemoStatisticsWidget UI."""
-
+    
     toplevel_table = gtk.Table(rows=1, columns=2)
     toolbar_container = gtk.Notebook()
     toolbar_container.set_show_tabs(False)
@@ -889,6 +889,17 @@ def create_statistics_ui(main_switcher, image_name):
     info_container.set_show_border(False)
     info_container.set_show_tabs(False)
     info_box = gtk.VBox()
+    label_title = gtk.Label()
+    label_title.set_use_markup(True)
+    label_title.set_justify(gtk.JUSTIFY_CENTER)
+    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
+        "Current card statistics</b></span>")
+    label_text = gtk.Label()
+    label_text.set_use_markup(True)
+    label_text.set_justify(gtk.JUSTIFY_LEFT)
+    label_text.set_markup(statistics_text)
+    info_box.pack_start(label_title, expand=False, fill=True, padding=10)
+    info_box.pack_start(label_text, expand=False, fill=True, padding=10)
     info_container.append_page(info_box)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
         yoptions=gtk.EXPAND)
