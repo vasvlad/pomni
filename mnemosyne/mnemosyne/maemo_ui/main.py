@@ -39,7 +39,14 @@ class MainWdgt(MainWidget):
         self.window = None
         self.switcher = None
         self.widgets = {}
-        self.soundplayer = SoundPlayer()
+        self._soundplayer = None
+
+    @property
+    def soundplayer(self):
+        if not self._soundplayer:
+            from mnemosyne.maemo_ui.sound import SoundPlayer
+            self._soundplayer = SoundPlayer()
+        return self._soundplayer
 
     def activate(self):
         """Basic UI setup."""
