@@ -24,10 +24,6 @@
 Main
 """
 
-if __name__ != "__main__":
-    raise ImportError("Don't import this! "\
-                      "This program is supposed to be run from command line")
-
 import sys
 import os
 
@@ -36,6 +32,10 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../../")
     sys.path.insert(0, "../")
 
+# turn on lazy imports
+from mnemosyne.maemo_ui import importer
+importer.install()
+
 from optparse import OptionParser
 from mnemosyne.maemo_ui.factory import app_factory
 from mnemosyne.maemo_ui.dbfixer import DBFixer
@@ -43,11 +43,11 @@ from mnemosyne.version import version
 
 # register OSSO DBUS service if applicable
 try:
-    import osso  
+    import osso
 except ImportError:
     pass
 else:
-    SERV = osso.Context("org.mnemosyneproj.mnemosyne", version, False)  
+    SERV = osso.Context("org.mnemosyneproj.mnemosyne", version, False)
 
 def parse_commandline(argv):
     """ Parse commandline, check options """

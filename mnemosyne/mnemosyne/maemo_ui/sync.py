@@ -26,14 +26,16 @@ Hildon UI. Sync Widget.
 
 import gtk
 import sys
+import socket
+
 sys.path.insert(0, "../../")
 sys.path.insert(0, "../")
 
-import socket
-from libSM2sync.server import Server
-from libSM2sync.client import Client
-from libSM2sync.sync import UIMessenger
-from mnemosyne.maemo_ui.widgets import create_sync_ui
+import libSM2sync.server as server
+import libSM2sync.client as client
+import libSM2sync.sync as sync
+import mnemosyne.maemo_ui.widgets.sync as widgets
+
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 
@@ -58,7 +60,8 @@ class SyncWidget(UiComponent):
             self.client_port_entry, self.server_login_entry, \
             self.server_passwd_entry, self.server_address_entry, \
             self.server_port_entry, self.menu_button, self.client_table, \
-            self.server_table = create_sync_ui(self.main_widget().switcher)
+            self.server_table = \
+                widgets.create_sync_ui(self.main_widget().switcher)
         # connect signals
         self.client_mode_button.connect('pressed', self.activate_client_mode_cb)
         self.server_mode_button.connect('pressed', self.activate_server_mode_cb)
@@ -66,7 +69,8 @@ class SyncWidget(UiComponent):
         self.client_start_button.connect('pressed', self.start_client_sync_cb)
         self.server_start_button.connect('pressed', self.start_server_sync_cb)
 
-    def complete_events(self):
+    @staticmethod
+    def complete_events():
         """Defreeze GTK UI."""
 
         while gtk.events_pending():
@@ -130,6 +134,7 @@ class SyncWidget(UiComponent):
         """Starts syncing as Client."""
 
         if not widget.get_active():
+            
             self.show_or_hide_containers(False, "client")
             login = self.client_login_entry.get_text()
             passwd = self.client_passwd_entry.get_text()
@@ -138,10 +143,11 @@ class SyncWidget(UiComponent):
             uri = host + ':' + port
             if not uri.startswith("http://"):
                 uri = "http://" + uri
-            messenger = UIMessenger(self.show_message, self.complete_events, \
-                self.update_client_status, self.client_progressbar.show, \
-                self.update_client_progressbar, self.client_progressbar.hide)
-            self.client = Client(host, port, uri, self.database(), \
+            messenger = sync.UIMessenger(self.show_message, 
+                self.complete_events, self.update_client_status,
+                self.client_progressbar.show, self.update_client_progressbar,
+                self.client_progressbar.hide)
+            self.client = client.Client(host, port, uri, self.database(), \
                 self.controller(), self.config(), self.log(), messenger)
             self.client.set_user(login, passwd)
             self.complete_events()
@@ -165,12 +171,12 @@ class SyncWidget(UiComponent):
                 host = self.server_address_entry.get_text()
                 self.show_or_hide_containers(False, "server")
                 try:
-                    messenger = UIMessenger(self.show_message, \
-                    self.complete_events, self.update_server_status, \
-                    self.server_progressbar.show, \
-                    self.update_server_progressbar, \
-                    self.server_progressbar.hide)
-                    self.server = Server("%s:%s" % (host, port), \
+                    messenger = sync.UIMessenger(self.show_message,
+                        self.complete_events, self.update_server_status,
+                        self.server_progressbar.show, 
+                        self.update_server_progressbar, 
+                        self.server_progressbar.hide)
+                    self.server = server.Server("%s:%s" % (host, port),
                     self.database(), self.config(), self.log(), messenger)
                 except socket.error, error:
                     self.show_message(str(error))

@@ -70,16 +70,8 @@ def app_factory(interface=None):
     app = Mnemosyne()
     app.components.append(("mnemosyne.maemo_ui.factory", "ConfigHook"))
 
-    if interface == 'cmd':
-        #from maemo_ui.cmd_ui import CmdUiControllerReview, CommandlineUI
-
-        #component_manager.register("ui_controller_review",
-        #                           CmdUiControllerReview())
-        #component_manager.register("renderer", TextRenderer())
-        raise NotImplementedError('cmd ui has to be redesigned')
-
     if not interface or interface == "hildon":
-        # Remove unused components
+        # Remove not used components
         app.components.remove(\
             ("mnemosyne.libmnemosyne.card_types.map", "MapPlugin"))
         app.components.remove(\
@@ -98,7 +90,7 @@ def app_factory(interface=None):
         app.components.remove(\
             ("mnemosyne.libmnemosyne.filters.html5_media", "Html5Media"))
         app.components.remove(\
-            ("mnemosyne.libmnemosyne.file_formats.mnemosyne1_mem", \
+            ("mnemosyne.libmnemosyne.file_formats.mnemosyne1_mem",
             "Mnemosyne1Mem"))
 
         # Add necessary components

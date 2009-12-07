@@ -24,7 +24,8 @@
 Hildon UI. Menu widgets.
 """
 
-from mnemosyne.maemo_ui.widgets import create_menu_ui
+import mnemosyne.maemo_ui.widgets.menu as widgets
+#import create_menu_ui
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 
 class MenuWidget(UiComponent):
@@ -36,7 +37,7 @@ class MenuWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self._main_widget = self.main_widget()
         # create widgets
-        self.page, buttons = create_menu_ui(self._main_widget.switcher)
+        self.page, buttons = widgets.create_menu_ui(self._main_widget.switcher)
         # connect signals
         buttons['tags'].connect('clicked', self.tags_cb)
         buttons['review'].connect('clicked', self.review_cb)
@@ -49,7 +50,7 @@ class MenuWidget(UiComponent):
 
     def activate(self):
         """Activates necessary switcher page."""
-
+        
         self._main_widget.switcher.set_current_page(self.page)
 
     # callbacks
@@ -97,7 +98,6 @@ class MenuWidget(UiComponent):
 
     def exit_cb(self, widget):
         """Exit program."""
-
         self._main_widget.exit_()
 
 
