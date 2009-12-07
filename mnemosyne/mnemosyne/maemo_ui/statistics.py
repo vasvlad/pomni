@@ -24,7 +24,6 @@
 Hildon UI. Statistics Widget.
 """
 
-import os
 import time
 from mnemosyne.maemo_ui.widgets import create_statistics_ui
 from mnemosyne.libmnemosyne.ui_component import UiComponent
@@ -40,15 +39,17 @@ class MaemoStatisticsWidget(UiComponent):
         UiComponent.__init__(self, component_manager, )
         self.prepare_statistics()
         # create widgets
-        self.page, menu_button = create_statistics_ui(self.main_widget().switcher, \
-            self.statistics_text)
+        self.page, menu_button = create_statistics_ui( \
+            self.main_widget().switcher, self.statistics_text)
         # connect signals
         menu_button.connect('clicked', self.statistics_to_main_menu_cb)
 
     def prepare_statistics(self):
+        """ Preparing statistics text """
+
         card = self.review_controller().card
         self.statistics_text = """<span  foreground='white'\
-        size="large">"""
+        size="x-large">"""
         if not card:
             self.statistics_text += "No current card."
         elif card.grade == -1:
@@ -62,7 +63,7 @@ class MaemoStatisticsWidget(UiComponent):
             self.statistics_text += "Interval" + ": %d\n" \
                 % (card.interval / DAY)
             self.statistics_text += "Last repetition" + ": %s\n" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))           
+                % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
             self.statistics_text += "Next repetition" + ": %s\n" \
                 % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
             self.statistics_text += "Average thinking time (secs)" + ": %d\n" \
@@ -73,10 +74,9 @@ class MaemoStatisticsWidget(UiComponent):
 
     def activate(self):
         """Set necessary switcher page."""
-        print "activate"
-        print self.statistics_text
+
         self.main_widget().switcher.set_current_page(self.page)
-        
+
     def statistics_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
