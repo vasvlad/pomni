@@ -40,7 +40,7 @@ def create_menu_ui(main_switcher):
     row2.set_col_spacings(28)
     buttons = {}
     for button_name in ('tags', 'review', 'input', 'settings', \
-        'about', 'exit'):
+        'statistics', 'about', 'settings', 'exit'):
         button = gtk.Button()
         button.set_size_request(110, 155)
         button.set_name('menu_button_%s' % button_name)
@@ -55,9 +55,10 @@ def create_menu_ui(main_switcher):
     row1.attach(buttons['input'], 2, 3, 0, 1)
     row1.attach(buttons['tags'], 3, 4, 0, 1)
     row2.attach(buttons['settings'], 1, 2, 0, 1)
-    #row2.attach(buttons['sync'], 1, 2, 0, 1)
-    row2.attach(buttons['about'], 2, 3, 0, 1)
-    row2.attach(buttons['exit'], 3, 4, 0, 1)
+#    row2.attach(buttons['sync'], 1, 2, 0, 1)
+    row2.attach(buttons['statistics'], 2, 3, 0, 1)
+    row2.attach(buttons['about'], 3, 4, 0, 1)
+    row2.attach(buttons['exit'], 5, 6, 0, 1)
     buttons_table.attach(row1, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
         yoptions=gtk.EXPAND)
     buttons_table.attach(row2, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
