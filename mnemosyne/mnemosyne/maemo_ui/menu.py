@@ -44,13 +44,13 @@ class MenuWidget(UiComponent):
         buttons['input'].connect('clicked', self.input_cb)
         buttons['settings'].connect('clicked', self.settings_cb)
         #buttons['sync'].connect('clicked', self.sync_cb)
-        buttons['statistics'].connect('clicked', self.statistics_cb)
+        buttons['stat'].connect('clicked', self.statistics_cb)
         buttons['about'].connect('clicked', self.about_cb)
         buttons['exit'].connect('clicked', self.exit_cb)
 
     def activate(self):
         """Activates necessary switcher page."""
-        
+
         self._main_widget.switcher.set_current_page(self.page)
 
     # callbacks
@@ -62,7 +62,7 @@ class MenuWidget(UiComponent):
 
     def input_cb(self, widget):
         """Go to input mode."""
-        
+
         self._main_widget.switcher.remove_page(self.page)
         self._main_widget.input_()
 
@@ -74,13 +74,13 @@ class MenuWidget(UiComponent):
 
     def sync_cb(self, widget):
         """Go to sync mode."""
-        
+
         self._main_widget.switcher.remove_page(self.page)
         self._main_widget.sync_()
 
     def settings_cb(self, widget):
         """Go to configuration mode."""
-        
+
         self._main_widget.switcher.remove_page(self.page)
         self._main_widget.configure_()
 
