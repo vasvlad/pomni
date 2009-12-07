@@ -24,7 +24,8 @@
 Hildon UI: Tags widget.
 """
 
-from mnemosyne.maemo_ui.widgets import create_tags_ui, create_tag_checkbox
+import mnemosyne.maemo_ui.widgets.tags as widgets
+
 from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
     DefaultCriterion
@@ -56,7 +57,7 @@ class TagsWidget(NonBlockingActivateCardsDialog):
     
     def __init__(self, component_manager):
         NonBlockingActivateCardsDialog.__init__(self, component_manager)
-        self.page, self.tags_box, menu_button = create_tags_ui( \
+        self.page, self.tags_box, menu_button = widgets.create_tags_ui( \
             self.main_widget().switcher)
         self.tags_dict = {}
         # connecting signals
@@ -76,7 +77,7 @@ class TagsWidget(NonBlockingActivateCardsDialog):
             tags_box.remove(child)
         for tag in self.database().get_tags():
             self.tags_dict[tag.name] = tag._id
-            tags_box.pack_start(create_tag_checkbox( \
+            tags_box.pack_start(widgets.create_tag_checkbox( \
                 tag.name, tag._id in criterion.active_tag__ids))
 
     def get_criterion(self):

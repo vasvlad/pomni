@@ -25,7 +25,7 @@ Hildon UI. Review widgets.
 """
 
 from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
-from mnemosyne.maemo_ui.widgets import create_review_ui
+import mnemosyne.maemo_ui.widgets.review as widgets
 from mnemosyne.maemo_ui import tts
 
 LARGE_CONTAINER_HEIGHT = 260
@@ -44,7 +44,7 @@ class ReviewWdgt(ReviewWidget):
             self.question_container, self.answer_container, \
             self.question_text, self.answer_text, self.sound_container, \
             self.sound_button, self.grades_table, grades, toolbar_buttons = \
-            create_review_ui(self.main_widget().switcher)            
+            widgets.create_review_ui(self.main_widget().switcher)            
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
         self.container_width = self.question_text.window.get_geometry()[2]

@@ -25,11 +25,9 @@ Hildon UI. Configuration Widget.
 """
 
 import os
-import gettext
 import tts
-_ = gettext.gettext
 
-from mnemosyne.maemo_ui.widgets import create_configuration_ui
+import mnemosyne.maemo_ui.widgets as widgets
 from mnemosyne.libmnemosyne.ui_components.dialogs import ConfigurationDialog
 
 class ConfigurationWidget(ConfigurationDialog):
@@ -51,7 +49,7 @@ class ConfigurationWidget(ConfigurationDialog):
             self.tts_lang_prev_button, tts_lang_next_button, menu_button, \
             font_size_decrease_button, font_size_increase_button, \
             tts_voice_prev_button, tts_voice_next_button = \
-                create_configuration_ui(self.main_widget().switcher)
+                widgets.create_configuration_ui(self.main_widget().switcher)
         # connect signals
         general_settings_button.connect('released', \
             self.show_general_settings_cb)
@@ -213,6 +211,8 @@ class ConfigurationWidget(ConfigurationDialog):
 
     def config_to_main_menu_cb(self, widget):
         """ Return to main menu. """
+
+        from gettext import gettext as _
 
         if not os.path.exists(os.path.abspath(self.imagedir_entry.get_text())):
             self.main_widget().information_box(\

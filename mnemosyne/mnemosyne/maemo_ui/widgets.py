@@ -281,7 +281,7 @@ def create_input_ui(main_switcher):
     # create grades buttons
     grades = {}
     for num in range(6):
-        grades[num] = create_button('grade%s_disabled' % num)
+        grades[num] = create_grade_button('grade%s_disabled' % num)
     # create text fields
     question_container = gtk.Frame()
     question_container.set_name('html_container')

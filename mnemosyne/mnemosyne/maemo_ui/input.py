@@ -31,8 +31,7 @@ import gettext
 
 from mnemosyne.libmnemosyne.ui_components.dialogs import \
     AddCardsDialog, EditFactDialog
-from mnemosyne.maemo_ui.widgets import create_input_ui, create_tag_checkbox, \
-    create_media_dialog_ui, create_card_type_dialog_ui, create_content_dialog_ui
+import mnemosyne.maemo_ui.widgets.input as widgets
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 from mnemosyne.libmnemosyne.utils import numeric_string_cmp
 from mnemosyne.libmnemosyne.card_types.front_to_back import FrontToBack
@@ -72,7 +71,7 @@ class InputWidget(UiComponent):
             pronunciation_text, translation_text, cloze_text, new_tag_button, \
             new_tag_entry, tags_box, card_type_switcher, add_card_button, \
             sound_container, question_container, toolbar_container, \
-            self.grades = create_input_ui(self._main_widget.switcher)
+            self.grades = widgets.create_input_ui(self._main_widget.switcher)
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
@@ -180,7 +179,7 @@ class InputWidget(UiComponent):
     def set_current_grade(self, grade=None):
         """Activate selected grade button."""
 
-        if not grade:
+        if grade is None:
             for num in range(6):
                 self.grades[num].set_name('grade%s' % num)
                 self.grades[num].set_sensitive(False)
@@ -272,7 +271,7 @@ class InputWidget(UiComponent):
         for child in tags_box.get_children():
             tags_box.remove(child)
         for tag in self.tags:
-            tags_box.pack_start(create_tag_checkbox( \
+            tags_box.pack_start(widgets.create_tag_checkbox( \
                 tag, tag in self.selected_tags))
 
     def add_new_tag_cb(self, widget):
@@ -283,7 +282,7 @@ class InputWidget(UiComponent):
         tags_box = self.widgets["TagsBox"]
         if tag and not tag in self.tags:
             self.tags.append(tag)
-            tag_widget = create_tag_checkbox(tag, True)
+            tag_widget = widgets.create_tag_checkbox(tag, True)
             tags_box.pack_start(tag_widget)
             tags_box.reorder_child(tag_widget, 0)
             tag_entry.set_text("")
@@ -292,7 +291,7 @@ class InputWidget(UiComponent):
         """Open CardTypeDialog."""
 
         self._main_widget.soundplayer.stop()
-        create_card_type_dialog_ui(self.selectors, FrontToBack.id, \
+        widgets.create_card_type_dialog_ui(self.selectors, FrontToBack.id, \
             BothWays.id, ThreeSided.id, Cloze.id, self.widgets[ \
             'CardTypeButton'], self.card_type, self.set_card_type_cb)
 
@@ -300,8 +299,8 @@ class InputWidget(UiComponent):
         """Open ContentDialog."""
 
         self._main_widget.soundplayer.stop()
-        create_content_dialog_ui(self.set_content_type_cb, self.widgets[ \
-            "ContentButton"], self.widgets["ToolbarContainer"], \
+        widgets.create_content_dialog_ui(self.set_content_type_cb,
+            self.widgets["ContentButton"], self.widgets["ToolbarContainer"],
             self.card_type, FrontToBack.id)
 
     def set_card_type_cb(self, widget):
@@ -342,7 +341,7 @@ class InputWidget(UiComponent):
         else:
             ctype = self.content_type + 'dir'
             setattr(self, ctype, self.conf[ctype])
-            dialog, liststore, iconview_widget = create_media_dialog_ui()
+            dialog, liststore, iconview_widget = widgets.create_media_dialog_ui()
             if ctype == 'imagedir':
                 for fname in os.listdir(self.imagedir):
                     if os.path.isfile(os.path.join(self.imagedir, fname)):

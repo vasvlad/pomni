@@ -26,11 +26,10 @@ Main Widget.
 
 import os
 import gtk
-from mnemosyne.maemo_ui.sound import SoundPlayer
-from mnemosyne.maemo_ui.widgets import create_main_ui, \
-    create_question_dialog, create_information_dialog
-from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
+import mnemosyne.maemo_ui.widgets.main as widgets
+
+from mnemosyne.libmnemosyne.ui_components.main_widget import MainWidget
 
 class MainWdgt(MainWidget):
     """Main widget class."""
@@ -40,7 +39,14 @@ class MainWdgt(MainWidget):
         self.window = None
         self.switcher = None
         self.widgets = {}
-        self.soundplayer = SoundPlayer()
+        self._soundplayer = None
+
+    @property
+    def soundplayer(self):
+        if not self._soundplayer:
+            from mnemosyne.maemo_ui.sound import SoundPlayer
+            self._soundplayer = SoundPlayer()
+        return self._soundplayer
 
     def activate(self):
         """Basic UI setup."""
@@ -48,7 +54,7 @@ class MainWdgt(MainWidget):
         # load styles
         gtk.rc_parse(os.path.join(self.config()["theme_path"], "rcfile"))
         # create main window
-        self.window, self.switcher = create_main_ui()
+        self.window, self.switcher = widgets.create_main_ui()
         # fullscreen mode
         fullscreen = self.config()['fullscreen']
         if fullscreen:
@@ -98,6 +104,7 @@ class MainWdgt(MainWidget):
             else:
                 self.menu_()
         gtk.main()
+
 
     def kill_menu_object(self):
         """Removes MenuWidget object from memory."""
@@ -183,7 +190,7 @@ class MainWdgt(MainWidget):
     def information_box(self, message):
         """Show Information message."""
 
-        create_information_dialog(self.window, message)
+        widgets.create_information_dialog(self.window, message)
 
     def error_box(self, message):
         """Error message."""
@@ -193,7 +200,7 @@ class MainWdgt(MainWidget):
     def question_box(self, question, option0, option1, option2):
         """Show Question message."""
 
-        return create_question_dialog(self.window, question) 
+        return widgets.create_question_dialog(self.window, question) 
         
 
 
