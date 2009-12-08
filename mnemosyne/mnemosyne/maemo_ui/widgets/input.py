@@ -280,7 +280,7 @@ def create_content_dialog_ui(callback, content_button, toolbar_container, \
     current_card_type, front_to_back_id):
     """Creates ContentDialog UI."""
 
-    from mnemosyne.maemo_ui.widgets.commont import create_button
+    from mnemosyne.maemo_ui.widgets.common import create_button
 
     text_content_button = create_button('text_content_button', callback, \
         width=72, height=72)
