@@ -27,7 +27,7 @@ Hildon UI. Configuration Widget.
 import os
 import tts
 
-import mnemosyne.maemo_ui.widgets as widgets
+import mnemosyne.maemo_ui.widgets.configuration as widgets
 from mnemosyne.libmnemosyne.ui_components.dialogs import ConfigurationDialog
 
 class ConfigurationWidget(ConfigurationDialog):
