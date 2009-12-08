@@ -94,7 +94,7 @@ class MainWdgt(MainWidget):
                 widget = TagsWidget(self.component_manager)
             elif mode == "statistics":
                 from mnemosyne.maemo_ui.statistics import MaemoStatisticsWidget
-                widget = MaemoStatisticsWidget(self.component_manager)
+                widget = MaemoStatisticsWidget(self.component_manager, "Menu")
             self.widgets[mode] = widget
         return widget
 

@@ -107,6 +107,7 @@ def app_factory(interface=None):
         #app.components.append(("mnemosyne.maemo_ui.sync", "SyncWidget"))
         app.components.append(("mnemosyne.maemo_ui.tags", "TagsWidget"))
         app.components.append(("mnemosyne.maemo_ui.statistics", "MaemoStatisticsWidget"))
+
         app.components.append(\
             ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
         return app

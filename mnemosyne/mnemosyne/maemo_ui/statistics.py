@@ -25,24 +25,26 @@ Hildon UI. Statistics widget.
 """
 
 import time
-from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.libmnemosyne.ui_components.dialogs import StatisticsDialog
 from mnemosyne.maemo_ui.widgets.statistics import create_statistics_ui
 
 DAY = 24 * 60 * 60 # Seconds in a day.
 
-class MaemoStatisticsWidget(UiComponent):
+class MaemoStatisticsWidget(StatisticsDialog):
     """Statistics Widget."""
 
-
-    def __init__(self, component_manager):
+    def __init__(self, component_manager, previous_mode=None):
         self.statistics_text = ""
-        UiComponent.__init__(self, component_manager, )
+        StatisticsDialog.__init__(self, component_manager)
         self.prepare_statistics()
         # create widgets
         self.page, menu_button = create_statistics_ui(\
             self.main_widget().switcher, self.statistics_text)
         # connect signals
-        menu_button.connect('clicked', self.statistics_to_main_menu_cb)
+        if previous_mode == 'Menu':
+            menu_button.connect('clicked', self.back_to_main_menu_cb)
+        else:
+            menu_button.connect('clicked', self.back_to_previous_mode_cb)
 
     def prepare_statistics(self):
         """Preparing statistics text"""
@@ -77,11 +79,14 @@ class MaemoStatisticsWidget(UiComponent):
 
         self.main_widget().switcher.set_current_page(self.page)
 
-    def statistics_to_main_menu_cb(self, widget):
+    def back_to_previous_mode_cb(self, widget):
+        """Returns to previous menu."""
+
+        self.main_widget().switcher.remove_page(self.page)
+
+    def back_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('statistics')
-
-
 
