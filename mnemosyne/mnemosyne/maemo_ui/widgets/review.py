@@ -65,8 +65,9 @@ def create_review_ui(main_switcher):
     buttons[0] = create_button('review_toolbar_tts_button')
     buttons[1] = create_button('review_toolbar_edit_card_button')
     buttons[2] = create_button('plus_button')
-    buttons[3] = create_button('review_toolbar_delete_card_button')
-    buttons[4] = create_button('main_menu_button') 
+    buttons[3] = create_button('review_toolbar_stat_current_card_button')
+    buttons[4] = create_button('review_toolbar_delete_card_button')
+    buttons[5] = create_button('main_menu_button')
     # create grades buttons
     grades = {}
     for num in range(6):
@@ -101,7 +102,7 @@ def create_review_ui(main_switcher):
     # hide necessary widgets
     sound_container.hide()
     return main_switcher.append_page(toplevel_table), buttons[0], buttons[1], \
-        buttons[3], question_container, answer_container, question_text, \
+        buttons[4], question_container, answer_container, question_text, \
         answer_text, sound_container, sound_button, grades_table, \
         grades.values(), buttons.values()
 

@@ -519,6 +519,26 @@ style "delete-card-button" {
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
 
+style "stat-card-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "current_stat_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "current_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
+
 style "grade0" {
     engine "pixmap" {
         image {
