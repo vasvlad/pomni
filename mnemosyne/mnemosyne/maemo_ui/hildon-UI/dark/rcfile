@@ -429,7 +429,7 @@ style "grades-container" {
 }
 widget "*.grades_container" style "grades-container"
 
-style "toolbar-container" {
+style "review-toolbar-container" {
     engine "sapwood" {
         image {
             function = BOX
@@ -437,7 +437,17 @@ style "toolbar-container" {
         }
     }
 }
-widget "*.toolbar_container" style "toolbar-container"
+widget "*.review_toolbar_container" style "review-toolbar-container"
+
+style "input-toolbar-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "left_5.png"
+        }
+    }
+}
+widget "*.input_toolbar_container" style "input-toolbar-container"
 
 style "speak-button" {
     engine "sapwood" {

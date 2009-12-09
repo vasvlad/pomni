@@ -41,7 +41,7 @@ def create_review_ui(main_switcher):
     toolbar_container = gtk.Notebook()
     toolbar_container.set_show_tabs(False)
     toolbar_container.set_size_request(82, 480)
-    toolbar_container.set_name('toolbar_container')
+    toolbar_container.set_name('review_toolbar_container')
     # create grades container
     grades_container = gtk.Notebook()
     grades_container.set_show_tabs(False)
