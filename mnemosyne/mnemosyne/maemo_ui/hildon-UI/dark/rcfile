@@ -433,7 +433,7 @@ style "toolbar-container" {
     engine "sapwood" {
         image {
             function = BOX
-            file = "left_5.png"
+            file = "left_6.png"
         }
     }
 }
