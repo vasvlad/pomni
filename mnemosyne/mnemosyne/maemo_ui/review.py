@@ -44,7 +44,7 @@ class ReviewWdgt(ReviewWidget):
             self.question_container, self.answer_container, \
             self.question_text, self.answer_text, self.sound_container, \
             self.sound_button, self.grades_table, grades, toolbar_buttons = \
-            widgets.create_review_ui(self.main_widget().switcher)            
+            widgets.create_review_ui(self.main_widget().switcher)
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
         self.container_width = self.question_text.window.get_geometry()[2]
@@ -56,8 +56,9 @@ class ReviewWdgt(ReviewWidget):
         toolbar_buttons[0].connect('clicked', self.speak_cb)
         toolbar_buttons[1].connect('clicked', self.edit_card_cb)
         toolbar_buttons[2].connect('clicked', self.add_card_cb)
-        toolbar_buttons[3].connect('clicked', self.delete_card_cb)
-        toolbar_buttons[4].connect('clicked', self.review_to_main_menu_cb)
+        toolbar_buttons[3].connect('clicked', self.statistics_card_cb)
+        toolbar_buttons[4].connect('clicked', self.delete_card_cb)
+        toolbar_buttons[5].connect('clicked', self.review_to_main_menu_cb)
 
     def activate(self):
         """Set necessary switcher page."""
@@ -68,15 +69,15 @@ class ReviewWdgt(ReviewWidget):
         """Enable or disable 'edit card' button."""
 
         self.edit_button.set_sensitive(enabled)
-        
+
     def enable_delete_current_card(self, enabled):
         """Enable or disable 'delete card' button."""
 
         self.del_button.set_sensitive(enabled)
-        
+
     def set_question(self, text):
         """Set question."""
-        
+
         self.next_is_image_card = False
         self.tts_button.set_sensitive(False)
         if "sound src=" in text:
@@ -88,7 +89,7 @@ class ReviewWdgt(ReviewWidget):
             self.sound_button.set_active(True)
             self.main_widget().soundplayer.play(self.sndtext, self)
         else:
-            self.sound_container.hide()            
+            self.sound_container.hide()
             if "img src=" in text:
                 self.next_is_image_card = True
                 self.question_container.set_size_request( \
@@ -104,17 +105,17 @@ class ReviewWdgt(ReviewWidget):
         """Set answer."""
 
         self.renderer.render_html(self.answer_text, text)
-        
+
     def clear_question(self): 
         """Clear question text."""
 
         self.renderer.render_html(self.question_text)
-        
+
     def clear_answer(self):
         """Clear answer text."""
 
         self.renderer.render_html(self.answer_text)
-        
+
     def update_show_button(self, text, default, enabled): 
         """Update show button."""
 
@@ -172,6 +173,11 @@ class ReviewWdgt(ReviewWidget):
         """Hook for add new card."""
 
         self.controller().add_cards()
+
+    def statistics_card_cb(self, widget):
+        """Hook for statistics of current card."""
+
+        self.controller().show_statistics()
 
     def delete_card_cb(self, widget):
         """Hook for delete card."""

@@ -35,7 +35,7 @@ def create_input_ui(main_switcher):
     toolbar_container = gtk.Notebook()
     toolbar_container.set_show_tabs(False)
     toolbar_container.set_size_request(82, 480)
-    toolbar_container.set_name('toolbar_container')
+    toolbar_container.set_name('input_toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create toolbar buttons
     card_type_button = gtk.Button()

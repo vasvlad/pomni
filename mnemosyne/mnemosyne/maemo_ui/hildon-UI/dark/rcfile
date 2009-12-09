@@ -390,6 +390,19 @@ style "menu-button-about" {
 }
 widget "*.menu_button_about" style "menu-button-about"
 
+style "menu-button-stat" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "stat.png"
+        }
+        image {
+            function = FOCUS
+        }
+    }
+}
+widget "*.menu_button_stat" style "menu-button-stat"
+
 style "menu-button-exit" {
     engine "sapwood" {
         image {
@@ -416,7 +429,17 @@ style "grades-container" {
 }
 widget "*.grades_container" style "grades-container"
 
-style "toolbar-container" {
+style "review-toolbar-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "left_6.png"
+        }
+    }
+}
+widget "*.review_toolbar_container" style "review-toolbar-container"
+
+style "input-toolbar-container" {
     engine "sapwood" {
         image {
             function = BOX
@@ -424,7 +447,7 @@ style "toolbar-container" {
         }
     }
 }
-widget "*.toolbar_container" style "toolbar-container"
+widget "*.input_toolbar_container" style "input-toolbar-container"
 
 style "speak-button" {
     engine "sapwood" {
@@ -505,6 +528,26 @@ style "delete-card-button" {
     }
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+
+style "stat-card-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "current_stat_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "current_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
 
 style "grade0" {
     engine "pixmap" {
