@@ -41,7 +41,7 @@ def create_input_ui(main_switcher):
     toolbar_container = gtk.Notebook()
     toolbar_container.set_show_tabs(False)
     toolbar_container.set_size_request(82, 480)
-    toolbar_container.set_name('toolbar_container')
+    toolbar_container.set_name('input_toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create grades container
     grades_container = gtk.Notebook()
@@ -271,7 +271,7 @@ def create_card_type_dialog_ui(selectors, front_to_back_id, both_ways_id, \
     three_sided_id, cloze_id, card_type_button, current_card_type, callback):
     """Creates CardType dialog UI."""
     
-    from mnemosyne.maemo_ui.widgets.commont import create_radio_button
+    from mnemosyne.maemo_ui.widgets.common import create_radio_button
 
     button = create_radio_button(None, 'front_to_back_cardtype_button', \
         callback)
@@ -308,7 +308,7 @@ def create_content_dialog_ui(callback, content_button, toolbar_container, \
     current_card_type, front_to_back_id):
     """Creates ContentDialog UI."""
 
-    from mnemosyne.maemo_ui.widgets.commont import create_button
+    from mnemosyne.maemo_ui.widgets.common import create_button
 
     text_content_button = create_button('text_content_button', callback, \
         width=72, height=72)

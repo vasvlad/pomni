@@ -92,6 +92,9 @@ class MainWdgt(MainWidget):
             elif mode == "tags":
                 from mnemosyne.maemo_ui.tags import TagsWidget
                 widget = TagsWidget(self.component_manager)
+            elif mode == "statistics":
+                from mnemosyne.maemo_ui.statistics import MaemoStatisticsWidget
+                widget = MaemoStatisticsWidget(self.component_manager, "Menu")
             self.widgets[mode] = widget
         return widget
 
@@ -149,6 +152,12 @@ class MainWdgt(MainWidget):
 
         self.kill_menu_object()
         self.activate_mode('review')
+
+    def statistics_(self):
+        """Activate statistics mode."""
+
+        self.kill_menu_object()
+        self.activate_mode('statistics')
 
     def sync_(self):
         """Activate sync mode."""
