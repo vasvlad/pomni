@@ -63,7 +63,7 @@ def create_input_ui(main_switcher):
     widgets_table = gtk.Table(rows=2, columns=1)
     widgets_table.set_row_spacings(14)
     tags_button = gtk.Button()
-    tags_button.set_size_request(-1, 60)
+    tags_button.set_size_request(80, 80)
     tags_button.set_name('tags_button')
     card_type_switcher = gtk.Notebook()
     card_type_switcher.set_show_tabs(False)
@@ -118,6 +118,10 @@ def create_input_ui(main_switcher):
     cloze_text.set_justification(gtk.JUSTIFY_CENTER)
     cloze_text.set_wrap_mode(gtk.WRAP_WORD)
     # create new tag elements
+    tags_label = gtk.Label()
+    tags_label.set_name('tags_label')
+    tags_label.set_justify(gtk.JUSTIFY_LEFT)
+    tags_label.set_single_line_mode(True)
     tags_layout = gtk.VBox(spacing=26)
     new_tag_box = gtk.HBox()
     new_tag_label = gtk.Label()
@@ -152,6 +156,8 @@ def create_input_ui(main_switcher):
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(add_card_button, 0, 1, 2, 3, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toolbar_table.attach(tags_button, 0, 1, 3, 4, \
+        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_container.add(toolbar_table)
@@ -164,9 +170,8 @@ def create_input_ui(main_switcher):
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.attach(grades_container, 3, 4, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-    widgets_table.attach(tags_button, 0, 1, 0, 1, \
-        xoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND, \
-        yoptions=gtk.SHRINK, xpadding=4)
+    widgets_table.attach(tags_label, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK, xpadding=4)
     widgets_table.attach(card_type_switcher, 0, 1, 1, 2, \
         xoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND, \
         yoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND)
@@ -211,7 +216,7 @@ def create_input_ui(main_switcher):
         answer_text, foreign_text, pronunciation_text, translation_text, \
         cloze_text, new_tag_button, new_tag_entry, tags_box, \
         card_type_switcher, add_card_button, sound_container, \
-        question_container, toolbar_container, grades
+        question_container, toolbar_container, grades, tags_label, tags_button
 
 
 def create_media_dialog_ui():

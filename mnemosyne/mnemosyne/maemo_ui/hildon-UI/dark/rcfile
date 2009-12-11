@@ -292,6 +292,11 @@ style "white-label" {
 }
 widget "*.white_label" style "white-label"
 
+style "tags-label" = "white-label" {
+    font_name = "Nokia Sans 15"
+}
+widget "*.tags_label" style "tags-label"
+
 style "black-label" = "white-label" {
     fg[NORMAL] = "#000000"
     fg[PRELIGHT] = "#000000"
@@ -698,12 +703,17 @@ widget "*.grade5_disabled" style 'grade5_disabled'
 widget "*.tags_button.GtkLabel" style "white-label"
 
 style "tags-button" {
-    engine "sapwood" {
+    engine "pixmap" {
         image {
             function = BOX
-            file = "tag_button.png"
-            border = {6, 6, 6, 6}
-            stretch = TRUE
+            state = INSENSITIVE
+            overlay_file = "tag_button_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "tag_button.png"
+            overlay_stretch = FALSE
         }
 	    image {
 	        function = FOCUS

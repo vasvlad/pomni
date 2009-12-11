@@ -71,7 +71,8 @@ class InputWidget(UiComponent):
             pronunciation_text, translation_text, cloze_text, new_tag_button, \
             new_tag_entry, tags_box, card_type_switcher, add_card_button, \
             sound_container, question_container, toolbar_container, \
-            self.grades = widgets.create_input_ui(self._main_widget.switcher)
+            self.grades, tags_label, tags_button = widgets.create_input_ui( \
+                self._main_widget.switcher)
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
@@ -95,6 +96,7 @@ class InputWidget(UiComponent):
             area.modify_font(font)
 
         self.widgets = {# Other widgets
+            "TagsLabel": tags_label,
             "TagsButton": tags_button,
             "NewTagEntry": new_tag_entry,
             "TagsBox": tags_box,
@@ -172,9 +174,9 @@ class InputWidget(UiComponent):
     def update_tags(self):
         """Update active tags list."""
 
-        self.widgets["TagsButton"].set_label(', '.join( \
-            [tag.strip() for tag in self.selected_tags.split(',') \
-                if tag.strip() in self.tags]) or self.default_tag_name)
+        tags = ', '.join([tag.strip() for tag in self.selected_tags.split(',') \
+            if tag.strip() in self.tags]) or self.default_tag_name
+        self.widgets["TagsLabel"].set_text(_('Current tags: ') + tags)
 
     def set_current_grade(self, grade=None):
         """Activate selected grade button."""
@@ -244,10 +246,11 @@ class InputWidget(UiComponent):
         selected_tags = ', '.join([hbox.get_children()[1].get_label() for \
             hbox in self.widgets["TagsBox"].get_children() if \
             hbox.get_children()[0].get_active()]) or self.default_tag_name
-        self.widgets["TagsButton"].set_label(selected_tags)
-        self.widgets["TagsButton"].show()
+        self.widgets["TagsLabel"].set_text(_('Current tags: ') + selected_tags)
+        self.widgets["TagsLabel"].show()
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
-        for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
+        for widget in ("CardTypeButton", "ContentButton", "AddCardButton", \
+            "TagsButton"):
             self.widgets[widget].set_sensitive(True)
         for widget in self.grades.values():
             widget.set_sensitive(True)
@@ -260,11 +263,12 @@ class InputWidget(UiComponent):
 
         self.tag_mode = True
         tags_box = self.widgets["TagsBox"]
-        self.widgets["TagsButton"].hide()
+        self.widgets["TagsLabel"].hide()
         self.last_input_page = self.widgets["CardTypeSwitcher"]. \
             get_current_page()
         self.widgets["CardTypeSwitcher"].set_current_page(3)
-        for widget in ("CardTypeButton", "ContentButton", "AddCardButton"):
+        for widget in ("CardTypeButton", "ContentButton", "AddCardButton", \
+            "TagsButton"):
             self.widgets[widget].set_sensitive(False)
         for widget in self.grades.values():
             widget.set_sensitive(False)
