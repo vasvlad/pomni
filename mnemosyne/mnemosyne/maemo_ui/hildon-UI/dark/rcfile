@@ -221,7 +221,7 @@ style "scrolled-window" {
         }
     }
 }
-widget "*.scrolled_window" style "scrolled-window"
+widget "*.scrolled_window.GtkVScrollbar" style "scrolled-window"
 
 style "to-main-menu-button" {
     engine "sapwood" {
