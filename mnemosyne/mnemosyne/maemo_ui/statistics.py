@@ -24,9 +24,9 @@
 Hildon UI. Statistics widget.
 """
 
-import time
 from mnemosyne.libmnemosyne.ui_components.dialogs import StatisticsDialog
 from mnemosyne.maemo_ui.widgets.statistics import create_statistics_ui
+from mnemosyne.libmnemosyne.statistics import CurrentCardStatisctcs
 
 DAY = 24 * 60 * 60 # Seconds in a day.
 
@@ -35,6 +35,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
 
     def __init__(self, component_manager, previous_mode=None):
         self.statistics_text = ""
+        self.component_manager = component_manager
         StatisticsDialog.__init__(self, component_manager)
         self.prepare_statistics()
         # create widgets
@@ -48,31 +49,17 @@ class MaemoStatisticsWidget(StatisticsDialog):
 
     def prepare_statistics(self):
         """Preparing statistics text"""
-
-        card = self.review_controller().card
+        
+        data = CurrentCardStatisctcs(self.component_manager).get_data()
         self.statistics_text = """<span  foreground='white'\
         size="x-large">"""
-        if not card:
-            self.statistics_text += "No current card."
-        elif card.grade == -1:
-            self.statistics_text += "Unseen card, no statistics available yet."
+        if data.has_key('error'):
+            self.statistics_text += data['error']
         else:
-            self.statistics_text += "Grade" + ": %d\n" % card.grade
-            self.statistics_text += "Easiness" + ": %1.2f\n" % card.easiness
-            self.statistics_text += "Repetitions" + ": %d\n" \
-                % (card.acq_reps + card.ret_reps)
-            self.statistics_text += "Lapses" + ": %d\n" % card.lapses
-            self.statistics_text += "Interval" + ": %d\n" \
-                % (card.interval / DAY)
-            self.statistics_text += "Last repetition" + ": %s\n" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
-            self.statistics_text += "Next repetition" + ": %s\n" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
-            self.statistics_text += "Average thinking time (secs)" + ": %d\n" \
-                % self.database().average_thinking_time(card)
-            self.statistics_text += "Total thinking time (secs)" + ": %d\n" \
-                % self.database().total_thinking_time(card)
+            self.statistics_text += "\n".join(["%s %s" % (name, result) \
+                                        for name, result in data.items()])
         self.statistics_text += "</span>"
+
 
     def activate(self):
         """Set necessary switcher page."""
