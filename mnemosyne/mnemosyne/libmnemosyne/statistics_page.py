@@ -25,6 +25,7 @@ class StatisticsPage(Component):
     instantiate = Component.LATER
 
     name = ""
+    data = {}
     variants = [] # [(variant_id, variant_name)]
     show_variants_in_combobox = True
         
@@ -32,6 +33,22 @@ class StatisticsPage(Component):
 
         """This method calculates the data for the requested variant and sets
         the approriate hints to be picked up by the corresponding widget.
+
+        """
+        
+        raise NotImplementedError
+
+    def get_data(self):
+
+        """This method returns the data for statistics in dictonary 
+
+        """
+        
+        raise NotImplementedError
+
+    def get_view(self):
+
+        """This method shows the statistics
 
         """
         
