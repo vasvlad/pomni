@@ -2,8 +2,11 @@
 # statistics_page.py <Peter.Bienstman@UGent.be>
 #
 
+import time
+
 from mnemosyne.libmnemosyne.component import Component
 
+DAY = 24 * 60 * 60 # Seconds in a day
 
 class StatisticsPage(Component):
 
@@ -26,6 +29,7 @@ class StatisticsPage(Component):
 
     name = ""
     data = {}
+
     variants = [] # [(variant_id, variant_name)]
     show_variants_in_combobox = True
         
@@ -38,17 +42,9 @@ class StatisticsPage(Component):
 
         raise NotImplementedError
 
-    def get_data(self):
+    def get_raw_data(self):
 
         """This method returns the data(dictonary) for statistics
-
-        """
-
-        raise NotImplementedError
-
-    def get_view(self):
-
-        """This method shows the statistics
 
         """
 
@@ -60,6 +56,7 @@ class CurrentCardStatPage(StatisticsPage):
     """A statistics for current card
 
     """
+    raw_data = {}
 
     def __init__(self, component_manager):
         StatisticsPage.__init__(self, component_manager)
@@ -69,24 +66,25 @@ class CurrentCardStatPage(StatisticsPage):
 
         card = self.review_controller().card
         if not card:
-            self.data['error'] = 'No current card.'
+            self.raw_data['error'] = 'No current card.'
         elif card.grade == -1:
-            self.data['error'] = 'Unseen card, no statistics available yet.'
+            self.raw_data['error'] = 'Unseen card, no statistics available yet.'
         else:
-            self.data['Grade'] = '%d' % card.grade 
-            self.data['Easiness'] = '%1.2f' % card.easiness 
-            self.data['Repetitions'] = '%d' % (card.acq_reps + card.ret_reps) 
-            self.data['Lapses'] = '%d' % card.lapses
-            self.data['Interval'] = '%d' % (card.interval / DAY)
-            self.data['Last repetition'] = '%s' % \
-                        time.strftime("%B %d, %Y", time.gmtime(card.last_rep)) 
-            self.data['Next repetition'] = '%s' % \
-                        time.strftime("%B %d, %Y", time.gmtime(card.next_rep)) 
-            self.data['Average thinking time (secs)'] = '%d' % \
+            self.raw_data['Grade'] = '%d' % card.grade 
+            self.raw_data['Easiness'] = '%1.2f' % card.easiness 
+            self.raw_data['Repetitions'] = '%d' % \
+                                          (card.acq_reps + card.ret_reps)
+            self.raw_data['Lapses'] = '%d' % card.lapses
+            self.raw_data['Interval'] = '%d' % (card.interval / DAY)
+            self.raw_data['Last repetition'] = '%s' % \
+                        time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
+            self.raw_data['Next repetition'] = '%s' % \
+                        time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
+            self.raw_data['Average thinking time (secs)'] = '%d' % \
                         self.database().average_thinking_time(card)
-            self.data['Total thinking time (secs)'] = '%d' % \
+            self.raw_data['Total thinking time (secs)'] = '%d' % \
                         self.database().total_thinking_time(card)
-        return self.data
+        return self.raw_data
 
 class PlotStatisticsPage(StatisticsPage):
 

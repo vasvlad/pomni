@@ -2,19 +2,18 @@
 # current_card.py <Peter.Bienstman@UGent.be>
 #
 
-import time
-
 from mnemosyne.libmnemosyne.translator import _
+from mnemosyne.libmnemosyne.statistics_page import CurrentCardStatPage
 from mnemosyne.libmnemosyne.statistics_page import HtmlStatisticsPage
 
-DAY = 24 * 60 * 60 # Seconds in a day.
 
-
-class CurrentCard(CurrentCardStatPage):
+class CurrentCard(CurrentCardStatPage, HtmlStatisticsPage):
 
     name = _("Current card")
 
     def prepare_statistics(self, variant):
+        """ Preparing for html widget """
+
         card = self.review_controller().card
         self.html = """<html<body>
         <style type="text/css">
@@ -26,4 +25,10 @@ class CurrentCard(CurrentCardStatPage):
                 padding: 0;
                 border: thin solid #8F8F8F; }
         </style></head><table><tr><td>"""
+        data = self.get_data()
+        if data.has_key('error'):
+            self.html += data['error']
+        else:
+            self.html += "<br>".join(["%s %s" % (name, result) \
+                                        for name, result in data.items()])
         self.html += "</td></tr></table></body></html>"
