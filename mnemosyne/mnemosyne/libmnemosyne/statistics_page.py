@@ -35,15 +35,15 @@ class StatisticsPage(Component):
         the approriate hints to be picked up by the corresponding widget.
 
         """
-        
+
         raise NotImplementedError
 
     def get_data(self):
 
-        """This method returns the data for statistics in dictonary 
+        """This method returns the data(dictonary) for statistics
 
         """
-        
+
         raise NotImplementedError
 
     def get_view(self):
@@ -51,9 +51,18 @@ class StatisticsPage(Component):
         """This method shows the statistics
 
         """
-        
+
         raise NotImplementedError
 
+
+class CurrentCardStatPage(StatisticsPage):
+
+    """A statistics for current card
+
+    """
+    
+    def __init__(self, component_manager):
+        StatisticsPage.__init__(self, component_manager)
 
 class PlotStatisticsPage(StatisticsPage):
 
