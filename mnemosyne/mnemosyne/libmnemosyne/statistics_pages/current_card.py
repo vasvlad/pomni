@@ -10,10 +10,10 @@ from mnemosyne.libmnemosyne.statistics_page import HtmlStatisticsPage
 DAY = 24 * 60 * 60 # Seconds in a day.
 
 
-class CurrentCard(HtmlStatisticsPage):
+class CurrentCard(CurrentCardStatPage):
 
     name = _("Current card")
-        
+
     def prepare_statistics(self, variant):
         card = self.review_controller().card
         self.html = """<html<body>
@@ -26,24 +26,4 @@ class CurrentCard(HtmlStatisticsPage):
                 padding: 0;
                 border: thin solid #8F8F8F; }
         </style></head><table><tr><td>"""
-        if not card:
-            self.html += _("No current card.")
-        elif card.grade == -1:
-            self.html += _("Unseen card, no statistics available yet.")
-        else:
-            self.html += _("Grade") + ": %d<br>" % card.grade
-            self.html += _("Easiness") + ": %1.2f<br>" % card.easiness
-            self.html += _("Repetitions") + ": %d<br>" \
-                % (card.acq_reps + card.ret_reps)
-            self.html += _("Lapses") + ": %d<br>" % card.lapses
-            self.html += _("Interval") + ": %d<br>" \
-                % (card.interval / DAY)
-            self.html += _("Last repetition") + ": %s<br>" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))           
-            self.html += _("Next repetition") + ": %s<br>" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
-            self.html += _("Average thinking time (secs)") + ": %d<br>" \
-                % self.database().average_thinking_time(card)
-            self.html += _("Total thinking time (secs)") + ": %d<br>" \
-                % self.database().total_thinking_time(card)
         self.html += "</td></tr></table></body></html>"
