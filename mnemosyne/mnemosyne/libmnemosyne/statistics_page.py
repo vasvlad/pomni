@@ -61,7 +61,7 @@ class CurrentCardStatPage(StatisticsPage):
     def __init__(self, component_manager):
         StatisticsPage.__init__(self, component_manager)
 
-    def get_data(self):
+    def get_raw_data(self):
         """ get data """
 
         card = self.review_controller().card

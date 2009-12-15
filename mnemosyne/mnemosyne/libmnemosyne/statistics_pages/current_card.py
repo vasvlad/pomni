@@ -14,7 +14,6 @@ class CurrentCard(CurrentCardStatPage, HtmlStatisticsPage):
     def prepare_statistics(self, variant):
         """ Preparing for html widget """
 
-        card = self.review_controller().card
         self.html = """<html<body>
         <style type="text/css">
         table { height: 100%;
@@ -25,7 +24,7 @@ class CurrentCard(CurrentCardStatPage, HtmlStatisticsPage):
                 padding: 0;
                 border: thin solid #8F8F8F; }
         </style></head><table><tr><td>"""
-        data = self.get_data()
+        data = self.get_raw_data()
         if data.has_key('error'):
             self.html += data['error']
         else:
