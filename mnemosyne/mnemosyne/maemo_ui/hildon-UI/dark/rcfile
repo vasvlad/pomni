@@ -548,6 +548,26 @@ style "stat-card-button" {
     }
 }
 widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
+widget "*.stat_toolbar_current_card_button" style "stat-card-button"
+style "stat-common-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "common_stat_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "common_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.stat_toolbar_common_stat_button" style "stat-common-button"
 
 style "grade0" {
     engine "pixmap" {
