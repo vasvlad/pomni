@@ -243,7 +243,7 @@ def create_card_type_dialog_ui(selectors, front_to_back_id, both_ways_id, \
     three_sided_id, cloze_id, card_type_button, current_card_type, callback):
     """Creates CardType dialog UI."""
     
-    from mnemosyne.maemo_ui.widgets.commont import create_radio_button
+    from mnemosyne.maemo_ui.widgets.common import create_radio_button
 
     button = create_radio_button(None, 'front_to_back_cardtype_button', \
         callback)
@@ -280,7 +280,7 @@ def create_content_dialog_ui(callback, content_button, toolbar_container, \
     current_card_type, front_to_back_id):
     """Creates ContentDialog UI."""
 
-    from mnemosyne.maemo_ui.widgets.commont import create_button
+    from mnemosyne.maemo_ui.widgets.common import create_button
 
     text_content_button = create_button('text_content_button', callback, \
         width=72, height=72)

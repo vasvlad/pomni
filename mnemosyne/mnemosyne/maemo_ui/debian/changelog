@@ -4,8 +4,9 @@ mnemosyne (2.0.0~beta6) unstable; urgency=low
   * removed demo database from the package
   * removed rainbow theme from the package
   * decreased memory consumption
+  * implemented statistics for current card (Vlad) 
 
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 06 Dec 2009 20:12:19 +0200
+ -- Ed Bartosh <bartosh@gmail.com>  Wed, 09 Dec 2009 20:36:55 +0200
 
 mnemosyne (2.0.0~beta5) unstable; urgency=low
 
