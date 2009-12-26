@@ -49,11 +49,9 @@ def create_statistics_ui(main_switcher, statistics_text):
     toolbar_container = create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     general_settings_button = widgets.create_radio_button(None, \
-        'config_toolbar_general_settings_button', None, width=80, height=80)
+        'stat_toolbar_current_card_button', None, width=80, height=80)
     skin_settings_button = widgets.create_radio_button(general_settings_button,
-        'config_toolbar_skin_settings_button', None, width=80, height=80)
-    tts_settings_button = widgets.create_radio_button(general_settings_button,
-        'config_toolbar_tts_settings_button', None, width=80, height=80)
+        'config_toolbar_common_stat_button', None, width=80, height=80)
 
     menu_button = widgets.create_button('main_menu_button', None)
 
@@ -68,8 +66,6 @@ def create_statistics_ui(main_switcher, statistics_text):
     toolbar_table.attach(general_settings_button, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_table.attach(skin_settings_button, 0, 1, 1, 2, \
-        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
-    toolbar_table.attach(tts_settings_button, 0, 1, 2, 3, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)

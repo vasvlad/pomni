@@ -538,47 +538,6 @@ style "delete-card-button" {
     }
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
-
-style "stat-card-button" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            overlay_file = "current_stat_disabled.png"
-            overlay_stretch = FALSE
-        }
-        image {
-            function = BOX
-            overlay_file = "current_stat.png"
-            overlay_stretch = FALSE
-        }
-        image {
-	        function = FOCUS
-        }
-    }
-}
-widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
-widget "*.stat_toolbar_current_card_button" style "stat-card-button"
-style "stat-common-button" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            overlay_file = "common_stat_disabled.png"
-            overlay_stretch = FALSE
-        }
-        image {
-            function = BOX
-            overlay_file = "common_stat.png"
-            overlay_stretch = FALSE
-        }
-        image {
-	        function = FOCUS
-        }
-    }
-}
-widget "*.stat_toolbar_common_stat_button" style "stat-common-button"
-
 style "grade0" {
     engine "pixmap" {
         image {
@@ -698,6 +657,27 @@ style "grade5" {
     }
 }
 widget "*.grade5" style "grade5"
+
+style "stat-card-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "current_stat_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "current_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
+
 #----------------------------- Review mode ------------------
 
 
@@ -1603,3 +1583,76 @@ style "media-scrolls" {
 }
 widget "*.scrolledwindow_widget.*" style "media-scrolls"
 #----------------------------- Dialogs ------------------
+
+#----------------------------- Statistics mode ----------
+style "stat-common-button" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            state = INSENSITIVE
+            overlay_file = "common_stat_disabled.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = BOX
+            overlay_file = "common_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+	        function = FOCUS
+        }
+    }
+}
+widget "*.stat_toolbar_common_stat_button" style "stat-common-button"
+
+
+style "current-stat-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "current_stat_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "current_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "current_stat_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "current_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "current_stat_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "current_stat.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.stat_toolbar_current_card_button" style "current-stat-button"
+
+#----------------------------- Statistics mode ----------
