@@ -25,9 +25,19 @@ Hildon UI. Statistics widget.
 """
 
 import gtk
+import mnemosyne.maemo_ui.widgets.common as widgets
 
 def create_statistics_ui(main_switcher, statistics_text):
     """Creates MaemoStatisticsWidget UI."""
+    def create_toolbar_container(name, show_tabs=False, width=82, height=480):
+        """Creates toolbar container."""
+
+        container = gtk.Notebook()
+        container.set_show_tabs(show_tabs)
+        container.set_size_request(width, height)
+        container.set_name(name)
+        return container
+
 
     def create_button(name, width=80, height=80):
         button = gtk.Button()
@@ -36,22 +46,36 @@ def create_statistics_ui(main_switcher, statistics_text):
         return button
 
     toplevel_table = gtk.Table(rows=1, columns=2)
-    toolbar_container = gtk.Notebook()
-    toolbar_container.set_show_tabs(False)
-    toolbar_container.set_size_request(82, 480)
-    toolbar_container.set_name('one_button_container')
+    toolbar_container = create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+    general_settings_button = widgets.create_radio_button(None, \
+        'config_toolbar_general_settings_button', None, width=80, height=80)
+    skin_settings_button = widgets.create_radio_button(general_settings_button,
+        'config_toolbar_skin_settings_button', None, width=80, height=80)
+    tts_settings_button = widgets.create_radio_button(general_settings_button,
+        'config_toolbar_tts_settings_button', None, width=80, height=80)
+
+    menu_button = widgets.create_button('main_menu_button', None)
+
 # create toolbar buttons
-    buttons = {}
-    buttons[0] = create_button('stat_toolbar_current_card_button')
-    buttons[1] = create_button('stat_toolbar_common_stat_button')
-    buttons[5] = create_button('main_menu_button')
+#    buttons = {}
+#    buttons[0] = create_button('stat_toolbar_current_card_button')
+#    buttons[1] = create_button('stat_toolbar_common_stat_button')
+#    buttons[5] = create_button('main_menu_button')
 
 # packing toolbar buttons
-    for pos in buttons.keys():
-        toolbar_table.attach(buttons[pos], 0, 1, pos, pos + 1, \
-            xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    # packing widgets
+    toolbar_table.attach(general_settings_button, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+    toolbar_table.attach(skin_settings_button, 0, 1, 1, 2, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+    toolbar_table.attach(tts_settings_button, 0, 1, 2, 3, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+    toolbar_table.attach(menu_button, 0, 1, 4, 5, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_container.add(toolbar_table)
+    toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
 
     info_container = gtk.Notebook()
     info_container.set_show_border(False)
@@ -75,6 +99,6 @@ def create_statistics_ui(main_switcher, statistics_text):
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
-    return main_switcher.append_page(toplevel_table), buttons[5] 
+    return main_switcher.append_page(toplevel_table), menu_button 
 
 
