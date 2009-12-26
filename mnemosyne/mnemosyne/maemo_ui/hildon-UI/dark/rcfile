@@ -439,6 +439,16 @@ style "review-toolbar-container" {
 }
 widget "*.review_toolbar_container" style "review-toolbar-container"
 
+style "toolbar-container" {
+engine "sapwood" {
+    image {
+	function = BOX
+	file = "left_5.png"
+    }
+}
+}
+widget "*.toolbar_container" style "toolbar-container"
+
 style "input-toolbar-container" {
     engine "sapwood" {
         image {
