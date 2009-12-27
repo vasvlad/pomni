@@ -38,13 +38,20 @@ class MaemoStatisticsWidget(StatisticsDialog):
         StatisticsDialog.__init__(self, component_manager)
         self.prepare_statistics()
         # create widgets
-        self.page, menu_button = create_statistics_ui(\
-            self.main_widget().switcher, self.statistics_text)
+        self.page, self.mode_statistics_switcher, menu_button, current_card_button, \
+            common_button = create_statistics_ui(\
+            self.main_widget().switcher, self.statistics_text, "test common")
         # connect signals
         if previous_mode == 'Menu':
             menu_button.connect('clicked', self.back_to_main_menu_cb)
         else:
             menu_button.connect('clicked', self.back_to_previous_mode_cb)
+
+        current_card_button.connect('released', \
+            self.current_card_statistics_cb)
+        common_button.connect('released', \
+            self.common_statistics_cb)
+
 
     def prepare_statistics(self):
         """Preparing statistics text"""
@@ -89,4 +96,15 @@ class MaemoStatisticsWidget(StatisticsDialog):
 
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('statistics')
+
+    # callbacks
+    def current_card_statistics_cb(self, widget):
+        """Switches to the current card statistics page."""
+
+        self.mode_statistics_switcher.set_current_page(0)
+
+    def common_statistics_cb(self, widget):
+        """Switches to the current card statistics page."""
+
+        self.mode_statistics_switcher.set_current_page(1)
 
