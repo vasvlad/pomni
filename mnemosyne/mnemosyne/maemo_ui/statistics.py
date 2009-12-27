@@ -84,7 +84,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
         self.common_text = """<span  foreground='white'\
         size="x-large">"""
         grades = range(-1, 6)
-        self.common_text +=  [ "%i" % self.database().card_count_for_grade\
+        self.common_text += join.[ "%i" % self.database().card_count_for_grade\
                             (grade) for grade in grades] 
         self.common_text += "</span>"
 
