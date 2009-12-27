@@ -48,11 +48,6 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
 
     menu_button = widgets.create_button('main_menu_button', None)
 
-# create toolbar buttons
-#    buttons = {}
-#    buttons[0] = create_button('stat_toolbar_current_card_button')
-#    buttons[1] = create_button('stat_toolbar_common_stat_button')
-#    buttons[5] = create_button('main_menu_button')
 
 # packing toolbar buttons
     # packing widgets
@@ -90,7 +85,7 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
     label_title.set_use_markup(True)
     label_title.set_justify(gtk.JUSTIFY_CENTER)
     label_title.set_markup("<span foreground='white' size='x-large'><b>"\
-        "Current card statistics</b></span>")
+        "Grade statistics for all cards</b></span>")
     label_text = gtk.Label()
     label_text.set_use_markup(True)
     label_text.set_justify(gtk.JUSTIFY_LEFT)
