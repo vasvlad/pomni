@@ -51,7 +51,7 @@ def create_statistics_ui(main_switcher, statistics_text):
     general_settings_button = widgets.create_radio_button(None, \
         'stat_toolbar_current_card_button', None, width=80, height=80)
     skin_settings_button = widgets.create_radio_button(general_settings_button,
-        'config_toolbar_common_stat_button', None, width=80, height=80)
+        'stat_toolbar_common_stat_button', None, width=80, height=80)
 
     menu_button = widgets.create_button('main_menu_button', None)
 

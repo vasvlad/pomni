@@ -1655,4 +1655,53 @@ style "current-stat-button" {
 }
 widget "*.stat_toolbar_current_card_button" style "current-stat-button"
 
+style "common-stat-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "common_stat_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "common_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "common_stat_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "common_stat.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "common_stat_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "common_stat.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.stat_toolbar_common_stat_button" style "common-stat-button"
+
 #----------------------------- Statistics mode ----------
