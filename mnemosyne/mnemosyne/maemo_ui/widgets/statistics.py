@@ -82,22 +82,9 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, total_te
     current_card_box.pack_start(label_text, expand=False, fill=True, \
                                                             padding=10)
     mode_statistics_switcher.append_page(current_card_box)
-  
-    # Grades
+
     common_box = gtk.VBox()
-    label_title = gtk.Label()
-    label_title.set_use_markup(True)
-    label_title.set_justify(gtk.JUSTIFY_CENTER)
-    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
-        "Grade statistics for all cards</b></span>")
-    label_text = gtk.Label()
-    label_text.set_use_markup(True)
-    label_text.set_justify(gtk.JUSTIFY_LEFT)
-    label_text.set_markup(common_text)
-    common_box.pack_start(label_title, expand=False, fill=True, padding=10)
-    common_box.pack_start(label_text, expand=False, fill=True, padding=10)
-    
-    # Total
+     # Total
     label_title = gtk.Label()
     label_title.set_use_markup(True)
     label_title.set_justify(gtk.JUSTIFY_CENTER)
@@ -110,6 +97,19 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, total_te
     common_box.pack_start(label_title, expand=False, fill=True, padding=10)
     common_box.pack_start(label_text, expand=False, fill=True, padding=10)
 
+    # Grades
+    label_title = gtk.Label()
+    label_title.set_use_markup(True)
+    label_title.set_justify(gtk.JUSTIFY_CENTER)
+    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
+        "Grade statistics for all cards</b></span>")
+    label_text = gtk.Label()
+    label_text.set_use_markup(True)
+    label_text.set_justify(gtk.JUSTIFY_LEFT)
+    label_text.set_markup(common_text)
+    common_box.pack_start(label_title, expand=False, fill=True, padding=10)
+    common_box.pack_start(label_text, expand=False, fill=True, padding=10)
+    
     mode_statistics_switcher.append_page(common_box)
   
     toplevel_table.attach(mode_statistics_switcher, 1, 2, 0, 1, \
