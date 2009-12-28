@@ -76,8 +76,10 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
     label_text.set_use_markup(True)
     label_text.set_justify(gtk.JUSTIFY_LEFT)
     label_text.set_markup(current_card_text)
-    current_card_box.pack_start(label_title, expand=False, fill=True, padding=10)
-    current_card_box.pack_start(label_text, expand=False, fill=True, padding=10)
+    current_card_box.pack_start(label_title, expand=False, fill=True, \
+                                                            padding=10)
+    current_card_box.pack_start(label_text, expand=False, fill=True, \
+                                                            padding=10)
     mode_statistics_switcher.append_page(current_card_box)
   
     common_box = gtk.VBox()
@@ -98,7 +100,8 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
-    return main_switcher.append_page(toplevel_table), mode_statistics_switcher, \
-           menu_button, current_card_button, common_button 
+    return main_switcher.append_page(toplevel_table), \
+           mode_statistics_switcher, menu_button, current_card_button, \
+           common_button 
 
 
