@@ -36,13 +36,14 @@ class MaemoStatisticsWidget(StatisticsDialog):
     def __init__(self, component_manager, previous_mode=None):
         self.current_card_text = ""
         self.common_text = ""
+        self.total_text = ""
         StatisticsDialog.__init__(self, component_manager)
         self.prepare_statistics()
         # create widgets
         self.page, self.mode_statistics_switcher, menu_button, \
             current_card_button, common_button = \
             create_statistics_ui(self.main_widget().switcher, \
-            self.current_card_text, self.common_text)
+            self.current_card_text, self.common_text, self.total_text)
         # connect signals
         if previous_mode == 'Menu':
             menu_button.connect('clicked', self.back_to_main_menu_cb)
@@ -84,13 +85,22 @@ class MaemoStatisticsWidget(StatisticsDialog):
             self.current_card_text += "Total thinking time (secs)" + ": %d\n" \
                 % self.database().total_thinking_time(card)
         self.current_card_text += "</span>"
+
         self.common_text = """<span  foreground='white'\
         size="x-large">"""
         grades = range(-1, 6)
         self.common_text += "\n".join([ "Grade  %2i -  %i" % \
-                 (grade, self.database().card_count_for_grade\
+                 (grade, self.database().card_count_for_grade \
                             (grade)) for grade in grades])
         self.common_text += "</span>"
+
+        self.total_text = """<span  foreground='white'\
+        size="x-large">"""
+        count_of_card = sum([ self.database().card_count_for_grade \
+                            (grade) for grade in grades])
+        self.total_text += "Cards - %i" % count_of_card 
+        self.total_text += "</span>"
+
 
 
     def activate(self):

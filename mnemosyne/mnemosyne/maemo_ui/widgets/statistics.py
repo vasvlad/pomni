@@ -27,7 +27,7 @@ Hildon UI. Statistics widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def create_statistics_ui(main_switcher, current_card_text, common_text):
+def create_statistics_ui(main_switcher, current_card_text, common_text, total_text):
     """Creates MaemoStatisticsWidget UI."""
     def create_toolbar_container(name, show_tabs=False, width=82, height=480):
         """Creates toolbar container."""
@@ -66,6 +66,7 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
     mode_statistics_switcher.set_show_border(False)
     mode_statistics_switcher.set_name('config_mode_settings_switcher')
 
+    # Current card
     current_card_box = gtk.VBox()
     label_title = gtk.Label()
     label_title.set_use_markup(True)
@@ -82,6 +83,7 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
                                                             padding=10)
     mode_statistics_switcher.append_page(current_card_box)
   
+    # Grades
     common_box = gtk.VBox()
     label_title = gtk.Label()
     label_title.set_use_markup(True)
@@ -94,6 +96,20 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
     label_text.set_markup(common_text)
     common_box.pack_start(label_title, expand=False, fill=True, padding=10)
     common_box.pack_start(label_text, expand=False, fill=True, padding=10)
+    
+    # Total
+    label_title = gtk.Label()
+    label_title.set_use_markup(True)
+    label_title.set_justify(gtk.JUSTIFY_CENTER)
+    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
+        "Total</b></span>")
+    label_text = gtk.Label()
+    label_text.set_use_markup(True)
+    label_text.set_justify(gtk.JUSTIFY_LEFT)
+    label_text.set_markup(total_text)
+    common_box.pack_start(label_title, expand=False, fill=True, padding=10)
+    common_box.pack_start(label_text, expand=False, fill=True, padding=10)
+
     mode_statistics_switcher.append_page(common_box)
   
     toplevel_table.attach(mode_statistics_switcher, 1, 2, 0, 1, \
