@@ -43,8 +43,9 @@ class ReviewWdgt(ReviewWidget):
         self.page, self.tts_button, self.edit_button, self.del_button, \
             self.question_container, self.answer_container, \
             self.question_text, self.answer_text, self.sound_container, \
-            self.sound_button, self.grades_table, grades, toolbar_buttons = \
-            widgets.create_review_ui(self.main_widget().switcher)
+            self.sound_button, self.grades_table, grades, toolbar_buttons, \
+            self.tags_label = widgets.create_review_ui( \
+                self.main_widget().switcher)
         self.tts_available = tts.is_available()
         self.tts_button.set_sensitive(self.tts_available)
         self.container_width = self.question_text.window.get_geometry()[2]
@@ -99,6 +100,8 @@ class ReviewWdgt(ReviewWidget):
                     self.container_width, 16)
                 self.tts_button.set_sensitive(self.tts_available)
             self.question_container.show()
+        tags = [tag.name for tag in self.review_controller().card.tags]
+        self.tags_label.set_text("Card tags: " + ', '.join(tags))
         self.renderer.render_html(self.question_text, text)
 
     def set_answer(self, text):
@@ -109,6 +112,7 @@ class ReviewWdgt(ReviewWidget):
     def clear_question(self): 
         """Clear question text."""
 
+        self.tags_label.set_text("No tags")
         self.renderer.render_html(self.question_text)
 
     def clear_answer(self):

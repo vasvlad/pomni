@@ -47,6 +47,8 @@ def create_review_ui(main_switcher):
     grades_container.set_show_tabs(False)
     grades_container.set_size_request(82, 480)
     grades_container.set_name('grades_container')
+    widgets_table = gtk.Table(rows=2, columns=1)
+    widgets_table.set_row_spacings(14)
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     grades_table = gtk.Table(rows=6, columns=1, homogeneous=True)
     widgets_box = gtk.VBox(spacing=10)
@@ -54,6 +56,11 @@ def create_review_ui(main_switcher):
     sound_container = gtk.Table(rows=1, columns=10, homogeneous=True)
     sound_button = gtk.Button()
     sound_button.set_name('media_button')
+    # create tags label
+    tags_label = gtk.Label()
+    tags_label.set_name('tags_label')
+    tags_label.set_justify(gtk.JUSTIFY_LEFT)
+    tags_label.set_single_line_mode(True)
     answer_container = gtk.Frame()
     answer_container.set_name('html_container')
     question_container = gtk.Frame()
@@ -95,7 +102,12 @@ def create_review_ui(main_switcher):
     question_box.pack_end(question_container)
     widgets_box.pack_start(question_box)
     widgets_box.pack_end(answer_container)
-    toplevel_table.attach(widgets_box, 2, 3, 0, 1, ypadding=30,
+    widgets_table.attach(tags_label, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK, xpadding=4)
+    widgets_table.attach(widgets_box, 0, 1, 1, 2, \
+        xoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND, \
+        yoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND)
+    toplevel_table.attach(widgets_table, 2, 3, 0, 1, ypadding=30,
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30)
     toplevel_table.show_all()
@@ -104,6 +116,6 @@ def create_review_ui(main_switcher):
     return main_switcher.append_page(toplevel_table), buttons[0], buttons[1], \
         buttons[4], question_container, answer_container, question_text, \
         answer_text, sound_container, sound_button, grades_table, \
-        grades.values(), buttons.values()
+        grades.values(), buttons.values(), tags_label
 
 
