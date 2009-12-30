@@ -36,7 +36,6 @@ class ReviewWdgt(ReviewWidget):
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
-        self.next_is_image_card = False #Image card indicator
         self.sndtext = None
         self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
@@ -79,7 +78,6 @@ class ReviewWdgt(ReviewWidget):
     def set_question(self, text):
         """Set question."""
 
-        self.next_is_image_card = False
         self.tts_button.set_sensitive(False)
         if "sound src=" in text:
             self.sndtext = text
@@ -92,7 +90,6 @@ class ReviewWdgt(ReviewWidget):
         else:
             self.sound_container.hide()
             if "img src=" in text:
-                self.next_is_image_card = True
                 self.question_container.set_size_request( \
                     self.container_width, LARGE_CONTAINER_HEIGHT)
             else:
@@ -125,8 +122,7 @@ class ReviewWdgt(ReviewWidget):
 
         self.answer_container.set_sensitive(enabled)
         if enabled:
-            self.renderer.render_hint( \
-                self.answer_text, text, self.next_is_image_card)
+            self.renderer.render_hint(self.answer_text, text)
 
     def enable_grades(self, enabled):
         """Enable grades."""

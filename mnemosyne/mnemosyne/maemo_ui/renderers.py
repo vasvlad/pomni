@@ -109,17 +109,14 @@ class Html(Renderer):
         document.write_stream(text)
         document.close_stream()
 
-    def render_hint(self, widget, text, next_is_image_card):
+    def render_hint(self, widget, text):
         """Render html text for show answer button."""
 
-        if next_is_image_card:
-            margin_top = LARGE_HTML_MARGIN
-        else:
-            margin_top = NORMAL_HTML_MARGIN
-        html = "<html><style> body {background:#FFFFFF; color:#000000}" \
-            "</style> <p align=center style='margin-top:%spx; font-size:" \
-            "%s;'>%s</p></html>" % (margin_top, HINT_SIZE, text)
-        self.render_html(widget, html)
+        html = "<html><head><style>*{font-size:30px;font-family:Nokia Sans}" \
+            "body {background:#FFFFFF;color:#000000;}table {height:100;" \
+            "margin-left:auto;margin-right:auto;}</style></head><body><table>" \
+            "<tr><td>%s</td></tr></table></body></html>" % text
+        return self.render_html(widget, self.change_font_size(html))
     
 
 
