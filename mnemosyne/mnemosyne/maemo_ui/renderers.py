@@ -27,10 +27,6 @@ from mnemosyne.libmnemosyne.renderer import Renderer
 import os
 import re
 
-LARGE_HTML_MARGIN = 20
-NORMAL_HTML_MARGIN = 70
-HINT_SIZE = 20
-
 re_src = re.compile(r"""src=\"(.+?)\"""", re.DOTALL | re.IGNORECASE)
 
 class Html(Renderer):
