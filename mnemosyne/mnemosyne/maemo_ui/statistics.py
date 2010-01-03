@@ -143,11 +143,15 @@ class MaemoStatisticsWidget(StatisticsDialog):
     def back_to_previous_mode_cb(self, widget):
         """Returns to previous menu."""
 
+        self.config()["last_variant_for_statistics_page"] = \
+            self.mode_statistics_switcher.get_current_page()
         self.main_widget().switcher.remove_page(self.page)
 
     def back_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
+        self.config()["last_variant_for_statistics_page"] = \
+            self.mode_statistics_switcher.get_current_page()
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('statistics')
 
