@@ -30,13 +30,25 @@ from mnemosyne.maemo_ui.widgets.common import create_tag_checkbox
 def create_input_ui(main_switcher):
     """Creates InputWidget UI."""
 
-    toplevel_table = gtk.Table(rows=1, columns=2)
+    def create_grade_button(name, width=80, height=80):
+        button = gtk.Button()
+        button.set_size_request(width, height)
+        button.set_name(name)
+        return button
+
+    toplevel_table = gtk.Table(rows=1, columns=3)
     # create toolbar container
     toolbar_container = gtk.Notebook()
     toolbar_container.set_show_tabs(False)
     toolbar_container.set_size_request(82, 480)
     toolbar_container.set_name('input_toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+    # create grades container
+    grades_container = gtk.Notebook()
+    grades_container.set_show_tabs(False)
+    grades_container.set_size_request(82, 480)
+    grades_container.set_name('grades_container')
+    grades_table = gtk.Table(rows=6, columns=1, homogeneous=True)
     # create toolbar buttons
     card_type_button = gtk.Button()
     card_type_button.set_size_request(80, 80)
@@ -51,7 +63,7 @@ def create_input_ui(main_switcher):
     widgets_table = gtk.Table(rows=2, columns=1)
     widgets_table.set_row_spacings(14)
     tags_button = gtk.Button()
-    tags_button.set_size_request(-1, 60)
+    tags_button.set_size_request(80, 80)
     tags_button.set_name('tags_button')
     card_type_switcher = gtk.Notebook()
     card_type_switcher.set_show_tabs(False)
@@ -62,6 +74,10 @@ def create_input_ui(main_switcher):
     sound_container = gtk.Table(rows=1, columns=3, homogeneous=True)
     sound_button = gtk.ToggleButton()
     sound_button.set_name('media_button')
+    # create grades buttons
+    grades = {}
+    for num in range(6):
+        grades[num] = create_grade_button('grade%s_disabled' % num)
     # create text fields
     question_container = gtk.Frame()
     question_container.set_name('html_container')
@@ -102,6 +118,10 @@ def create_input_ui(main_switcher):
     cloze_text.set_justification(gtk.JUSTIFY_CENTER)
     cloze_text.set_wrap_mode(gtk.WRAP_WORD)
     # create new tag elements
+    tags_label = gtk.Label()
+    tags_label.set_name('tags_label')
+    tags_label.set_justify(gtk.JUSTIFY_LEFT)
+    tags_label.set_single_line_mode(True)
     tags_layout = gtk.VBox(spacing=26)
     new_tag_box = gtk.HBox()
     new_tag_label = gtk.Label()
@@ -136,14 +156,22 @@ def create_input_ui(main_switcher):
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(add_card_button, 0, 1, 2, 3, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    toolbar_table.attach(tags_button, 0, 1, 3, 4, \
+        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_container.add(toolbar_table)
+    # packing grades buttons
+    for pos in grades.keys():
+        grades_table.attach(grades[pos], 0, 1, 5 - pos, 6 - pos, \
+            xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
+    grades_container.add(grades_table)
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-    widgets_table.attach(tags_button, 0, 1, 0, 1, \
-        xoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND, \
-        yoptions=gtk.SHRINK, xpadding=4)
+    toplevel_table.attach(grades_container, 3, 4, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+    widgets_table.attach(tags_label, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK, xpadding=4)
     widgets_table.attach(card_type_switcher, 0, 1, 1, 2, \
         xoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND, \
         yoptions=gtk.SHRINK|gtk.FILL|gtk.EXPAND)
@@ -188,7 +216,7 @@ def create_input_ui(main_switcher):
         answer_text, foreign_text, pronunciation_text, translation_text, \
         cloze_text, new_tag_button, new_tag_entry, tags_box, \
         card_type_switcher, add_card_button, sound_container, \
-        question_container, toolbar_container
+        question_container, toolbar_container, grades, tags_label, tags_button
 
 
 def create_media_dialog_ui():
