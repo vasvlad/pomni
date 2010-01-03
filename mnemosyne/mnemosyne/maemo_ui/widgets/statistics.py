@@ -121,13 +121,6 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, total_te
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
-<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/widgets/statistics.py
     return main_switcher.append_page(toplevel_table), mode_statistics_switcher, \
            menu_button, current_card_button, common_button, tags_button 
-=======
-    return main_switcher.append_page(toplevel_table), \
-           mode_statistics_switcher, menu_button, current_card_button, \
-           common_button 
->>>>>>> 96d89637a2850cf7723aa07e7062837eda6ef382:mnemosyne/mnemosyne/maemo_ui/widgets/statistics.py
-
 
