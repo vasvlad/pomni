@@ -1548,11 +1548,13 @@ style "icon-view" {
 }
 widget "*.iconview_widget" style "icon-view"
 
+
 style "media-scrolls" {
     GtkRange::slider-width = 60
     GtkRange::stepper-size = 60
     GtkRange::min-slider-length = 60
     GtkRange::trough-border = 0
+    bg[NORMAL] = "#333333"
     engine "pixmap" {
         image {
             function = ARROW
