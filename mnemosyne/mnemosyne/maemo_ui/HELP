@@ -1,0 +1,111 @@
+What is this about?
+==================
+
+'Mnemosyne for Maemo' is a port of well-known flash-card tool 'Mnemosyne' to Maemo platform.
+
+The Mnemosyne software resembles a traditional flash-card program to help you memorise question/answer pairs, but with an important twist: it uses a sophisticated algorithm to schedule the best time for a card to come up for review. Difficult cards that you tend to forget quickly will be scheduled more often, while Mnemosyne won't waste your time on things you remember well.
+
+Spaced Repetition
+=================
+When you have memorised something, you need to review that material, otherwise you will forget it. However, as you probably know from experience, it is much more effective to space out these revisions over the course over several days, rather than cramming all the revisions in a single session. This is what is called the spacing effect.
+
+During the past 120 years, there has been considerable research into these aspects of human memory (by e.g. Ebbinghaus, Mace, Leitner and Wozniak). Based on the work of these people, it was shown that in order to get the best results, the intervals between revisions of the same card should gradually increase. This allows you to focus on things you still haven't mastered, while not wasting time on cards you remember very well.
+
+It is clear that a computer program can be very valuable in assisting you in this process, by keeping track of how difficult you find an card and by doing the scheduling of the revisions. Let's see how this works in practice in the Mnemosyne program.
+
+The Mnemosyne algorithm is very similar to SM2 used in one of the early versions of SuperMemo. There are some modifications that deal with early and late repetitions, and also to add a small, healthy dose of randomness to the intervals.
+
+Supermemo now uses SM11. However, we are a bit skeptical that the huge complexity of the newer SM algorithms provides for a statistically relevant benefit. But, that is one of the facts we hope to find out with our data collection.
+
+We will only make modifications to our algorithms based on common sense or if the data tells us that there is a statistically relevant reason to do so.
+
+
+Getting started using Mnemosyne
+===============================
+You can use Mnemosyne to study anything. In addition to unicode text (meaning all human languages are supported), you can add pictures and sounds to cards.
+
+How do I add cards?
+-------------------
+
+You can make your flash cards however you want. One point to keep in mind, though, is that it will probably be easier on you if you limit each flashcard to one "thing" you are trying to remember.
+
+An exception to this is foreign language study, where you have a word to memorize and you want to learn both the meaning and the pronunciation-- Mnemosyne includes a special feature for this.
+
+For more recommendations on how to make the cards, you can read 20 Rules of Formulating Knowledge from the SuperMemo website. SuperMemo is the commercial software that inspired Mnemosyne.
+
+Grading 101
+-----------
+
+The software will present you with a question, and your task is trying to remember the answer. Afterwards, you rate yourself on a scale between 0 and 5. These ratings will be used in computing the optimal revision schedule. Let's see what these grades mean.
+
+Grades 0 and 1 are used if you don't know the answer yet, or if you have forgotten it. A card with grade 1 is starting to get more familiar than one with grade 0, and will be repeated less often.
+
+The software will keep on asking you these questions until you give them a grade 2 or higher (the exact grade doesn't matter). Grade 2 basically means that you think you'll be able to remember the card for at least one or two days. It signals the transition between short and long term memory.
+
+So now you've memorised this new card. Mnemosyne will next try to make sure that you do not forget it anymore. It will schedule the next revision of this card to some future date, when it thinks you'll still be able to remember it with some effort, without having forgotten it completely. This is the most efficient for the learning process.
+
+If in the future Mnemosyne asks you the question too soon, and you're able to remember it without any effort, you rate the card a 5. The program will take this into account by waiting a lot longer before asking you this question again. (If you know a card really well, you may need to consistently give it a 5 the first several times. As long as you keep giving the card a 4 or 5, Mnemosyne will keep increasing the interval-- there is no limit, and cards will gradually develop a year or more between repetitions).
+
+If Mnemosyne gets it just right, so that you remember it, albeit with some effort, you use grade 4.
+
+If on the other hand it takes you significant effort to remember the answer, and you think the software has waited too long to ask you this question, then rate the card 3.
+
+If you fail to remember it altogether, rate it either 0 or 1, and Mnemosyne will keep on asking you this question until you think you'll be able to remember it again for a few days.
+
+For best results, it is suggested to do your revisions every day, although Mnemosyne will try to cope as well as possible if you postpone your revisions or if you want to learn ahead of time.
+
+
+Initial grades for cards
+------------------------
+
+When first entering cards, you will have to assign a grade. If you don't know the card, give it a 0 or 1. If you do know the card, give higher grades, and the higher the grade, the longer the initial interval will be.
+
+Reviewing the cards
+-------------------
+
+When you start Mnemosyne, it will automatically present you with any cards that have been scheduled for review that day (plus any cards from previous days that you missed). To do your review, simply click on Show Answer, add a grade, and you're on to the next card.
+
+For the best performance of your memory and the Mnemosyne algorithm, you should do your entire scheduled review each day. If this is not possible, it's not a major worry-- Mnemosyne will automatically postpone the cards for you. However, if you frequently miss days, your recall will suffer.
+
+Oranizing your cards using tags
+-------------------------------
+
+To divide your entire card set to parts we recommend using tags. You can assign several tags to one card. When you activate or deactivate tags tagged cards are included or excluded from the review process respectively. 
+
+Working with large numbers of new cards
+---------------------------------------
+
+By default, Mnemosyne will only show you 10 different cards you've put in grade 0 at once. This is because it does not make sense to try and memorise e.g. 100 new cards all at once.
+
+We recommend only going through a limited number of new cards each day, in order to help Mnemosyne achieve a better spread of your workload when reviewing those cards again.
+
+Maximum interval between repetitions
+------------------------------------
+
+ There is no maximum interval between repetitions, and this period can exceed one year.
+ 
+Dealing with large numbers of cards to review
+---------------------------------------------
+
+Don't worry too much! Do as many cards as you feel like to catch up, the rest will be automatically rescheduled to the future.
+
+
+Advanced Grading
+----------------
+
+Here is some additional information about what happens when you grade cards. This information is not necessary to successfully use the program and is intended only for advanced users.
+
+If you grade a card successfully (2-5), the card is scheduled again for a future date. If you grade a card unsuccessfully (0-1), the card is placed in the "unmemorized" pile and is available again for review after you finish the repetitions scheduled for the current day.
+
+All cards have an "easiness" factor which the algorithm uses to schedule the interval between repetitions. It is basically the factor with which the old interval is multiplied in order to get the new one. Note that for the first repetitions, the intervals corresponding to the different grades won't be very different, but as you see the card more often, the differences become larger. The default value of the easiness is 2.5, and it cannot go below 1.3, so intervals always increase if you grade a card 2 or higher. Also note that for the first repetitions, the intervals corresponding to the different grades won't be very differentThe easiness factor is not generally presented to the user because its usefulness is limited to the algorithm's computations.
+
+If you select grade 4, the easiness factor is unchanged and the card is scheduled for future repetition based on the previous record of repetitions.
+
+If you select grade 5, the easiness factor is increased and the card is scheduled for future repetition based on the previous record of repetitions.
+
+If you select grade 2 or 3, the easiness factor is decreased and the card is scheduled for future repetition based on the previous record of repetitions.
+
+If you select grade 0 or 1, the easiness factor is unchanged and the card is put back in the stack of unmemorised cards.
+
+
+
