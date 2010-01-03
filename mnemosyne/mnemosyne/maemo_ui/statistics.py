@@ -40,7 +40,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
         self.prepare_statistics()
         # create widgets
         self.page, self.mode_statistics_switcher, menu_button, current_card_button, \
-            common_button = create_statistics_ui(\
+            common_button, tags_button = create_statistics_ui(\
             self.main_widget().switcher, self.current_card_text, self.common_text)
         # connect signals
         if previous_mode == 'Menu':

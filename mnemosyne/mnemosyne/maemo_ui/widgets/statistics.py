@@ -45,6 +45,9 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
         'stat_toolbar_current_card_button', None, width=80, height=80)
     common_button = widgets.create_radio_button(current_card_button, \
         'stat_toolbar_common_stat_button', None, width=80, height=80)
+    tags_button = widgets.create_radio_button(common_button, \
+        'stat_toolbar_tags_stat_button', None, width=80, height=80)
+
 
     menu_button = widgets.create_button('main_menu_button', None)
 
@@ -54,6 +57,8 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
     toolbar_table.attach(current_card_button,  0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_table.attach(common_button, 0, 1, 1, 2, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+    toolbar_table.attach(tags_button, 0, 1, 2, 3, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
@@ -99,6 +104,6 @@ def create_statistics_ui(main_switcher, current_card_text, common_text):
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), mode_statistics_switcher, \
-           menu_button, current_card_button, common_button 
+           menu_button, current_card_button, common_button, tags_button 
 
 
