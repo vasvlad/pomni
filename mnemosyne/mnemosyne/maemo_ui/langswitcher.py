@@ -34,6 +34,9 @@ except ImportError:
 from mnemosyne.libmnemosyne.component import Component
 
 class LangSwitcher(Component):
+    """Remembers language for set of widgets and saves/restores
+       them when requested.
+    """
     
     gconf_entry = "/apps/osso/inputmethod/int_kb_level_shifted"
     component_type = "langswitcher"
@@ -51,7 +54,7 @@ class LangSwitcher(Component):
             self.enabled = False
 
     def restore_cb(self, widget, event):
-        """Restores saved language if saved."""
+        """Restore saved language if saved."""
         
         self.widgets.setdefault(widget.name, None)
 
@@ -60,7 +63,7 @@ class LangSwitcher(Component):
             self.gconf.set_bool(self.gconf_entry, self.widgets[widget.name])
         
     def save_cb(self, widget, event):
-        """Saves current language."""
+        """Save current language."""
         if self.enabled:
             self.widgets[widget.name] = self.gconf.get_value(self.gconf_entry)
             self.gconf.set_bool(self.gconf_entry, self.current)
