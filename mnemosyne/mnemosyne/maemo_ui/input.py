@@ -73,6 +73,7 @@ class InputWidget(UiComponent):
             sound_container, question_container, toolbar_container, \
             self.grades, tags_label, tags_button = widgets.create_input_ui( \
                 self._main_widget.switcher)
+        
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
@@ -81,8 +82,17 @@ class InputWidget(UiComponent):
         sound_button.connect('released', self.preview_sound_in_input_cb)
         question_text.connect('button_release_event', self.show_media_dialog_cb)
         new_tag_button.connect('clicked', self.add_new_tag_cb)
+        
         for button in self.grades.values():
             button.connect('clicked', self.set_current_grade_cb)
+
+        # create language switcher and set its callbacks for all text widgets
+        text_widgets = [question_text, answer_text, foreign_text,
+                        pronunciation_text, translation_text, cloze_text]
+        langswitcher = self.component_manager.get_current("langswitcher")
+        for widget in text_widgets:
+            widget.connect('focus-in-event', langswitcher.restore_cb)
+            widget.connect('focus-out-event', langswitcher.save_cb)
 
         # Widgets as attributes
         self.areas = {"cloze": cloze_text, "answer":  answer_text,
