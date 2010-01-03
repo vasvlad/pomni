@@ -748,6 +748,7 @@ style "stat-card-button" {
     }
 }
 widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
+widget "*.stat_button" style "stat-card-button"
 
 #----------------------------- Review mode ------------------
 

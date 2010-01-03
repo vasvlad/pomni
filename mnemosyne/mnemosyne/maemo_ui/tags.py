@@ -57,11 +57,12 @@ class TagsWidget(NonBlockingActivateCardsDialog):
     
     def __init__(self, component_manager):
         NonBlockingActivateCardsDialog.__init__(self, component_manager)
-        self.page, self.tags_box, menu_button = widgets.create_tags_ui( \
-            self.main_widget().switcher)
+        self.page, self.tags_box, menu_button, stat_button = \
+        widgets.create_tags_ui(self.main_widget().switcher)
         self.tags_dict = {}
         # connecting signals
         menu_button.connect('clicked', self.tags_to_main_menu_cb)
+        stat_button.connect('clicked', self.stat_cb)
 
     def activate(self):
         """Activate 'ActivateCardsDialog'."""
@@ -98,3 +99,10 @@ class TagsWidget(NonBlockingActivateCardsDialog):
         self.update_ui(self.review_controller())
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_()
+    
+    def stat_cb(self, widget):
+        """Go to main tag statistics."""
+
+        self.config()["last_variant_for_statistics_page"] = 2
+        self.controller().show_statistics()
+

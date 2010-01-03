@@ -59,7 +59,18 @@ class MaemoStatisticsWidget(StatisticsDialog):
         tags_button.connect('released', \
             self.tags_statistics_cb)
 
-
+        #Change current page
+        number_of_page = self.config()["last_variant_for_statistics_page"] 
+        if number_of_page == 0:
+            current_card_button.set_active(True)
+            self.current_card_statistics_cb(None)
+        elif number_of_page == 2:
+            tags_button.set_active(True)
+            self.tags_statistics_cb(None) 
+        else:
+            common_button.set_active(True)
+            self.common_statistics_cb(None) 
+ 
 
     def prepare_statistics(self):
         """Preparing statistics text"""
@@ -122,7 +133,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
             text_for_tag += "</span>"
             self.tags_text[name] = text_for_tag
 
-
+     
 
     def activate(self):
         """Set necessary switcher page."""
@@ -153,6 +164,5 @@ class MaemoStatisticsWidget(StatisticsDialog):
         
     def tags_statistics_cb(self, widget):
         """Switches to the tags statistics page."""
-
         self.mode_statistics_switcher.set_current_page(2)
 
