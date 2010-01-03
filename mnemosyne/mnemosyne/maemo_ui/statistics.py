@@ -36,12 +36,14 @@ class MaemoStatisticsWidget(StatisticsDialog):
     def __init__(self, component_manager, previous_mode=None):
         self.current_card_text = ""
         self.common_text = ""
+        self.total_text = ""
         StatisticsDialog.__init__(self, component_manager)
         self.prepare_statistics()
         # create widgets
         self.page, self.mode_statistics_switcher, menu_button, current_card_button, \
             common_button, tags_button = create_statistics_ui(\
-            self.main_widget().switcher, self.current_card_text, self.common_text)
+            self.main_widget().switcher, self.current_card_text, self.common_text, \
+            self.total_text)
         # connect signals
         if previous_mode == 'Menu':
             menu_button.connect('clicked', self.back_to_main_menu_cb)
@@ -63,7 +65,8 @@ class MaemoStatisticsWidget(StatisticsDialog):
         if not card:
             self.current_card_text += "No current card."
         elif card.grade == -1:
-            self.current_card_text += "Unseen card, no statistics available yet."
+            self.current_card_text += \
+                "Unseen card, no statistics available yet."
         else:
             self.current_card_text += "Grade" + ": %d\n" % card.grade
             self.current_card_text += "Easiness" + ": %1.2f\n" % card.easiness
@@ -76,18 +79,28 @@ class MaemoStatisticsWidget(StatisticsDialog):
                 % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
             self.current_card_text += "Next repetition" + ": %s\n" \
                 % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
-            self.current_card_text += "Average thinking time (secs)" + ": %d\n" \
+            self.current_card_text += \
+                "Average thinking time (secs)" + ": %d\n" \
                 % self.database().average_thinking_time(card)
             self.current_card_text += "Total thinking time (secs)" + ": %d\n" \
                 % self.database().total_thinking_time(card)
         self.current_card_text += "</span>"
+
         self.common_text = """<span  foreground='white'\
         size="x-large">"""
         grades = range(-1, 6)
         self.common_text += "\n".join([ "Grade  %2i -  %i" % \
-                 (grade, self.database().card_count_for_grade\
+                 (grade, self.database().card_count_for_grade \
                             (grade)) for grade in grades])
         self.common_text += "</span>"
+
+        self.total_text = """<span  foreground='white'\
+        size="x-large">"""
+        count_of_card = sum([ self.database().card_count_for_grade \
+                            (grade) for grade in grades])
+        self.total_text += "Cards - %i" % count_of_card 
+        self.total_text += "</span>"
+
 
 
     def activate(self):
