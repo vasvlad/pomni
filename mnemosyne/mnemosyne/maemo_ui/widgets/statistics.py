@@ -43,19 +43,20 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, \
     toplevel_table = gtk.Table(rows=1, columns=2)
     toolbar_container = create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
+    # create toolbar buttons
     current_card_button = widgets.create_radio_button(None, \
         'stat_toolbar_current_card_button', None, width=80, height=80)
     common_button = widgets.create_radio_button(current_card_button, \
         'stat_toolbar_common_stat_button', None, width=80, height=80)
     tags_button = widgets.create_radio_button(common_button, \
         'stat_toolbar_tags_stat_button', None, width=80, height=80)
-
-
     menu_button = widgets.create_button('main_menu_button', None)
-
-
-# packing toolbar buttons
-    # packing widgets
+    # create mode switcher
+    mode_statistics_switcher = gtk.Notebook()
+    mode_statistics_switcher.set_show_tabs(False)
+    mode_statistics_switcher.set_show_border(False)
+    mode_statistics_switcher.set_name('config_mode_settings_switcher')
+    # packing toolbar buttons
     toolbar_table.attach(current_card_button,  0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_table.attach(common_button, 0, 1, 1, 2, \
@@ -67,87 +68,78 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, \
     toolbar_container.add(toolbar_table)
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-
-    mode_statistics_switcher = gtk.Notebook()
-    mode_statistics_switcher.set_show_tabs(False)
-    mode_statistics_switcher.set_show_border(False)
-    mode_statistics_switcher.set_name('config_mode_settings_switcher')
-
-    # Current card
-    box = gtk.VBox()
-    label_title = gtk.Label()
-    label_title.set_use_markup(True)
-    label_title.set_justify(gtk.JUSTIFY_CENTER)
-    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
-        "Current card statistics</b></span>")
-    label_text = gtk.Label()
-    label_text.set_use_markup(True)
-    label_text.set_justify(gtk.JUSTIFY_LEFT)
-    label_text.set_markup(current_card_text)
-    box.pack_start(label_title, expand=False, fill=True, \
-                                                            padding=10)
-    box.pack_start(label_text, expand=False, fill=True, \
-                                                            padding=10)
-    mode_statistics_switcher.append_page(box)
-
-    box = gtk.VBox()
-    # Total
-    label_title = gtk.Label()
-    label_title.set_use_markup(True)
-    label_title.set_justify(gtk.JUSTIFY_CENTER)
-    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
-        "Total</b></span>")
-    label_text = gtk.Label()
-    label_text.set_use_markup(True)
-    label_text.set_justify(gtk.JUSTIFY_LEFT)
-    label_text.set_markup(total_text)
-    box.pack_start(label_title, expand=False, fill=True, padding=10)
-    box.pack_start(label_text, expand=False, fill=True, padding=10)
-
-    # Grades
-    label_title = gtk.Label()
-    label_title.set_use_markup(True)
-    label_title.set_justify(gtk.JUSTIFY_CENTER)
-    label_title.set_markup("<span foreground='white' size='x-large'><b>"\
-        "Grade statistics for all cards</b></span>")
-    label_text = gtk.Label()
-    label_text.set_use_markup(True)
-    label_text.set_justify(gtk.JUSTIFY_LEFT)
-    label_text.set_markup(common_text)
-    box.pack_start(label_title, expand=False, fill=True, padding=10)
-    box.pack_start(label_text, expand=False, fill=True, padding=10)
-    
-    mode_statistics_switcher.append_page(box)
-
-    # Tags statistucs 
-    box = gtk.VBox()
+    # create widgets for current card mode
+    current_card_box = gtk.VBox()
+    current_card_label_title = gtk.Label()
+    current_card_label_title.set_use_markup(True)
+    current_card_label_title.set_justify(gtk.JUSTIFY_CENTER)
+    current_card_label_title.set_markup("<span foreground='white' " \
+        "size='x-large'><b>Current card statistics</b></span>")
+    current_card_label_text = gtk.Label()
+    current_card_label_text.set_use_markup(True)
+    current_card_label_text.set_justify(gtk.JUSTIFY_LEFT)
+    current_card_label_text.set_markup(current_card_text)
+    current_card_box.pack_start(current_card_label_title, expand=False, \
+        fill=True, padding=10)
+    current_card_box.pack_start(current_card_label_text, expand=False, \
+        fill=True, padding=10)
+    mode_statistics_switcher.append_page(current_card_box)
+    # create widgets for total cards mode
+    total_cards_box = gtk.VBox()
+    total_cards_label_title = gtk.Label()
+    total_cards_label_title.set_use_markup(True)
+    total_cards_label_title.set_justify(gtk.JUSTIFY_CENTER)
+    total_cards_label_title.set_markup("<span foreground='white' " \
+        "size='x-large'><b>Total</b></span>")
+    total_cards_label_text = gtk.Label()
+    total_cards_label_text.set_use_markup(True)
+    total_cards_label_text.set_justify(gtk.JUSTIFY_LEFT)
+    total_cards_label_text.set_markup(total_text)
+    total_cards_box.pack_start(total_cards_label_title, expand=False, \
+        fill=True, padding=10)
+    total_cards_box.pack_start(total_cards_label_text, expand=False, \
+        fill=True, padding=10)
+    # create widgets for grades section
+    grades_label_title = gtk.Label()
+    grades_label_title.set_use_markup(True)
+    grades_label_title.set_justify(gtk.JUSTIFY_CENTER)
+    grades_label_title.set_markup("<span foreground='white' " \
+        "size='x-large'><b>Grade statistics for all cards</b></span>")
+    grades_label_text = gtk.Label()
+    grades_label_text.set_use_markup(True)
+    grades_label_text.set_justify(gtk.JUSTIFY_LEFT)
+    grades_label_text.set_markup(common_text)
+    total_cards_box.pack_start(grades_label_title, expand=False, fill=True, \
+        padding=10)
+    total_cards_box.pack_start(grades_label_text, expand=False, fill=True, \
+        padding=10)
+    mode_statistics_switcher.append_page(total_cards_box)
+    # create widgets for tags statistics mode
+    tags_box = gtk.VBox()
     scrolledwindow_widget = gtk.ScrolledWindow()
-    scrolledwindow_widget.set_policy(gtk.POLICY_NEVER, \
-        gtk.POLICY_AUTOMATIC)
+    scrolledwindow_widget.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
     scrolledwindow_widget.set_name('scrolledwindow_widget')
-    scrolledwindow_widget.add_with_viewport(box)
-
+    scrolledwindow_widget.add_with_viewport(tags_box)
     for key in tags_text:
-        label_title = gtk.Label()
-        label_title.set_use_markup(True)
-        label_title.set_justify(gtk.JUSTIFY_CENTER)
-        label_title.set_markup("<span foreground='white' size='x-large'><b>"\
-            "Tag %s</b></span>" % key ) 
-        label_text = gtk.Label()
-        label_text.set_use_markup(True)
-        label_text.set_justify(gtk.JUSTIFY_LEFT)
-        label_text.set_markup(tags_text[key])
-        box.pack_start(label_title, expand=False, fill=True, \
-                                                                padding=10)
-        box.pack_start(label_text, expand=False, fill=True, \
-                                                                padding=10)
+        tags_label_title = gtk.Label()
+        tags_label_title.set_use_markup(True)
+        tags_label_title.set_justify(gtk.JUSTIFY_CENTER)
+        tags_label_title.set_markup("<span foreground='white' " \
+            "size='x-large'><b>Tag %s</b></span>" % key ) 
+        tags_label_text = gtk.Label()
+        tags_label_text.set_use_markup(True)
+        tags_label_text.set_justify(gtk.JUSTIFY_LEFT)
+        tags_label_text.set_markup(tags_text[key])
+        tags_box.pack_start(tags_label_title, expand=False, fill=True, \
+            padding=10)
+        tags_box.pack_start(tags_label_text, expand=False, fill=True, \
+            padding=10)
     mode_statistics_switcher.append_page(scrolledwindow_widget)
-  
+    # packing widgets
     toplevel_table.attach(mode_statistics_switcher, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
-
     return main_switcher.append_page(toplevel_table), \
            mode_statistics_switcher, menu_button, current_card_button, \
            common_button, tags_button 
