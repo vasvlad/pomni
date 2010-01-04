@@ -24,8 +24,8 @@
 Hildon UI: Tags widget.
 """
 
+import re
 import mnemosyne.maemo_ui.widgets.tags as widgets
-
 from mnemosyne.libmnemosyne.ui_components.dialogs import ActivateCardsDialog
 from mnemosyne.libmnemosyne.activity_criteria.default_criterion import \
     DefaultCriterion
@@ -58,11 +58,11 @@ class TagsWidget(NonBlockingActivateCardsDialog):
     def __init__(self, component_manager):
         NonBlockingActivateCardsDialog.__init__(self, component_manager)
         self.page, self.tags_box, menu_button, stat_button = \
-        widgets.create_tags_ui(self.main_widget().switcher)
+            widgets.create_tags_ui(self.main_widget().switcher)
         self.tags_dict = {}
         # connecting signals
-        menu_button.connect('clicked', self.tags_to_main_menu_cb)
         stat_button.connect('clicked', self.stat_cb)
+        menu_button.connect('clicked', self.tags_to_main_menu_cb)
 
     def activate(self):
         """Activate 'ActivateCardsDialog'."""
@@ -78,8 +78,13 @@ class TagsWidget(NonBlockingActivateCardsDialog):
             tags_box.remove(child)
         for tag in self.database().get_tags():
             self.tags_dict[tag.name] = tag._id
-            tags_box.pack_start(widgets.create_tag_checkbox( \
-                tag.name, tag._id in criterion.active_tag__ids))
+            # get cards count for tag
+            cards_count = sum([ \
+                self.database().card_count_for_grade_and__tag_id( \
+                    grade, tag._id) for grade in range(-1, 6)])
+            tags_box.pack_start(widgets.create_tag_checkbox(tag.name + \
+                unicode(" (%s cards)" % cards_count), \
+                tag._id in criterion.active_tag__ids))
 
     def get_criterion(self):
         """Build the criterion from the information the user entered."""
@@ -88,8 +93,9 @@ class TagsWidget(NonBlockingActivateCardsDialog):
         for hbox in self.tags_box.get_children():
             children = hbox.get_children()
             if children[0].get_active():
-                criterion.active_tag__ids.add(\
-                    self.tags_dict[unicode(children[1].get_label())])
+                label = children[1].get_label()
+                tag_name = re.search(r'(.+) \(\d+ cards\)', label).group(1)
+                criterion.active_tag__ids.add(self.tags_dict[tag_name])
         return criterion
 
     def tags_to_main_menu_cb(self, widget):
