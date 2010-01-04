@@ -53,10 +53,10 @@ class ReviewWdgt(ReviewWidget):
         self.sound_button.connect('released', self.preview_sound_in_review_cb)
         for grade_button in grades:
             grade_button.connect('clicked', self.grade_cb)
-        toolbar_buttons[0].connect('clicked', self.speak_cb)
-        toolbar_buttons[1].connect('clicked', self.edit_card_cb)
-        toolbar_buttons[2].connect('clicked', self.add_card_cb)
-        toolbar_buttons[3].connect('clicked', self.statistics_card_cb)
+        toolbar_buttons[0].connect('clicked', self.statistics_card_cb)
+        toolbar_buttons[1].connect('clicked', self.speak_cb)
+        toolbar_buttons[2].connect('clicked', self.edit_card_cb)
+        toolbar_buttons[3].connect('clicked', self.add_card_cb)
         toolbar_buttons[4].connect('clicked', self.delete_card_cb)
         toolbar_buttons[5].connect('clicked', self.review_to_main_menu_cb)
 
@@ -176,7 +176,7 @@ class ReviewWdgt(ReviewWidget):
 
     def statistics_card_cb(self, widget):
         """Hook for statistics of current card."""
-
+        self.config()["last_variant_for_statistics_page"] = 0
         self.controller().show_statistics()
 
     def delete_card_cb(self, widget):
