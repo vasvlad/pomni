@@ -5,8 +5,11 @@ mnemosyne (2.0.0~beta6) unstable; urgency=low
   * removed rainbow theme from the package
   * decreased memory consumption
   * implemented statistics for current card (Vlad) 
+  * implemented total statistics (Vlad)
+  * made cards look similar in review and input modes (Max)
+  * implemented input language switcher for text fields
 
- -- Ed Bartosh <bartosh@gmail.com>  Wed, 09 Dec 2009 20:36:55 +0200
+ -- Ed Bartosh <bartosh@gmail.com>  Sun, 03 Jan 2010 20:02:57 +0200
 
 mnemosyne (2.0.0~beta5) unstable; urgency=low
 

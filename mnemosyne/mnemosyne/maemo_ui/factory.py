@@ -111,6 +111,8 @@ def app_factory(interface=None):
 
         app.components.append(\
             ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
+        app.components.append(\
+            ("mnemosyne.maemo_ui.langswitcher", "LangSwitcher"))
         return app
 
     # add next gui here
