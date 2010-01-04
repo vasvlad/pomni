@@ -94,7 +94,8 @@ class TagsWidget(NonBlockingActivateCardsDialog):
             children = hbox.get_children()
             if children[0].get_active():
                 label = children[1].get_label()
-                tag_name = re.search(r'(.+) \(\d+ cards\)', label).group(1)
+                tag_name = unicode( \
+                    re.search(r'(.+) \(\d+ cards\)', label).group(1))
                 criterion.active_tag__ids.add(self.tags_dict[tag_name])
         return criterion
 
