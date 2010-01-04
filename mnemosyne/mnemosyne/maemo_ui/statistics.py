@@ -130,10 +130,12 @@ class MaemoStatisticsWidget(StatisticsDialog):
             text_for_tag += "\n".join([ "Grade %2i - %i" % \
                 (grade, self.database().card_count_for_grade_and__tag_id \
                                         (grade, _id)) for grade in grades])
+            count_of_card = sum([ self.database(). \
+                  card_count_for_grade_and__tag_id \
+                  (grade, _id) for grade in grades])
+            text_for_tag += "\n\n<b>Total:      %i</b>" % count_of_card
             text_for_tag += "</span>"
             self.tags_text[name] = text_for_tag
-
-     
 
     def activate(self):
         """Set necessary switcher page."""
