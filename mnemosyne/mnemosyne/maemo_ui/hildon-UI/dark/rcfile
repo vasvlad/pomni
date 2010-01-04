@@ -134,6 +134,16 @@ style "one-button-container" {
 }
 widget "*.one_button_container" style "one-button-container"
 
+style "two-button-container" {
+    engine "sapwood" {
+        image {
+            function = BOX
+            file = "two_button_toolbar.png"
+        }
+    }
+}
+widget "*.two_button_container" style "two-button-container"
+
 style "three-button-container" {
     engine "sapwood" {
         image {
