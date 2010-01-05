@@ -159,6 +159,12 @@ class MainWdgt(MainWidget):
         self.kill_menu_object()
         self.activate_mode('statistics')
 
+    def import_(self):
+        """Activate import mode."""
+
+        self.kill_menu_object()
+        self.activate_mode('importcards')
+
     def sync_(self):
         """Activate sync mode."""
 
