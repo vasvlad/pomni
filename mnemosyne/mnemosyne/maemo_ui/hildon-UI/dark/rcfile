@@ -744,12 +744,12 @@ style "stat-card-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            overlay_file = "stat_disabled.png"
+            overlay_file = "stats_disabled.png"
             overlay_stretch = FALSE
         }
         image {
             function = BOX
-            overlay_file = "stat.png"
+            overlay_file = "stats.png"
             overlay_stretch = FALSE
         }
         image {
