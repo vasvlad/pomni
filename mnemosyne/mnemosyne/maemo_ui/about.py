@@ -35,20 +35,40 @@ class AboutWidget(UiComponent):
     def __init__(self, component_manager):
         UiComponent.__init__(self, component_manager, )
         # create widgets
-        self.page, menu_button = \
+        self.page, self.switcher, menu_button, about_button, help_button = \
             widgets.create_about_ui(self.main_widget().switcher,
                 os.path.join(self.config()['theme_path'], "mnemosyne.png"))
         # connect signals
         menu_button.connect('clicked', self.about_to_main_menu_cb)
+        about_button.connect('released', self.show_about_cb)
+        help_button.connect('released', self.show_help_cb)
+        if self.config()['last_about_page'] == 0:
+            about_button.set_active(True)
+            self.show_about_cb(None)
+        else:
+            help_button.set_active(True)
+            self.show_help_cb(None)
 
     def activate(self):
         """Set necessary switcher page."""
 
         self.main_widget().switcher.set_current_page(self.page)
+
+    def show_about_cb(self, widget):
+        """Show program about information."""
         
+        self.switcher.set_current_page(0)
+
+    def show_help_cb(self, widget):
+        """Show program documentation."""
+        
+        self.switcher.set_current_page(1)
+
     def about_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
+        self.config()['last_about_page'] = self.switcher.get_current_page()
+        self.config().save()
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('about')
        

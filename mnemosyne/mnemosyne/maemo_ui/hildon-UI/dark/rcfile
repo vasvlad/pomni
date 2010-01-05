@@ -744,12 +744,12 @@ style "stat-card-button" {
         image {
             function = BOX
             state = INSENSITIVE
-            overlay_file = "current_stat_disabled.png"
+            overlay_file = "stat_disabled.png"
             overlay_stretch = FALSE
         }
         image {
             function = BOX
-            overlay_file = "current_stat.png"
+            overlay_file = "stat.png"
             overlay_stretch = FALSE
         }
         image {
@@ -1595,6 +1595,107 @@ widget "*.sync_button" style "sync-button"
 #----------------------------- Sync mode ------------------
 
 
+#----------------------------- Help mode ----------------
+style "about-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "human_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "human_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "human_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "human.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.help_toolbar_about_button" style "about-button"
+
+style "help-button" {
+    GtkRadioButton::indicator-size = 80
+    engine "pixmap" {
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = IN
+            overlay_file = "documentation_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = NORMAL
+            shadow = OUT
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = IN
+            overlay_file = "documentation_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = ACTIVE
+            shadow = OUT
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = IN
+            overlay_file = "documentation_selected.png"
+            overlay_stretch = FALSE
+        }
+        image {
+            function = OPTION
+            state = PRELIGHT
+            shadow = OUT
+            overlay_file = "documentation.png"
+            overlay_stretch = FALSE
+        }
+    }
+}
+widget "*.help_toolbar_help_button" style "help-button"
+#----------------------------- Help mode ----------------
+
+
 #----------------------------- Dialogs ------------------
 style "dialog" {
     engine "sapwood" {
@@ -1672,6 +1773,7 @@ style "media-scrolls" {
 }
 widget "*.scrolledwindow_widget.*" style "media-scrolls"
 #----------------------------- Dialogs ------------------
+
 
 #----------------------------- Statistics mode ----------
 style "stat-common-button" {
@@ -1841,5 +1943,4 @@ style "tags-stat-button" {
     }
 }
 widget "*.stat_toolbar_tags_stat_button" style "tags-stat-button"
-
 #----------------------------- Statistics mode ----------
