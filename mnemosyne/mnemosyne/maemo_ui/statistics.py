@@ -60,7 +60,10 @@ class MaemoStatisticsWidget(StatisticsDialog):
             self.tags_statistics_cb)
 
         #Change current page
-        number_of_page = self.config()["last_variant_for_statistics_page"] 
+        if "last_variant_for_statistics_page" in self.config():
+            number_of_page = self.config()["last_variant_for_statistics_page"] 
+        else:
+            number_of_page = 2
         if number_of_page == 0:
             current_card_button.set_active(True)
             self.current_card_statistics_cb(None)
