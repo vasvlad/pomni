@@ -1,0 +1,40 @@
+rich; wealthy	богатый	
+богатый	rich; wealthy	
+to see	видеть<br>увидеть	test
+видеть	увидеть	test
+good	хороший	
+хороший	good	
+airplane	самолёт	
+самолёт	airplane	
+tea	чай	
+чай	tea	
+horse	лошадь (ж)	
+лошадь (ж)	horse	
+bad	плохой	
+плохой	bad	
+to want	хотеть<br>захотеть	
+хотеть	захотеть	
+loud	громкий	
+громкий	loud	
+to hit; to strike	попадать<br>попасть	
+попадать	попасть	
+bank	банк	
+банк	bank	
+weak	слабый	
+слабый	weak	
+to sell	продавать<br>продать	
+продавать	продать	
+(drinking) glass; cup	стакан	
+стакан	(drinking) glass; cup	
+chair	стул	
+стул	chair	
+house	дом	
+дом	house	
+to buy	покупать<br>купить	
+покупать	купить	
+to look; to look at (на)	смотреть<br>посмотреть	
+смотреть	посмотреть	
+beautiful; handsome	красивый	
+красивый	beautiful; handsome	
+to eat	есть<br>съесть	
+есть	съесть	
