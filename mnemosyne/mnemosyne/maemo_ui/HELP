@@ -1,6 +1,8 @@
-===================
-User Guide
-===================
+================================
+Mnemosyne for Maemo. User Guide.
+================================
+
+.. contents:: Table of Contents
 
 -------
 Preface
@@ -23,6 +25,10 @@ When you have memorised something, you need to review that material, otherwise y
 
 During the past 120 years, there has been considerable research into these aspects of human memory (by e.g. Ebbinghaus, Mace, Leitner and Wozniak). Based on the work of these people, it was shown that in order to get the best results, the intervals between revisions of the same card should gradually increase. This allows you to focus on things you still haven't mastered, while not wasting time on cards you remember very well.
 
+You can find more information about spaced repetition in `this wikipedia article`_
+
+.. _this wikipedia article: http://en.wikipedia.org/wiki/Spaced_repetition
+
 It is clear that a computer program can be very valuable in assisting you in this process, by keeping track of how difficult you find an card and by doing the scheduling of the revisions. Let's see how this works in practice in the Mnemosyne program.
 
 The Mnemosyne algorithm is very similar to SM2 used in one of the early versions of SuperMemo. There are some modifications that deal with early and late repetitions, and also to add a small, healthy dose of randomness to the intervals.
@@ -30,6 +36,7 @@ The Mnemosyne algorithm is very similar to SM2 used in one of the early versions
 Supermemo now uses SM11. However, we are a bit skeptical that the huge complexity of the newer SM algorithms provides for a statistically relevant benefit. But, that is one of the facts we hope to find out with our data collection.
 
 We will only make modifications to our algorithms based on common sense or if the data tells us that there is a statistically relevant reason to do so.
+
 
 ------------------------------------
 Common principles of Mnemosyne usage
