@@ -27,8 +27,7 @@ Hildon UI. Import widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def create_importcard_ui(main_switcher, current_card_text, common_text, \
-                        total_text, tags_text):
+def create_importcard_ui(main_switcher):
     """Creates MaemoImportWidget UI."""
 
     def create_toolbar_container(name, show_tabs=False, width=82, height=480):
@@ -54,9 +53,6 @@ def create_importcard_ui(main_switcher, current_card_text, common_text, \
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # packing widgets
-    toplevel_table.attach(mode_statistics_switcher, 1, 2, 0, 1, \
-        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
 
     return main_switcher.append_page(toplevel_table), \

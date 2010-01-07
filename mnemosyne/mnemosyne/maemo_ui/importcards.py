@@ -24,49 +24,38 @@
 Hildon UI. Import widget.
 """
 
-from mnemosyne.maemo_ui.widgets.importcards  import create_import_ui
+from mnemosyne.libmnemosyne.ui_component import UiComponent
+from mnemosyne.maemo_ui.widgets.importcards  import create_importcard_ui
 
-
-#class ImportWidget():
-#    """Import Widget."""
-#
-#    def __init__(self, component_manager, previous_mode=None):
-#        pass
-
-from mnemosyne.maemo_ui.widgets.importcards.py import create_importcard_ui
-
-DAY = 24 * 60 * 60 # Seconds in a day.
-
-class ImportCardsWidget(StatisticsDialog):
+class ImportCardsWidget(UiComponent):
     """Import Widget."""
 
     def __init__(self, component_manager ):
-	self.page, menu_button, ok_button = create_importcard_ui( \
-	self.main_widget().switcher)	
+
+        UiComponent.__init__(self, component_manager)
+        self.page, menu_button, ok_button = create_importcard_ui( \
+	    self.main_widget().switcher)	
+
+        # connect signals
+        menu_button.connect('clicked', self.back_to_main_menu_cb)
+
 
     def activate(self):
         """Set necessary switcher page."""
 
         self.main_widget().switcher.set_current_page(self.page)
 
-    def back_to_previous_mode_cb(self, widget):
-        """Returns to previous menu."""
-
-        self.config()["last_variant_for_statistics_page"] = \
-            self.mode_statistics_switcher.get_current_page()
-        self.main_widget().switcher.remove_page(self.page)
-
     def back_to_main_menu_cb(self, widget):
         """Returns to main menu."""
 
         self.main_widget().switcher.remove_page(self.page)
-        self.main_widget().menu_('importcard')
+        self.main_widget().menu_('importcards')
 
     def ok_button_cb(self, widget):
         """Ok """
 
-    	from mnemosyne.libmnemosyne.file_formats.tsv import import_txt
+        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt
 
         imported_cards = export_txt("./test/anki.txt", "test_anki") 	
-	print imported_cards
+        print imported_cards
       
