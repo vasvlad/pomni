@@ -232,6 +232,7 @@ def import_txt_2(filename, default_cat, reset_learning_data=False):
 #                     export_function=False)
 
 
+from mnemosyne.libmnemosyne.file_format import FileFormat
 
 class TabSeparated(FileFormat):    
 
