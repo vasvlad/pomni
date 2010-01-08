@@ -230,3 +230,39 @@ def import_txt_2(filename, default_cat, reset_learning_data=False):
 #                     filter=_("Text files (*.txt *.TXT)"),
 #                     import_function=import_txt_2,
 #                     export_function=False)
+
+
+
+class TabSeparated(FileFormat):    
+
+    description = _("Text with tab separated Q/A")
+    filename_filter = description + " (*.txt)"
+    import_possible = True
+    export_possible = False
+
+    def do_import(self, filename, tag_name=None, reset_learning_data=False):
+
+		db = self.database()
+		f = None
+		try:
+			f = file(filename)
+		except IOError, exc_obj:
+            self.main_widget().error_box(str(exc_obj))
+		
+		for line in f:
+			line = line.strip()
+		
+		if not line:
+			continue
+
+		fields = line.split('\t')
+
+		# Orphaned 2 or 3 sided card.
+		card_type = self.card_type_by_id("1")
+		fact_data = {"q": fields[0], "a": fields[1]}
+		card = self.controller().create_new_cards(fact_data,
+			card_type, grade=-1, tag_names=['<default>'],
+			check_for_duplicates=False, save=False)[0]
+		print line, card.id
+
+
