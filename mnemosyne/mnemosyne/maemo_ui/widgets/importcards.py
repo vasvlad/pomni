@@ -44,6 +44,11 @@ def create_importcard_ui(main_switcher):
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create toolbar buttons
     menu_button = widgets.create_button('main_menu_button', None)
+    notebook = gtk.Notebook()
+    notebook.set_show_tabs(False)
+    notebook.set_show_border(False)
+    notebook.set_name('config_mode_settings_switcher')
+ 
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
     # packing toolbar buttons
@@ -53,6 +58,11 @@ def create_importcard_ui(main_switcher):
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # packing widgets
+    notebook.add(ok_button) 
+    toplevel_table.attach(notebook, 1, 2, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+
     toplevel_table.show_all()
 
     return main_switcher.append_page(toplevel_table), \

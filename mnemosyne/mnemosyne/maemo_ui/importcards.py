@@ -38,7 +38,7 @@ class ImportCardsWidget(UiComponent):
 
         # connect signals
         menu_button.connect('clicked', self.back_to_main_menu_cb)
-
+        ok_button.connect('clicked', self.ok_button_cb)
 
     def activate(self):
         """Set necessary switcher page."""
@@ -53,7 +53,7 @@ class ImportCardsWidget(UiComponent):
 
     def ok_button_cb(self, widget):
         """Ok """
-
+        print "ddddddddddddd"
         from mnemosyne.libmnemosyne.file_formats.tsv import import_txt
 
         imported_cards = export_txt("./test/anki.txt", "test_anki") 	
