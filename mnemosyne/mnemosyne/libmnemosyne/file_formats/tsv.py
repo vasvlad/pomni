@@ -245,13 +245,13 @@ class TabSeparated(FileFormat):
     def do_import(self, filename, tag_name=None, reset_learning_data=False):
 
         db = self.database()
-        f = None
         try:
-            f = file(filename)
+            fimp = file(filename)
         except IOError, exc_obj:
             self.main_widget().error_box(str(exc_obj))
-        
-        for line in f:
+        	return -1 
+
+        for line in fimp:
             line = line.strip()
             if not line:
                 continue
