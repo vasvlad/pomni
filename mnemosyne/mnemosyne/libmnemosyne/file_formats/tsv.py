@@ -249,7 +249,7 @@ class TabSeparated(FileFormat):
             fimp = file(filename)
         except IOError, exc_obj:
             self.main_widget().error_box(str(exc_obj))
-        	return -1 
+            return -1 
 
         for line in fimp:
             line = line.strip()
