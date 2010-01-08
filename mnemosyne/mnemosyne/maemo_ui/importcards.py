@@ -54,8 +54,8 @@ class ImportCardsWidget(UiComponent):
     def ok_button_cb(self, widget):
         """Ok """
         print "ddddddddddddd"
-        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt
-
-        imported_cards = export_txt("./test/anki.txt", "test_anki") 	
+        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
+        
+        imported_cards = import_txt_2("./test/anki.txt", "test_anki") 	
         print imported_cards
       
