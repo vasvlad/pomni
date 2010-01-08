@@ -106,7 +106,7 @@ def app_factory(interface=None):
         app.components.append(("mnemosyne.maemo_ui.tags", "TagsWidget"))
         app.components.append(("mnemosyne.maemo_ui.statistics", "MaemoStatisticsWidget"))
         app.components.append(("mnemosyne.maemo_ui.importcards", "ImportCardsWidget"))
-        app.components.append(("mnemosyne.file_formats.tsv", "TabSeparated"))
+        app.components.append(("mnemosyne.libmnemosyne.file_formats.tsv", "TabSeparated"))
 
         app.components.append(\
             ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
