@@ -253,7 +253,7 @@ class TabSeparated(FileFormat):
             line = line.strip()
         
         if not line:
-            continue
+			continue
 
         fields = line.split('\t')
 
