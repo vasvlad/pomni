@@ -90,9 +90,6 @@ def app_factory(interface=None):
             ("mnemosyne.libmnemosyne.filters.latex", "Latex"))
         app.components.remove(\
             ("mnemosyne.libmnemosyne.filters.html5_media", "Html5Media"))
-        app.components.remove(\
-            ("mnemosyne.libmnemosyne.file_formats.mnemosyne1_mem",
-            "Mnemosyne1Mem"))
 
         # Add necessary components
         app.components.insert(0, ("mnemosyne.libmnemosyne.translator",
@@ -109,6 +106,7 @@ def app_factory(interface=None):
         app.components.append(("mnemosyne.maemo_ui.tags", "TagsWidget"))
         app.components.append(("mnemosyne.maemo_ui.statistics", "MaemoStatisticsWidget"))
         app.components.append(("mnemosyne.maemo_ui.importcards", "ImportCardsWidget"))
+        app.components.append(("mnemosyne.file_formats.tsv", "TabSeparated"))
 
         app.components.append(\
             ("mnemosyne.libmnemosyne.card_types.cloze", "Cloze"))
