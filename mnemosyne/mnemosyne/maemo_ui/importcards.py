@@ -55,7 +55,5 @@ class ImportCardsWidget(UiComponent):
         """Ok """
         print "ddddddddddddd"
         from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
-        self.component_manager.get_current("file_format").do_import(filename) 
-        imported_cards = import_txt_2("./test/anki.txt", "test_anki") 	
-        print imported_cards
+        self.component_manager.get_current("file_format").do_import("./test/anki.txt") 
       
