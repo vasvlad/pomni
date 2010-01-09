@@ -97,6 +97,7 @@ class MainWdgt(MainWidget):
                 widget = MaemoStatisticsWidget(self.component_manager, "Menu")
             elif mode == "importcards":
                 from mnemosyne.maemo_ui.importcards import ImportCardsWidget 
+                self.review_controller().reset()
                 widget = ImportCardsWidget(self.component_manager)
 
             self.widgets[mode] = widget
