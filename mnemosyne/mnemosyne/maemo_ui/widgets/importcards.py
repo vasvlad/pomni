@@ -66,11 +66,11 @@ def create_importcard_ui(main_switcher):
     format_next_button = widgets.create_button('right_arrow', None)
     # Package of selected widgets
     format_container.add(format_label)
-    format_table.attach(tts_voice_prev_button, 0, 1, 0, 1, \
+    format_table.attach(format_prev_button, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
-    format_table.attach(tts_voice_container, 1, 2, 0, 1, \
+    format_table.attach(format_container, 1, 2, 0, 1, \
         xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.SHRINK)
-    format_table.attach(tts_voice_next_button, 2, 3, 0, 1, \
+    format_table.attach(format_next_button, 2, 3, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
 
     # create OK button
