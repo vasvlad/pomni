@@ -44,8 +44,6 @@ def create_importcard_ui(main_switcher):
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create toolbar buttons
     menu_button = widgets.create_button('main_menu_button', None)
-    notebook.set_show_border(False)
-    notebook.set_name('config_mode_settings_switcher')
 
     #Create main table 
     general_settings_table = gtk.Table(rows=4, columns=1, homogeneous=True)
