@@ -44,13 +44,11 @@ def create_importcard_ui(main_switcher):
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create toolbar buttons
     menu_button = widgets.create_button('main_menu_button', None)
-    notebook = gtk.Notebook()
-    notebook.set_show_tabs(False)
     notebook.set_show_border(False)
     notebook.set_name('config_mode_settings_switcher')
 
     #Create main table 
-    general_settings_table = gtk.Table(rows=2, columns=1, homogeneous=True)
+    general_settings_table = gtk.Table(rows=4, columns=1, homogeneous=True)
     general_settings_table.set_row_spacings(10)
 
     #Create format selector 
@@ -71,6 +69,29 @@ def create_importcard_ui(main_switcher):
         xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.SHRINK)
     format_table.attach(format_next_button, 2, 3, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+    
+    # create tags frame
+    tags_frame = gtk.Frame()
+    tags_frame.set_name('html_container')
+    tags_eventbox = gtk.EventBox()
+    tags_eventbox.set_visible_window(True)
+    tags_eventbox.set_name('viewport_widget')
+    tags_scrolledwindow = gtk.ScrolledWindow()
+    tags_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    tags_scrolledwindow.set_name('scrolled_window')
+    tags_viewport = gtk.Viewport()
+    tags_viewport.set_shadow_type(gtk.SHADOW_NONE)
+    tags_viewport.set_name('viewport_widget')
+    # packing widgets
+    toolbar_container.add(toolbar_table)
+    tags_viewport.add(tags_box)
+    tags_scrolledwindow.add(tags_viewport)
+    tags_eventbox.add(tags_scrolledwindow)
+    tags_frame.add(tags_eventbox)
+    general_settings_table.attach(tags_frame, 1, 2, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        xpadding=30, ypadding=30)
 
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
@@ -81,11 +102,13 @@ def create_importcard_ui(main_switcher):
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # packing widgets
-#   notebook.add(ok_button) 
-    notebook.add(format_table) 
-    toplevel_table.attach(notebook, 1, 2, 0, 1, \
+    toplevel_table.attach(general_settings_table, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+    toplevel_table.attach(ok_button, 3, 4, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+
 
     toplevel_table.show_all()
 
