@@ -55,7 +55,6 @@ def create_importcard_ui(main_switcher):
 
     #Create format selector 
     format_table = gtk.Table(rows=2, columns=1, homogeneous=True)
-    format_table = gtk.Table(rows=2, columns=1, homogeneous=True)
     format_table.set_row_spacings(10)
     #Button of selected format
     format_container = widgets.create_button('labels_container', 
@@ -82,7 +81,7 @@ def create_importcard_ui(main_switcher):
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # packing widgets
-    notebook.add(ok_button) 
+#   notebook.add(ok_button) 
     notebook.add(format_table) 
     toplevel_table.attach(notebook, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
