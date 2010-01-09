@@ -48,7 +48,31 @@ def create_importcard_ui(main_switcher):
     notebook.set_show_tabs(False)
     notebook.set_show_border(False)
     notebook.set_name('config_mode_settings_switcher')
- 
+
+    #Create main table 
+    general_settings_table = gtk.Table(rows=2, columns=1, homogeneous=True)
+    general_settings_table.set_row_spacings(10)
+
+    #Create format selector 
+    format_table = gtk.Table(rows=2, columns=1, homogeneous=True)
+    format_table = gtk.Table(rows=2, columns=1, homogeneous=True)
+    format_table.set_row_spacings(10)
+    #Button of selected format
+    format_container = widgets.create_button('labels_container', 
+        width=-1, height=60)
+    format_label = gtk.Label('default')
+    format_label.set_name('format_label')
+    format_prev_button = widgets.create_button('left_arrow', None)
+    format_next_button = widgets.create_button('right_arrow', None)
+    # Package of selected widgets
+    format_container.add(format_label)
+    format_table.attach(tts_voice_prev_button, 0, 1, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+    format_table.attach(tts_voice_container, 1, 2, 0, 1, \
+        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.SHRINK)
+    format_table.attach(tts_voice_next_button, 2, 3, 0, 1, \
+        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
     # packing toolbar buttons
@@ -59,6 +83,7 @@ def create_importcard_ui(main_switcher):
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # packing widgets
     notebook.add(ok_button) 
+    notebook.add(format_table) 
     toplevel_table.attach(notebook, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
