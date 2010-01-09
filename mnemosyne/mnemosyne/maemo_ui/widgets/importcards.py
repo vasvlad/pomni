@@ -80,6 +80,7 @@ def create_importcard_ui(main_switcher):
     tags_viewport = gtk.Viewport()
     tags_viewport.set_shadow_type(gtk.SHADOW_NONE)
     tags_viewport.set_name('viewport_widget')
+    tags_box = gtk.VBox()
     # packing widgets
     toolbar_container.add(toolbar_table)
     tags_viewport.add(tags_box)
