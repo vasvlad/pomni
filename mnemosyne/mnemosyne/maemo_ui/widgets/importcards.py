@@ -87,6 +87,10 @@ def create_importcard_ui(main_switcher):
     tags_scrolledwindow.add(tags_viewport)
     tags_eventbox.add(tags_scrolledwindow)
     tags_frame.add(tags_eventbox)
+
+    # create OK button
+    ok_button = widgets.create_button('ok_button', None)
+    #packing widget to table
     general_settings_table.attach(tags_frame, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
@@ -95,9 +99,7 @@ def create_importcard_ui(main_switcher):
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
 
-    # create OK button
-    ok_button = widgets.create_button('ok_button', None)
-    # packing toolbar buttons
+        # packing toolbar buttons
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_container.add(toolbar_table)
