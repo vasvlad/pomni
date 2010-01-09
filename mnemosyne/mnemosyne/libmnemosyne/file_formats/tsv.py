@@ -261,6 +261,7 @@ class TabSeparated(FileFormat):
             # Orphaned 2 or 3 sided card.
             card_type = self.card_type_by_id("1")
             fact_data = {"q": fields[0], "a": fields[1]}
+            self.review_controller().learning_ahead = True
             card = self.controller().create_new_cards(fact_data,
                 card_type, grade=-1, tag_names=['<default>'],
                 check_for_duplicates=False, save=False)[0]
