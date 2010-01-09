@@ -91,22 +91,22 @@ def create_importcard_ui(main_switcher):
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
     #packing widget to table
-    general_settings_table.attach(tags_frame, 1, 2, 0, 1, \
-        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-        xpadding=30, ypadding=30)
+#    general_settings_table.attach(tags_frame, 0, 1, 0, 1, \
+#        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+#        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+#        xpadding=30, ypadding=30)
     general_settings_table.attach(ok_button, 3, 4, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
 
-        # packing toolbar buttons
+    # packing toolbar buttons
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_container.add(toolbar_table)
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # packing widgets
-    toplevel_table.attach(general_settings_table, 0, 1, 0, 1, \
+    toplevel_table.attach(general_settings_table, 0, 1, 1, 2, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
 
