@@ -46,12 +46,11 @@ def create_importcard_ui(main_switcher):
     menu_button = widgets.create_button('main_menu_button', None)
 
     #Create main table 
-    general_settings_table = gtk.Table(rows=4, columns=1, homogeneous=True)
+    general_settings_table = gtk.Table(rows=4, columns=1, homogeneous=False)
     general_settings_table.set_row_spacings(10)
 
     #Create format selector 
-    format_table = gtk.Table(rows=2, columns=1, homogeneous=True)
-    format_table.set_row_spacings(10)
+    format_table = gtk.Table(rows=1, columns=3, homogeneous=True)
     #Button of selected format
     format_container = widgets.create_button('labels_container', 
         width=-1, height=60)
@@ -66,7 +65,7 @@ def create_importcard_ui(main_switcher):
     format_table.attach(format_container, 1, 2, 0, 1, \
         xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.SHRINK)
     format_table.attach(format_next_button, 2, 3, 0, 1, \
-        xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
+        xoptions=gtk.SHRINK, yoptions=gtk.SHRINK)
     
     # create tags frame
     tags_frame = gtk.Frame()
@@ -82,31 +81,45 @@ def create_importcard_ui(main_switcher):
     tags_viewport.set_name('viewport_widget')
     tags_box = gtk.VBox()
     # packing widgets
-    toolbar_container.add(toolbar_table)
     tags_viewport.add(tags_box)
     tags_scrolledwindow.add(tags_viewport)
     tags_eventbox.add(tags_scrolledwindow)
     tags_frame.add(tags_eventbox)
 
+    # create filename button
+    file_name_button = widgets.create_button('file_name_button', None)
+
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
     #packing widget to table
-#    general_settings_table.attach(tags_frame, 0, 1, 0, 1, \
-#        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-#        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-#        xpadding=30, ypadding=30)
-    general_settings_table.attach(ok_button, 3, 4, 0, 1, \
+    general_settings_table.attach(format_table, 0, 1, 0, 1, \
+#    general_settings_table.attach(format_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
+        yoptions=gtk.SHRINK)
+
+    general_settings_table.attach(tags_frame, 0, 1, 1, 2, \
+       xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+       yoptions=gtk.SHRINK|gtk.FILL, \
+       xpadding=30, ypadding=10)
+
+    general_settings_table.attach(file_name_button, 0, 1, 2, 3, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK)
+      
+    general_settings_table.attach(ok_button, 0, 1, 3, 4, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK)
 
     # packing toolbar buttons
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.SHRINK, yoptions=gtk.EXPAND)
     toolbar_container.add(toolbar_table)
+
+    # packing widgets in toplevel table
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-    # packing widgets
-    toplevel_table.attach(general_settings_table, 0, 1, 1, 2, \
+
+    toplevel_table.attach(general_settings_table, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
 

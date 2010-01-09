@@ -252,6 +252,7 @@ style "to-main-menu-button" {
     }
 }
 widget "*.main_menu_button" style "to-main-menu-button"
+widget "*.left_arrow" style "to-main-menu-button"
 
 style "media-button" {
     engine "pixmap" {
