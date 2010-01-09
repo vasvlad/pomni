@@ -91,6 +91,9 @@ def create_importcard_ui(main_switcher):
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         xpadding=30, ypadding=30)
+    general_settings_table.attach(ok_button, 3, 4, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
 
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
@@ -104,10 +107,6 @@ def create_importcard_ui(main_switcher):
     toplevel_table.attach(general_settings_table, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-    toplevel_table.attach(ok_button, 3, 4, 0, 1, \
-        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
-        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
-
 
     toplevel_table.show_all()
 
