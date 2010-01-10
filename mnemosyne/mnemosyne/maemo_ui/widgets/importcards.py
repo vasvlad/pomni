@@ -28,7 +28,15 @@ import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
 def choose_file_cb(self):
-      dlg = hildon.FileChooserDialog(self.window, gtk.FILE_CHOOSER_ACTION_SAVE);
+      try:
+          import hildon
+          dlg = hildon.FileChooserDialog(self.window, gtk.FILE_CHOOSER_ACTION_SAVE);
+      except ImportError:
+          dlg = gtk.FileChooserDialog( title="Choose file", parent = None)
+          dlg.add_button( gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+          dlg.add_button( gtk.STOCK_SAVE, gtk.RESPONSE_OK)
+          print "Neudalos" 
+
       response = dlg.run() 
       if response == gtk.RESPONSE_OK:
           print "dddddddddddddddddddasssssssssssss"
