@@ -24,6 +24,7 @@
 Hildon UI. Import widget.
 """
 
+import mnemosyne.maemo_ui.widgets.tags as widgets
 from mnemosyne.libmnemosyne.ui_component import UiComponent
 from mnemosyne.maemo_ui.widgets.importcards  import create_importcard_ui
 
@@ -35,7 +36,7 @@ class ImportCardsWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self.page, self.tags_box, menu_button, \
             ok_button = create_importcard_ui( \
-	        self.main_widget().switcher)	
+            self.main_widget().switcher)
         self.tags_dict = {}
         # connect signals
         menu_button.connect('clicked', self.back_to_main_menu_cb)
@@ -84,7 +85,6 @@ class ImportCardsWidget(UiComponent):
 
     def ok_button_cb(self, widget):
         """Ok """
-        print "ddddddddddddd"
+
         from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
         self.component_manager.get_current("file_format").do_import("./test_import/anki.txt") 
-      
