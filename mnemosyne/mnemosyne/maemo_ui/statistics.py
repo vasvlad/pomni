@@ -34,30 +34,31 @@ class MaemoStatisticsWidget(StatisticsDialog):
     """Statistics Widget."""
 
     def __init__(self, component_manager, previous_mode=None):
-        self.current_card_text = ""
+        StatisticsDialog.__init__(self, component_manager)
+        self.renderer = self.component_manager.get_current('renderer')
+        self.html = '<html><head><meta http-equiv="Content-Type" content='\
+        '"text/html;charset=UTF-8"><style type="text/css">*{font-size:28px;'\
+        'font-family:Nokia Sans} table {height:100%;margin-left:auto;margin-'\
+        'right:auto;text-align:center} body{ background-color:white;margin:0;'\
+        'padding:0;}</style></head><body><table>'
         self.common_text = ""
         self.total_text = ""
         self.tags_text = {}
-        StatisticsDialog.__init__(self, component_manager)
-        self.prepare_statistics()
         # create widgets
         self.page, self.mode_statistics_switcher, menu_button, \
-            current_card_button, common_button, \
-            tags_button = create_statistics_ui(\
-            self.main_widget().switcher, self.current_card_text, \
-            self.common_text, self.total_text, self.tags_text)
+            current_card_button, common_button, tags_button, \
+            self.current_card_html_widget = create_statistics_ui( \
+            self.main_widget().switcher, self.common_text, self.total_text, \
+            self.tags_text)
         # connect signals
         if previous_mode == 'Menu':
             menu_button.connect('clicked', self.back_to_main_menu_cb)
         else:
             menu_button.connect('clicked', self.back_to_previous_mode_cb)
 
-        current_card_button.connect('released', \
-            self.current_card_statistics_cb)
-        common_button.connect('released', \
-            self.common_statistics_cb)
-        tags_button.connect('released', \
-            self.tags_statistics_cb)
+        current_card_button.connect('released', self.current_card_statistics_cb)
+        common_button.connect('released', self.common_statistics_cb)
+        tags_button.connect('released', self.tags_statistics_cb)
 
         #Change current page
         if "last_variant_for_statistics_page" in self.config():
@@ -81,31 +82,42 @@ class MaemoStatisticsWidget(StatisticsDialog):
         card = self.review_controller().card
 
         #Current card text
-        self.current_card_text = """<span  foreground='white'\
-        size="x-large">"""
+        #self.current_card_text = """<span  foreground='white'\
+        #size="x-large">"""
+        self.html = '<html<body><style type="text/css">' \
+            'table {height:100%;margin-left:auto;margin-right:auto;' \
+            'text-align: center} body{background-color:white;margin:0;' \
+            'padding:0;}</style></head><table><tr><td>'
         if not card:
-            self.current_card_text += "No current card."
+            #self.current_card_text += "No current card."
+            self.html += "No current card."
         elif card.grade == -1:
-            self.current_card_text += \
+            #self.current_card_text += \
+            #    "Unseen card, no statistics available yet."
+            self.html += \
                 "Unseen card, no statistics available yet."
         else:
-            self.current_card_text += "Grade" + ": %d\n" % card.grade
-            self.current_card_text += "Easiness" + ": %1.2f\n" % card.easiness
-            self.current_card_text += "Repetitions" + ": %d\n" \
-                % (card.acq_reps + card.ret_reps)
-            self.current_card_text += "Lapses" + ": %d\n" % card.lapses
-            self.current_card_text += "Interval" + ": %d\n" \
-                % (card.interval / DAY)
-            self.current_card_text += "Last repetition" + ": %s\n" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
-            self.current_card_text += "Next repetition" + ": %s\n" \
-                % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
-            self.current_card_text += \
-                "Average thinking time (secs)" + ": %d\n" \
-                % self.database().average_thinking_time(card)
-            self.current_card_text += "Total thinking time (secs)" + ": %d\n" \
-                % self.database().total_thinking_time(card)
-        self.current_card_text += "</span>"
+            #self.current_card_text += "Grade" + ": %d\n" % card.grade
+            self.html += "Grade" + ": %d<br>" % card.grade
+            #self.current_card_text += "Easiness" + ": %1.2f\n" % card.easiness
+            #self.current_card_text += "Repetitions" + ": %d\n" \
+            #    % (card.acq_reps + card.ret_reps)
+            #self.current_card_text += "Lapses" + ": %d\n" % card.lapses
+            #self.current_card_text += "Interval" + ": %d\n" \
+            #    % (card.interval / DAY)
+            #self.current_card_text += "Last repetition" + ": %s\n" \
+            #    % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
+            #self.current_card_text += "Next repetition" + ": %s\n" \
+            #    % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
+            #self.current_card_text += \
+            #    "Average thinking time (secs)" + ": %d\n" \
+            #    % self.database().average_thinking_time(card)
+            #self.current_card_text += "Total thinking time (secs)" + ": %d\n" \
+            #    % self.database().total_thinking_time(card)
+        #self.current_card_text += "</span>"
+        #renderer = self.component_manager.get_current('renderer')
+        #renderer.render_html(self.current_card_html, self.html)
+
 
         #Common text
         self.common_text = """<span  foreground='white'\
@@ -164,6 +176,32 @@ class MaemoStatisticsWidget(StatisticsDialog):
     def current_card_statistics_cb(self, widget):
         """Switches to the current card statistics page."""
 
+        card = self.review_controller().card
+        html = self.html
+        if not card:
+            html += "<tr><td><b>No current card.</b></td></tr>"
+        elif card.grade == -1:
+            html += "<tr><td><b>Unseen card, no statistics available " \
+                "yet.</b></td></tr>"
+        else:
+            html += "<tr><td>Grade" + ": %d</td></tr>" % card.grade
+            html += "<tr><td>Easiness" + ": %1.2f</td></tr>" % card.easiness
+            html += "<tr><td>Repetitions" + ": %d</td></tr>" % \
+                (card.acq_reps + card.ret_reps)
+            html += "<tr><td>Lapses" + ": %d</td></tr>" % card.lapses
+            html += "<tr><td>Interval" + ": %d</td></tr>" % \
+                (card.interval / DAY)
+            html += "<tr><td>Last repetition" + ": %s</td></tr>" \
+                % time.strftime("%B %d, %Y", time.gmtime(card.last_rep))
+            html += "<tr><td>Next repetition" + ": %s</td></tr>" \
+                % time.strftime("%B %d, %Y", time.gmtime(card.next_rep))
+            html += "<tr><td>Average thinking time (secs): %d</td></tr>"\
+                % self.database().average_thinking_time(card)
+            html += "<tr><td>Total thinking time (secs): %d</td></tr>" \
+                % self.database().total_thinking_time(card)
+        html += "</table></body></html>"
+        html = self.renderer.change_font_size(html)
+        self.renderer.render_html(self.current_card_html_widget, html)
         self.mode_statistics_switcher.set_current_page(0)
 
     def common_statistics_cb(self, widget):

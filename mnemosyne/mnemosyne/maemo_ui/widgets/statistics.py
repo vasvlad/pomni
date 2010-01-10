@@ -27,7 +27,7 @@ Hildon UI. Statistics widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def create_statistics_ui(main_switcher, current_card_text, common_text, \
+def create_statistics_ui(main_switcher, common_text, \
                         total_text, tags_text):
     """Creates MaemoStatisticsWidget UI."""
 
@@ -69,6 +69,18 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, \
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     # create widgets for current card mode
+    current_card_table = gtk.Table(rows=1, columns=1, homogeneous=False)
+    current_card_frame = gtk.Frame()
+    current_card_frame.set_name('html_container')
+    current_card_eventbox = gtk.EventBox()
+    current_card_eventbox.set_visible_window(True)
+    current_card_eventbox.set_name('viewport_widget')
+    current_card_scrolledwindow = gtk.ScrolledWindow()
+    current_card_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, \
+        gtk.POLICY_AUTOMATIC)
+    current_card_scrolledwindow.set_name('scrolled_window')
+    current_card_html = widgets.create_gtkhtml()
+    """
     current_card_box = gtk.VBox()
     current_card_label_title = gtk.Label()
     current_card_label_title.set_use_markup(True)
@@ -83,7 +95,15 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, \
         fill=True, padding=10)
     current_card_box.pack_start(current_card_label_text, expand=False, \
         fill=True, padding=10)
-    mode_statistics_switcher.append_page(current_card_box)
+    """
+    current_card_table.attach(current_card_frame, 1, 2, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        xpadding=30, ypadding=30)
+    current_card_scrolledwindow.add(current_card_html)
+    current_card_eventbox.add(current_card_scrolledwindow)
+    current_card_frame.add(current_card_eventbox)
+    mode_statistics_switcher.append_page(current_card_table)
     # create widgets for total cards mode
     total_cards_box = gtk.VBox()
     total_cards_label_title = gtk.Label()
@@ -142,5 +162,5 @@ def create_statistics_ui(main_switcher, current_card_text, common_text, \
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), \
            mode_statistics_switcher, menu_button, current_card_button, \
-           common_button, tags_button 
+           common_button, tags_button, current_card_html
 
