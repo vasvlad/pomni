@@ -45,8 +45,9 @@ class MaemoStatisticsWidget(StatisticsDialog):
         # create widgets
         self.page, self.mode_statistics_switcher, menu_button, \
             current_card_button, common_button, tags_button, \
-            self.current_card_html_widget, self.total_card_html_widget \
-            = create_statistics_ui(self.main_widget().switcher)
+            self.current_card_html_widget, self.total_card_html_widget, \
+            self.tags_html_widget = create_statistics_ui( \
+                self.main_widget().switcher)
         # connect signals
         if previous_mode == 'Menu':
             menu_button.connect('clicked', self.back_to_main_menu_cb)
@@ -72,45 +73,6 @@ class MaemoStatisticsWidget(StatisticsDialog):
             common_button.set_active(True)
             self.common_statistics_cb(None) 
  
-
-    def prepare_statistics(self):
-        """Preparing statistics text"""
-
-        card = self.review_controller().card
-
-        #Common text
-        self.common_text = """<span  foreground='white'\
-        size="x-large">"""
-        grades = range(-1, 6)
-        self.common_text += "\n".join([ "Grade  %2i -  %i" % \
-                 (grade, self.database().card_count_for_grade \
-                            (grade)) for grade in grades])
-        self.common_text += "</span>"
-
-        self.total_text = """<span  foreground='white'\
-        size="x-large">"""
-        count_of_card = sum([ self.database().card_count_for_grade \
-                            (grade) for grade in grades])
-        self.total_text += "Cards - %i" % count_of_card 
-        self.total_text += "</span>"
-
-        #Tags text in dict
-        text_for_tag = ""
-        for _id, name in self.database().get_tags__id_and_name():
-            name = name.replace('<','')
-            name = name.replace('>','')
-            text_for_tag = """<span  foreground='white'\
-                    size="x-large">"""
-            text_for_tag += "\n".join([ "Grade %2i - %i" % \
-                (grade, self.database().card_count_for_grade_and__tag_id \
-                                        (grade, _id)) for grade in grades])
-            count_of_card = sum([ self.database(). \
-                  card_count_for_grade_and__tag_id \
-                  (grade, _id) for grade in grades])
-            text_for_tag += "\n\n<b>Total:      %i</b>" % count_of_card
-            text_for_tag += "</span>"
-            self.tags_text[name] = text_for_tag
-
     def activate(self):
         """Set necessary switcher page."""
 
@@ -183,5 +145,16 @@ class MaemoStatisticsWidget(StatisticsDialog):
         
     def tags_statistics_cb(self, widget):
         """Switches to the tags statistics page."""
+
+        html = self.html
+        html += "<tr><td><b>Tags statistics<br></b></td></tr>"
+        for _id, name in self.database().get_tags__id_and_name():
+            html += "<tr><td><br><br>Tag <b>%s</b></td></tr>" % name
+            for grade in range(-1, 6):
+               html += "<tr><td>Grade %2i: %i cards</td></tr>" % (grade, \
+                self.database().card_count_for_grade_and__tag_id(grade, _id))
+        html += "</table></body></html>"
+        html = self.renderer.change_font_size(html)
+        self.renderer.render_html(self.tags_html_widget, html)
         self.mode_statistics_switcher.set_current_page(2)
 

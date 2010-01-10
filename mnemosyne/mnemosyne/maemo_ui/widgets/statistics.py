@@ -79,22 +79,7 @@ def create_statistics_ui(main_switcher):
         gtk.POLICY_AUTOMATIC)
     current_card_scrolledwindow.set_name('scrolled_window')
     current_card_html = widgets.create_gtkhtml()
-    """
-    current_card_box = gtk.VBox()
-    current_card_label_title = gtk.Label()
-    current_card_label_title.set_use_markup(True)
-    current_card_label_title.set_justify(gtk.JUSTIFY_CENTER)
-    current_card_label_title.set_markup("<span foreground='white' " \
-        "size='x-large'><b>Current card statistics</b></span>")
-    current_card_label_text = gtk.Label()
-    current_card_label_text.set_use_markup(True)
-    current_card_label_text.set_justify(gtk.JUSTIFY_LEFT)
-    current_card_label_text.set_markup(current_card_text)
-    current_card_box.pack_start(current_card_label_title, expand=False, \
-        fill=True, padding=10)
-    current_card_box.pack_start(current_card_label_text, expand=False, \
-        fill=True, padding=10)
-    """
+    # packing widgets for current card mode
     current_card_table.attach(current_card_frame, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
@@ -115,22 +100,7 @@ def create_statistics_ui(main_switcher):
         gtk.POLICY_AUTOMATIC)
     total_card_scrolledwindow.set_name('scrolled_window')
     total_card_html = widgets.create_gtkhtml()
-    """
-    total_cards_box = gtk.VBox()
-    total_cards_label_title = gtk.Label()
-    total_cards_label_title.set_use_markup(True)
-    total_cards_label_title.set_justify(gtk.JUSTIFY_CENTER)
-    total_cards_label_title.set_markup("<span foreground='white' " \
-        "size='x-large'><b>Total</b></span>")
-    total_cards_label_text = gtk.Label()
-    total_cards_label_text.set_use_markup(True)
-    total_cards_label_text.set_justify(gtk.JUSTIFY_LEFT)
-    total_cards_label_text.set_markup(total_text)
-    total_cards_box.pack_start(total_cards_label_title, expand=False, \
-        fill=True, padding=10)
-    total_cards_box.pack_start(total_cards_label_text, expand=False, \
-        fill=True, padding=10)
-    """
+    # packing widgets for total cards mode
     total_card_table.attach(total_card_frame, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
@@ -140,43 +110,26 @@ def create_statistics_ui(main_switcher):
     total_card_frame.add(total_card_eventbox)
     mode_statistics_switcher.append_page(total_card_table)
     # create widgets for grades section
-    grades_label_title = gtk.Label()
-    grades_label_title.set_use_markup(True)
-    grades_label_title.set_justify(gtk.JUSTIFY_CENTER)
-    grades_label_title.set_markup("<span foreground='white' " \
-        "size='x-large'><b>Grade statistics for all cards</b></span>")
-    grades_label_text = gtk.Label()
-    grades_label_text.set_use_markup(True)
-    grades_label_text.set_justify(gtk.JUSTIFY_LEFT)
-    #grades_label_text.set_markup(common_text)
-    #total_cards_box.pack_start(grades_label_title, expand=False, fill=True, \
-    #    padding=10)
-    #total_cards_box.pack_start(grades_label_text, expand=False, fill=True, \
-    #    padding=10)
-    #mode_statistics_switcher.append_page(total_cards_box)
-    # create widgets for tags statistics mode
-    tags_box = gtk.VBox()
-    scrolledwindow_widget = gtk.ScrolledWindow()
-    scrolledwindow_widget.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-    scrolledwindow_widget.set_name('scrolledwindow_widget')
-    scrolledwindow_widget.add_with_viewport(tags_box)
-    """
-    for key in tags_text:
-        tags_label_title = gtk.Label()
-        tags_label_title.set_use_markup(True)
-        tags_label_title.set_justify(gtk.JUSTIFY_CENTER)
-        tags_label_title.set_markup("<span foreground='white' " \
-            "size='x-large'><b>Tag %s</b></span>" % key ) 
-        tags_label_text = gtk.Label()
-        tags_label_text.set_use_markup(True)
-        tags_label_text.set_justify(gtk.JUSTIFY_LEFT)
-        tags_label_text.set_markup(tags_text[key])
-        tags_box.pack_start(tags_label_title, expand=False, fill=True, \
-            padding=10)
-        tags_box.pack_start(tags_label_text, expand=False, fill=True, \
-            padding=10)
-    """
-    mode_statistics_switcher.append_page(scrolledwindow_widget)
+    tags_card_table = gtk.Table(rows=1, columns=1, homogeneous=False)
+    tags_card_frame = gtk.Frame()
+    tags_card_frame.set_name('html_container')
+    tags_card_eventbox = gtk.EventBox()
+    tags_card_eventbox.set_visible_window(True)
+    tags_card_eventbox.set_name('viewport_widget')
+    tags_card_scrolledwindow = gtk.ScrolledWindow()
+    tags_card_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, \
+        gtk.POLICY_AUTOMATIC)
+    tags_card_scrolledwindow.set_name('scrolled_window')
+    tags_card_html = widgets.create_gtkhtml()
+    # packing widgets for grades section
+    tags_card_table.attach(tags_card_frame, 1, 2, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        xpadding=30, ypadding=30)
+    tags_card_scrolledwindow.add(tags_card_html)
+    tags_card_eventbox.add(tags_card_scrolledwindow)
+    tags_card_frame.add(tags_card_eventbox)
+    mode_statistics_switcher.append_page(tags_card_table)
     # packing widgets
     toplevel_table.attach(mode_statistics_switcher, 1, 2, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
@@ -184,5 +137,6 @@ def create_statistics_ui(main_switcher):
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), \
            mode_statistics_switcher, menu_button, current_card_button, \
-           common_button, tags_button, current_card_html, total_card_html
+           common_button, tags_button, current_card_html, total_card_html, \
+           tags_card_html
 
