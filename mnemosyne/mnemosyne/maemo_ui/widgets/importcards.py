@@ -125,6 +125,6 @@ def create_importcard_ui(main_switcher):
 
     toplevel_table.show_all()
 
-    return main_switcher.append_page(toplevel_table), \
+    return main_switcher.append_page(toplevel_table), tags_box, \
            menu_button, ok_button
 
