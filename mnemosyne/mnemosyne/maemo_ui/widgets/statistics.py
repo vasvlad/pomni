@@ -27,8 +27,7 @@ Hildon UI. Statistics widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def create_statistics_ui(main_switcher, common_text, \
-                        total_text, tags_text):
+def create_statistics_ui(main_switcher):
     """Creates MaemoStatisticsWidget UI."""
 
     def create_toolbar_container(name, show_tabs=False, width=82, height=480):
@@ -105,6 +104,18 @@ def create_statistics_ui(main_switcher, common_text, \
     current_card_frame.add(current_card_eventbox)
     mode_statistics_switcher.append_page(current_card_table)
     # create widgets for total cards mode
+    total_card_table = gtk.Table(rows=1, columns=1, homogeneous=False)
+    total_card_frame = gtk.Frame()
+    total_card_frame.set_name('html_container')
+    total_card_eventbox = gtk.EventBox()
+    total_card_eventbox.set_visible_window(True)
+    total_card_eventbox.set_name('viewport_widget')
+    total_card_scrolledwindow = gtk.ScrolledWindow()
+    total_card_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, \
+        gtk.POLICY_AUTOMATIC)
+    total_card_scrolledwindow.set_name('scrolled_window')
+    total_card_html = widgets.create_gtkhtml()
+    """
     total_cards_box = gtk.VBox()
     total_cards_label_title = gtk.Label()
     total_cards_label_title.set_use_markup(True)
@@ -119,6 +130,15 @@ def create_statistics_ui(main_switcher, common_text, \
         fill=True, padding=10)
     total_cards_box.pack_start(total_cards_label_text, expand=False, \
         fill=True, padding=10)
+    """
+    total_card_table.attach(total_card_frame, 1, 2, 0, 1, \
+        xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
+        xpadding=30, ypadding=30)
+    total_card_scrolledwindow.add(total_card_html)
+    total_card_eventbox.add(total_card_scrolledwindow)
+    total_card_frame.add(total_card_eventbox)
+    mode_statistics_switcher.append_page(total_card_table)
     # create widgets for grades section
     grades_label_title = gtk.Label()
     grades_label_title.set_use_markup(True)
@@ -128,18 +148,19 @@ def create_statistics_ui(main_switcher, common_text, \
     grades_label_text = gtk.Label()
     grades_label_text.set_use_markup(True)
     grades_label_text.set_justify(gtk.JUSTIFY_LEFT)
-    grades_label_text.set_markup(common_text)
-    total_cards_box.pack_start(grades_label_title, expand=False, fill=True, \
-        padding=10)
-    total_cards_box.pack_start(grades_label_text, expand=False, fill=True, \
-        padding=10)
-    mode_statistics_switcher.append_page(total_cards_box)
+    #grades_label_text.set_markup(common_text)
+    #total_cards_box.pack_start(grades_label_title, expand=False, fill=True, \
+    #    padding=10)
+    #total_cards_box.pack_start(grades_label_text, expand=False, fill=True, \
+    #    padding=10)
+    #mode_statistics_switcher.append_page(total_cards_box)
     # create widgets for tags statistics mode
     tags_box = gtk.VBox()
     scrolledwindow_widget = gtk.ScrolledWindow()
     scrolledwindow_widget.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
     scrolledwindow_widget.set_name('scrolledwindow_widget')
     scrolledwindow_widget.add_with_viewport(tags_box)
+    """
     for key in tags_text:
         tags_label_title = gtk.Label()
         tags_label_title.set_use_markup(True)
@@ -154,6 +175,7 @@ def create_statistics_ui(main_switcher, common_text, \
             padding=10)
         tags_box.pack_start(tags_label_text, expand=False, fill=True, \
             padding=10)
+    """
     mode_statistics_switcher.append_page(scrolledwindow_widget)
     # packing widgets
     toplevel_table.attach(mode_statistics_switcher, 1, 2, 0, 1, \
@@ -162,5 +184,5 @@ def create_statistics_ui(main_switcher, common_text, \
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), \
            mode_statistics_switcher, menu_button, current_card_button, \
-           common_button, tags_button, current_card_html
+           common_button, tags_button, current_card_html, total_card_html
 
