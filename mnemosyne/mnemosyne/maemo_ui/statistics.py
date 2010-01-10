@@ -143,7 +143,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
             html += "<tr><td><b>Unseen card, no statistics available " \
                 "yet</b></td></tr>"
         else:
-            html += "<tr><td><b>Current card statistics</b></td></tr>"
+            html += "<tr><td><b>Current card statistics<br><br></b></td></tr>"
             html += "<tr><td>Grade" + ": %d</td></tr>" % card.grade
             html += "<tr><td>Easiness" + ": %1.2f</td></tr>" % card.easiness
             html += "<tr><td>Repetitions" + ": %d</td></tr>" % \
@@ -169,7 +169,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
 
         html = self.html
         html += "<tr><td><b>Total cards statistics</b></td></tr>"
-        html += "<tr><td>Total cards: %d</td></tr>" % \
+        html += "<tr><td>Total cards: %d<br><br><br></td></tr>" % \
             sum([self.database().card_count_for_grade(grade) \
             for grade in range(-1, 6)])
         html += "<tr><td><b>Grade statistics for all cards</b></td></tr>"
