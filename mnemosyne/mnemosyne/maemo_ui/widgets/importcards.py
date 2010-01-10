@@ -27,6 +27,12 @@ Hildon UI. Import widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
+def choose_file_cb(self):
+      dlg = hildon.FileChooserDialog(self.window, gtk.FILE_CHOOSER_ACTION_SAVE);
+      response = dlg.run() 
+      if response == gtk.RESPONSE_OK:
+          print "dddddddddddddddddddasssssssssssss"
+          
 def create_importcard_ui(main_switcher):
     """Creates MaemoImportWidget UI."""
 
@@ -88,6 +94,7 @@ def create_importcard_ui(main_switcher):
 
     # create filename button
     file_name_button = widgets.create_button('file_name_button', None)
+    file_name_button.connect('clicked', choose_file_cb)
 
     # create OK button
     ok_button = widgets.create_button('ok_button', None)
