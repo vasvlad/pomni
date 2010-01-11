@@ -141,7 +141,8 @@ class MaemoStatisticsWidget(StatisticsDialog):
         html = self.html
         html += "<tr><td><b>Tags statistics<br></b></td></tr>"
         for _id, name in self.database().get_tags__id_and_name():
-            html += "<tr><td><br><br>Tag <b>%s</b></td></tr>" % name
+            html += "<tr><td><br><br>Tag <b>%s</b></td></tr>" % \
+                name.replace('<', '&lt;').replace('>', '&gt;')
             for grade in range(-1, 6):
                 html += "<tr><td>Grade %2i: %i cards</td></tr>" % (grade, \
                 self.database().card_count_for_grade_and__tag_id(grade, _id))
