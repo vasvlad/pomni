@@ -109,3 +109,11 @@ def create_radio_button(group=None, name=None, callback=None, \
         button.connect(event, callback)
     return button
 
+def create_toolbar_container(name, show_tabs=False, width=82, height=480):
+    """Creates toolbar container."""
+
+    container = gtk.Notebook()
+    container.set_show_tabs(show_tabs)
+    container.set_size_request(width, height)
+    container.set_name(name)
+    return container
