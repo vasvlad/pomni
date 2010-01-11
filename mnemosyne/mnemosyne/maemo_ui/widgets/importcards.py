@@ -27,12 +27,21 @@ Hildon UI. Import widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def choose_file_cb(self):
-      dlg = hildon.FileChooserDialog(self.window, gtk.FILE_CHOOSER_ACTION_SAVE);
-      response = dlg.run() 
-      if response == gtk.RESPONSE_OK:
-          print "dddddddddddddddddddasssssssssssss"
-          
+def choose_file_cb(self, file_name_label):
+        try:
+            import hildon
+            dlg = hildon.FileChooserDialog(self.window, gtk.FILE_CHOOSER_ACTION_OPEN);
+        except ImportError:
+            dlg = gtk.FileChooserDialog( title="Choose File.", parent = None, action = gtk.FILE_CHOOSER_ACTION_OPEN)
+            dlg.add_button( gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+            dlg.add_button( gtk.STOCK_SAVE, gtk.RESPONSE_OK)
+        response = dlg.run() 
+        if response == gtk.RESPONSE_OK:
+            file_name_label.set_text(dlg.get_filename())
+            file_name_label.show()
+            dlg.destroy()
+        else:
+            dlg.destroy()
 def create_importcard_ui(main_switcher):
     """Creates MaemoImportWidget UI."""
 
@@ -61,7 +70,7 @@ def create_importcard_ui(main_switcher):
     format_container = widgets.create_button('labels_container', 
         width=-1, height=60)
     format_label = gtk.Label('default')
-    format_label.set_name('format_label')
+    format_label.set_name('config_import_label')
     format_prev_button = widgets.create_button('left_arrow', None)
     format_next_button = widgets.create_button('right_arrow', None)
     # Package of selected widgets
@@ -93,14 +102,20 @@ def create_importcard_ui(main_switcher):
     tags_frame.add(tags_eventbox)
 
     # create filename button
-    file_name_button = widgets.create_button('file_name_button', None)
-    file_name_button.connect('clicked', choose_file_cb)
+    file_name_button = widgets.create_button('labels_container', None)
+    file_name_label = gtk.Label('Press here for choosing file')
+    file_name_label.set_name('config_import_label')
+    file_name_button.add(file_name_label)
+    file_name_button.connect('clicked', choose_file_cb, file_name_label)
 
     # create OK button
-    ok_button = widgets.create_button('ok_button', None)
+    ok_button = widgets.create_button('labels_container', None)
+    ok_label = gtk.Label('Go!')
+    ok_label.set_name('config_import_label')
+    ok_button.add(ok_label)
+
     #packing widget to table
     general_settings_table.attach(format_table, 0, 1, 0, 1, \
-#    general_settings_table.attach(format_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK)
 
@@ -133,5 +148,5 @@ def create_importcard_ui(main_switcher):
     toplevel_table.show_all()
 
     return main_switcher.append_page(toplevel_table), tags_box, \
-           menu_button, ok_button
+           menu_button, ok_button, file_name_label
 
