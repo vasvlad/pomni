@@ -114,6 +114,18 @@ class Html(Renderer):
             "<tr><td>%s</td></tr></table></body></html>" % text
         return self.render_html(widget, self.change_font_size(html))
     
+    def render_sound_hint(self, widget, stopped):
+        """Render html text for sound button."""
+
+        if stopped:
+            text = "Press to Start playing"
+        else:
+            text = "Press to Stop playing"
+        html = "<html><head><style>*{font-size:30px;font-family:Nokia Sans}" \
+            "body {background:#FFFFFF;color:#000000;}table {height:100;" \
+            "margin-left:auto;margin-right:auto;}</style></head><body><table>" \
+            "<tr><td>%s</td></tr></table></body></html>" % text
+        return self.render_html(widget, self.change_font_size(html))
 
 
 class Text(Renderer):
