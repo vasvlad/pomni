@@ -1454,6 +1454,7 @@ style "config-tts-label" = "white-label" {
     fg[PRELIGHT] = "#000000"
 }
 widget "*.config_tts_label" style "config-tts-label"
+widget "*.config_import_label" style "config-tts-label"
 #----------------------------- Config mode ------------------
 
 

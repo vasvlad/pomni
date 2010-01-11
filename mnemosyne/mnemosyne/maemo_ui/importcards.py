@@ -35,7 +35,7 @@ class ImportCardsWidget(UiComponent):
 
         UiComponent.__init__(self, component_manager)
         self.page, self.tags_box, menu_button, \
-            ok_button = create_importcard_ui( \
+            ok_button, self.file_name_label = create_importcard_ui( \
             self.main_widget().switcher)
         self.tags_dict = {}
         # connect signals
@@ -87,4 +87,7 @@ class ImportCardsWidget(UiComponent):
         """Ok """
 
         from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
-        self.component_manager.get_current("file_format").do_import("./test_import/anki.txt") 
+        self.component_manager.get_current("file_format").do_import(self.file_name_label.get_text()) 
+        self.main_widget().switcher.remove_page(self.page)
+        self.main_widget().menu_('importcards')
+
