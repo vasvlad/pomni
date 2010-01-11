@@ -30,17 +30,8 @@ import mnemosyne.maemo_ui.widgets.common as widgets
 def create_statistics_ui(main_switcher):
     """Creates MaemoStatisticsWidget UI."""
 
-    def create_toolbar_container(name, show_tabs=False, width=82, height=480):
-        """Creates toolbar container."""
-
-        container = gtk.Notebook()
-        container.set_show_tabs(show_tabs)
-        container.set_size_request(width, height)
-        container.set_name(name)
-        return container
-
     toplevel_table = gtk.Table(rows=1, columns=2)
-    toolbar_container = create_toolbar_container('toolbar_container')
+    toolbar_container = widgets.create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create toolbar buttons
     current_card_button = widgets.create_radio_button(None, \
@@ -136,7 +127,6 @@ def create_statistics_ui(main_switcher):
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.show_all()
     return main_switcher.append_page(toplevel_table), \
-           mode_statistics_switcher, menu_button, current_card_button, \
-           common_button, tags_button, current_card_html, total_card_html, \
-           tags_card_html
-
+        mode_statistics_switcher, menu_button, current_card_button, \
+        common_button, tags_button, current_card_html, total_card_html, \
+        tags_card_html
