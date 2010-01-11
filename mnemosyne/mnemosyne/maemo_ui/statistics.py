@@ -36,42 +36,39 @@ class MaemoStatisticsWidget(StatisticsDialog):
     def __init__(self, component_manager, previous_mode=None):
         StatisticsDialog.__init__(self, component_manager)
         self.renderer = self.component_manager.get_current('renderer')
+        self.previous_mode = previous_mode
         self.html = '<html><head><meta http-equiv="Content-Type" content='\
         '"text/html;charset=UTF-8"><style type="text/css">*{font-size:28px;'\
         'font-family:Nokia Sans} table {height:100%;margin-left:auto;margin-'\
         'right:auto;text-align:center} body{ background-color:white;margin:0;'\
         'padding:0;}</style></head><body><table>'
-        self.tags_text = {}
         # create widgets
         self.page, self.mode_statistics_switcher, menu_button, \
-            current_card_button, common_button, tags_button, \
+            current_card_button, common_card_button, tags_card_button, \
             self.current_card_html_widget, self.total_card_html_widget, \
             self.tags_html_widget = create_statistics_ui( \
                 self.main_widget().switcher)
         # connect signals
-        if previous_mode == 'Menu':
-            menu_button.connect('clicked', self.back_to_main_menu_cb)
-        else:
-            menu_button.connect('clicked', self.back_to_previous_mode_cb)
-
+        menu_button.connect('clicked', self.back_to_previous_mode_cb)
         current_card_button.connect('released', self.current_card_statistics_cb)
-        common_button.connect('released', self.common_statistics_cb)
-        tags_button.connect('released', self.tags_statistics_cb)
+        common_card_button.connect('released', self.common_statistics_cb)
+        tags_card_button.connect('released', self.tags_statistics_cb)
 
-        #Change current page
-        if "last_variant_for_statistics_page" in self.config():
-            number_of_page = self.config()["last_variant_for_statistics_page"] 
-        else:
-            number_of_page = 2
-        if number_of_page == 0:
+        # change current statistics page
+        try:
+            statistics_page = self.config()["last_variant_for_statistics_page"] 
+        except KeyError:
+            statistics_page = 2
+
+        if statistics_page == 0:
             current_card_button.set_active(True)
             self.current_card_statistics_cb(None)
-        elif number_of_page == 2:
-            tags_button.set_active(True)
-            self.tags_statistics_cb(None) 
-        else:
-            common_button.set_active(True)
+        elif statistics_page == 1:
+            common_card_button.set_active(True)
             self.common_statistics_cb(None) 
+        else:
+            tags_card_button.set_active(True)
+            self.tags_statistics_cb(None) 
  
     def activate(self):
         """Set necessary switcher page."""
@@ -79,19 +76,14 @@ class MaemoStatisticsWidget(StatisticsDialog):
         self.main_widget().switcher.set_current_page(self.page)
 
     def back_to_previous_mode_cb(self, widget):
-        """Returns to previous menu."""
+        """Returns to previous mode."""
 
         self.config()["last_variant_for_statistics_page"] = \
             self.mode_statistics_switcher.get_current_page()
         self.main_widget().switcher.remove_page(self.page)
+        if self.previous_mode is not None:
+            self.main_widget().menu_('statistics')
 
-    def back_to_main_menu_cb(self, widget):
-        """Returns to main menu."""
-
-        self.config()["last_variant_for_statistics_page"] = \
-            self.mode_statistics_switcher.get_current_page()
-        self.main_widget().switcher.remove_page(self.page)
-        self.main_widget().menu_('statistics')
 
     # callbacks
     def current_card_statistics_cb(self, widget):
@@ -151,7 +143,7 @@ class MaemoStatisticsWidget(StatisticsDialog):
         for _id, name in self.database().get_tags__id_and_name():
             html += "<tr><td><br><br>Tag <b>%s</b></td></tr>" % name
             for grade in range(-1, 6):
-               html += "<tr><td>Grade %2i: %i cards</td></tr>" % (grade, \
+                html += "<tr><td>Grade %2i: %i cards</td></tr>" % (grade, \
                 self.database().card_count_for_grade_and__tag_id(grade, _id))
         html += "</table></body></html>"
         html = self.renderer.change_font_size(html)
