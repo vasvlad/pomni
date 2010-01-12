@@ -102,5 +102,7 @@ class SoundPlayer:
     def stopped(self):
         """Returns current player status."""
 
+        if not self.soundengine:
+            self.soundengine = GstSoundEngine()
         return self.soundengine.stopped
 
