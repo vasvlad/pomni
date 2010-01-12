@@ -36,7 +36,7 @@ class ImportCardsWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self.page, self.tags_box, menu_button, \
             ok_button, self.file_name_label = create_importcard_ui( \
-            self.main_widget().switcher)
+            self.main_widget().switcher, [self.component_manager.get_current("file_format").description])
         self.tags_dict = {}
         # connect signals
         menu_button.connect('clicked', self.back_to_main_menu_cb)
@@ -86,8 +86,9 @@ class ImportCardsWidget(UiComponent):
     def ok_button_cb(self, widget):
         """Ok """
 
-        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
-        self.component_manager.get_current("file_format").do_import(self.file_name_label.get_text()) 
+#        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
+        self.component_manager.get_current("file_format"). \
+            do_import(self.file_name_label.get_text() 
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('importcards')
 
