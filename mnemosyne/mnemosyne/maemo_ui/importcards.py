@@ -88,7 +88,7 @@ class ImportCardsWidget(UiComponent):
 
 #        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
         self.component_manager.get_current("file_format"). \
-            do_import(self.file_name_label.get_text() 
+            do_import(self.file_name_label.get_text()) 
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('importcards')
 
