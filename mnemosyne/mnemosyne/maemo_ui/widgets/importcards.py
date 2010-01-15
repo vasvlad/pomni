@@ -27,10 +27,10 @@ Hildon UI. Import widget.
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def choose_file_cb(self, file_name_label, ok_button):
+def choose_file_cb(self, file_name_label, ok_button, main_window) :
         try:
             import hildon
-            dlg = hildon.FileChooserDialog(self.window, gtk.FILE_CHOOSER_ACTION_OPEN);
+            dlg = hildon.FileChooserDialog(main_window, gtk.FILE_CHOOSER_ACTION_OPEN);
         except ImportError:
             dlg = gtk.FileChooserDialog( title="Choose File.", parent = None, action = gtk.FILE_CHOOSER_ACTION_OPEN)
             dlg.add_button( gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
@@ -45,7 +45,7 @@ def choose_file_cb(self, file_name_label, ok_button):
         else:
             dlg.destroy()
 
-def create_importcard_ui(main_switcher, formats):
+def create_importcard_ui(main_window, main_switcher, formats):
     """Creates MaemoImportWidget UI."""
 
     def create_toolbar_container(name, show_tabs=False, width=82, height=480):
@@ -118,7 +118,7 @@ def create_importcard_ui(main_switcher, formats):
     ok_button.set_sensitive(False)
     ok_button.add(ok_label)
 
-    file_name_button.connect('clicked', choose_file_cb, file_name_label, ok_button)
+    file_name_button.connect('clicked', choose_file_cb, file_name_label, ok_button, main_window)
 
     #packing widget to table
     general_settings_table.attach(format_table, 0, 1, 0, 1, \

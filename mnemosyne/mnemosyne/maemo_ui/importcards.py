@@ -36,7 +36,8 @@ class ImportCardsWidget(UiComponent):
         UiComponent.__init__(self, component_manager)
         self.page, self.tags_box, menu_button, \
             ok_button, self.file_name_label = create_importcard_ui( \
-            self.main_widget().switcher, [self.component_manager.get_current("file_format").description])
+            self.main_widget().window, self.main_widget().switcher,\
+            [self.component_manager.get_current("file_format").description])
         self.tags_dict = {}
         # connect signals
         menu_button.connect('clicked', self.back_to_main_menu_cb)
