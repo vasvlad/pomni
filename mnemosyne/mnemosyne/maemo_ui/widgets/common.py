@@ -44,13 +44,19 @@ def create_gtkhtml(content=None):
         document.write_stream(content)
         document.close_stream()
 
-    def link_clicked(object, link, document):
+    def link_clicked(object, link, document, view):
         """Called when link is clicked."""
-        urlfd = urllib2.urlopen(link)
-        content = urlfd.read()
-        urlfd.close()
-        load_html(document, content)
-
+        if link.startswith("#"):
+            # jump to the local link(anchor)
+            view.jump_to_anchor(link[1:])
+            view.show()
+        else:
+            # FIXME: open browser here
+            #urlfd = urllib2.urlopen(link)
+            #content = urlfd.read()
+            #urlfd.close()
+            #load_html(document, content)
+            pass
 
     import gtkhtml2
     import urllib
@@ -62,9 +68,8 @@ def create_gtkhtml(content=None):
     if content:
         load_html(document, content)
     document.connect('request_url', request_url)
-    document.connect('link_clicked', link_clicked, document)
+    document.connect('link_clicked', link_clicked, document, view)
     view.set_document(document)
-    view.document = document
     view.show()
     return view
 
