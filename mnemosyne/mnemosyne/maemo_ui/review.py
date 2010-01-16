@@ -28,29 +28,29 @@ from mnemosyne.libmnemosyne.ui_components.review_widget import ReviewWidget
 import mnemosyne.maemo_ui.widgets.review as widgets
 from mnemosyne.maemo_ui import tts
 
-LARGE_CONTAINER_HEIGHT = 260
-NORMAL_CONTAINER_HEIGHT = 16
+LARGE_CONTAINER_HEIGHT = 140
 
 class ReviewWdgt(ReviewWidget):
     """Review Widget."""
 
     def __init__(self, component_manager):
         ReviewWidget.__init__(self, component_manager)
+        self._main_widget = self.main_widget()
         self.sndtext = None
+        self.is_sound_card = False
         self.tts = None
         self.renderer = self.component_manager.get_current('renderer')
         self.page, self.tts_button, self.edit_button, self.del_button, \
             self.question_container, self.answer_container, \
-            self.question_text, self.answer_text, self.sound_container, \
-            self.sound_button, self.grades_table, grades, toolbar_buttons, \
-            self.tags_label = widgets.create_review_ui( \
-                self.main_widget().switcher)
+            self.question_text, self.answer_text, self.grades_table, \
+            grades, toolbar_buttons, self.tags_label = \
+            widgets.create_review_ui(self._main_widget.switcher)
         self.tts_available = tts.is_available()
-        self.tts_button.set_sensitive(self.tts_available)
-        self.container_width = self.question_text.window.get_geometry()[2]
+        self.tts_button.set_sensitive(False)
         # connect signals
+        self.question_text.connect('button-press-event', \
+            self.preview_sound_in_review_cb)
         self.answer_text.connect('button-press-event', self.get_answer_cb)
-        self.sound_button.connect('released', self.preview_sound_in_review_cb)
         for grade_button in grades:
             grade_button.connect('clicked', self.grade_cb)
         toolbar_buttons[0].connect('clicked', self.statistics_card_cb)
@@ -63,7 +63,7 @@ class ReviewWdgt(ReviewWidget):
     def activate(self):
         """Set necessary switcher page."""
 
-        self.main_widget().switcher.set_current_page(self.page)
+        self._main_widget.switcher.set_current_page(self.page)
 
     def enable_edit_current_card(self, enabled):
         """Enable or disable 'edit card' button."""
@@ -76,33 +76,28 @@ class ReviewWdgt(ReviewWidget):
         self.del_button.set_sensitive(enabled)
 
     def set_question(self, text):
-        """Set question."""
+        """Set question text."""
 
         self.tts_button.set_sensitive(False)
+        self.is_sound_card = False
+        self.question_container.set_size_request(-1, -1)
         if "sound src=" in text:
             self.sndtext = text
-            self.question_container.hide()
-            self.sound_container.set_size_request( \
-                self.container_width, NORMAL_CONTAINER_HEIGHT)
-            self.sound_container.show()
-            self.sound_button.set_active(True)
-            self.main_widget().soundplayer.play(self.sndtext, self)
+            self.is_sound_card = True
+            self.renderer.render_sound_hint(self.question_text)
+            self._main_widget.soundplayer.play(self.sndtext, self)
         else:
-            self.sound_container.hide()
             if "img src=" in text:
                 self.question_container.set_size_request( \
-                    self.container_width, LARGE_CONTAINER_HEIGHT)
+                    -1, LARGE_CONTAINER_HEIGHT)
             else:
-                self.question_container.set_size_request( \
-                    self.container_width, 16)
                 self.tts_button.set_sensitive(self.tts_available)
-            self.question_container.show()
+            self.renderer.render_html(self.question_text, text)
         tags = [tag.name for tag in self.review_controller().card.tags]
         self.tags_label.set_text("Card tags: " + ', '.join(tags))
-        self.renderer.render_html(self.question_text, text)
 
     def set_answer(self, text):
-        """Set answer."""
+        """Set answer text."""
 
         self.renderer.render_html(self.answer_text, text)
 
@@ -131,14 +126,10 @@ class ReviewWdgt(ReviewWidget):
         self.enable_edit_current_card(enabled)
         self.enable_delete_current_card(enabled)
 
-    def update_indicator(self):
-        """Set non active state for widget."""
-
-        self.sound_button.set_active(False)
 
     # callbacks
     def speak_cb(self, widget):
-        """Speaks current question."""
+        """Hook for 'tts' button."""
 
         config = self.config()
         params = {"language": config['tts_language'], "voice": \
@@ -150,51 +141,54 @@ class ReviewWdgt(ReviewWidget):
         self.tts.set_params(params)
         self.tts.speak(self.renderer.tts_text)
 
-    def preview_sound_in_review_cb(self, widget):
-        """Play/stop listening."""
+    def preview_sound_in_review_cb(self, widget, event):
+        """Hook for 'play sound' button."""
 
-        if widget.get_active():
-            self.main_widget().soundplayer.play(self.sndtext, self)
-        else:
-            self.main_widget().soundplayer.stop()
+        if self.is_sound_card:
+            self.renderer.render_sound_hint(self.question_text)
+            if self._main_widget.soundplayer.stopped():
+                self._main_widget.soundplayer.play(self.sndtext, self)
+            else:
+                self._main_widget.soundplayer.stop()
 
     def review_to_main_menu_cb(self, widget):
-        """Return to main menu."""
+        """Hook for 'main menu' button."""
 
-        self.main_widget().soundplayer.stop()
-        self.main_widget().menu_()
+        self._main_widget.soundplayer.stop()
+        self._main_widget.menu_()
 
     def get_answer_cb(self, widget, event):
-        """Hook for showing a right answer."""
+        """Hook for 'show answer' button."""
 
         self.review_controller().show_answer()
 
     def add_card_cb(self, widget):
-        """Hook for add new card."""
+        """Hook for 'add new card' button."""
 
         self.controller().add_cards()
 
     def statistics_card_cb(self, widget):
-        """Hook for statistics of current card."""
+        """Hook for 'statistics' button."""
+
         self.config()["last_variant_for_statistics_page"] = 0
         self.controller().show_statistics()
 
     def delete_card_cb(self, widget):
-        """Hook for delete card."""
+        """Hook for 'delete card' button."""
 
-        self.main_widget().soundplayer.stop()
+        self._main_widget.soundplayer.stop()
         self.controller().delete_current_fact()
 
     def edit_card_cb(self, widget):
-        """Hook for edit card."""
+        """Hook for 'edit card' button."""
 
-        self.main_widget().soundplayer.stop()
+        self._main_widget.soundplayer.stop()
         self.controller().edit_current_card()
 
     def grade_cb(self, widget):
-        """Call grade of answer."""
+        """Hook for 'grade' button."""
 
-        self.main_widget().soundplayer.stop()
+        self._main_widget.soundplayer.stop()
         self.review_controller().grade_answer(int(widget.name[-1]))
 
 

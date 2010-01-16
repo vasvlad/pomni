@@ -104,9 +104,6 @@ def create_about_ui(main_switcher, image_name, help_html):
     help_scrolledwindow = gtk.ScrolledWindow()
     help_scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
     help_scrolledwindow.set_name('scrolled_window')
-    help_viewport = gtk.Viewport()
-    help_viewport.set_shadow_type(gtk.SHADOW_NONE)
-    help_viewport.set_name('viewport_widget')
     help_html = widgets.create_gtkhtml(open(help_html).read())
     # packing widgets
     logo_box.pack_start(logo, expand=False, fill=False, padding=10)
@@ -131,8 +128,7 @@ def create_about_ui(main_switcher, image_name, help_html):
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         xpadding=30, ypadding=30)
-    help_viewport.add(help_html)
-    help_scrolledwindow.add(help_viewport)
+    help_scrolledwindow.add(help_html)
     help_eventbox.add(help_scrolledwindow)
     help_frame.add(help_eventbox)
     mode_switcher.append_page(help_table)

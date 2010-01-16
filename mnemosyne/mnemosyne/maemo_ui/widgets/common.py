@@ -79,10 +79,10 @@ def create_gtkhtml(content=None):
 
     view = gtkhtml2.View()
     document = gtkhtml2.Document()
-    if content:
-        load_html(document, content)
     document.connect('request_url', request_url)
     document.connect('link_clicked', link_clicked, document, view)
+    if content:
+        load_html(document, content)
     view.set_document(document)
     view.document = document
     view.show()
@@ -129,3 +129,11 @@ def create_radio_button(group=None, name=None, callback=None, \
         button.connect(event, callback)
     return button
 
+def create_toolbar_container(name, show_tabs=False, width=82, height=480):
+    """Creates toolbar container."""
+
+    container = gtk.Notebook()
+    container.set_show_tabs(show_tabs)
+    container.set_size_request(width, height)
+    container.set_name(name)
+    return container

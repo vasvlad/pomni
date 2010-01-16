@@ -72,14 +72,14 @@ class InputWidget(UiComponent):
             new_tag_entry, tags_box, card_type_switcher, add_card_button, \
             sound_container, question_container, toolbar_container, \
             self.grades, tags_label, tags_button = widgets.create_input_ui( \
-                self._main_widget.switcher)
+                self._main_widget.switcher, self.conf["theme_path"])
         
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
         menu_button.connect('clicked', self.input_to_main_menu_cb)
         tags_button.connect('clicked', self.show_tags_dialog_cb)
-        sound_button.connect('released', self.preview_sound_in_input_cb)
+        sound_button.connect('button-press-event', self.preview_sound_in_input_cb)
         question_text.connect('button_release_event', self.show_media_dialog_cb)
         new_tag_button.connect('clicked', self.add_new_tag_cb)
         
@@ -154,7 +154,7 @@ class InputWidget(UiComponent):
             pass # so, skip silently
 
     def show_snd_container(self):
-        """Show or hide PlaySound button. """
+        """Show or hide sound button. """
                     
         text = self.get_textview_text(self.areas["question"])
         if "sound src=" in text:
@@ -243,11 +243,6 @@ class InputWidget(UiComponent):
 
         start, end = widget.get_buffer().get_bounds()
         return widget.get_buffer().get_text(start, end)
-
-    def update_indicator(self):
-        """Set non active state for widget."""
-
-        self.widgets["SoundButton"].set_active(False)
 
     def hide_tags_dialog(self):
         """Close TagsDialog."""
@@ -376,24 +371,24 @@ class InputWidget(UiComponent):
             response = dialog.run()
             if response == gtk.RESPONSE_OK:
                 item_index = iconview_widget.get_selected_items()[0]
-                item_type = liststore.get_value( \
-                    liststore.get_iter(item_index), 1)
-                item_fname = liststore.get_value( \
-                    liststore.get_iter(item_index), 2)
-                item_dirname = liststore.get_value( \
-                    liststore.get_iter(item_index), 3)
+                item_type = liststore.get_value(liststore.get_iter( \
+                    item_index), 1)
+                item_fname = liststore.get_value(liststore.get_iter( \
+                    item_index), 2)
+                item_dirname = liststore.get_value(liststore.get_iter( \
+                    item_index), 3)
                 question_text = """<%s src="%s">""" % (item_type, \
                     os.path.abspath(os.path.join(item_dirname, item_fname)))
                 self.areas["question"].get_buffer().set_text(question_text)
                 self.show_snd_container()
             dialog.destroy()
 
-    def preview_sound_in_input_cb(self, widget):
+    def preview_sound_in_input_cb(self, widget, event):
         """Listen sound in input mode."""
 
-        if widget.get_active():
-            self._main_widget.soundplayer.play( \
-                self.get_textview_text(self.areas["question"]), self)
+        if self._main_widget.soundplayer.stopped():
+            self._main_widget.soundplayer.play(self.get_textview_text( \
+                self.areas["question"]), self)
         else:
             self._main_widget.soundplayer.stop()
 
