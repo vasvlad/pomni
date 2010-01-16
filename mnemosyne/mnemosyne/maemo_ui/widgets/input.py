@@ -27,6 +27,7 @@ Hildon UI. Widgets for input mode.
 import os
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
+from mnemosyne.maemo_ui.widgets.common import create_tag_checkbox
 
 def create_input_ui(main_switcher, theme_path):
     """Creates InputWidget UI."""
