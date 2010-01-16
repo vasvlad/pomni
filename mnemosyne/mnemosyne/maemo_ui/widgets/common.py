@@ -44,19 +44,33 @@ def create_gtkhtml(content=None):
         document.write_stream(content)
         document.close_stream()
 
-    def link_clicked(object, link, document, view):
+    def link_clicked(object, url, document, view):
         """Called when link is clicked."""
-        if link.startswith("#"):
-            # jump to the local link(anchor)
-            view.jump_to_anchor(link[1:])
+        if url.startswith("#"):
+            # jump to the local url(anchor)
+            view.jump_to_anchor(url[1:])
             view.show()
         else:
-            # FIXME: open browser here
+            # open browser here
+            import webbrowser
+            webbrowser.open(url)
+
+            # start maemo browser via d-bus
+            #import dbus
+            #try:
+            #    proxy_obj = dbus.SessionBus().get_object(\
+            #        'com.nokia.osso_browser', '/com/nokia/osso_browser')
+            #    dbus.Interface(proxy_obj,
+            #        'com.nokia.osso_browser').load_url(url)
+            #except dbus.exceptions.DBusException:
+            #    import webbrowser
+            #    webbrowser.open(url)
+
+            # open url in the current view
             #urlfd = urllib2.urlopen(link)
             #content = urlfd.read()
             #urlfd.close()
             #load_html(document, content)
-            pass
 
     import gtkhtml2
     import urllib
@@ -70,6 +84,7 @@ def create_gtkhtml(content=None):
     document.connect('request_url', request_url)
     document.connect('link_clicked', link_clicked, document, view)
     view.set_document(document)
+    view.document = document
     view.show()
     return view
 
