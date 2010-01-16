@@ -51,7 +51,7 @@ class GstSoundEngine:
         if mtype == gst.MESSAGE_EOS:
             self.player.set_state(gst.STATE_NULL)
             self.stopped = True
-            self.parent.update_indicator()
+            #self.parent.update_indicator()
         elif mtype == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()

@@ -24,10 +24,11 @@
 Hildon UI. Widgets for input mode.
 """
 
+import os
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def create_input_ui(main_switcher):
+def create_input_ui(main_switcher, theme_path):
     """Creates InputWidget UI."""
 
     def create_grade_button(name, width=80, height=80):
@@ -68,7 +69,9 @@ def create_input_ui(main_switcher):
     # create sound button
     sound_container = gtk.Frame()
     sound_container.set_name('html_container')
-    sound_button = widgets.create_gtkhtml()
+    html = '<html><body><table align="center"><tr><td><img src=%s></td></tr>' \
+        '</table></body></html>' % os.path.join(theme_path, "note.png")
+    sound_button = widgets.create_gtkhtml(html)
     sound_container.add(sound_button)
     sound_box = gtk.VBox()
     sound_box.set_homogeneous(True)

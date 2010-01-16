@@ -72,7 +72,7 @@ class InputWidget(UiComponent):
             new_tag_entry, tags_box, card_type_switcher, add_card_button, \
             sound_container, question_container, toolbar_container, \
             self.grades, tags_label, tags_button = widgets.create_input_ui( \
-                self._main_widget.switcher)
+                self._main_widget.switcher, self.conf["theme_path"])
         
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
@@ -244,12 +244,6 @@ class InputWidget(UiComponent):
         start, end = widget.get_buffer().get_bounds()
         return widget.get_buffer().get_text(start, end)
 
-    def update_indicator(self, stopped=True):
-        """Updates sound hint text."""
-
-        self.component_manager.get_current('renderer').render_sound_hint( \
-            self.widgets["SoundButton"], stopped)
-
     def hide_tags_dialog(self):
         """Close TagsDialog."""
 
@@ -386,9 +380,6 @@ class InputWidget(UiComponent):
                 question_text = """<%s src="%s">""" % (item_type, \
                     os.path.abspath(os.path.join(item_dirname, item_fname)))
                 self.areas["question"].get_buffer().set_text(question_text)
-                # update sound button text
-                self.component_manager.get_current('renderer'). \
-                    render_sound_hint(self.widgets["SoundButton"], True)
                 self.show_snd_container()
             dialog.destroy()
 
@@ -398,12 +389,8 @@ class InputWidget(UiComponent):
         if self._main_widget.soundplayer.stopped():
             self._main_widget.soundplayer.play(self.get_textview_text( \
                 self.areas["question"]), self)
-            self.component_manager.get_current('renderer').render_sound_hint( \
-                self.widgets["SoundButton"], False)
         else:
             self._main_widget.soundplayer.stop()
-            self.component_manager.get_current('renderer').render_sound_hint( \
-                self.widgets["SoundButton"], True)
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""

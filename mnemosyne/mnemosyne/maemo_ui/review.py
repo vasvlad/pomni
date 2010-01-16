@@ -84,7 +84,7 @@ class ReviewWdgt(ReviewWidget):
         if "sound src=" in text:
             self.sndtext = text
             self.is_sound_card = True
-            self.renderer.render_sound_hint(self.question_text, False)
+            self.renderer.render_sound_hint(self.question_text)
             self._main_widget.soundplayer.play(self.sndtext, self)
         else:
             if "img src=" in text:
@@ -126,11 +126,6 @@ class ReviewWdgt(ReviewWidget):
         self.enable_edit_current_card(enabled)
         self.enable_delete_current_card(enabled)
 
-    def update_indicator(self, stopped=True):
-        """Updates sound hint text."""
-
-        self.renderer.render_sound_hint(self.question_text, stopped)
-        
 
     # callbacks
     def speak_cb(self, widget):
@@ -150,12 +145,11 @@ class ReviewWdgt(ReviewWidget):
         """Hook for 'play sound' button."""
 
         if self.is_sound_card:
+            self.renderer.render_sound_hint(self.question_text)
             if self._main_widget.soundplayer.stopped():
                 self._main_widget.soundplayer.play(self.sndtext, self)
-                self.renderer.render_sound_hint(self.question_text, False)
             else:
                 self._main_widget.soundplayer.stop()
-                self.renderer.render_sound_hint(self.question_text, True)
 
     def review_to_main_menu_cb(self, widget):
         """Hook for 'main menu' button."""
