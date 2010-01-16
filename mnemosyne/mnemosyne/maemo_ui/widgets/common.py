@@ -59,10 +59,10 @@ def create_gtkhtml(content=None):
 
     view = gtkhtml2.View()
     document = gtkhtml2.Document()
-    if content:
-        load_html(document, content)
     document.connect('request_url', request_url)
     document.connect('link_clicked', link_clicked, document)
+    if content:
+        load_html(document, content)
     view.set_document(document)
     view.document = document
     view.show()
