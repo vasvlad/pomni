@@ -36,7 +36,7 @@ class ConfigHook(Component):
         """Entry point."""
         for key, value in {\
             "theme_path": "/usr/share/mnemosyne/hildon-UI/dark",
-            "html_path": "/usr/share/mnemosyne/html",
+            "help_path": "/usr/share/mnemosyne/help",
             "fullscreen": True,
             "font_size": 30.0,
             "startup_with_review": False,
