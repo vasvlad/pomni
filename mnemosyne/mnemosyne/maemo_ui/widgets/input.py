@@ -40,8 +40,7 @@ def create_input_ui(main_switcher, theme_path):
 
     toplevel_table = gtk.Table(rows=1, columns=3)
     # create toolbar container
-    toolbar_container = widgets.create_toolbar_container( \
-        'input_toolbar_container')
+    toolbar_container = widgets.create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create grades container
     grades_container = widgets.create_toolbar_container('grades_container')

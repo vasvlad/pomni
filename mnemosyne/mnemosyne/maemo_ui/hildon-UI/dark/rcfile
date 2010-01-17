@@ -253,48 +253,6 @@ style "to-main-menu-button" {
 }
 widget "*.main_menu_button" style "to-main-menu-button"
 
-style "media-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = NORMAL
-            shadow = OUT
-            file = "media_play.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            shadow = OUT
-            file = "media_play.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            shadow = OUT
-            file = "media_play.png"
-        }
-    }
-}
-widget "*.media_button" style "media-button"
-
 style "white-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
@@ -455,24 +413,14 @@ style "review-toolbar-container" {
 widget "*.review_toolbar_container" style "review-toolbar-container"
 
 style "toolbar-container" {
-engine "sapwood" {
-    image {
-	function = BOX
-	file = "left_5.png"
-    }
-}
-}
-widget "*.toolbar_container" style "toolbar-container"
-
-style "input-toolbar-container" {
     engine "sapwood" {
         image {
-            function = BOX
-            file = "left_5.png"
+	        function = BOX
+	        file = "left_5.png"
         }
     }
 }
-widget "*.input_toolbar_container" style "input-toolbar-container"
+widget "*.toolbar_container" style "toolbar-container"
 
 style "speak-button" {
     engine "sapwood" {
@@ -553,6 +501,7 @@ style "delete-card-button" {
     }
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+
 style "grade0" {
     engine "pixmap" {
         image {
@@ -759,7 +708,6 @@ style "stat-card-button" {
 }
 widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
 widget "*.stat_button" style "stat-card-button"
-
 #----------------------------- Review mode ------------------
 
 
@@ -1795,7 +1743,6 @@ style "stat-common-button" {
     }
 }
 widget "*.stat_toolbar_common_stat_button" style "stat-common-button"
-
 
 style "current-stat-button" {
     GtkRadioButton::indicator-size = 80

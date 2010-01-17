@@ -40,7 +40,7 @@ def create_configuration_ui(main_switcher):
         return container
 
     toplevel_table = gtk.Table(rows=1, columns=2)
-    toolbar_container = create_toolbar_container('input_toolbar_container')
+    toolbar_container = create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     general_settings_button = widgets.create_radio_button(None, \
         'config_toolbar_general_settings_button', None, width=80, height=80)
