@@ -50,9 +50,6 @@ def create_input_ui(main_switcher, theme_path):
     card_type_button.set_size_request(80, 80)
     content_button = gtk.Button()
     content_button.set_size_request(80, 80)
-    add_card_button = gtk.Button()
-    add_card_button.set_size_request(80, 80)
-    add_card_button.set_name('plus_button')
     menu_button = gtk.Button()
     menu_button.set_size_request(80, 80)
     menu_button.set_name('main_menu_button')
@@ -78,7 +75,7 @@ def create_input_ui(main_switcher, theme_path):
     # create grades buttons
     grades = {}
     for num in range(6):
-        grades[num] = create_grade_button('grade%s_disabled' % num)
+        grades[num] = create_grade_button('grade%s' % num)
     # create text fields
     question_container = gtk.Frame()
     question_container.set_name('html_container')
@@ -155,9 +152,7 @@ def create_input_ui(main_switcher, theme_path):
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(content_button, 0, 1, 1, 2, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
-    toolbar_table.attach(add_card_button, 0, 1, 2, 3, \
-        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
-    toolbar_table.attach(tags_button, 0, 1, 3, 4, \
+    toolbar_table.attach(tags_button, 0, 1, 2, 3, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
@@ -215,8 +210,8 @@ def create_input_ui(main_switcher, theme_path):
         content_button, menu_button, tags_button, sound_button, question_text, \
         answer_text, foreign_text, pronunciation_text, translation_text, \
         cloze_text, new_tag_button, new_tag_entry, tags_box, \
-        card_type_switcher, add_card_button, sound_container, \
-        question_container, toolbar_container, grades, tags_label, tags_button
+        card_type_switcher, sound_container, question_container, \
+        toolbar_container, grades, tags_label, tags_button
 
 
 def create_media_dialog_ui():
