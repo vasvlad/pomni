@@ -45,7 +45,7 @@ class MenuWidget(UiComponent):
         buttons['settings'].connect('clicked', self.settings_cb)
         #buttons['sync'].connect('clicked', self.sync_cb)
         buttons['stat'].connect('clicked', self.statistics_cb)
-        buttons['about'].connect('clicked', self.about_cb)
+        buttons['help'].connect('clicked', self.about_cb)
         buttons['exit'].connect('clicked', self.exit_cb)
 
     def activate(self):

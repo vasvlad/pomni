@@ -350,18 +350,18 @@ style "menu-button-conf" {
 }
 widget "*.menu_button_settings" style "menu-button-conf"
 
-style "menu-button-about" {
+style "menu-button-help" {
     engine "sapwood" {
         image {
             function = BOX
-            file = "about.png"
+            file = "help.png"
         }
         image {
             function = FOCUS
         }
     }
 }
-widget "*.menu_button_about" style "menu-button-about"
+widget "*.menu_button_help" style "menu-button-help"
 
 style "menu-button-stat" {
     engine "sapwood" {
