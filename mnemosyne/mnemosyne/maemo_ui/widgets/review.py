@@ -37,25 +37,15 @@ def create_review_ui(main_switcher):
         return button
 
     toplevel_table = gtk.Table(rows=1, columns=3)
-    # create toolbar container   
-    toolbar_container = gtk.Notebook()
-    toolbar_container.set_show_tabs(False)
-    toolbar_container.set_size_request(82, 480)
-    toolbar_container.set_name('review_toolbar_container')
-    # create grades container
-    grades_container = gtk.Notebook()
-    grades_container.set_show_tabs(False)
-    grades_container.set_size_request(82, 480)
-    grades_container.set_name('grades_container')
+    # create containers
+    toolbar_container = widgets.create_toolbar_container( \
+        'review_toolbar_container')
+    grades_container = widgets.create_toolbar_container('grades_container')
     widgets_table = gtk.Table(rows=2, columns=1)
     widgets_table.set_row_spacings(14)
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     grades_table = gtk.Table(rows=6, columns=1, homogeneous=True)
     widgets_box = gtk.VBox(spacing=10)
-    question_box = gtk.VBox(homogeneous=True)
-    sound_container = gtk.Table(rows=1, columns=10, homogeneous=True)
-    sound_button = gtk.Button()
-    sound_button.set_name('media_button')
     # create tags label
     tags_label = gtk.Label()
     tags_label.set_name('tags_label')
@@ -89,18 +79,14 @@ def create_review_ui(main_switcher):
         grades_table.attach(grades[pos], 0, 1, 5 - pos, 6 - pos, \
             xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     grades_container.add(grades_table)
+    # packing other widgets
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.attach(grades_container, 3, 4, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     question_container.add(question_text)
     answer_container.add(answer_text)
-    sound_container.attach(sound_button, 3, 7, 0, 1, \
-        xoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK, \
-        yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
-    question_box.pack_start(sound_container)
-    question_box.pack_end(question_container)
-    widgets_box.pack_start(question_box)
+    widgets_box.pack_start(question_container)
     widgets_box.pack_end(answer_container)
     widgets_table.attach(tags_label, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK, xpadding=4)
@@ -111,11 +97,6 @@ def create_review_ui(main_switcher):
         xoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, \
         yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL, xpadding=30)
     toplevel_table.show_all()
-    # hide necessary widgets
-    sound_container.hide()
     return main_switcher.append_page(toplevel_table), buttons[1], buttons[2], \
         buttons[4], question_container, answer_container, question_text, \
-        answer_text, sound_container, sound_button, grades_table, \
-        grades.values(), buttons.values(), tags_label
-
-
+        answer_text, grades_table, grades.values(), buttons.values(), tags_label

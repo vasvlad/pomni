@@ -35,6 +35,7 @@ class GstSoundEngine:
         """Init variables."""
 
         self.fname = ""
+        self.stopped = True
         self.parent = None
         self.player = gst.element_factory_make("playbin", "player")
         self.player.set_property("volume", 8)
@@ -49,7 +50,8 @@ class GstSoundEngine:
         mtype = message.type
         if mtype == gst.MESSAGE_EOS:
             self.player.set_state(gst.STATE_NULL)
-            self.parent.update_indicator()
+            self.stopped = True
+            #self.parent.update_indicator()
         elif mtype == gst.MESSAGE_ERROR:
             self.player.set_state(gst.STATE_NULL)
             err, debug = message.parse_error()
@@ -58,6 +60,7 @@ class GstSoundEngine:
     def play(self, fname, parent):
         """Start playing fname."""
 
+        self.stopped = False
         self.parent = parent # parens is a class, which call this function
         self.fname = self.parse_fname(fname)
         self.player.set_property("uri", "file://" + self.fname)
@@ -66,8 +69,9 @@ class GstSoundEngine:
     def stop(self):
         """Stop playing."""
 
+        self.stopped = True
         self.player.set_state(gst.STATE_NULL)
-        self.parent.update_indicator()
+        #self.parent.update_indicator()
 
     @staticmethod
     def parse_fname(text):
@@ -94,4 +98,11 @@ class SoundPlayer:
 
         if self.soundengine:
             self.soundengine.stop()
+
+    def stopped(self):
+        """Returns current player status."""
+
+        if not self.soundengine:
+            self.soundengine = GstSoundEngine()
+        return self.soundengine.stopped
 
