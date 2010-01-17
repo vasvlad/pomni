@@ -140,7 +140,7 @@ Main menu
 
 .. image:: /usr/share/mnemosyne/help/menu.png
 
-Main menu is the place user see first after running a program. And this is the place user go when she exit one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see `Configuration`_ section below).
+Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see `Configuration`_ section below).
 
 Input mode
 ----------
@@ -153,9 +153,11 @@ Upper control is 'Type'. For text cards you can choose one of the following type
  * Front to back - the simplest type of card with question and answer fields.
  * Three-sided cards have question, prononciation and answer fields.
  * Both ways is for creation 2 cards: question-answer and answer-question. Sometimes it helps to memorise facts better if you use direct and back order of cards. 'Both ways' helps you with this.
- * Cloze is for creation `cloze deletion`_ cards. Part of the question in square brackets will be removed from the text to create cards. For example "The political parties in the US are the [democrats] and the [republicans]." gives you the following 2 cards: 
-    * Q:The political parties in the US are the [...] and the republicans. A:democrats 
-    * Q:The political parties in the US are the democrats and the [...]. A:republicans.
+ * Cloze is for creation `cloze deletion`_ cards. Parts of the question surraunded by asterisks will be removed from the text to create cards. For example "The political parties in the US are the \*democrats\* and the \*republicans\*." gives you the following 2 cards: 
+    * Q:The political parties in the US are the ... and the republicans. A:democrats 
+    * Q:The political parties in the US are the democrats and the ... A:republicans. 
+
+You can use whatever amount of cloze deletions in the text you want. It's not limited by 2 entries shown in the example.
 
 Next control is 'Kind'. You can chose between text, sound and pictures. Note that it's only possible to choose non-text kind of cards(sounds or pictures) for 'Front to back' type of cards.
 
@@ -171,6 +173,29 @@ In right panel there are 6 grades from 0(totally unknown card) to 5(known and ve
 
 Review mode
 -----------
+
+.. image:: /usr/share/mnemosyne/help/input.png
+
+This is a main mode of the application. Most of the user's time is spent here. This mode implements `spaced repetition` technique. It shows cards in the order, determined by the scheduling algorithm and user's job is to grade them. 
+
+Cards and grade panel look the same as in the input mode, only left panel is different. 
+
+First(upper) control there is statistics button. It will show you statistics for the current card and overall program statistics. It actually brings you to the `Statistics mode` (see below).
+
+Second control is 'Pronounce'. It used to prononce the text. This feature is available only when text-to-speach program `Espeak` is installed.
+
+Next control is 'Edit card'. It allows user to edit current card (see `Edit mode`_ below).
+
+And the next one is 'Add card'. Program switches to `Input mode` when user presses this button.
+
+'Delete card' is the next control. Use it if you want to delete current card.
+
+And the last one is 'Main menu'. It's the same as in almost all modes. Use it to switch to `Main menu`_
+
+For each scheduled card question will be shown first. You should try to recall the answer, then press on the answer field with the text 'Show answer' in it. After that answer will be shown in answer field and you should grade it. See `Grading 101`_ for the details how to grade cards properly. As soon as card is graded next scheduled card will be shown. When all scheduled cards are reviewed you'll be asked if you want to review unscheduled cards. We'd not recommend to do that. It's better to add new cards instead and review only scheduled cards. It will allow you to utilize the power of program more efficiently. However, if you understand what you're doing you can review cards ahead of schedule.
+
+.. _spaced repetition: http://en.wikipedia.org/wiki/Spaced_repetition
+.. _Espeak: http://espeak.sourceforge.net/
 
 Edit mode
 ---------
