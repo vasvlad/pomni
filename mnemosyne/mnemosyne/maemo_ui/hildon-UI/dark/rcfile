@@ -363,7 +363,7 @@ style "menu-button-help" {
 }
 widget "*.menu_button_help" style "menu-button-help"
 
-style "menu-button-stat" {
+style "menu-button-stats" {
     engine "sapwood" {
         image {
             function = BOX
@@ -374,7 +374,7 @@ style "menu-button-stat" {
         }
     }
 }
-widget "*.menu_button_stat" style "menu-button-stat"
+widget "*.menu_button_stats" style "menu-button-stats"
 
 style "menu-button-exit" {
     engine "sapwood" {
