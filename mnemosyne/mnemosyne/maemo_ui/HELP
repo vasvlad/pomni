@@ -25,7 +25,7 @@ When you have memorised something, you need to review that material, otherwise y
 
 During the past 120 years, there has been considerable research into these aspects of human memory (by e.g. Ebbinghaus, Mace, Leitner and Wozniak). Based on the work of these people, it was shown that in order to get the best results, the intervals between revisions of the same card should gradually increase. This allows you to focus on things you still haven't mastered, while not wasting time on cards you remember very well.
 
-You can find more information about spaced repetition in `this wikipedia article`_
+You can find more information about spaced repetition in `this wikipedia article`_.
 
 .. _this wikipedia article: http://en.wikipedia.org/wiki/Spaced_repetition
 
@@ -140,7 +140,7 @@ Main menu
 
 .. image:: /usr/share/mnemosyne/help/menu.png
 
-Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see `Configuration`_ section below).
+Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see `Settings`_ section below).
 
 Input mode
 ----------
@@ -196,6 +196,8 @@ Next control is 'Kind'. You can chose between text, sound and pictures. Note tha
 +----------------------------------------------------------+--------------------------------------------------------+
 | .. image:: /usr/share/mnemosyne/help/picture_content.png | *'Image content'* means that image file will be used as|
 |                                                          | question.                                              |
++----------------------------------------------------------+--------------------------------------------------------+
+|                                                                                                                   |
 +----------------------------------------------------------+--------------------------------------------------------+
 
 +------------------------------------------------------+------------------------------------------------------------------+
@@ -289,13 +291,51 @@ This mode is used for tag activation and deactivation. Cards with only non-activ
 |                                                            | you statistics for all tags. It actually brings you to the| 
 |                                                            | `Statistics mode` (see below).                            |
 +------------------------------------------------------------+-----------------------------------------------------------+
+|                                                                                                                        |
++------------------------------------------------------------+-----------------------------------------------------------+
+
+Settings
+--------
+This mode is for configuring the program. It has 3 parts:
+ - general settings,
+ - appearance,
+ - text to speech settings.
+
+You can switch between them using controls on the left panel.
+
+In *'general settings view'* you can specify directories for images and sounds, fullscreen mode and opening review mode on startup. Directories for images and sounds are used when you create cards with sounds or pictures. Program will be taking pictures and/or sounds from those directories.
+
++---------------------------------------------------------+
+|.. image:: /usr/share/mnemosyne/help/settings_general.png|
++---------------------------------------------------------+
+|                                                         |
++---------------------------------------------------------+
+
+In *'appearance view'* you can set font size for the text in your cards. 
+
++------------------------------------------------------------+
+|.. image:: /usr/share/mnemosyne/help/settings_appearance.png|
++------------------------------------------------------------+
+|                                                            |
++------------------------------------------------------------+
+
+In *'text-to-speech settings'* you can set language, speed and pitch and switch between male and female voices. 
+
++-----------------------------------------------------+
+|.. image:: /usr/share/mnemosyne/help/settings_tts.png|
++-----------------------------------------------------+
+|                                                     |
++-----------------------------------------------------+
 
 
-Configuration
--------------
+Stats
+-----
+In this mode you can see 3 types of statistics:
+ - current card statistics,
+ - grade statistics for all cards,
+ - grade statistics for tags.
 
-Statistics
-----------
+You can also switch between them using controls on the left panel.
 
 ----------------
 Interesting info
