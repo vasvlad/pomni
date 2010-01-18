@@ -140,7 +140,7 @@ Main menu
 
 .. image:: /usr/share/mnemosyne/help/menu.png
 
-Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see `Configuration`_ section below).
+Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see `Settings`_ section below).
 
 Input mode
 ----------
@@ -274,15 +274,32 @@ Edit mode
 ---------
 This is the mode you can get to from review mode if you press 'Edit' button. It has the same view and controls as `Input mode`_ and used for editing current card.
 
-Tags mode
----------
-This mode is used for tag activation and deactivation. Cards with only non-active tags assigned to it will not be scheduled for review. So, using tagging it's easy to devide your set of cards into groups and activate/deactivate them when needed.
+Tags
+----
+This mode is used for tag activation and deactivation. Cards with only non-active tags assigned to it will not be scheduled for review. So, using tagging it's easy to divide your set of cards into groups and activate/deactivate them when needed.
 
-Configuration
--------------
+Settings
+--------
+This mode is for configuring the program. It has 3 parts:
+ * general settings
+ * appearance
+ * text to speech settings
 
-Statistics
-----------
+You can switch between them using controls on the left panel.
+
+In general settings view you can specify directories for images and sounds, fullscreen mode and opening review mode on startup. Directories for images and sounds are used when you create cards with sounds or pictures. Program will be taking pictures and/or sounds from those directories.
+
+In appearance view you can set font size for the text in your cards. 
+
+In text to speech settings you can set language, speed and pitch and switch between male and female voices. 
+
+
+Stats
+-----
+In this mode you can see 3 types of statistics:
+ * current card statistics
+ * grade statistics for all cards
+ * grade statistics for tags
 
 ----------------
 Interesting info

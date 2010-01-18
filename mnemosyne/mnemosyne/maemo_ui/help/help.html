@@ -312,9 +312,9 @@ ul.auto-toc {
 <li><a class="reference internal" href="#input-mode" id="id18">Input mode</a></li>
 <li><a class="reference internal" href="#review-mode" id="id19">Review mode</a></li>
 <li><a class="reference internal" href="#edit-mode" id="id20">Edit mode</a></li>
-<li><a class="reference internal" href="#managing-tags" id="id21">Managing Tags</a></li>
-<li><a class="reference internal" href="#configuration" id="id22">Configuration</a></li>
-<li><a class="reference internal" href="#statistics" id="id23">Statistics</a></li>
+<li><a class="reference internal" href="#tags-mode" id="id21">Tags mode</a></li>
+<li><a class="reference internal" href="#settings" id="id22">Settings</a></li>
+<li><a class="reference internal" href="#stats" id="id23">Stats</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#interesting-info" id="id24">Interesting info</a></li>
@@ -399,11 +399,11 @@ There is no maximum interval between repetitions, and this period can exceed one
 </div>
 <div class="section" id="how-to-use-mnemosyne-for-maemo">
 <h1><a class="toc-backref" href="#id16">How to use Mnemosyne for Maemo</a></h1>
-<p>Note, that user interface of the program is designed for using with fingers. You can use stylus if you wish, but it shouldn't be needed. In case it's not convenient to use fingers please contact developers or file a bug in projects bugtracker.</p>
+<p>User interface of the program is designed for using with fingers. You can use stylus if you wish, but usually it's not needed.</p>
 <div class="section" id="main-menu">
 <h2><a class="toc-backref" href="#id17">Main menu</a></h2>
 <img alt="/usr/share/mnemosyne/help/menu.png" src="/usr/share/mnemosyne/help/menu.png" />
-<p>Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see <a class="reference internal" href="#configuration">Configuration</a> section below).</p>
+<p>Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see <a class="reference internal" href="#settings">Settings</a> section below).</p>
 </div>
 <div class="section" id="input-mode">
 <h2><a class="toc-backref" href="#id18">Input mode</a></h2>
@@ -633,15 +633,30 @@ modes. Use it to switch to <a class="reference internal" href="#main-menu">Main 
 </div>
 <div class="section" id="edit-mode">
 <h2><a class="toc-backref" href="#id20">Edit mode</a></h2>
+<p>This is the mode you can get to from review mode if you press 'Edit' button. It has the same view and controls as <a class="reference internal" href="#input-mode">Input mode</a> and used for editing current card.</p>
 </div>
-<div class="section" id="managing-tags">
-<h2><a class="toc-backref" href="#id21">Managing Tags</a></h2>
+<div class="section" id="tags-mode">
+<h2><a class="toc-backref" href="#id21">Tags mode</a></h2>
+<p>This mode is used for tag activation and deactivation. Cards with only non-active tags assigned to it will not be scheduled for review. So, using tagging it's easy to divide your set of cards into groups and activate/deactivate them when needed.</p>
 </div>
-<div class="section" id="configuration">
-<h2><a class="toc-backref" href="#id22">Configuration</a></h2>
+<div class="section" id="settings">
+<h2><a class="toc-backref" href="#id22">Settings</a></h2>
+<dl class="docutils">
+<dt>This mode is for configuring the program. It has 3 parts:</dt>
+<dd><ul class="first last simple">
+<li>general settings</li>
+<li>appearance</li>
+<li>text to speech settings</li>
+</ul>
+</dd>
+</dl>
+<p>You can switch between them using controls on the left panel.</p>
+<p>In general settings view you can specify directories for images and sounds, fullscreen mode and opening review mode on startup. Directories for images and sounds are used when you create cards with sounds or pictures. Program will be taking pictures and/or sounds from those directories.</p>
+<p>In appearance view you can set font size for the text in your cards.</p>
+<p>In text to speech settings you can set language, speed and pitch and switch between male and female voices.</p>
 </div>
-<div class="section" id="statistics">
-<h2><a class="toc-backref" href="#id23">Statistics</a></h2>
+<div class="section" id="stats">
+<h2><a class="toc-backref" href="#id23">Stats</a></h2>
 </div>
 </div>
 <div class="section" id="interesting-info">
