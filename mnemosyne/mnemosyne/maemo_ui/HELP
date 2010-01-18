@@ -272,11 +272,24 @@ For each scheduled card question will be shown first. You should try to recall t
 
 Edit mode
 ---------
-This is the mode you can get to from review mode if you press 'Edit' button. It has the same view and controls as `Input mode`_ and used for editing current card.
+
+.. image:: /usr/share/mnemosyne/help/edit.png
+
+This is the mode you can get to from review mode if you press *'Edit'* button. It has the same view and controls as `Input mode`_ and used for editing current card.
 
 Tags mode
 ---------
+
+.. image:: /usr/share/mnemosyne/help/tags.png
+
 This mode is used for tag activation and deactivation. Cards with only non-active tags assigned to it will not be scheduled for review. So, using tagging it's easy to devide your set of cards into groups and activate/deactivate them when needed.
+
++------------------------------------------------------------+-----------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/statistics_button.png | Selecting *'Statistics'* button in this mode will show    |
+|                                                            | you statistics for all tags. It actually brings you to the| 
+|                                                            | `Statistics mode` (see below).                            |
++------------------------------------------------------------+-----------------------------------------------------------+
+
 
 Configuration
 -------------
