@@ -114,9 +114,9 @@ def create_about_ui(main_switcher, image_name, help_html):
     info_box.pack_start(hbutton_box, expand=False)
     info_box.pack_end(text_box)
     info_container.append_page(info_box)
-    toolbar_table.attach(about_button, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
+    toolbar_table.attach(about_button, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
         yoptions=gtk.EXPAND)
-    toolbar_table.attach(help_button, 0, 1, 1, 2, xoptions=gtk.EXPAND, \
+    toolbar_table.attach(help_button, 0, 1, 0, 1, xoptions=gtk.EXPAND, \
         yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, xoptions=gtk.EXPAND, \
         yoptions=gtk.EXPAND)

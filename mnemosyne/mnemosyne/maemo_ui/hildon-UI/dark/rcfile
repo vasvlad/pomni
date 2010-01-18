@@ -254,48 +254,6 @@ style "to-main-menu-button" {
 widget "*.main_menu_button" style "to-main-menu-button"
 widget "*.left_arrow" style "to-main-menu-button"
 
-style "media-button" {
-    engine "pixmap" {
-        image {
-            function = BOX
-            state = NORMAL
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = NORMAL
-            shadow = OUT
-            file = "media_play.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = ACTIVE
-            shadow = OUT
-            file = "media_play.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            shadow = IN
-            file = "media_stop.png"
-        }
-        image {
-            function = BOX
-            state = PRELIGHT
-            shadow = OUT
-            file = "media_play.png"
-        }
-    }
-}
-widget "*.media_button" style "media-button"
-
 style "white-label" {
     fg[NORMAL] = "#FFFFFF"
     fg[PRELIGHT] = "#FFFFFF"
@@ -393,20 +351,20 @@ style "menu-button-conf" {
 }
 widget "*.menu_button_settings" style "menu-button-conf"
 
-style "menu-button-about" {
+style "menu-button-help" {
     engine "sapwood" {
         image {
             function = BOX
-            file = "about.png"
+            file = "help.png"
         }
         image {
             function = FOCUS
         }
     }
 }
-widget "*.menu_button_about" style "menu-button-about"
+widget "*.menu_button_help" style "menu-button-help"
 
-style "menu-button-stat" {
+style "menu-button-stats" {
     engine "sapwood" {
         image {
             function = BOX
@@ -417,7 +375,7 @@ style "menu-button-stat" {
         }
     }
 }
-widget "*.menu_button_stat" style "menu-button-stat"
+widget "*.menu_button_stats" style "menu-button-stats"
 
 style "menu-button-exit" {
     engine "sapwood" {
@@ -456,24 +414,14 @@ style "review-toolbar-container" {
 widget "*.review_toolbar_container" style "review-toolbar-container"
 
 style "toolbar-container" {
-engine "sapwood" {
-    image {
-	function = BOX
-	file = "left_5.png"
-    }
-}
-}
-widget "*.toolbar_container" style "toolbar-container"
-
-style "input-toolbar-container" {
     engine "sapwood" {
         image {
-            function = BOX
-            file = "left_5.png"
+	        function = BOX
+	        file = "left_5.png"
         }
     }
 }
-widget "*.input_toolbar_container" style "input-toolbar-container"
+widget "*.toolbar_container" style "toolbar-container"
 
 style "speak-button" {
     engine "sapwood" {
@@ -554,6 +502,7 @@ style "delete-card-button" {
     }
 }
 widget "*.review_toolbar_delete_card_button" style "delete-card-button"
+
 style "grade0" {
     engine "pixmap" {
         image {
@@ -760,7 +709,6 @@ style "stat-card-button" {
 }
 widget "*.review_toolbar_stat_current_card_button" style "stat-card-button"
 widget "*.stat_button" style "stat-card-button"
-
 #----------------------------- Review mode ------------------
 
 
@@ -1797,7 +1745,6 @@ style "stat-common-button" {
     }
 }
 widget "*.stat_toolbar_common_stat_button" style "stat-common-button"
-
 
 style "current-stat-button" {
     GtkRadioButton::indicator-size = 80
