@@ -174,23 +174,53 @@ In right panel there are 6 grades from 0(totally unknown card) to 5(known and ve
 Review mode
 -----------
 
-.. image:: /usr/share/mnemosyne/help/input.png
+.. image:: /usr/share/mnemosyne/help/review.png
 
 This is a main mode of the application. Most of the user's time is spent here. This mode implements `spaced repetition` technique. It shows cards in the order, determined by the scheduling algorithm and user's job is to grade them. 
 
+
 Cards and grade panel look the same as in the input mode, only left panel is different. 
 
-First(upper) control there is statistics button. It will show you statistics for the current card and overall program statistics. It actually brings you to the `Statistics mode` (see below).
++------------------------------------------------------------+-----------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/statistics_button.png | First(upper) control there is *'Statistics'* button. It   |
+|                                                            | will show you statistics for the current card and overall |
+|                                                            | program statistics. It actually brings you to the         |
+|                                                            | `Statistics mode` (see below).                            |
++------------------------------------------------------------+-----------------------------------------------------------+
 
-Second control is 'Pronounce'. It used to prononce the text. This feature is available only when text-to-speach program `Espeak` is installed.
 
-Next control is 'Edit card'. It allows user to edit current card (see `Edit mode`_ below).
++---------------------------------------------------------+---------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/speaker_button.png | Second control is *'Pronounce'*. It used to prononce the text.|
+|                                                         | This feature is available only when text-to-speach program    |
+|                                                         | `Espeak` is installed.                                        |
++---------------------------------------------------------+---------------------------------------------------------------+
 
-And the next one is 'Add card'. Program switches to `Input mode` when user presses this button.
 
-'Delete card' is the next control. Use it if you want to delete current card.
++------------------------------------------------------+---------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/edit_button.png | Next control is *'Edit card'*. It allows user to edit current |
+|                                                      | card (see `Edit mode`_ below).                                |
++------------------------------------------------------+---------------------------------------------------------------+
 
-And the last one is 'Main menu'. It's the same as in almost all modes. Use it to switch to `Main menu`_
+
++-----------------------------------------------------+-------------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/add_button.png | And the next one is *'Add card'*. Program switches to `Input mode`|
+|                                                     | when user presses this button.                                    |
++-----------------------------------------------------+-------------------------------------------------------------------+
+
+
++--------------------------------------------------------+------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/delete_button.png | *'Delete card'* is the next control. Use it if you want to |
+|                                                        | delete current card.                                       |
++--------------------------------------------------------+------------------------------------------------------------+
+
+
++------------------------------------------------------+------------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/menu_button.png | And the last one is *'Main menu'*. It's the same as in almost all|
+|                                                      | modes. Use it to switch to `Main menu`_.                         |
++------------------------------------------------------+------------------------------------------------------------------+
+
+
+
 
 For each scheduled card question will be shown first. You should try to recall the answer, then press on the answer field with the text 'Show answer' in it. After that answer will be shown in answer field and you should grade it. See `Grading 101`_ for the details how to grade cards properly. As soon as card is graded next scheduled card will be shown. When all scheduled cards are reviewed you'll be asked if you want to review unscheduled cards. We'd not recommend to do that. It's better to add new cards instead and review only scheduled cards. It will allow you to utilize the power of program more efficiently. However, if you understand what you're doing you can review cards ahead of schedule.
 
