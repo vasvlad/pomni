@@ -133,7 +133,7 @@ If you select grade 0 or 1, the easiness factor is unchanged and the card is put
 How to use Mnemosyne for Maemo
 ------------------------------
 
-Note, that user interface of the program is designed for using with fingers. You can use stylus if you wish, but it shouldn't be needed. In case it's not convenient to use fingers please contact developers or file a bug in projects bugtracker.
+User interface of the program is designed for using with fingers. You can use stylus if you wish, but usually it's not needed.
 
 Main menu
 ---------
@@ -235,7 +235,7 @@ Cards and grade panel look the same as in the input mode, only left panel is dif
 +---------------------------------------------------------+---------------------------------------------------------------+
 | .. image:: /usr/share/mnemosyne/help/speaker_button.png | Second control is *'Pronounce'*. It used to prononce the text.|
 |                                                         | This feature is available only when text-to-speach program    |
-|                                                         | `Espeak` is installed.                                        |
+|                                                         | `Espeak`_ is installed.                                       |
 +---------------------------------------------------------+---------------------------------------------------------------+
 
 
@@ -272,9 +272,11 @@ For each scheduled card question will be shown first. You should try to recall t
 
 Edit mode
 ---------
+This is the mode you can get to from review mode if you press 'Edit' button. It has the same view and controls as `Input mode`_ and used for editing current card.
 
-Managing Tags
--------------
+Tags mode
+---------
+This mode is used for tag activation and deactivation. Cards with only non-active tags assigned to it will not be scheduled for review. So, using tagging it's easy to devide your set of cards into groups and activate/deactivate them when needed.
 
 Configuration
 -------------
