@@ -539,7 +539,8 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
                 content_type = "text"
         else:
             content_type = "text"
-            
+        
+        self.widgets["CardTypeButton"].set_sensitive(False)
         self.set_content_type(content_type)
         self.set_widgets_data(self.fact)
         self.update_tags()
