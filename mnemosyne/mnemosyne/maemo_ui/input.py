@@ -201,7 +201,7 @@ class InputWidget(UiComponent):
 
         fact = {}
         for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
-            fact[fact_key] = self.get_textview_text(widget)
+            fact[fact_key] = unicode(self.get_textview_text(widget))
         if check_for_required:
             for required in self.card_type.required_fields:
                 if not fact[required]:
