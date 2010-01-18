@@ -149,23 +149,66 @@ Input mode
 
 Input mode is used to enter new cards. Lets look at the controls in this mode. At the left there are four controls: Type, Kind, Tags and Menu.
 
-Upper control is 'Type'. For text cards you can choose one of the following types: 
- * Front to back - the simplest type of card with question and answer fields.
- * Three-sided cards have question, prononciation and answer fields.
- * Both ways is for creation 2 cards: question-answer and answer-question. Sometimes it helps to memorise facts better if you use direct and back order of cards. 'Both ways' helps you with this.
- * Cloze is for creation `cloze deletion`_ cards. Parts of the question surraunded by asterisks will be removed from the text to create cards. For example "The political parties in the US are the \*democrats\* and the \*republicans\*." gives you the following 2 cards: 
-    * Q:The political parties in the US are the ... and the republicans. A:democrats 
-    * Q:The political parties in the US are the democrats and the ... A:republicans. 
+Upper control is 'Type'. For text cards you can choose one of the following types:
 
-You can use whatever amount of cloze deletions in the text you want. It's not limited by 2 entries shown in the example.
++--------------------------------------------------------+-------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/front_to_back.png | *'Front to back'* - the simplest type of card with question |
+|                                                        | and answer fields.                                          |
++--------------------------------------------------------+-------------------------------------------------------------+
+
++------------------------------------------------------+---------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/three_sided.png | *'Three-sided'* cards have question, prononciation and answer |
+|                                                      | fields.                                                       |
++------------------------------------------------------+---------------------------------------------------------------+
+
++----------------------------------------------------+-------------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/both_ways.png | *'Both ways'* is for creation 2 cards: question-answer and answer-|
+|                                                    | question. Sometimes it helps to memorise facts better if you use  |
+|                                                    | direct and back order of cards. 'Both ways' helps you with this.  |
++----------------------------------------------------+-------------------------------------------------------------------+
+
++------------------------------------------------+------------------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/cloze.png |*'Cloze'* is for creation `cloze deletion`_ cards. Parts of the question|
+|                                                | surraunded by asterisks will be removed from the text to create cards. |
+|                                                | For example "The political parties in the US are the \*democrats\* and |
+|                                                | the \*republicans\*." gives you the following 2 cards:                 |
+|                                                |                                                                        |
+|                                                | **Q**:The political parties in the US are the ... and the republicans. |
+|                                                | **A**:democrats.                                                       |
+|                                                | **Q**:The political parties in the US are the democrats and the ...    |
+|                                                | **A**:republicans.                                                     |
+|                                                |                                                                        |
+|                                                | You can use whatever amount of cloze deletions in the text you want.   |
+|                                                | It's not limited by 2 entries shown in the example.                    |
++------------------------------------------------+------------------------------------------------------------------------+
 
 Next control is 'Kind'. You can chose between text, sound and pictures. Note that it's only possible to choose non-text kind of cards(sounds or pictures) for 'Front to back' type of cards.
 
-Next control is 'Tags'. You can create tags and assign them to the current card.
++-------------------------------------------------------+----------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/text_content.png | *'Text content'* means that only text will be used as question.|
++-------------------------------------------------------+----------------------------------------------------------------+
+
++--------------------------------------------------------+--------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/sound_content.png | *'Sound content'* means that sound file will be used as|
+|                                                        | question.                                              |
++--------------------------------------------------------+--------------------------------------------------------+
+
++----------------------------------------------------------+--------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/picture_content.png | *'Image content'* means that image file will be used as|
+|                                                          | question.                                              |
++----------------------------------------------------------+--------------------------------------------------------+
+
++------------------------------------------------------+------------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/tags_button.png | Next control is *'Tags'*. You can create tags and assign them to |
+|                                                      | the current card.                                                |
++------------------------------------------------------+------------------------------------------------------------------+
 
 Type, kind and assigned tags are preserved between sessions, so you don't need to choose them more often than needed. Be careful with this, especially with tags. If you don't want the same tags to be assigned to all cards you're entering you should check them and change.
 
-The latest control in the left panel is 'Menu'. It's used to go to the `Main menu`_
++------------------------------------------------------+------------------------------------------------------------------+
+| .. image:: /usr/share/mnemosyne/help/menu_button.png | The latest control in the left panel is *'Menu'*. It's used to go|
+|                                                      | to the `Main menu`_.                                             |
++------------------------------------------------------+------------------------------------------------------------------+
 
 In right panel there are 6 grades from 0(totally unknown card) to 5(known and very good memorized card). By default grade 0 is used in the input mode. However, any grade you choose will be used as the default for future cards. There is no special control for card creation. Card will be created when grade button is pressed.
 
