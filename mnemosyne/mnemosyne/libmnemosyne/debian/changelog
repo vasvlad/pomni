@@ -1,3 +1,9 @@
+python-libmnemosyne (2.0.0-15~prerelease1) unstable; urgency=low
+
+  * changed version for the first prerelease
+
+ -- Max Usachev <maxusachev@gmail.com>  Tue, 19 Jan 2010 20:24:05 +0200
+
 python-libmnemosyne (2.0.0-15) unstable; urgency=low
 
   * got latest code from upstream 
