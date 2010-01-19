@@ -27,6 +27,8 @@ setup(name=PKG,
        [('share/dbus-1/services', ['maemo/%s.service' % PKG]),
         ('share/applications/hildon', ['maemo/%s.desktop' % PKG]),
         #('share/%s/demo' % PKG, [".%s/default.db" % PKG]),
+        ('share/%s/help' % PKG, [os.path.join('help', fname) \
+            for fname in os.listdir('help')]),
         ('share/icons/hicolor/26x26/apps/',
          ['./maemo/icons/26x26/%s.png' % PKG]),
         ('share/icons/hicolor/64x64/apps/',

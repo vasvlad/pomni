@@ -27,7 +27,7 @@ Hildon UI. Common widgets (used in different modes).
 import gtk
 import mnemosyne.maemo_ui.widgets.common as widgets
 
-def create_gtkhtml():
+def create_gtkhtml(content=None):
     """ Create gtkhtml2 widget """
 
     def request_url(document, url, stream):
@@ -38,13 +38,51 @@ def create_gtkhtml():
         fpurl.close()
         stream.close()
 
+    def load_html(document, content):
+        document.clear()
+        document.open_stream("text/html")
+        document.write_stream(content)
+        document.close_stream()
+
+    def link_clicked(object, url, document, view):
+        """Called when link is clicked."""
+        if url.startswith("#"):
+            # jump to the local url(anchor)
+            view.jump_to_anchor(url[1:])
+            view.show()
+        else:
+            # open browser here
+            import webbrowser
+            webbrowser.open(url)
+
+            # start maemo browser via d-bus
+            #import dbus
+            #try:
+            #    proxy_obj = dbus.SessionBus().get_object(\
+            #        'com.nokia.osso_browser', '/com/nokia/osso_browser')
+            #    dbus.Interface(proxy_obj,
+            #        'com.nokia.osso_browser').load_url(url)
+            #except dbus.exceptions.DBusException:
+            #    import webbrowser
+            #    webbrowser.open(url)
+
+            # open url in the current view
+            #urlfd = urllib2.urlopen(link)
+            #content = urlfd.read()
+            #urlfd.close()
+            #load_html(document, content)
+
     import gtkhtml2
     import urllib
+    import urllib2
     import urlparse
 
     view = gtkhtml2.View()
     document = gtkhtml2.Document()
     document.connect('request_url', request_url)
+    document.connect('link_clicked', link_clicked, document, view)
+    if content:
+        load_html(document, content)
     view.set_document(document)
     view.document = document
     view.show()
@@ -91,3 +129,11 @@ def create_radio_button(group=None, name=None, callback=None, \
         button.connect(event, callback)
     return button
 
+def create_toolbar_container(name, show_tabs=False, width=82, height=480):
+    """Creates toolbar container."""
+
+    container = gtk.Notebook()
+    container.set_show_tabs(show_tabs)
+    container.set_size_request(width, height)
+    container.set_name(name)
+    return container

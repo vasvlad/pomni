@@ -114,6 +114,13 @@ class Html(Renderer):
             "<tr><td>%s</td></tr></table></body></html>" % text
         return self.render_html(widget, self.change_font_size(html))
     
+    def render_sound_hint(self, widget):
+        """Render html text for sound button."""
+
+        html = '<html><body><table align="center"><tr><td><img src=%s></td>' \
+            '</tr></table></body></html>' % os.path.join( \
+                self.config["theme_path"], "note.png")
+        return self.render_html(widget, self.change_font_size(html))
 
 
 class Text(Renderer):

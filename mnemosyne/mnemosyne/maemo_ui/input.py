@@ -69,23 +69,20 @@ class InputWidget(UiComponent):
         self.page, card_type_button, content_button, menu_button, tags_button, \
             sound_button, question_text, answer_text, foreign_text, \
             pronunciation_text, translation_text, cloze_text, new_tag_button, \
-            new_tag_entry, tags_box, card_type_switcher, add_card_button, \
-            sound_container, question_container, toolbar_container, \
-            self.grades, tags_label, tags_button = widgets.create_input_ui( \
-                self._main_widget.switcher)
+            new_tag_entry, tags_box, card_type_switcher, sound_container, \
+            question_container, toolbar_container, self.grades, tags_label, \
+            tags_button = widgets.create_input_ui(self._main_widget.switcher, \
+                self.conf["theme_path"])
         
         # connect signals
         card_type_button.connect('clicked', self.show_cardtype_dialog_cb)
         content_button.connect('clicked', self.show_content_dialog_cb)
         menu_button.connect('clicked', self.input_to_main_menu_cb)
         tags_button.connect('clicked', self.show_tags_dialog_cb)
-        sound_button.connect('released', self.preview_sound_in_input_cb)
+        sound_button.connect('button-press-event', self.preview_sound_in_input_cb)
         question_text.connect('button_release_event', self.show_media_dialog_cb)
         new_tag_button.connect('clicked', self.add_new_tag_cb)
         
-        for button in self.grades.values():
-            button.connect('clicked', self.set_current_grade_cb)
-
         # create language switcher and set its callbacks for all text widgets
         text_widgets = [question_text, answer_text, foreign_text,
                         pronunciation_text, translation_text, cloze_text]
@@ -113,7 +110,6 @@ class InputWidget(UiComponent):
             "CardTypeButton": card_type_button,
             "ContentButton": content_button,
             "CardTypeSwitcher": card_type_switcher,
-            "AddCardButton": add_card_button,
             "SoundContainer": sound_container,
             "SoundButton": sound_button,
             "QuestionContainer": question_container,
@@ -154,7 +150,7 @@ class InputWidget(UiComponent):
             pass # so, skip silently
 
     def show_snd_container(self):
-        """Show or hide PlaySound button. """
+        """Show or hide sound button. """
                     
         text = self.get_textview_text(self.areas["question"])
         if "sound src=" in text:
@@ -188,20 +184,6 @@ class InputWidget(UiComponent):
             if tag.strip() in self.tags]) or self.default_tag_name
         self.widgets["TagsLabel"].set_text(_('Current tags: ') + tags)
 
-    def set_current_grade(self, grade=None):
-        """Activate selected grade button."""
-
-        if grade is None:
-            for num in range(6):
-                self.grades[num].set_name('grade%s' % num)
-                self.grades[num].set_sensitive(False)
-        else:
-            for num in range(6):
-                self.grades[num].set_name('grade%s_disabled' % num)
-                self.grades[num].set_sensitive(True)
-            self.grades[grade].set_name('grade%s' % grade)
-            self.last_selected_grade = grade
-
     def check_complete_input(self):
         """Check for non empty fields."""
 
@@ -219,7 +201,7 @@ class InputWidget(UiComponent):
 
         fact = {}
         for fact_key, widget in self.selectors[self.card_type.id]["widgets"]:
-            fact[fact_key] = self.get_textview_text(widget)
+            fact[fact_key] = unicode(self.get_textview_text(widget))
         if check_for_required:
             for required in self.card_type.required_fields:
                 if not fact[required]:
@@ -244,11 +226,6 @@ class InputWidget(UiComponent):
         start, end = widget.get_buffer().get_bounds()
         return widget.get_buffer().get_text(start, end)
 
-    def update_indicator(self):
-        """Set non active state for widget."""
-
-        self.widgets["SoundButton"].set_active(False)
-
     def hide_tags_dialog(self):
         """Close TagsDialog."""
 
@@ -259,8 +236,7 @@ class InputWidget(UiComponent):
         self.widgets["TagsLabel"].set_text(_('Current tags: ') + selected_tags)
         self.widgets["TagsLabel"].show()
         self.widgets["CardTypeSwitcher"].set_current_page(self.last_input_page)
-        for widget in ("CardTypeButton", "ContentButton", "AddCardButton", \
-            "TagsButton"):
+        for widget in ("CardTypeButton", "ContentButton", "TagsButton"):
             self.widgets[widget].set_sensitive(True)
         for widget in self.grades.values():
             widget.set_sensitive(True)
@@ -277,8 +253,7 @@ class InputWidget(UiComponent):
         self.last_input_page = self.widgets["CardTypeSwitcher"]. \
             get_current_page()
         self.widgets["CardTypeSwitcher"].set_current_page(3)
-        for widget in ("CardTypeButton", "ContentButton", "AddCardButton", \
-            "TagsButton"):
+        for widget in ("CardTypeButton", "ContentButton", "TagsButton"):
             self.widgets[widget].set_sensitive(False)
         for widget in self.grades.values():
             widget.set_sensitive(False)
@@ -376,24 +351,24 @@ class InputWidget(UiComponent):
             response = dialog.run()
             if response == gtk.RESPONSE_OK:
                 item_index = iconview_widget.get_selected_items()[0]
-                item_type = liststore.get_value( \
-                    liststore.get_iter(item_index), 1)
-                item_fname = liststore.get_value( \
-                    liststore.get_iter(item_index), 2)
-                item_dirname = liststore.get_value( \
-                    liststore.get_iter(item_index), 3)
+                item_type = liststore.get_value(liststore.get_iter( \
+                    item_index), 1)
+                item_fname = liststore.get_value(liststore.get_iter( \
+                    item_index), 2)
+                item_dirname = liststore.get_value(liststore.get_iter( \
+                    item_index), 3)
                 question_text = """<%s src="%s">""" % (item_type, \
                     os.path.abspath(os.path.join(item_dirname, item_fname)))
                 self.areas["question"].get_buffer().set_text(question_text)
                 self.show_snd_container()
             dialog.destroy()
 
-    def preview_sound_in_input_cb(self, widget):
+    def preview_sound_in_input_cb(self, widget, event):
         """Listen sound in input mode."""
 
-        if widget.get_active():
-            self._main_widget.soundplayer.play( \
-                self.get_textview_text(self.areas["question"]), self)
+        if self._main_widget.soundplayer.stopped():
+            self._main_widget.soundplayer.play(self.get_textview_text( \
+                self.areas["question"]), self)
         else:
             self._main_widget.soundplayer.stop()
 
@@ -433,10 +408,12 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         InputWidget.__init__(self, component_manager)
         NonBlockingAddCardsDialog.__init__(self, component_manager)
         # connect signals
-        self.widgets['AddCardButton'].connect('clicked', self.add_card_cb)
+        for button in self.grades.values():
+            button.connect('clicked', self.add_card_cb)
         for name in ('answer', 'foreign', 'pronunciation', 'translation', \
             'cloze'):
             self.areas[name].connect('button_press_event', self.clear_text_cb)
+        # gets last selected options
         try:
             self.selected_tags = self.conf["tags_of_last_added"]
             self.last_selected_grade = self.conf['last_selected_grade']
@@ -452,7 +429,6 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.conf["card_type_last_selected"]]["card_type"])
         self.set_content_type(self.conf["content_type_last_selected"])
         self.update_tags()
-        self.set_current_grade(self.last_selected_grade)
         self.clear_widgets()
         self._main_widget.switcher.set_current_page(self.page)
 
@@ -475,15 +451,14 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
-        if self.last_selected_grade in (0, 1):
+        grade = int(widget.name[-1])
+        if grade in (0, 1):
             grade = -1
-        else:
-            grade = self.last_selected_grade
         self.controller().create_new_cards(fact_data, self.card_type, grade, \
             [tag.strip() for tag in self.selected_tags.split(',')], save=True)
-        self.clear_widgets()
         self.added_new_cards = True
         self._main_widget.soundplayer.stop()
+        self.clear_widgets()
         self.show_snd_container()
         self.update_ui(self.review_controller())
 
@@ -538,10 +513,18 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         NonBlockingEditFactDialog.__init__(self, fact, 
             component_manager, allow_cancel)
         self.fact = fact
+        self.allow_cancel = allow_cancel
         self.selected_tags = self.database().cards_from_fact(fact)\
             [0].tag_string()
-        self.allow_cancel = allow_cancel
-        self.widgets['AddCardButton'].connect('clicked', self.update_card_cb)
+        # set grade of the current card active
+        for num in range(6):
+            self.grades[num].set_name('grade%s_disabled' % num)
+        current_grade = self.review_controller().card.grade
+        if current_grade == -1:
+            current_grade = 0
+        self.grades[current_grade].set_name('grade%s' % current_grade)
+        # connect signals
+        self.grades[current_grade].connect('clicked', self.update_card_cb)
 
     def activate(self):
         """Activate input mode."""
@@ -560,7 +543,6 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.set_content_type(content_type)
         self.set_widgets_data(self.fact)
         self.update_tags()
-        self.set_current_grade()
         self.show_snd_container()
         self._main_widget.switcher.set_current_page(self.page)
 

@@ -24,10 +24,12 @@
 Hildon UI. Widgets for input mode.
 """
 
+import os
 import gtk
+import mnemosyne.maemo_ui.widgets.common as widgets
 from mnemosyne.maemo_ui.widgets.common import create_tag_checkbox
 
-def create_input_ui(main_switcher):
+def create_input_ui(main_switcher, theme_path):
     """Creates InputWidget UI."""
 
     def create_grade_button(name, width=80, height=80):
@@ -38,25 +40,16 @@ def create_input_ui(main_switcher):
 
     toplevel_table = gtk.Table(rows=1, columns=3)
     # create toolbar container
-    toolbar_container = gtk.Notebook()
-    toolbar_container.set_show_tabs(False)
-    toolbar_container.set_size_request(82, 480)
-    toolbar_container.set_name('input_toolbar_container')
+    toolbar_container = widgets.create_toolbar_container('toolbar_container')
     toolbar_table = gtk.Table(rows=5, columns=1, homogeneous=True)
     # create grades container
-    grades_container = gtk.Notebook()
-    grades_container.set_show_tabs(False)
-    grades_container.set_size_request(82, 480)
-    grades_container.set_name('grades_container')
+    grades_container = widgets.create_toolbar_container('grades_container')
     grades_table = gtk.Table(rows=6, columns=1, homogeneous=True)
     # create toolbar buttons
     card_type_button = gtk.Button()
     card_type_button.set_size_request(80, 80)
     content_button = gtk.Button()
     content_button.set_size_request(80, 80)
-    add_card_button = gtk.Button()
-    add_card_button.set_size_request(80, 80)
-    add_card_button.set_name('plus_button')
     menu_button = gtk.Button()
     menu_button.set_size_request(80, 80)
     menu_button.set_name('main_menu_button')
@@ -69,15 +62,20 @@ def create_input_ui(main_switcher):
     card_type_switcher.set_show_tabs(False)
     card_type_switcher.set_show_border(False)
     two_sided_box = gtk.VBox(spacing=10)
+    two_sided_box.set_homogeneous(True)
+    # create sound button
+    sound_container = gtk.Frame()
+    sound_container.set_name('html_container')
+    html = '<html><body><table align="center"><tr><td><img src=%s></td></tr>' \
+        '</table></body></html>' % os.path.join(theme_path, "note.png")
+    sound_button = widgets.create_gtkhtml(html)
+    sound_container.add(sound_button)
     sound_box = gtk.VBox()
     sound_box.set_homogeneous(True)
-    sound_container = gtk.Table(rows=1, columns=3, homogeneous=True)
-    sound_button = gtk.ToggleButton()
-    sound_button.set_name('media_button')
     # create grades buttons
     grades = {}
     for num in range(6):
-        grades[num] = create_grade_button('grade%s_disabled' % num)
+        grades[num] = create_grade_button('grade%s' % num)
     # create text fields
     question_container = gtk.Frame()
     question_container.set_name('html_container')
@@ -154,9 +152,7 @@ def create_input_ui(main_switcher):
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(content_button, 0, 1, 1, 2, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
-    toolbar_table.attach(add_card_button, 0, 1, 2, 3, \
-        xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
-    toolbar_table.attach(tags_button, 0, 1, 3, 4, \
+    toolbar_table.attach(tags_button, 0, 1, 2, 3, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     toolbar_table.attach(menu_button, 0, 1, 4, 5, \
         xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
@@ -166,6 +162,7 @@ def create_input_ui(main_switcher):
         grades_table.attach(grades[pos], 0, 1, 5 - pos, 6 - pos, \
             xoptions=gtk.EXPAND, yoptions=gtk.EXPAND)
     grades_container.add(grades_table)
+    # packing other widgets
     toplevel_table.attach(toolbar_container, 0, 1, 0, 1, \
         xoptions=gtk.SHRINK, yoptions=gtk.SHRINK|gtk.EXPAND|gtk.FILL)
     toplevel_table.attach(grades_container, 3, 4, 0, 1, \
@@ -179,8 +176,6 @@ def create_input_ui(main_switcher):
     card_type_switcher.append_page(three_sided_box)
     card_type_switcher.append_page(cloze_box)
     card_type_switcher.append_page(tags_layout)
-    sound_container.attach(sound_button, 1, 2, 0, 1, \
-        xoptions=gtk.EXPAND|gtk.FILL, yoptions=gtk.EXPAND|gtk.FILL|gtk.SHRINK)
     question_container.add(question_text)
     sound_box.pack_start(sound_container)
     sound_box.pack_end(question_container)
@@ -215,8 +210,8 @@ def create_input_ui(main_switcher):
         content_button, menu_button, tags_button, sound_button, question_text, \
         answer_text, foreign_text, pronunciation_text, translation_text, \
         cloze_text, new_tag_button, new_tag_entry, tags_box, \
-        card_type_switcher, add_card_button, sound_container, \
-        question_container, toolbar_container, grades, tags_label, tags_button
+        card_type_switcher, sound_container, question_container, \
+        toolbar_container, grades, tags_label, tags_button
 
 
 def create_media_dialog_ui():
