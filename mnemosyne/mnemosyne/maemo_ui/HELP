@@ -317,8 +317,6 @@ In *'text-to-speech settings'* you can set language, speed and pitch and switch 
 .. image:: /usr/share/mnemosyne/help/settings_tts.png
 
 
-
-
 Stats
 -----
 In this mode you can see 3 types of statistics:
@@ -327,6 +325,8 @@ In this mode you can see 3 types of statistics:
  - grade statistics for tags.
 
 You can also switch between them using controls on the left panel.
+
+.. image:: /usr/share/mnemosyne/help/stats.png
 
 ----------------
 Interesting info
