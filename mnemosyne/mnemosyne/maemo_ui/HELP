@@ -1,5 +1,7 @@
 ================================
-Mnemosyne for Maemo. User Guide.
+Mnemosyne for Maemo.
+================================
+User Guide.
 ================================
 
 .. contents:: Table of Contents
@@ -197,8 +199,6 @@ Next control is 'Kind'. You can chose between text, sound and pictures. Note tha
 | .. image:: /usr/share/mnemosyne/help/picture_content.png | *'Image content'* means that image file will be used as|
 |                                                          | question.                                              |
 +----------------------------------------------------------+--------------------------------------------------------+
-|                                                                                                                   |
-+----------------------------------------------------------+--------------------------------------------------------+
 
 +------------------------------------------------------+------------------------------------------------------------------+
 | .. image:: /usr/share/mnemosyne/help/tags_button.png | Next control is *'Tags'*. You can create tags and assign them to |
@@ -291,8 +291,7 @@ This mode is used for tag activation and deactivation. Cards with only non-activ
 |                                                            | you statistics for all tags. It actually brings you to the| 
 |                                                            | `Statistics mode` (see below).                            |
 +------------------------------------------------------------+-----------------------------------------------------------+
-|                                                                                                                        |
-+------------------------------------------------------------+-----------------------------------------------------------+
+
 
 Settings
 --------
@@ -305,27 +304,19 @@ You can switch between them using controls on the left panel.
 
 In *'general settings view'* you can specify directories for images and sounds, fullscreen mode and opening review mode on startup. Directories for images and sounds are used when you create cards with sounds or pictures. Program will be taking pictures and/or sounds from those directories.
 
-+---------------------------------------------------------+
-|.. image:: /usr/share/mnemosyne/help/settings_general.png|
-+---------------------------------------------------------+
-|                                                         |
-+---------------------------------------------------------+
+.. image:: /usr/share/mnemosyne/help/settings_general.png
+
 
 In *'appearance view'* you can set font size for the text in your cards. 
 
-+------------------------------------------------------------+
-|.. image:: /usr/share/mnemosyne/help/settings_appearance.png|
-+------------------------------------------------------------+
-|                                                            |
-+------------------------------------------------------------+
+.. image:: /usr/share/mnemosyne/help/settings_appearance.png
+
 
 In *'text-to-speech settings'* you can set language, speed and pitch and switch between male and female voices. 
 
-+-----------------------------------------------------+
-|.. image:: /usr/share/mnemosyne/help/settings_tts.png|
-+-----------------------------------------------------+
-|                                                     |
-+-----------------------------------------------------+
+.. image:: /usr/share/mnemosyne/help/settings_tts.png
+
+
 
 
 Stats
