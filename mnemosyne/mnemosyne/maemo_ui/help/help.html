@@ -3,13 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
-<title>Mnemosyne for Maemo. User Guide.</title>
+<meta name="generator" content="Docutils 0.4: http://docutils.sourceforge.net/" />
+<title>Mnemosyne for Maemo.</title>
 <style type="text/css">
 
 /*
-:Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 5196 2007-06-03 20:25:28Z wiemann $
+:Author: David Goodger
+:Contact: goodger@users.sourceforge.net
+:Date: $Date$
+:Revision: $Revision$
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -115,7 +117,7 @@ div.line-block div.line-block {
   margin-left: 1.5em }
 
 div.sidebar {
-  margin: 0 0 0.5em 1em ;
+  margin-left: 1em ;
   border: medium outset ;
   padding: 1em ;
   background-color: #ffffee ;
@@ -221,7 +223,8 @@ pre.address {
 
 pre.literal-block, pre.doctest-block {
   margin-left: 2em ;
-  margin-right: 2em }
+  margin-right: 2em ;
+  background-color: #eeeeee }
 
 span.classifier {
   font-family: sans-serif ;
@@ -278,77 +281,80 @@ h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
 h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
   font-size: 100% }
 
+tt.docutils {
+  background-color: #eeeeee }
+
 ul.auto-toc {
   list-style-type: none }
 
 </style>
 </head>
 <body>
-<div class="document" id="mnemosyne-for-maemo-user-guide">
-<h1 class="title">Mnemosyne for Maemo. User Guide.</h1>
-
-<div class="contents topic" id="table-of-contents">
-<p class="topic-title first">Table of Contents</p>
+<div class="document" id="mnemosyne-for-maemo">
+<h1 class="title">Mnemosyne for Maemo.</h1>
+<h2 class="subtitle" id="user-guide">User Guide.</h2>
+<div class="contents topic">
+<p class="topic-title first"><a id="table-of-contents" name="table-of-contents">Table of Contents</a></p>
 <ul class="simple">
-<li><a class="reference internal" href="#preface" id="id3">Preface</a><ul>
-<li><a class="reference internal" href="#mnemosyne" id="id4">Mnemosyne</a></li>
-<li><a class="reference internal" href="#spaced-repetition" id="id5">Spaced Repetition</a></li>
+<li><a class="reference" href="#preface" id="id3" name="id3">Preface</a><ul>
+<li><a class="reference" href="#mnemosyne" id="id4" name="id4">Mnemosyne</a></li>
+<li><a class="reference" href="#spaced-repetition" id="id5" name="id5">Spaced Repetition</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#common-principles-of-mnemosyne-usage" id="id6">Common principles of Mnemosyne usage</a><ul>
-<li><a class="reference internal" href="#how-do-i-add-cards" id="id7">How do I add cards?</a></li>
-<li><a class="reference internal" href="#grading-101" id="id8">Grading 101</a></li>
-<li><a class="reference internal" href="#initial-grades-for-cards" id="id9">Initial grades for cards</a></li>
-<li><a class="reference internal" href="#reviewing-the-cards" id="id10">Reviewing the cards</a></li>
-<li><a class="reference internal" href="#oranizing-your-cards-using-tags" id="id11">Oranizing your cards using tags</a></li>
-<li><a class="reference internal" href="#working-with-large-numbers-of-new-cards" id="id12">Working with large numbers of new cards</a></li>
-<li><a class="reference internal" href="#maximum-interval-between-repetitions" id="id13">Maximum interval between repetitions</a></li>
-<li><a class="reference internal" href="#dealing-with-large-numbers-of-cards-to-review" id="id14">Dealing with large numbers of cards to review</a></li>
-<li><a class="reference internal" href="#advanced-grading" id="id15">Advanced Grading</a></li>
+<li><a class="reference" href="#common-principles-of-mnemosyne-usage" id="id6" name="id6">Common principles of Mnemosyne usage</a><ul>
+<li><a class="reference" href="#how-do-i-add-cards" id="id7" name="id7">How do I add cards?</a></li>
+<li><a class="reference" href="#grading-101" id="id8" name="id8">Grading 101</a></li>
+<li><a class="reference" href="#initial-grades-for-cards" id="id9" name="id9">Initial grades for cards</a></li>
+<li><a class="reference" href="#reviewing-the-cards" id="id10" name="id10">Reviewing the cards</a></li>
+<li><a class="reference" href="#oranizing-your-cards-using-tags" id="id11" name="id11">Oranizing your cards using tags</a></li>
+<li><a class="reference" href="#working-with-large-numbers-of-new-cards" id="id12" name="id12">Working with large numbers of new cards</a></li>
+<li><a class="reference" href="#maximum-interval-between-repetitions" id="id13" name="id13">Maximum interval between repetitions</a></li>
+<li><a class="reference" href="#dealing-with-large-numbers-of-cards-to-review" id="id14" name="id14">Dealing with large numbers of cards to review</a></li>
+<li><a class="reference" href="#advanced-grading" id="id15" name="id15">Advanced Grading</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#how-to-use-mnemosyne-for-maemo" id="id16">How to use Mnemosyne for Maemo</a><ul>
-<li><a class="reference internal" href="#main-menu" id="id17">Main menu</a></li>
-<li><a class="reference internal" href="#input-mode" id="id18">Input mode</a></li>
-<li><a class="reference internal" href="#review-mode" id="id19">Review mode</a></li>
-<li><a class="reference internal" href="#edit-mode" id="id20">Edit mode</a></li>
-<li><a class="reference internal" href="#tags-mode" id="id21">Tags mode</a></li>
-<li><a class="reference internal" href="#settings" id="id22">Settings</a></li>
-<li><a class="reference internal" href="#stats" id="id23">Stats</a></li>
+<li><a class="reference" href="#how-to-use-mnemosyne-for-maemo" id="id16" name="id16">How to use Mnemosyne for Maemo</a><ul>
+<li><a class="reference" href="#main-menu" id="id17" name="id17">Main menu</a></li>
+<li><a class="reference" href="#input-mode" id="id18" name="id18">Input mode</a></li>
+<li><a class="reference" href="#review-mode" id="id19" name="id19">Review mode</a></li>
+<li><a class="reference" href="#edit-mode" id="id20" name="id20">Edit mode</a></li>
+<li><a class="reference" href="#tags-mode" id="id21" name="id21">Tags mode</a></li>
+<li><a class="reference" href="#settings" id="id22" name="id22">Settings</a></li>
+<li><a class="reference" href="#stats" id="id23" name="id23">Stats</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#interesting-info" id="id24">Interesting info</a></li>
+<li><a class="reference" href="#interesting-info" id="id24" name="id24">Interesting info</a></li>
 </ul>
 </div>
-<div class="section" id="preface">
-<h1><a class="toc-backref" href="#id3">Preface</a></h1>
-<div class="section" id="mnemosyne">
-<h2><a class="toc-backref" href="#id4">Mnemosyne</a></h2>
-<p>Mnemosyne for Maemo is a port of well-known flash-card tool <a class="reference external" href="http://mnemosyne-proj.org/">Mnemosyne</a> to <a class="reference external" href="http://www.maemo.org/">Maemo</a> platform.</p>
+<div class="section">
+<h1><a class="toc-backref" href="#id3" id="preface" name="preface">Preface</a></h1>
+<div class="section">
+<h2><a class="toc-backref" href="#id4" id="mnemosyne" name="mnemosyne">Mnemosyne</a></h2>
+<p>Mnemosyne for Maemo is a port of well-known flash-card tool <a class="reference" href="http://mnemosyne-proj.org/">Mnemosyne</a> to <a class="reference" href="http://www.maemo.org/">Maemo</a> platform.</p>
 <p>The Mnemosyne software resembles a traditional flash-card program to help you memorise question/answer pairs, but with an important twist: it uses a sophisticated algorithm to schedule the best time for a card to come up for review. Difficult cards that you tend to forget quickly will be scheduled more often, while Mnemosyne won't waste your time on things you remember well.</p>
 </div>
-<div class="section" id="spaced-repetition">
-<h2><a class="toc-backref" href="#id5">Spaced Repetition</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id5" id="spaced-repetition" name="spaced-repetition">Spaced Repetition</a></h2>
 <p>When you have memorised something, you need to review that material, otherwise you will forget it. However, as you probably know from experience, it is much more effective to space out these revisions over the course over several days, rather than cramming all the revisions in a single session. This is what is called the spacing effect.</p>
 <p>During the past 120 years, there has been considerable research into these aspects of human memory (by e.g. Ebbinghaus, Mace, Leitner and Wozniak). Based on the work of these people, it was shown that in order to get the best results, the intervals between revisions of the same card should gradually increase. This allows you to focus on things you still haven't mastered, while not wasting time on cards you remember very well.</p>
-<p>You can find more information about spaced repetition in <a class="reference external" href="http://en.wikipedia.org/wiki/Spaced_repetition">this wikipedia article</a>.</p>
+<p>You can find more information about spaced repetition in <a class="reference" href="http://en.wikipedia.org/wiki/Spaced_repetition">this wikipedia article</a>.</p>
 <p>It is clear that a computer program can be very valuable in assisting you in this process, by keeping track of how difficult you find an card and by doing the scheduling of the revisions. Let's see how this works in practice in the Mnemosyne program.</p>
 <p>The Mnemosyne algorithm is very similar to SM2 used in one of the early versions of SuperMemo. There are some modifications that deal with early and late repetitions, and also to add a small, healthy dose of randomness to the intervals.</p>
 <p>Supermemo now uses SM11. However, we are a bit skeptical that the huge complexity of the newer SM algorithms provides for a statistically relevant benefit. But, that is one of the facts we hope to find out with our data collection.</p>
 <p>We will only make modifications to our algorithms based on common sense or if the data tells us that there is a statistically relevant reason to do so.</p>
 </div>
 </div>
-<div class="section" id="common-principles-of-mnemosyne-usage">
-<h1><a class="toc-backref" href="#id6">Common principles of Mnemosyne usage</a></h1>
+<div class="section">
+<h1><a class="toc-backref" href="#id6" id="common-principles-of-mnemosyne-usage" name="common-principles-of-mnemosyne-usage">Common principles of Mnemosyne usage</a></h1>
 <p>You can use Mnemosyne to study anything. In addition to unicode text (meaning all human languages are supported), you can add pictures and sounds to cards.</p>
-<div class="section" id="how-do-i-add-cards">
-<h2><a class="toc-backref" href="#id7">How do I add cards?</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id7" id="how-do-i-add-cards" name="how-do-i-add-cards">How do I add cards?</a></h2>
 <p>You can make your flash cards however you want. One point to keep in mind, though, is that it will probably be easier on you if you limit each flashcard to one &quot;thing&quot; you are trying to remember.</p>
 <p>An exception to this is foreign language study, where you have a word to memorize and you want to learn both the meaning and the pronunciation-- Mnemosyne includes a special feature for this.</p>
-<p>For more recommendations on how to make the cards, you can read <a class="reference external" href="http://www.supermemo.com/articles/20rules.htm">20 Rules of Formulating Knowledge from the SuperMemo website</a>. SuperMemo is the commercial software that inspired Mnemosyne.</p>
+<p>For more recommendations on how to make the cards, you can read <a class="reference" href="http://www.supermemo.com/articles/20rules.htm">20 Rules of Formulating Knowledge from the SuperMemo website</a>. SuperMemo is the commercial software that inspired Mnemosyne.</p>
 </div>
-<div class="section" id="grading-101">
-<h2><a class="toc-backref" href="#id8">Grading 101</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id8" id="grading-101" name="grading-101">Grading 101</a></h2>
 <p>The software will present you with a question, and your task is trying to remember the answer. Afterwards, you rate yourself on a scale between 0 and 5. These ratings will be used in computing the optimal revision schedule. Let's see what these grades mean.</p>
 <p>Grades 0 and 1 are used if you don't know the answer yet, or if you have forgotten it. A card with grade 1 is starting to get more familiar than one with grade 0, and will be repeated less often.</p>
 <p>The software will keep on asking you these questions until you give them a grade 2 or higher (the exact grade doesn't matter). Grade 2 basically means that you think you'll be able to remember the card for at least one or two days. It signals the transition between short and long term memory.</p>
@@ -359,35 +365,35 @@ ul.auto-toc {
 <p>If you fail to remember it altogether, rate it either 0 or 1, and Mnemosyne will keep on asking you this question until you think you'll be able to remember it again for a few days.</p>
 <p>For best results, it is suggested to do your revisions every day, although Mnemosyne will try to cope as well as possible if you postpone your revisions or if you want to learn ahead of time.</p>
 </div>
-<div class="section" id="initial-grades-for-cards">
-<h2><a class="toc-backref" href="#id9">Initial grades for cards</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id9" id="initial-grades-for-cards" name="initial-grades-for-cards">Initial grades for cards</a></h2>
 <p>When first entering cards, you will have to assign a grade. If you don't know the card, give it a 0 or 1. If you do know the card, give higher grades, and the higher the grade, the longer the initial interval will be.</p>
 </div>
-<div class="section" id="reviewing-the-cards">
-<h2><a class="toc-backref" href="#id10">Reviewing the cards</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id10" id="reviewing-the-cards" name="reviewing-the-cards">Reviewing the cards</a></h2>
 <p>When you start Mnemosyne, it will automatically present you with any cards that have been scheduled for review that day (plus any cards from previous days that you missed). To do your review, simply click on Show Answer, add a grade, and you're on to the next card.</p>
 <p>For the best performance of your memory and the Mnemosyne algorithm, you should do your entire scheduled review each day. If this is not possible, it's not a major worry-- Mnemosyne will automatically postpone the cards for you. However, if you frequently miss days, your recall will suffer.</p>
 </div>
-<div class="section" id="oranizing-your-cards-using-tags">
-<h2><a class="toc-backref" href="#id11">Oranizing your cards using tags</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id11" id="oranizing-your-cards-using-tags" name="oranizing-your-cards-using-tags">Oranizing your cards using tags</a></h2>
 <p>To divide your entire card set to parts we recommend using tags. You can assign several tags to one card. When you activate or deactivate tags tagged cards are included or excluded from the review process respectively.</p>
 </div>
-<div class="section" id="working-with-large-numbers-of-new-cards">
-<h2><a class="toc-backref" href="#id12">Working with large numbers of new cards</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id12" id="working-with-large-numbers-of-new-cards" name="working-with-large-numbers-of-new-cards">Working with large numbers of new cards</a></h2>
 <p>By default, Mnemosyne will only show you 10 different cards you've put in grade 0 at once. This is because it does not make sense to try and memorise e.g. 100 new cards all at once.</p>
 <p>We recommend only going through a limited number of new cards each day, in order to help Mnemosyne achieve a better spread of your workload when reviewing those cards again.</p>
 </div>
-<div class="section" id="maximum-interval-between-repetitions">
-<h2><a class="toc-backref" href="#id13">Maximum interval between repetitions</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id13" id="maximum-interval-between-repetitions" name="maximum-interval-between-repetitions">Maximum interval between repetitions</a></h2>
 <blockquote>
 There is no maximum interval between repetitions, and this period can exceed one year.</blockquote>
 </div>
-<div class="section" id="dealing-with-large-numbers-of-cards-to-review">
-<h2><a class="toc-backref" href="#id14">Dealing with large numbers of cards to review</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id14" id="dealing-with-large-numbers-of-cards-to-review" name="dealing-with-large-numbers-of-cards-to-review">Dealing with large numbers of cards to review</a></h2>
 <p>Don't worry too much! Do as many cards as you feel like to catch up, the rest will be automatically rescheduled to the future.</p>
 </div>
-<div class="section" id="advanced-grading">
-<h2><a class="toc-backref" href="#id15">Advanced Grading</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id15" id="advanced-grading" name="advanced-grading">Advanced Grading</a></h2>
 <p>Here is some additional information about what happens when you grade cards. This information is not necessary to successfully use the program and is intended only for advanced users.</p>
 <p>If you grade a card successfully (2-5), the card is scheduled again for a future date. If you grade a card unsuccessfully (0-1), the card is placed in the &quot;unmemorized&quot; pile and is available again for review after you finish the repetitions scheduled for the current day.</p>
 <p>All cards have an &quot;easiness&quot; factor which the algorithm uses to schedule the interval between repetitions. It is basically the factor with which the old interval is multiplied in order to get the new one. Note that for the first repetitions, the intervals corresponding to the different grades won't be very different, but as you see the card more often, the differences become larger. The default value of the easiness is 2.5, and it cannot go below 1.3, so intervals always increase if you grade a card 2 or higher. Also note that for the first repetitions, the intervals corresponding to the different grades won't be very differentThe easiness factor is not generally presented to the user because its usefulness is limited to the algorithm's computations.</p>
@@ -397,16 +403,16 @@ There is no maximum interval between repetitions, and this period can exceed one
 <p>If you select grade 0 or 1, the easiness factor is unchanged and the card is put back in the stack of unmemorised cards.</p>
 </div>
 </div>
-<div class="section" id="how-to-use-mnemosyne-for-maemo">
-<h1><a class="toc-backref" href="#id16">How to use Mnemosyne for Maemo</a></h1>
+<div class="section">
+<h1><a class="toc-backref" href="#id16" id="how-to-use-mnemosyne-for-maemo" name="how-to-use-mnemosyne-for-maemo">How to use Mnemosyne for Maemo</a></h1>
 <p>User interface of the program is designed for using with fingers. You can use stylus if you wish, but usually it's not needed.</p>
-<div class="section" id="main-menu">
-<h2><a class="toc-backref" href="#id17">Main menu</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id17" id="main-menu" name="main-menu">Main menu</a></h2>
 <img alt="/usr/share/mnemosyne/help/menu.png" src="/usr/share/mnemosyne/help/menu.png" />
-<p>Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see <a class="reference internal" href="#settings">Settings</a> section below).</p>
+<p>Main menu is the place user see first after running a program. And this is the place user go when she exits one of the working modes. Note, that it's possible to bypass main menu and open review mode on program startup (see <a class="reference" href="#settings">Settings</a> section below).</p>
 </div>
-<div class="section" id="input-mode">
-<h2><a class="toc-backref" href="#id18">Input mode</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id18" id="input-mode" name="input-mode">Input mode</a></h2>
 <img alt="/usr/share/mnemosyne/help/input.png" src="/usr/share/mnemosyne/help/input.png" />
 <p>Input mode is used to enter new cards. Lets look at the controls in this mode. At the left there are four controls: Type, Kind, Tags and Menu.</p>
 <p>Upper control is 'Type'. For text cards you can choose one of the following types:</p>
@@ -459,7 +465,7 @@ direct and back order of cards. 'Both ways' helps you with this.</td>
 <tr><td><img alt="/usr/share/mnemosyne/help/cloze.png" class="first last" src="/usr/share/mnemosyne/help/cloze.png" />
 </td>
 <td><dl class="first last docutils">
-<dt><em>'Cloze'</em> is for creation <a class="reference external" href="http://en.wikipedia.org/wiki/Cloze_test">cloze deletion</a> cards. Parts of the question</dt>
+<dt><em>'Cloze'</em> is for creation <a class="reference" href="http://en.wikipedia.org/wiki/Cloze_test">cloze deletion</a> cards. Parts of the question</dt>
 <dd><p class="first">surraunded by asterisks will be removed from the text to create cards.
 For example &quot;The political parties in the US are the *democrats* and
 the *republicans*.&quot; gives you the following 2 cards:</p>
@@ -512,8 +518,6 @@ question.</td>
 <td><em>'Image content'</em> means that image file will be used as
 question.</td>
 </tr>
-<tr><td colspan="2">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 <table border="1" class="docutils">
@@ -539,14 +543,14 @@ the current card.</td>
 <tr><td><img alt="/usr/share/mnemosyne/help/menu_button.png" class="first last" src="/usr/share/mnemosyne/help/menu_button.png" />
 </td>
 <td>The latest control in the left panel is <em>'Menu'</em>. It's used to go
-to the <a class="reference internal" href="#main-menu">Main menu</a>.</td>
+to the <a class="reference" href="#main-menu">Main menu</a>.</td>
 </tr>
 </tbody>
 </table>
 <p>In right panel there are 6 grades from 0(totally unknown card) to 5(known and very good memorized card). By default grade 0 is used in the input mode. However, any grade you choose will be used as the default for future cards. There is no special control for card creation. Card will be created when grade button is pressed.</p>
 </div>
-<div class="section" id="review-mode">
-<h2><a class="toc-backref" href="#id19">Review mode</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id19" id="review-mode" name="review-mode">Review mode</a></h2>
 <img alt="/usr/share/mnemosyne/help/review.png" src="/usr/share/mnemosyne/help/review.png" />
 <p>This is a main mode of the application. Most of the user's time is spent here. This mode implements <cite>spaced repetition</cite> technique. It shows cards in the order, determined by the scheduling algorithm and user's job is to grade them.</p>
 <p>Cards and grade panel look the same as in the input mode, only left panel is different.</p>
@@ -575,7 +579,7 @@ program statistics. It actually brings you to the
 </td>
 <td>Second control is <em>'Pronounce'</em>. It used to prononce the text.
 This feature is available only when text-to-speach program
-<a class="reference external" href="http://espeak.sourceforge.net/">Espeak</a> is installed.</td>
+<a class="reference" href="http://espeak.sourceforge.net/">Espeak</a> is installed.</td>
 </tr>
 </tbody>
 </table>
@@ -588,7 +592,7 @@ This feature is available only when text-to-speach program
 <tr><td><img alt="/usr/share/mnemosyne/help/edit_button.png" class="first last" src="/usr/share/mnemosyne/help/edit_button.png" />
 </td>
 <td>Next control is <em>'Edit card'</em>. It allows user to edit current
-card (see <a class="reference internal" href="#edit-mode">Edit mode</a> below).</td>
+card (see <a class="reference" href="#edit-mode">Edit mode</a> below).</td>
 </tr>
 </tbody>
 </table>
@@ -627,19 +631,19 @@ delete current card.</td>
 <tr><td><img alt="/usr/share/mnemosyne/help/menu_button.png" class="first last" src="/usr/share/mnemosyne/help/menu_button.png" />
 </td>
 <td>And the last one is <em>'Main menu'</em>. It's the same as in almost all
-modes. Use it to switch to <a class="reference internal" href="#main-menu">Main menu</a>.</td>
+modes. Use it to switch to <a class="reference" href="#main-menu">Main menu</a>.</td>
 </tr>
 </tbody>
 </table>
-<p>For each scheduled card question will be shown first. You should try to recall the answer, then press on the answer field with the text 'Show answer' in it. After that answer will be shown in answer field and you should grade it. See <a class="reference internal" href="#grading-101">Grading 101</a> for the details how to grade cards properly. As soon as card is graded next scheduled card will be shown. When all scheduled cards are reviewed you'll be asked if you want to review unscheduled cards. We'd not recommend to do that. It's better to add new cards instead and review only scheduled cards. It will allow you to utilize the power of program more efficiently. However, if you understand what you're doing you can review cards ahead of schedule.</p>
+<p>For each scheduled card question will be shown first. You should try to recall the answer, then press on the answer field with the text 'Show answer' in it. After that answer will be shown in answer field and you should grade it. See <a class="reference" href="#grading-101">Grading 101</a> for the details how to grade cards properly. As soon as card is graded next scheduled card will be shown. When all scheduled cards are reviewed you'll be asked if you want to review unscheduled cards. We'd not recommend to do that. It's better to add new cards instead and review only scheduled cards. It will allow you to utilize the power of program more efficiently. However, if you understand what you're doing you can review cards ahead of schedule.</p>
 </div>
-<div class="section" id="edit-mode">
-<h2><a class="toc-backref" href="#id20">Edit mode</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id20" id="edit-mode" name="edit-mode">Edit mode</a></h2>
 <img alt="/usr/share/mnemosyne/help/edit.png" src="/usr/share/mnemosyne/help/edit.png" />
-<p>This is the mode you can get to from review mode if you press <em>'Edit'</em> button. It has the same view and controls as <a class="reference internal" href="#input-mode">Input mode</a> and used for editing current card.</p>
+<p>This is the mode you can get to from review mode if you press <em>'Edit'</em> button. It has the same view and controls as <a class="reference" href="#input-mode">Input mode</a> and used for editing current card.</p>
 </div>
-<div class="section" id="tags-mode">
-<h2><a class="toc-backref" href="#id21">Tags mode</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id21" id="tags-mode" name="tags-mode">Tags mode</a></h2>
 <img alt="/usr/share/mnemosyne/help/tags.png" src="/usr/share/mnemosyne/help/tags.png" />
 <p>This mode is used for tag activation and deactivation. Cards with only non-active tags assigned to it will not be scheduled for review. So, using tagging it's easy to devide your set of cards into groups and activate/deactivate them when needed.</p>
 <table border="1" class="docutils">
@@ -654,13 +658,11 @@ modes. Use it to switch to <a class="reference internal" href="#main-menu">Main 
 you statistics for all tags. It actually brings you to the
 <cite>Statistics mode</cite> (see below).</td>
 </tr>
-<tr><td colspan="2">&nbsp;</td>
-</tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="settings">
-<h2><a class="toc-backref" href="#id22">Settings</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id22" id="settings" name="settings">Settings</a></h2>
 <dl class="docutils">
 <dt>This mode is for configuring the program. It has 3 parts:</dt>
 <dd><ul class="first last simple">
@@ -672,47 +674,14 @@ you statistics for all tags. It actually brings you to the
 </dl>
 <p>You can switch between them using controls on the left panel.</p>
 <p>In <em>'general settings view'</em> you can specify directories for images and sounds, fullscreen mode and opening review mode on startup. Directories for images and sounds are used when you create cards with sounds or pictures. Program will be taking pictures and/or sounds from those directories.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr><td><img alt="/usr/share/mnemosyne/help/settings_general.png" class="first last" src="/usr/share/mnemosyne/help/settings_general.png" />
-</td>
-</tr>
-<tr><td>&nbsp;</td>
-</tr>
-</tbody>
-</table>
+<img alt="/usr/share/mnemosyne/help/settings_general.png" src="/usr/share/mnemosyne/help/settings_general.png" />
 <p>In <em>'appearance view'</em> you can set font size for the text in your cards.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr><td><img alt="/usr/share/mnemosyne/help/settings_appearance.png" class="first last" src="/usr/share/mnemosyne/help/settings_appearance.png" />
-</td>
-</tr>
-<tr><td>&nbsp;</td>
-</tr>
-</tbody>
-</table>
+<img alt="/usr/share/mnemosyne/help/settings_appearance.png" src="/usr/share/mnemosyne/help/settings_appearance.png" />
 <p>In <em>'text-to-speech settings'</em> you can set language, speed and pitch and switch between male and female voices.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr><td><img alt="/usr/share/mnemosyne/help/settings_tts.png" class="first last" src="/usr/share/mnemosyne/help/settings_tts.png" />
-</td>
-</tr>
-<tr><td>&nbsp;</td>
-</tr>
-</tbody>
-</table>
+<img alt="/usr/share/mnemosyne/help/settings_tts.png" src="/usr/share/mnemosyne/help/settings_tts.png" />
 </div>
-<div class="section" id="stats">
-<h2><a class="toc-backref" href="#id23">Stats</a></h2>
+<div class="section">
+<h2><a class="toc-backref" href="#id23" id="stats" name="stats">Stats</a></h2>
 <dl class="docutils">
 <dt>In this mode you can see 3 types of statistics:</dt>
 <dd><ul class="first last simple">
@@ -723,13 +692,14 @@ you statistics for all tags. It actually brings you to the
 </dd>
 </dl>
 <p>You can also switch between them using controls on the left panel.</p>
+<img alt="/usr/share/mnemosyne/help/stats.png" src="/usr/share/mnemosyne/help/stats.png" />
 </div>
 </div>
-<div class="section" id="interesting-info">
-<h1><a class="toc-backref" href="#id24">Interesting info</a></h1>
+<div class="section">
+<h1><a class="toc-backref" href="#id24" id="interesting-info" name="interesting-info">Interesting info</a></h1>
 <ul class="simple">
-<li><a class="reference external" href="http://www.glowingfaceman.com/blog/sentence-mining/">Sentence Mining</a></li>
-<li><a class="reference external" href="http://www.glowingfaceman.com/blog/neglected-srs-deck/">Neglected SRS Deck</a></li>
+<li><a class="reference" href="http://www.glowingfaceman.com/blog/sentence-mining/">Sentence Mining</a></li>
+<li><a class="reference" href="http://www.glowingfaceman.com/blog/neglected-srs-deck/">Neglected SRS Deck</a></li>
 </ul>
 </div>
 </div>
