@@ -54,6 +54,7 @@ class InputWidget(UiComponent):
         self.default_tag_name = _("<default>")
         self.content_type = None
         self.last_input_page = None
+        self.previous_mode = None
         self.fact = None
         self.tag_mode = False
         self.sounddir = None
@@ -378,35 +379,12 @@ class InputWidget(UiComponent):
         pass
 
 
-class NonBlockingAddCardsDialog(AddCardsDialog):
-    """Non blocking variant of AddCardsDialog."""
 
-    def add_cards(self):
-        """This part is the first part of add_cards
-           from default controller."""
-
-        self.stopwatch().pause()
-        self.component_manager.get_current("add_cards_dialog")\
-            (self.component_manager).activate()
-
-    def update_ui(self, review_controller):
-        """This part is called from add_card_cb, when card is added."""
-
-        self.database().save()
-        review_controller.reload_counters()
-        if review_controller.card is None:
-            review_controller.new_question()
-        else:
-            review_controller.update_status_bar()
-        self.stopwatch().unpause()
-
-
-class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
+class AddCardsWidget(AddCardsDialog, InputWidget):
     """Add new card widget."""
 
     def __init__(self, component_manager):
         InputWidget.__init__(self, component_manager)
-        NonBlockingAddCardsDialog.__init__(self, component_manager)
         # connect signals
         for button in self.grades.values():
             button.connect('clicked', self.add_card_cb)
@@ -421,8 +399,13 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.selected_tags = self.default_tag_name
             self.last_selected_grade = 0
 
-    def activate(self):
+    def activate(self, mode=None):
         """Activate input mode."""
+
+        self.previous_mode = mode
+
+        # this part is the first part of add_cards from default controller
+        self.stopwatch().pause()
 
         self.show_snd_container()
         self.set_card_type(self.selectors[ \
@@ -460,7 +443,16 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         self._main_widget.soundplayer.stop()
         self.clear_widgets()
         self.show_snd_container()
-        self.update_ui(self.review_controller())
+
+        # this part is called from add_card_cb, when card is added
+        self.database().save()
+        review_controller = self.review_controller()
+        review_controller.reload_counters()
+        if review_controller.card is None:
+            review_controller.new_question()
+        else:
+            review_controller.update_status_bar()
+        self.stopwatch().unpause()
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
@@ -475,7 +467,7 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.conf.save()
             self._main_widget.soundplayer.stop()
             self._main_widget.switcher.remove_page(self.page)
-            self._main_widget.menu_()
+            self._main_widget.activate_mode(self.previous_mode)
 
 
 class NonBlockingEditFactDialog(EditFactDialog):

@@ -165,7 +165,9 @@ class ReviewWdgt(ReviewWidget):
     def add_card_cb(self, widget):
         """Hook for 'add new card' button."""
 
-        self.controller().add_cards()
+        #self.controller().add_cards()
+        self.component_manager.get_current("add_cards_dialog")\
+            (self.component_manager).activate('review')
 
     def statistics_card_cb(self, widget):
         """Hook for 'statistics' button."""
