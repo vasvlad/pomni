@@ -126,7 +126,6 @@ class ConfigurationWidget(ConfigurationDialog):
     def show_tts_settings_cb(self, widget):
         """Switches to the tts settings page."""
 
-        print "show_tts_settings_cb"
         self.mode_settings_switcher.set_current_page(2)
         if not self.languages:
             self.languages = [lang for lang in tts.get_languages()]
