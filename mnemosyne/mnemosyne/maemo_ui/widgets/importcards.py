@@ -45,7 +45,7 @@ def choose_file_cb(self, file_name_label, ok_button):
         else:
             dlg.destroy()
 
-def create_importcard_ui(main_switcher, formats):
+def create_importcard_ui(main_switcher, format_desc):
     """Creates MaemoImportWidget UI."""
 
     def create_toolbar_container(name, show_tabs=False, width=82, height=480):
@@ -72,7 +72,7 @@ def create_importcard_ui(main_switcher, formats):
     #Button of selected format
     format_container = widgets.create_button('labels_container', 
         width=-1, height=60)
-    format_label = gtk.Label(formats[0])
+    format_label = gtk.Label(format_desc)
     format_label.set_name('config_import_label')
     format_prev_button = widgets.create_button('left_arrow', None)
     format_next_button = widgets.create_button('right_arrow', None)
@@ -153,6 +153,7 @@ def create_importcard_ui(main_switcher, formats):
 
     toplevel_table.show_all()
 
-    return main_switcher.append_page(toplevel_table), tags_box, \
-           menu_button, ok_button, file_name_label
+    return main_switcher.append_page(toplevel_table), format_label, \
+           tags_box, menu_button, ok_button, file_name_label, \
+           format_prev_button, format_next_button
 
