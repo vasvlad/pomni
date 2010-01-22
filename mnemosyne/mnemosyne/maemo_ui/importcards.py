@@ -34,12 +34,21 @@ class ImportCardsWidget(UiComponent):
     def __init__(self, component_manager ):
 
         UiComponent.__init__(self, component_manager)
-        self.page, self.tags_box, menu_button, \
-            ok_button, self.file_name_label = create_importcard_ui( \
-            self.main_widget().window, self.main_widget().switcher,\
-            [self.component_manager.get_current("file_format").description])
+
+        self.formats = [desc.description for desc in \
+                        self.component_manager.get_all("file_format")]
+ 
+        self.page, self.format_label, self.tags_box, menu_button, \
+            ok_button, self.file_name_label, \
+            self.format_prev_button, self.format_next_button, \
+            = create_importcard_ui( self.main_widget().window, \
+            self.main_widget().switcher, \
+            self.component_manager.get_current("file_format").description)
         self.tags_dict = {}
+
         # connect signals
+        self.format_prev_button.connect('clicked', self.change_format_cb)
+        self.format_next_button.connect('clicked', self.change_format_cb)
         menu_button.connect('clicked', self.back_to_main_menu_cb)
         ok_button.connect('clicked', self.ok_button_cb)
 
@@ -92,4 +101,22 @@ class ImportCardsWidget(UiComponent):
             do_import(self.file_name_label.get_text()) 
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('importcards')
+
+    def change_format_cb(self, widget):
+        """Changes current format file."""
+
+        format_index = self.formats.index(self.format_label.get_text())
+        direction = 1
+
+        if widget == self.format_prev_button:
+            direction = -1
+        try:
+            new_format = self.formats[format_index + direction]
+        except IndexError:
+            if direction:
+                new_format = self.formats[0]
+            else:
+                new_format = self.formats[-1]
+        finally:
+            self.format_label.set_text(new_format)
 

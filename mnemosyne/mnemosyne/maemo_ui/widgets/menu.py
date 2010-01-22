@@ -40,11 +40,7 @@ def create_menu_ui(main_switcher):
     row2.set_col_spacings(28)
     buttons = {}
     for button_name in ('tags', 'review', 'input', 'settings', \
-<<<<<<< HEAD:mnemosyne/mnemosyne/maemo_ui/widgets/menu.py
-        'stat', 'import','about', 'settings', 'exit'):
-=======
-        'stats', 'help', 'settings', 'exit'):
->>>>>>> coreteam:mnemosyne/mnemosyne/maemo_ui/widgets/menu.py
+        'stats','import', 'help', 'settings', 'exit'):
         button = gtk.Button()
         button.set_size_request(110, 155)
         button.set_name('menu_button_%s' % button_name)
