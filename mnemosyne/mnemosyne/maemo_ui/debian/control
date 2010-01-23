@@ -6,8 +6,6 @@ Build-Depends: debhelper (>= 5), python2.5, python-setuptools | python2.5-setupt
 Standards-Version: 3.8.0
 
 Package: mnemosyne
-Vcs-Git: git://github.com/umax/pomni.git
-Vcs-Browser: http://github.com/umax/pomni.git
 Homepage: http://www.mnemosyne-proj.org
 Architecture: all
 #Depends: python2.5, python2.5-gtk2, python-libmnemosyne (>= 2.0.0-15), python-gtkhtml2, python2.5-gstreamer | python-gst0.10, python-libsm2sync (>= 0.0.3), python-osso | python2.5-osso | python-gtk2, python-gconf | python2.5-gnome | python-gnome2
@@ -19,6 +17,8 @@ Description: Learning tool based on spaced repetition technique
  sophisticated algorithm to schedule the best time for an item to come up for
  review. Difficult items that you tend to forget quickly will be scheduled more
  often, while Mnemosyne won't waste your time on things you remember well.
+XB-Vcs-Git: git://github.com/umax/pomni.git
+XB-Vcs-Browser: http://github.com/umax/pomni.git/mnemosyne/mnemosyne/maemo_ui/
 XB-Maemo-Display-Name: Mnemosyne
 XB-Maemo-Icon-26:
  iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
