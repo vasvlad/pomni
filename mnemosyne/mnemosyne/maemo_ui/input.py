@@ -54,6 +54,7 @@ class InputWidget(UiComponent):
         self.default_tag_name = _("<default>")
         self.content_type = None
         self.last_input_page = None
+        self.previous_mode = None
         self.fact = None
         self.tag_mode = False
         self.sounddir = None
@@ -378,35 +379,12 @@ class InputWidget(UiComponent):
         pass
 
 
-class NonBlockingAddCardsDialog(AddCardsDialog):
-    """Non blocking variant of AddCardsDialog."""
 
-    def add_cards(self):
-        """This part is the first part of add_cards
-           from default controller."""
-
-        self.stopwatch().pause()
-        self.component_manager.get_current("add_cards_dialog")\
-            (self.component_manager).activate()
-
-    def update_ui(self, review_controller):
-        """This part is called from add_card_cb, when card is added."""
-
-        self.database().save()
-        review_controller.reload_counters()
-        if review_controller.card is None:
-            review_controller.new_question()
-        else:
-            review_controller.update_status_bar()
-        self.stopwatch().unpause()
-
-
-class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
+class AddCardsWidget(AddCardsDialog, InputWidget):
     """Add new card widget."""
 
     def __init__(self, component_manager):
         InputWidget.__init__(self, component_manager)
-        NonBlockingAddCardsDialog.__init__(self, component_manager)
         # connect signals
         for button in self.grades.values():
             button.connect('clicked', self.add_card_cb)
@@ -421,8 +399,13 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.selected_tags = self.default_tag_name
             self.last_selected_grade = 0
 
-    def activate(self):
+    def activate(self, mode=None):
         """Activate input mode."""
+
+        self.previous_mode = mode
+
+        # this part is the first part of add_cards from default controller
+        self.stopwatch().pause()
 
         self.show_snd_container()
         self.set_card_type(self.selectors[ \
@@ -460,7 +443,16 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
         self._main_widget.soundplayer.stop()
         self.clear_widgets()
         self.show_snd_container()
-        self.update_ui(self.review_controller())
+
+        # this part is called from add_card_cb, when card is added
+        self.database().save()
+        review_controller = self.review_controller()
+        review_controller.reload_counters()
+        if review_controller.card is None:
+            review_controller.new_question()
+        else:
+            review_controller.update_status_bar()
+        self.stopwatch().unpause()
 
     def input_to_main_menu_cb(self, widget):
         """Return to main menu."""
@@ -475,46 +467,17 @@ class AddCardsWidget(InputWidget, NonBlockingAddCardsDialog):
             self.conf.save()
             self._main_widget.soundplayer.stop()
             self._main_widget.switcher.remove_page(self.page)
-            self._main_widget.menu_()
+            self._main_widget.activate_mode(self.previous_mode)
 
 
-class NonBlockingEditFactDialog(EditFactDialog):
-    """Non blocking variant of EditFactDialog
-       edit_current_card is splitted to two methods."""
 
-    def edit_current_card(self):
-        """This part is the first part of edit_current_card
-           from default controller."""
-
-        self.stopwatch().pause()
-        review_controller = self.review_controller()
-        fact = review_controller.card.fact
-        self.component_manager.get_current("edit_fact_dialog")\
-            (fact, self.component_manager).activate()
-
-    def update_ui(self, review_controller):
-        """This part is called in callback, when editing is done."""
-
-        review_controller.reload_counters()
-        # Our current card could have disappeared from the database here,
-        # e.g. when converting a front-to-back card to a cloze card, which
-        # deletes the old cards and their learning history.        
-        review_controller.card = self.database().get_card(\
-            review_controller.card._id, id_is_internal=True)    
-        review_controller.update_dialog(redraw_all=True)
-        self.stopwatch().unpause()
-
-
-class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
+class EditFactWidget(EditFactDialog, InputWidget):
     """Edit current fact widget."""
 
-    def __init__(self, fact, component_manager, allow_cancel=True):
+    def __init__(self, component_manager):
         InputWidget.__init__(self, component_manager)
-        NonBlockingEditFactDialog.__init__(self, fact, 
-            component_manager, allow_cancel)
-        self.fact = fact
-        self.allow_cancel = allow_cancel
-        self.selected_tags = self.database().cards_from_fact(fact)\
+        self.fact = self.review_controller().card.fact
+        self.selected_tags = self.database().cards_from_fact(self.fact)\
             [0].tag_string()
         # set grade of the current card active
         for num in range(6):
@@ -527,7 +490,11 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         self.grades[current_grade].connect('clicked', self.update_card_cb)
 
     def activate(self):
-        """Activate input mode."""
+        """Activate Edit mode."""
+
+        # this part is the first part of
+        # edit_current_card from default controller
+        self.stopwatch().pause()
 
         self.set_card_type(self.fact.card_type)
         if self.card_type.id is FrontToBack.id:
@@ -539,7 +506,8 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
                 content_type = "text"
         else:
             content_type = "text"
-            
+        
+        self.widgets["CardTypeButton"].set_sensitive(False)
         self.set_content_type(content_type)
         self.set_widgets_data(self.fact)
         self.update_tags()
@@ -554,14 +522,20 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         except ValueError:
             return # Let the user try again to fill out the missing data.
 
+        review_controller = self.review_controller()
         new_tags = [tag.strip() for tag in self.selected_tags.split(',')]
         self.controller().update_related_cards(self.fact, fact_data,
           self.card_type, new_tags, None)
-        self.review_controller().update_dialog(redraw_all=True)
-        self._main_widget.activate_mode("review")
-        self._main_widget.soundplayer.stop()
-        self.show_snd_container()
-        self.update_ui(self.review_controller())
+
+        # this part is the second part of 
+        # edit_current_fact from default controller
+        review_controller.reload_counters()
+        review_controller.card = self.database().get_card(\
+            review_controller.card._id, id_is_internal=True)    
+        review_controller.update_dialog(redraw_all=True)
+        self.stopwatch().unpause()
+
+        self.input_to_main_menu_cb(None)
 
     def input_to_main_menu_cb(self, widget):
         """Return to Review mode."""
@@ -571,7 +545,7 @@ class EditFactWidget(InputWidget, NonBlockingEditFactDialog):
         else:
             self._main_widget.soundplayer.stop()
             self._main_widget.switcher.remove_page(self.page)
-            self._main_widget.review_()
+            self._main_widget.activate_mode('review')
 
 
 # Local Variables:

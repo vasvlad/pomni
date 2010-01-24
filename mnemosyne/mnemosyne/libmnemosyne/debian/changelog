@@ -1,8 +1,8 @@
-python-libmnemosyne (2.0.0-15) unstable; urgency=low
+python-libmnemosyne (2.0.0-15~rc1) unstable; urgency=low
 
   * got latest code from upstream 
 
- -- Ed Bartosh <bartosh@gmail.com>  Tue, 06 Oct 2009 20:37:24 +0300
+ -- Max Usachev <maxusachev@gmail.com>  Tue, 19 Jan 2010 20:24:05 +0200
 
 python-libmnemosyne (2.0.0-14) unstable; urgency=low
 

@@ -165,7 +165,9 @@ class ReviewWdgt(ReviewWidget):
     def add_card_cb(self, widget):
         """Hook for 'add new card' button."""
 
-        self.controller().add_cards()
+        #self.controller().add_cards()
+        self.component_manager.get_current("add_cards_dialog")\
+            (self.component_manager).activate('review')
 
     def statistics_card_cb(self, widget):
         """Hook for 'statistics' button."""
@@ -183,7 +185,9 @@ class ReviewWdgt(ReviewWidget):
         """Hook for 'edit card' button."""
 
         self._main_widget.soundplayer.stop()
-        self.controller().edit_current_card()
+        #self.controller().edit_current_card()
+        self.component_manager.get_current("edit_fact_dialog")\
+            (self.component_manager).activate()
 
     def grade_cb(self, widget):
         """Hook for 'grade' button."""
