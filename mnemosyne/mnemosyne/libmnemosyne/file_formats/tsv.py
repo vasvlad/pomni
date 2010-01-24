@@ -266,4 +266,3 @@ class TabSeparated(FileFormat):
                 check_for_duplicates=False, save=False)[0]
             print line, card.id
 
-
