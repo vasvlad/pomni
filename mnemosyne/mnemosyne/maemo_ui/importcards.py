@@ -94,11 +94,14 @@ class ImportCardsWidget(UiComponent):
         self.main_widget().menu_('importcards')
 
     def ok_button_cb(self, widget):
-        """Ok """
+        """Do Import from file to database """
 
 #        from mnemosyne.libmnemosyne.file_formats.tsv import import_txt_2
-        self.component_manager.get_current("file_format"). \
-            do_import(self.file_name_label.get_text()) 
+        for format in self.component_manager.get_all("file_format"):
+            if (format.description == self.format_label.get_text()):
+                format.do_import(self.file_name_label.get_text())
+                break
+
         self.main_widget().switcher.remove_page(self.page)
         self.main_widget().menu_('importcards')
 
