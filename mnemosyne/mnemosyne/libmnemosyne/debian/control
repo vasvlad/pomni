@@ -1,8 +1,8 @@
 Source: python-libmnemosyne
 Section: python
 Priority: optional
-Maintainer: Ed Bartosh <bartosh@gmail.com>
-Build-Depends: debhelper (>= 5), python, python-setuptools
+Maintainer: Max Usachev <maxusachev@gmail.com>
+Build-Depends: debhelper (>= 5), python, python-setuptools | python2.5-setuptools
 Standards-Version: 3.8.0
 
 Package: python-libmnemosyne

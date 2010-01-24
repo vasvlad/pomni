@@ -1726,26 +1726,6 @@ widget "*.scrolledwindow_widget.*" style "media-scrolls"
 
 
 #----------------------------- Statistics mode ----------
-style "stat-common-button" {
-    engine "sapwood" {
-        image {
-            function = BOX
-            state = INSENSITIVE
-            overlay_file = "common_stat_disabled.png"
-            overlay_stretch = FALSE
-        }
-        image {
-            function = BOX
-            overlay_file = "common_stat.png"
-            overlay_stretch = FALSE
-        }
-        image {
-	        function = FOCUS
-        }
-    }
-}
-widget "*.stat_toolbar_common_stat_button" style "stat-common-button"
-
 style "current-stat-button" {
     GtkRadioButton::indicator-size = 80
     engine "pixmap" {

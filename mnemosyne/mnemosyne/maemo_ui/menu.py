@@ -65,7 +65,7 @@ class MenuWidget(UiComponent):
         """Go to input mode."""
 
         self._main_widget.switcher.remove_page(self.page)
-        self._main_widget.input_()
+        self._main_widget.input_('menu')
 
     def review_cb(self, widget):
         """Go to review mode."""

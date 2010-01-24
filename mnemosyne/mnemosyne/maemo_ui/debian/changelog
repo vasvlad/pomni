@@ -1,5 +1,10 @@
-mnemosyne (2.0.0~beta6) unstable; urgency=low
+mnemosyne (2.0.0~beta6~rc1) unstable; urgency=low
 
+  * created first version of User guide (Ed)
+  * changed way of adding new cards (Max)
+  * changed sound cards view in Review and Input modes (Max)
+  * replaced statistics view - use Html widget (Max)
+  * implemented tags statistics (Vlad)
   * got rid of glade (Max)
   * removed demo database from the package
   * removed rainbow theme from the package
@@ -9,7 +14,7 @@ mnemosyne (2.0.0~beta6) unstable; urgency=low
   * made cards look similar in review and input modes (Max)
   * implemented input language switcher for text fields
 
- -- Ed Bartosh <bartosh@gmail.com>  Sun, 03 Jan 2010 20:02:57 +0200
+ -- Max Usachev <maxusachev@gmail.com>  Tue, 19 Jan 2010 18:11:12 +0200
 
 mnemosyne (2.0.0~beta5) unstable; urgency=low
 
