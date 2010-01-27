@@ -1,113 +1,95 @@
+#!/usr/bin/python -tt
+# vim: sw=4 ts=4 expandtab ai
+#
+# Mnemosyne. Learning tool based on spaced repetition technique
+#
+# Copyright (C) 2008 Pomni Development Team <pomni@googlegroups.com>
+#
+# This program is free software; you can redistribute it and/or modify it under
+# the terms of the GNU General Public License version 2 as published by the
+# Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+# 02110-1301 USA
+#
+
+"""
+Hildon UI. Widget for progressbar window.
+"""
 
 from mnemosyne.libmnemosyne.ui_components.dialogs import ProgressDialog
-
+import gtk
 
 class MaemoProgressDlg(ProgressDialog):
+    """ Class for ProgressDlg in libmnemosyne. It use in factory"""
 
     def __init__(self, component_manager):
         ProgressDialog.__init__(self, component_manager)
 
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.set_resizable(True)
+        self.fraction = 0.0
+        try:
+            import hildon
+            self.pbar = hildon.hildon_banner_show_progress(\
+                        self.main_widget().window, None, "")
+            self.pbar.show()
+        except ImportError:
 
-        self.window.set_title("ProgressBar")
-        self.window.set_border_width(0)
+            self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 
-        vbox = gtk.VBox(False, 5)
-        vbox.set_border_width(10)
-        self.window.add(vbox)
-        vbox.show()
-  
-        # Create a centering alignment object
-        align = gtk.Alignment(0.5, 0.5, 0, 0)
-        vbox.pack_start(align, False, False, 5)
-        align.show()
+            self.window.set_title("ProgressBar")
+            self.window.set_border_width(0)
 
-        # Create the ProgressBar
-        self.pbar = gtk.ProgressBar()
+            vbox = gtk.VBox(False, 5)
+            vbox.set_border_width(10)
+            self.window.add(vbox)
+            vbox.show()
+     
+      
+            # Create a centering alignment object
+            align = gtk.Alignment(0.5, 0.5, 0, 0)
+            vbox.pack_start(align, False, False, 5)
+            align.show()
 
-        align.add(self.pbar)
-        self.pbar.show()
+            # Create the ProgressBar
+            self.pbar = gtk.ProgressBar()
 
-        separator = gtk.HSeparator()
-        vbox.pack_start(separator, False, False, 0)
-        separator.show()
+            align.add(self.pbar)
+            self.pbar.show()
 
-        # rows, columns, homogeneous
-        table = gtk.Table(2, 2, False)
-        vbox.pack_start(table, False, True, 0)
-        table.show()
+            separator = gtk.HSeparator()
+            vbox.pack_start(separator, False, False, 0)
+            separator.show()
 
-        self.window.show()
+            # rows, columns, homogeneous
+            table = gtk.Table(2, 2, False)
+            vbox.pack_start(table, False, True, 0)
+            table.show()
+
+            self.window.show()
 
 	
     def set_range(self, minimum, maximum):
-#        self.setRange(minimum, maximum)
-        print "set_range ", minimum, maximum
+        """Calculate fraction for progressbar """
+
+        self.fraction = float(1.0/(maximum-minimum))
+        print self.fraction 
         
     def set_text(self, text):
-#        self.setLabelText(text)
-        self.window.set_title(text)
+        """Set title on progress bar """
+
         self.pbar.set_text(text)
-        print "set_text ", text
         
     def set_value(self, value):
-#        self.setValue(value)
-        print "set_value ", value
-	
-import gtk, gobject
+        """Set new value for progess bar """ 
 
-class ProgressBar:
-    # Callback that toggles the text display within the progress
-    # bar trough
-    def toggle_show_text(self, widget, data=None):
-        if widget.get_active():
-            self.pbar.set_text("some text")
-        else:
-            self.pbar.set_text("")
-
-    # Callback that toggles the activity mode of the progress
-    # bar
-    def toggle_activity_mode(self, widget, data=None):
-        if widget.get_active():
-            self.pbar.pulse()
-        else:
-            self.pbar.set_fraction(0.0)
-
-
-    def __init__(self):
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.set_resizable(True)
-
-        self.window.connect("destroy", self.destroy_progress)
-        self.window.set_title("ProgressBar")
-        self.window.set_border_width(0)
-
-        vbox = gtk.VBox(False, 5)
-        vbox.set_border_width(10)
-        self.window.add(vbox)
-        vbox.show()
-  
-        # Create a centering alignment object
-        align = gtk.Alignment(0.5, 0.5, 0, 0)
-        vbox.pack_start(align, False, False, 5)
-        align.show()
-
-        # Create the ProgressBar
-        self.pbar = gtk.ProgressBar()
-
-        align.add(self.pbar)
-        self.pbar.show()
-
-        separator = gtk.HSeparator()
-        vbox.pack_start(separator, False, False, 0)
-        separator.show()
-
-        # rows, columns, homogeneous
-        table = gtk.Table(2, 2, False)
-        vbox.pack_start(table, False, True, 0)
-        table.show()
-
-        self.window.show()
-
-	
+        self.pbar.set_fraction(value * self.fraction)
+        #Pending gtk
+        while gtk.events_pending():
+            gtk.main_iteration(False)
