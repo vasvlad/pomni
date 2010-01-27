@@ -77,7 +77,7 @@ class MaemoProgressDlg(ProgressDialog):
 	
     def set_range(self, minimum, maximum):
         """Calculate fraction for progressbar """
-
+        print  maximum
         self.fraction = float(1.0/(maximum-minimum))
         print self.fraction 
         

@@ -251,6 +251,13 @@ class TabSeparated(FileFormat):
             self.main_widget().error_box(str(exc_obj))
             return -1 
 
+        # Prepare progress bar widget
+        progress = self.component_manager.get_current("progress_dialog")\
+                   (self.component_manager)
+        progress.set_text(_("Importing cards..."))
+#        progress.set_range(0, len(fimp))
+        progress.set_value(0)
+ 
         for line in fimp:
             line = line.strip()
             if not line:
