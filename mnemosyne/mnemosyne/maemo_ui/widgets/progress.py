@@ -28,7 +28,7 @@ from mnemosyne.libmnemosyne.ui_components.dialogs import ProgressDialog
 import gtk
 
 class MaemoProgressDlg(ProgressDialog):
-    """ Class for ProgressDlg in libmnemosyne. It use in factory"""
+    """ Class for ProgressDlg in libmnemosyne. It using in factory"""
 
     def __init__(self, component_manager):
         ProgressDialog.__init__(self, component_manager)
@@ -51,7 +51,6 @@ class MaemoProgressDlg(ProgressDialog):
             self.window.add(vbox)
             vbox.show()
      
-      
             # Create a centering alignment object
             align = gtk.Alignment(0.5, 0.5, 0, 0)
             vbox.pack_start(align, False, False, 5)
@@ -72,15 +71,14 @@ class MaemoProgressDlg(ProgressDialog):
             vbox.pack_start(table, False, True, 0)
             table.show()
 
-            self.window.show()
 
 	
     def set_range(self, minimum, maximum):
         """Calculate fraction for progressbar """
-        print  maximum
+
         self.fraction = float(1.0/(maximum-minimum))
-        print self.fraction 
-        
+        self.window.show()
+       
     def set_text(self, text):
         """Set title on progress bar """
 
@@ -90,6 +88,10 @@ class MaemoProgressDlg(ProgressDialog):
         """Set new value for progess bar """ 
 
         self.pbar.set_fraction(value * self.fraction)
+        if (value * self.fraction == 1.0 and self.window):
+            self.window.destroy()
+ 
         #Pending gtk
         while gtk.events_pending():
             gtk.main_iteration(False)
+

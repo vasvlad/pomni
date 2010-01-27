@@ -255,14 +255,16 @@ class TabSeparated(FileFormat):
         progress = self.component_manager.get_current("progress_dialog")\
                    (self.component_manager)
         progress.set_text(_("Importing cards..."))
-#        progress.set_range(0, len(fimp))
+        progress.set_range(0, sum(1 for l in open(filename, 'r')))
         progress.set_value(0)
+        count = 0
  
         for line in fimp:
             line = line.strip()
             if not line:
                 continue
-
+            count += 1
+            progress.set_value(count)
             fields = line.split('\t')
 
             # Orphaned 2 or 3 sided card.
