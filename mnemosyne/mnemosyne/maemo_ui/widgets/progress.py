@@ -32,7 +32,8 @@ class MaemoProgressDlg(ProgressDialog):
 
     def __init__(self, component_manager):
         ProgressDialog.__init__(self, component_manager)
-
+        
+        self.window = None
         self.fraction = 0.0
         try:
             import hildon
