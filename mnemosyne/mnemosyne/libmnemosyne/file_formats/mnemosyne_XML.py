@@ -39,6 +39,7 @@ class Mnemosyne_XML_Importer(ContentHandler):
 
             self.card = {} 
             self.card["id"] = 0
+            self.card["cat"] = None
 
             if attrs.get("id"):
                 self.card['id'] = attrs.get("id")
@@ -87,7 +88,6 @@ class Mnemosyne_XML_Importer(ContentHandler):
                     self.card['unseen'] = True
                 else:
                     self.card['unseen'] = False
-
                 
         elif name == "category":
             self.active = self.to_bool(attrs.get("active"))
@@ -107,8 +107,10 @@ class Mnemosyne_XML_Importer(ContentHandler):
         self.reading[name] = False
 
         if name == "cat":
-
-            cat_name = self.text["cat"]
+            if not self.card['cat']:
+                self.card['cat'] = [self.text["cat"]]
+            else:
+               self.card['cat'].append(self.text["cat"])	        
             #self.card.cat = get_category_by_name(cat_name)
 
         elif name == "Q":
@@ -124,10 +126,8 @@ class Mnemosyne_XML_Importer(ContentHandler):
 
 #           if self.card.id.startswith('_'):
 #               unanonymise_id(self.card)
-
-#            if self.card['cat'] == None:
-#                self.card['cat'] = self.default_cat
-
+            if not self.card['cat']:
+                self.card['cat'] = [self.default_cat]
             if self.reset_learning_data == True:
                 self.card['reset_learning_data'] = True
 #                self.card.easiness = average_easiness()
@@ -136,7 +136,7 @@ class Mnemosyne_XML_Importer(ContentHandler):
             card_type = self.main.card_type_by_id("1")
             fact_data = {"q": self.card['q'], "a": self.card['a']}
             card = self.main.controller().create_new_cards(fact_data,
-        	    card_type, grade=-1, tag_names=['<default>'],
+        	    card_type, grade=-1, tag_names=self.card['cat'],
         	    check_for_duplicates=False, save=False)[0]
 
             self.count += 1
