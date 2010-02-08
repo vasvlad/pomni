@@ -34,7 +34,8 @@ class Mnemosyne_XML_Importer(ContentHandler):
         
         if name == "mnemosyne":
             t = time.localtime(0) # In seconds from Unix epoch in UTC.
-            import_time_of_start = time.mktime([t[0],t[1],t[2], 3,0,0, t[6],t[7],t[8]])
+            import_time_of_start = \
+	        time.mktime([t[0],t[1],t[2], 3,0,0, t[6],t[7],t[8]])
         elif name == "item":
 
             self.card = {} 
@@ -110,8 +111,7 @@ class Mnemosyne_XML_Importer(ContentHandler):
             if not self.card['cat']:
                 self.card['cat'] = [self.text["cat"]]
             else:
-               self.card['cat'].append(self.text["cat"])	        
-            #self.card.cat = get_category_by_name(cat_name)
+                self.card['cat'].append(self.text["cat"])	        
 
         elif name == "Q":
             self.card['q'] = self.text["Q"]
@@ -124,13 +124,10 @@ class Mnemosyne_XML_Importer(ContentHandler):
             if self.card['id'] == 0:
                 self.card.new_id()
 
-#           if self.card.id.startswith('_'):
-#               unanonymise_id(self.card)
             if not self.card['cat']:
                 self.card['cat'] = [self.default_cat]
             if self.reset_learning_data == True:
                 self.card['reset_learning_data'] = True
-#                self.card.easiness = average_easiness()
 
             self.imported_cards.append(self.card)
             card_type = self.main.card_type_by_id("1")
@@ -144,11 +141,7 @@ class Mnemosyne_XML_Importer(ContentHandler):
  
 
         elif name == "category":
-
-            name = self.text["name"]
-            print name
-#                ensure_category_exists(name)
-#            get_category_by_name(name).active = self.active
+            pass
 
 
 # TODO: remove duplication over different XML formats
@@ -184,7 +177,7 @@ def import_XML(filename, default_cat, reset_learning_data=False):
     if "mnemosyne" in l:
         handler = XML_Importer(default_cat, reset_learning_data)
     elif "smconv_pl" in l:
-    	handler = smconv_XML_Importer(default_cat, reset_learning_data)
+        handler = smconv_XML_Importer(default_cat, reset_learning_data)
     else:
         handler = memaid_XML_Importer(default_cat, reset_learning_data)
         
@@ -217,8 +210,8 @@ def import_XML(filename, default_cat, reset_learning_data=False):
     if reset_learning_data == False:
         if cur_start_date <= imp_start_date :
             for card in handler.imported_cards:
-               card.last_rep += abs(offset)
-               card.next_rep += abs(offset)
+                card.last_rep += abs(offset)
+                card.next_rep += abs(offset)
         else:
             time_of_start = StartTime(imp_start_date)
             for card in cards:
@@ -387,9 +380,10 @@ class MnemosyneXML(FileFormat):
         l = f.readline()
         l += f.readline();    
         if "mnemosyne" in l:
-            handler = Mnemosyne_XML_Importer(self, default_cat, reset_learning_data)
+            handler = Mnemosyne_XML_Importer(self, default_cat, \
+	        reset_learning_data)
         elif "smconv_pl" in l:
-        	handler = smconv_XML_Importer(default_cat, reset_learning_data)
+            handler = smconv_XML_Importer(default_cat, reset_learning_data)
         else:
             handler = memaid_XML_Importer(default_cat, reset_learning_data)
         f.close()
