@@ -396,7 +396,6 @@ class MnemosyneXML(FileFormat):
         for i in lines:
             if "</item>" in i:
                 count_of_max += 1
-        print count_of_max
         self.progress.set_range(0, count_of_max)
         self.progress.set_value(0)
     

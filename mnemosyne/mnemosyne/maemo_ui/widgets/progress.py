@@ -77,7 +77,8 @@ class MaemoProgressDlg(ProgressDialog):
         """Calculate fraction for progressbar """
 
         self.fraction = float(1.0/(maximum-minimum))
-        self.window.show()
+        if self.window:
+            self.window.show()
        
     def set_text(self, text):
         """Set title on progress bar """
@@ -88,7 +89,7 @@ class MaemoProgressDlg(ProgressDialog):
         """Set new value for progess bar """ 
 
         self.pbar.set_fraction(value * self.fraction)
-        if (value * self.fraction == 1.0 and self.window):
+        if (value * self.fraction > 0.999 and self.window):
             self.window.destroy()
  
         #Pending gtk
