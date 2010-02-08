@@ -21,6 +21,7 @@ class Mnemosyne_XML_Importer(ContentHandler):
         self.reset_learning_data = reset_learning_data
 
         self.imported_cards = []
+        self.count = 0
 
     def to_bool(self, string):
         if string == '0':
@@ -32,12 +33,6 @@ class Mnemosyne_XML_Importer(ContentHandler):
         global import_time_of_start
         
         if name == "mnemosyne":
-#            if attrs.get("time_of_start"):
-#                import_time_of_start \
-#                  = StartTime(long(attrs.get("time_of_start")))
-#                print import_time_of_start
-#            else:
-#                import_time_of_start = time_of_start
             t = time.localtime(0) # In seconds from Unix epoch in UTC.
             import_time_of_start = time.mktime([t[0],t[1],t[2], 3,0,0, t[6],t[7],t[8]])
         elif name == "item":
@@ -140,10 +135,13 @@ class Mnemosyne_XML_Importer(ContentHandler):
             self.imported_cards.append(self.card)
             card_type = self.main.card_type_by_id("1")
             fact_data = {"q": self.card['q'], "a": self.card['a']}
-            card1 = self.main.controller().create_new_cards(fact_data,
+            card = self.main.controller().create_new_cards(fact_data,
         	    card_type, grade=-1, tag_names=['<default>'],
         	    check_for_duplicates=False, save=False)[0]
 
+            self.count += 1
+            self.main.progress.set_value(self.count)
+ 
 
         elif name == "category":
 
@@ -384,7 +382,7 @@ class MnemosyneXML(FileFormat):
                 f = file(unicode(filename).encode("latin"))
             except IOError, exc_obj:
                 self.main_widget().error_box(str(exc_obj))
-                return
+                return -1
         
         l = f.readline()
         l += f.readline();    
@@ -394,8 +392,20 @@ class MnemosyneXML(FileFormat):
         	handler = smconv_XML_Importer(default_cat, reset_learning_data)
         else:
             handler = memaid_XML_Importer(default_cat, reset_learning_data)
-            
         f.close()
+        # Prepare progress bar widget
+        self.progress = self.component_manager.get_current("progress_dialog")\
+                   (self.component_manager)
+        self.progress.set_text(_("Importing cards..."))
+        lines = open(filename, 'r').readlines()
+        count_of_max = 0
+        for i in lines:
+            if "</item>" in i:
+                count_of_max += 1
+        print count_of_max
+        self.progress.set_range(0, count_of_max)
+        self.progress.set_value(0)
+    
     
         # Parse XML file.
         
@@ -412,21 +422,4 @@ class MnemosyneXML(FileFormat):
         except Exception, e:
             raise self.main_widget().error_box(str(e))
     
-        # Calculate offset with current start date.
-        
-#        cur_start_date =        time_of_start.time
-#        imp_start_date = import_time_of_start.time
-        
-#        offset = long(round((cur_start_date - imp_start_date) / 60. / 60. / 24.))
-        offset = 0
-            
-        # Adjust timings.
-#        for card in handler.imported_cards:
-#            print card["q"]
-#            card_type = self.card_type_by_id("1")
-#            fact_data = {"q": card['q'], "a": card['a']}
-#            card = self.controller().create_new_cards(fact_data,
-#        	card_type, grade=-1, tag_names=['<default>'],
-#        	check_for_duplicates=False, save=False)[0]
-#    
-    
+   
