@@ -90,8 +90,11 @@ class MaemoProgressDlg(ProgressDialog):
         """Set new value for progess bar """ 
 
         self.pbar.set_fraction(value * self.fraction)
-        if (value * self.fraction > 0.999 and self.window):
-            self.window.destroy()
+        if value * self.fraction > 0.999 :
+            if self.window:
+                self.window.destroy()
+            else:
+                self.pbar.destroy()
  
         #Pending gtk
         while gtk.events_pending():
